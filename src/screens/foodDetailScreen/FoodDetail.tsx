@@ -39,6 +39,7 @@ import ReviewPart from './foodDetailSubScreen/ReviewPart';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {IProductData} from '../../query/types/product';
 import {useSelector} from 'react-redux';
+import {SCREENWIDTH} from '../../constants/constants';
 
 export interface TableItem {
   name: string;
@@ -72,7 +73,7 @@ const FoodDetail = () => {
     }
     return isIncluded;
   };
-
+  console.log(SCREENWIDTH);
   //TODO : route.params.item 타입 관련 해결 및 만약 null값일 시 에러처리
   useEffect(() => {
     navigation.setOptions({
@@ -86,10 +87,13 @@ const FoodDetail = () => {
           <>
             <View style={{marginRight: 8}}>
               <Text
+                numberOfLines={1}
                 style={{
                   fontSize: 18,
                   color: colors.textMain,
                   fontWeight: 'bold',
+                  width: 0.7 * SCREENWIDTH,
+                  textAlign: 'center',
                 }}>
                 {item.productNm}
               </Text>
