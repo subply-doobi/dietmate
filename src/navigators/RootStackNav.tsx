@@ -10,6 +10,7 @@ import PaymentHistoryNav from './PaymentHistoryNav';
 import colors from '../styles/colors';
 import BackArrow from '../components/common/BackArrow';
 import {useNavigation} from '@react-navigation/native';
+import {Pressable, Image} from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,16 @@ const RootStackNav = () => {
           },
           headerBackVisible: false,
           headerLeft: () => <BackArrow goBackFn={goBack} />,
+          headerRight: () => {
+            return (
+              <Pressable onPress={() => navigation.navigate('Cart')}>
+                <Image
+                  source={require('../assets/icons/36_cartPage.png')}
+                  style={{width: 36, height: 36}}
+                />
+              </Pressable>
+            );
+          },
         }}
       />
       <Stack.Screen name="OrderNav" component={OrderNav} />
