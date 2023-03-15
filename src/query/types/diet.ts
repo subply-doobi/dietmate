@@ -16,6 +16,8 @@ export interface IListDietDetailParams {
 
 interface IDietDetailProductData extends IProductData {
   qty: string;
+  dietNo: string;
+  dietSeq: string;
 }
 
 export type IDietDetailData = Array<IDietDetailProductData>;

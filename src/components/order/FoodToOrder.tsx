@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 import {
   AccordionContentContainer,
@@ -31,10 +31,6 @@ const FoodToOrder = () => {
       {listDiet?.map((diet, index) => {
         return (
           <Col key={`${diet.dietNo}-${index}`}>
-            <MenuTitle>{diet.dietSeq}</MenuTitle>
-            <HorizontalLine
-              style={{marginTop: 8, backgroundColor: colors.line}}
-            />
             <FoodsInOneDiet dietNo={diet.dietNo} />
           </Col>
         );
@@ -47,20 +43,38 @@ interface FoodInOneDietProps {
 }
 const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
   const {data: listDietDetail, isLoading} = useListDietDetail(dietNo);
+  const {data: listDiet} = useListDiet();
+  const [menuTitle, setMenuTitle] = useState();
+
+  useEffect(() => {
+    const dietSeq = getDietSeq(listDiet, dietNo);
+    setMenuTitle(dietSeq);
+  }, []);
+
   if (isLoading) {
     return <ActivityIndicator />;
   }
-  if (listDietDetail.length === 0) {
-    return (
-      <View>
-        <Text>등록된 음식이 없습니다. 끼니를 확인해주세요</Text>
-      </View>
-    );
+  function getDietSeq(dietArr, dietNo) {
+    for (let i = 0; i < dietArr.length; i++) {
+      if (dietArr[i].dietNo === dietNo) {
+        return dietArr[i].dietSeq;
+      }
+    }
+    return null; // 만약 해당하는 dietNo를 찾을 수 없을 경우 null 반환
   }
 
   return (
     <>
       <Col>
+        {listDietDetail?.length ? (
+          <View>
+            <MenuTitle>{menuTitle}</MenuTitle>
+            <HorizontalLine
+              style={{marginTop: 8, backgroundColor: colors.line}}
+            />
+          </View>
+        ) : null}
+
         {listDietDetail?.map((product, index) => {
           return (
             <View key={`${product.productNo}-${index}`}>
