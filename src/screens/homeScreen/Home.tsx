@@ -30,9 +30,17 @@ import DBottomSheet from '../../components/common/DBottomSheet';
 import SortModalContent from '../../components/home/SortModalContent';
 import FilterModalContent from '../../components/home/FilterModalContent';
 import FilterHeader from '../../components/home/FilterHeader';
+import DTooltip from '../../components/common/DTooltip';
+import {SCREENWIDTH} from '../../constants/constants';
+import {useNavigation} from '@react-navigation/native';
 
 const Home = () => {
+  // navigation
+  const navigation = useNavigation();
+  const {navigate} = navigation;
+
   // state
+  const [tooltipShow, setTooltipShow] = useState(true);
   const [searchText, setSearchText] = useState('');
   const [menuSelectOpen, setMenuSelectOpen] = useState(false);
   let filterHeight = true;
@@ -108,6 +116,7 @@ const Home = () => {
     <TouchableWithoutFeedback
       onPress={() => {
         setMenuSelectOpen(false);
+        setTooltipShow(false);
       }}>
       <Container>
         <MenuAndSearchBox>
@@ -193,6 +202,16 @@ const Home = () => {
         )}
 
         {menuSelectOpen && <MenuSelect setOpen={setMenuSelectOpen} />}
+        <DTooltip
+          tooltipShow={tooltipShow}
+          text={`식단 고민하기 싫다면\n자동구성을 이용해보세요`}
+          boxRight={0}
+          triangleRight={SCREENWIDTH / 8}
+          onPressFn={() => {
+            setTooltipShow(false);
+            navigate('BottomTabNav', {screen: 'Cart'});
+          }}
+        />
       </Container>
     </TouchableWithoutFeedback>
   );

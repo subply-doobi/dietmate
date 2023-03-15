@@ -4,9 +4,11 @@ import cartReducer from './slices/cartSlice';
 import likeReducer from './slices/likeSlice';
 import orderReducer from './slices/orderSlice';
 import filterReducer from './slices/filterSlice';
+import homeReducer from './slices/homeSlice';
 
 export const store = configureStore({
   reducer: {
+    home: homeReducer,
     userInfo: userInfoReducer,
     cart: cartReducer,
     like: likeReducer,

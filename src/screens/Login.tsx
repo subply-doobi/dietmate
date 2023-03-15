@@ -13,9 +13,9 @@ const Login = () => {
   const navigation = useNavigation();
   const {navigate, reset} = navigation;
 
-  //redux
   //유저값 check 후 화면 이동
   const {data, isLoading} = useGetBaseLine();
+
   const signInWithKakao = async (): Promise<void> => {
     const isTokenValid = await validateToken();
     isTokenValid && !isLoading

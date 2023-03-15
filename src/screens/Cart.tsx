@@ -38,7 +38,7 @@ import {
 } from '../util/sumUp';
 import {useGetBaseLine} from '../query/queries/baseLine';
 import CartSummary from '../components/cart/CartSummary';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const Cart = () => {
   // redux

@@ -12,6 +12,7 @@ import Home from '../screens/homeScreen/Home';
 import {NavigationProps} from '../constants/constants';
 import {useNavigation} from '@react-navigation/native';
 import {useListDietDetailAll} from '../query/queries/diet';
+import DTooltip from '../components/common/DTooltip';
 
 const Tab = createBottomTabNavigator();
 
@@ -116,7 +117,9 @@ const BottomTabNav = props => {
             fontWeight: 'bold',
             color: colors.textMain,
           },
-          headerLeft: () => <BackArrow goBackFn={goBack} />,
+          headerLeft: () => (
+            <BackArrow goBackFn={goBack} style={{marginLeft: 16}} />
+          ),
         }}
       />
     </Tab.Navigator>

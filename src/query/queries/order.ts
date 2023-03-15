@@ -26,8 +26,8 @@ export const useKakaoPayReady = () => {
     },
   };
 
-  const mutation = useMutation(
-    async (price: number) => {
+  const mutation = useMutation({
+    mutationFn: async (price: number) => {
       const res = await axios.post(
         'https://kapi.kakao.com/v1/payment/ready',
         null,
@@ -46,8 +46,7 @@ export const useKakaoPayReady = () => {
       );
       return res.data;
     },
-    {enabled: false},
-  );
+  });
 
   return {
     isLoading: mutation.isLoading,
