@@ -32,7 +32,6 @@ const AutoDietModal = ({modalVisible, setModalVisible}: IAutoDietModal) => {
   // index 0: 도시락 | 1: 닭가슴살 | 2: 샐러드 | 3: 영양간식 | 4: 과자 | 5: 음료
   const [selectedCategory, setSelectedCategory] = useState<boolean[]>([]);
   const [sliderValue, setSliderValue] = useState<number[]>([4000, 12000]);
-
   useEffect(() => {
     categoryData &&
       setSelectedCategory(

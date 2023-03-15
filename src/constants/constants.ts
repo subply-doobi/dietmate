@@ -169,7 +169,7 @@ export const validationRules: IValidationRules = {
         '정확한 기초대사량을 입력해주세요',
     },
   },
-  calorie: {
+  caloriePerMeal: {
     maxlength: 4,
     validate: {
       range: (v: string) =>
@@ -178,7 +178,7 @@ export const validationRules: IValidationRules = {
     },
   },
   // TBD | carbManual -> carb로 고쳐서 mypage에서 validationRulesByNutr 단계 없애기
-  carb: {
+  carbManual: {
     maxlength: 4,
     validate: {
       range: (v: string) =>
@@ -188,7 +188,7 @@ export const validationRules: IValidationRules = {
             `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
     },
   },
-  protein: {
+  proteinManual: {
     maxlength: 4,
     validate: {
       range: (v: string) =>
@@ -198,7 +198,7 @@ export const validationRules: IValidationRules = {
             `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
     },
   },
-  fat: {
+  fatManual: {
     maxlength: 4,
     validate: {
       range: (v: string) =>
@@ -220,6 +220,7 @@ export interface NavigationProps {
     navigate: Function;
     goBack: Function;
     setOptions: Function;
+    reset: Function;
   };
   route?: any;
 }

@@ -8,3 +8,5 @@ export const AEROBIC_PURPOSE_CODE = 'AEROBIC_PURPOSE_CODE';
 export const PRODUCT_AUTO = 'PRODUCT_AUTO';
 export const CATEGORY = `CATEGORY`;
 export const DIET_DETAIL_ALL = 'DIET_DETAIL_ALL';
+export const DIET_DETAIL_EMPTY_YN = 'DIET_DETAIL_EMPTY_YN';
+export const PRODUCT = 'PRODUCT';

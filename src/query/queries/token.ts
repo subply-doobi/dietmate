@@ -11,7 +11,6 @@ import {GET_TOKEN, GET_AUTH, RE_ISSUE_TOKEN} from './urls';
 // 카카오 토큰으로 DoobiToken 발급
 export const getDoobiToken = async (kakaoAccessToken: string | null) => {
   try {
-    console.log('getDoobiToken!');
     const result = await axios.get(`${GET_TOKEN}/${kakaoAccessToken}`);
     return result?.status === 200 ? result.data : undefined;
   } catch (e) {
@@ -48,15 +47,6 @@ export const validateToken = async () => {
   let isTokenValid = false;
   let validToken: string | null = '';
   const {accessToken, refreshToken} = await getStoredToken();
-  if (!accessToken || !refreshToken) {
-    try {
-      validToken = await kakaoLogin();
-      isTokenValid = true;
-    } catch (e) {
-      console.log('카카오로그인 실패', e);
-    }
-  }
-
   if (!isTokenValid) {
     try {
       // 인증여부 조회
@@ -80,6 +70,7 @@ export const validateToken = async () => {
           authorization: `Bearer ${refreshToken}`,
         },
       });
+      console.log();
       await storeToken(reIssue.data.accessToken, reIssue.data.refreshToken);
       isTokenValid = true;
       validToken = reIssue.data.accessToken;

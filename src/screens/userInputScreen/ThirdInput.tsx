@@ -24,6 +24,7 @@ import {
   useGetBaseLine,
   useUpdateBaseLine,
 } from '../../query/queries/baseLine';
+import {useCreateDiet, useListDiet} from '../../query/queries/diet';
 
 interface IFormData {
   ratioType: string;
@@ -33,12 +34,14 @@ interface IFormData {
   fatManual: string;
 }
 
-const ThirdInput = ({navigation: {navigate}}: NavigationProps) => {
+const ThirdInput = ({navigation}: NavigationProps) => {
   // react-query
+  const {data} = useGetBaseLine();
   const updateMutation = useUpdateBaseLine();
   const createMutation = useCreateBaseLine();
-  const {data} = useGetBaseLine();
-  // console.log('ThirdInput/data:', data);
+  const {data: dietData} = useListDiet();
+  const createDietMutation = useCreateDiet();
+
   // redux
   const {userInfo, userTarget} = useSelector(
     (state: RootState) => state.userInfo,
@@ -113,7 +116,9 @@ const ThirdInput = ({navigation: {navigate}}: NavigationProps) => {
     // return section.title;
     return (
       <AccordionHeader isActivated={isActive}>
-        <AccordionHeaderTitle>{section.title}</AccordionHeaderTitle>
+        <AccordionHeaderTitle isActivated={isActive}>
+          {section.title}
+        </AccordionHeaderTitle>
         {isActive ? (
           <ArrowIcon source={require('../../assets/icons/20_up.png')} />
         ) : (
@@ -155,11 +160,25 @@ const ThirdInput = ({navigation: {navigate}}: NavigationProps) => {
     };
     const requestBody = convertDataByMethod[calculationMethod](dataToConvert);
     // console.log('ThirdInput/requestBody:', requestBody);
-    updateMutation.mutate(requestBody);
+    if (!dietData) return;
+    if (dietData.length === 0) {
+      createDietMutation.mutate();
+      createMutation.mutate(requestBody);
+    } else {
+      updateMutation.mutate(requestBody);
+    }
+    navigation.navigate('BottomTabNav', {screen: 'Home'});
   };
   // TBD | 스크롤뷰 ref를 Manual에 넘겨서 단백질입력 활성화시 스크롤 내려주기
   return (
     <Container>
+      <Title>
+        <TitleText>
+          <TitleTextHighlight>한 끼</TitleTextHighlight> 기준{' '}
+        </TitleText>
+        <TitleText>목표섭취량을 입력해주세요</TitleText>
+      </Title>
+      <HorizontalSpace height={16} />
       <ScrollView
         contentContainerStyle={{paddingBottom: 80}}
         showsVerticalScrollIndicator={false}
@@ -173,6 +192,7 @@ const ThirdInput = ({navigation: {navigate}}: NavigationProps) => {
           duration={200}
           onChange={updateSections}
           renderFooter={() => <HorizontalSpace height={20} />}
+          containerStyle={{marginTop: 32}}
         />
       </ScrollView>
       <BtnBottomCTA
@@ -180,7 +200,6 @@ const ThirdInput = ({navigation: {navigate}}: NavigationProps) => {
         disabled={btnIsActive ? false : true}
         onPress={() => {
           onSubmit();
-          navigate('BottomTabNav', {screen: 'Home'});
         }}>
         <BtnText>완료</BtnText>
       </BtnBottomCTA>
@@ -189,6 +208,21 @@ const ThirdInput = ({navigation: {navigate}}: NavigationProps) => {
 };
 
 export default ThirdInput;
+
+const Title = styled.View`
+  width: 100%;
+`;
+
+const TitleText = styled(TextMain)`
+  font-size: 24px;
+  font-weight: bold;
+`;
+
+const TitleTextHighlight = styled.Text`
+  font-size: 24px;
+  font-weight: bold;
+  color: ${colors.main};
+`;
 
 const AccordionHeader = styled.View`
   height: 52px;
@@ -212,5 +246,4 @@ const ArrowIcon = styled.Image`
   position: absolute;
   align-self: flex-end;
   right: 8px;
-  background-color: ${colors.backgroundLight};
 `;

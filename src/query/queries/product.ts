@@ -9,7 +9,7 @@ import {
 } from './urls';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {mutationFn, queryFn} from './requestFn';
-import {DIET_DETAIL, PRODUCT_AUTO} from '../keys';
+import {DIET_DETAIL, PRODUCT, PRODUCT_AUTO} from '../keys';
 import {IMutationOptions, IQueryOptions} from '../types/common';
 import {ICreateProductAutoParams, IListProductParams} from '../types/product';
 // const getProductList = async () => {
@@ -67,9 +67,10 @@ export const useCreateProductAuto = () => {
 };
 // optional params 어떻게 받을 것인지
 
-// GET
+// GET //
 export const useListProduct = (
-  params?: {
+  params: {
+    dietNo: string;
     searchText?: string;
     categoryCd?: string;
     sort?: string;
@@ -77,6 +78,7 @@ export const useListProduct = (
   },
   options?: IQueryOptions,
 ) => {
+  const dietNo = params?.dietNo ? params.dietNo : '';
   const enabled = options?.enabled ?? true;
   const searchText = params?.searchText ? params?.searchText : '';
   const categoryCd = params?.categoryCd ? params?.categoryCd : '';
@@ -84,17 +86,17 @@ export const useListProduct = (
   const filter = params?.filter ? params?.filter : '';
 
   return useQuery({
-    queryKey: ['tempProduct'],
+    queryKey: [PRODUCT],
     queryFn: () =>
       queryFn(
-        `${LIST_PRODUCT}?searchText=${searchText}&categoryCd=${categoryCd}&sort=${sort}&filter=${filter}`,
-      ).then(res => res.slice(0, 3)),
+        `${LIST_PRODUCT}/${dietNo}?searchText=${searchText}&categoryCd=${categoryCd}&sort=${sort}&filter=${filter}`,
+      ),
     enabled,
     onSuccess: data => {
       options?.onSuccess && options?.onSuccess();
     },
     onError: e => {
-      console.log(e);
+      console.log('useListProduct Error: ', e);
     },
   });
 };

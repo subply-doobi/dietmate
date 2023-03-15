@@ -5,13 +5,13 @@ import styled from 'styled-components/native';
 import {
   useCreateDiet,
   useDeleteDiet,
+  useGetDietDetailEmptyYn,
   useListDiet,
 } from '../../query/queries/diet';
 import {setCurrentDietNo} from '../../stores/slices/cartSlice';
 import {RootState} from '../../stores/store';
 import colors from '../../styles/colors';
 import {Col, HorizontalLine, TextMain} from '../../styles/styledConsts';
-import {checkEmptyMenuIndex} from '../../util/checkEmptyMenu';
 import {findDietSeq} from '../../util/findDietSeq';
 import CreateLimitAlertContent from './alert/CreateLimitAlertContent';
 import DAlert from './alert/DAlert';
@@ -25,6 +25,7 @@ interface IMenuSelect {
 const MenuSelect = ({setOpen, center}: IMenuSelect) => {
   // react-query
   const {data: dietData} = useListDiet();
+  const {data: dietEmptyData} = useGetDietDetailEmptyYn();
   const createDietMutation = useCreateDiet();
   const deleteDietMutation = useDeleteDiet();
 
@@ -41,26 +42,29 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
   const NoOfDiet = dietData?.length;
   const addAlertStatus =
     NoOfDiet === undefined
-      ? 'error'
-      : checkEmptyMenuIndex(dietData)
-      ? 'empty'
+      ? 'noData'
       : NoOfDiet >= 3
       ? 'limit'
+      : dietEmptyData?.emptyYn === 'Y'
+      ? 'empty'
       : 'possible';
 
   const onCreateDiet = () => {
     if (addAlertStatus === 'possible') {
       createDietMutation.mutate();
+      setOpen(false);
       // TBD | 여기서 빈 끼니 있는지도 확인
       return;
     }
+
     setCreateAlertShow(true);
   };
 
   const onDeleteDiet = () => {
+    if (!dietData) {
+      return;
+    }
     dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
-    dietData &&
-      dispatch(setCurrentDietNo(dietData[dietData.length - 2]?.dietNo));
     setOpen(false);
     setDeleteAlertShow(false);
   };
@@ -68,7 +72,7 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
   return (
     <TouchableWithoutFeedback onPress={() => {}}>
       <SelectContainer center={center}>
-        {dietData?.map((menu, index) => (
+        {dietData?.map(menu => (
           <Col key={menu.dietNo}>
             <Menu
               onPress={() => {
@@ -94,10 +98,7 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
           </Col>
         ))}
 
-        <Menu
-          onPress={() => {
-            onCreateDiet();
-          }}>
+        <Menu onPress={onCreateDiet}>
           <MenuText>끼니 추가하기</MenuText>
         </Menu>
 
@@ -123,7 +124,6 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
             )
           }
           onConfirm={() => {
-            setOpen(false);
             setCreateAlertShow(false);
           }}
           onCancel={() => setCreateAlertShow(false)}
@@ -136,13 +136,6 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
 
 export default MenuSelect;
 
-const Container = styled.View`
-  padding: 0px 16px 24px 16px;
-`;
-
-const AlertText = styled(TextMain)`
-  font-size: 16px;
-`;
 const SelectContainer = styled.View`
   position: absolute;
   top: 48px;

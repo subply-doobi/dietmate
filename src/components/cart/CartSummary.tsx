@@ -23,17 +23,30 @@ const CartSummary = () => {
   return (
     <TotalSummaryContainer>
       <MenuTotalText>{menuTotalText}</MenuTotalText>
-      {reGroupedProducts?.map((group, idx) => (
-        <View key={idx}>
-          <SellerText>{group[0].platformNm}</SellerText>
-          <SellerProductPrice>
-            식품: {commaToNum(sumUpPrice(group))} 원
-          </SellerProductPrice>
-          <SellerShippingPrice>
-            배송비: 3,000원 (10,000원 이상 무료배송)
-          </SellerShippingPrice>
-        </View>
-      ))}
+      {reGroupedProducts?.map((seller, idx) => {
+        const sellerProductPrice = sumUpPrice(seller);
+        const sellerFreeShippingPrice = 30000;
+        // TBD | 아직 freeShippingPrice 서버에서 값 못받아서 수기로
+        // const sellerFreeShippingPrice = seller[0].freeShippingPrice
+        // const sellershippingPrice =
+        //   sellerProductPrice < seller[0].freeShippingPrice
+        //     ? seller[0].shippingPrice
+        //     : 0;
+        const sellershippingPrice =
+          sellerProductPrice < sellerFreeShippingPrice ? 3000 : 0;
+        return (
+          <View key={idx}>
+            <SellerText>{seller[0]?.platformNm}</SellerText>
+            <SellerProductPrice>
+              식품: {commaToNum(sellerProductPrice)} 원
+            </SellerProductPrice>
+            <SellerShippingPrice>
+              배송비: {commaToNum(sellershippingPrice)}원 (
+              {commaToNum(sellerFreeShippingPrice)}원 이상 무료배송)
+            </SellerShippingPrice>
+          </View>
+        );
+      })}
     </TotalSummaryContainer>
   );
 };

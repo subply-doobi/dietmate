@@ -25,17 +25,6 @@ interface IFoodList extends NavigationProps {
   dietDetailData: IProductData[];
 }
 
-const checkProductIncluded = (productNo: string, menu: IProductData[]) => {
-  let isIncluded = false;
-  for (let i = 0; i < menu.length; i++) {
-    if (menu[i].productNo === productNo) {
-      isIncluded = true;
-      break;
-    }
-  }
-  return isIncluded;
-};
-
 const FoodList = ({item, dietDetailData}: IFoodList) => {
   const navigation = useNavigation();
   // redux
@@ -48,9 +37,7 @@ const FoodList = ({item, dietDetailData}: IFoodList) => {
   // state
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
 
-  const isIncluded =
-    dietDetailData && checkProductIncluded(item.productNo, dietDetailData);
-
+  // etc
   const onDelete = () => {
     deleteMutation.mutate({
       dietNo: currentDietNo,
@@ -60,7 +47,7 @@ const FoodList = ({item, dietDetailData}: IFoodList) => {
   };
 
   const onAdd = (productNo: string) => {
-    addMutation.mutate({dietNo: currentDietNo, productNo, item});
+    addMutation.mutate({dietNo: currentDietNo, productNo});
   };
 
   return (
@@ -72,6 +59,7 @@ const FoodList = ({item, dietDetailData}: IFoodList) => {
             source={{
               uri: `${BASE_URL}${item?.mainAttUrl}`,
             }}
+            resizeMode="center"
           />
           <ProductInfoContainer>
             <Col>
@@ -86,14 +74,14 @@ const FoodList = ({item, dietDetailData}: IFoodList) => {
           </ProductInfoContainer>
           <AddOrDeleteBtn
             onPress={() => {
-              if (isIncluded) {
+              if (item.productChoiceYn === 'Y') {
                 // 실제 삭제는 DAlert callback에서!
                 setDeleteAlertShow(true);
               } else {
                 onAdd(item.productNo);
               }
             }}>
-            {isIncluded ? (
+            {item.productChoiceYn === 'Y' ? (
               <AddToCartBtnImage
                 source={require('../../assets/icons/24_foodDelete.png')}
               />
@@ -185,7 +173,7 @@ const NutrSummaryContainer = styled.View`
 
 const Nutr = styled.View`
   flex-direction: row;
-  width: ${(SCREENWIDTH - 16) / 5}px;
+  /* width: ${(SCREENWIDTH - 16) / 5}px; */
 `;
 
 const NutrText = styled(TextSub)`

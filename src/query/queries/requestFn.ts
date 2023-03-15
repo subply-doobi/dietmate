@@ -16,7 +16,7 @@ export const mutationFn = async <T>(
   requestBody?: T,
 ) => {
   const {isTokenValid, validToken} = await validateToken();
-  if (!isTokenValid) return null;
+  // if (!isTokenValid) return null;
   const requestConfig = {
     url,
     method,

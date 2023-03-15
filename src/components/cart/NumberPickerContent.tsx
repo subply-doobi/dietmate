@@ -10,12 +10,31 @@ import {
   TextSub,
 } from '../../styles/styledConsts';
 import {Text} from 'react-native';
-import {commaToNum} from '../../util/sumUp';
+import {
+  commaToNum,
+  makePriceObjBySeller,
+  reGroupBySeller,
+} from '../../util/sumUp';
 import colors from '../../styles/colors';
 import {useState, SetStateAction} from 'react';
-import {useUpdateDietDetail} from '../../query/queries/diet';
+import {
+  useListDietDetail,
+  useListDietDetailAll,
+  useUpdateDietDetail,
+} from '../../query/queries/diet';
 import {RootState} from '../../stores/store';
 import {useSelector} from 'react-redux';
+import {IDietDetailData} from '../../query/types/diet';
+
+const getCurrentQty = (productNm: string, dietDetail: IDietDetailData) => {
+  let currentQty = '';
+  dietDetail.forEach(food => {
+    if (food.productNm === productNm) {
+      currentQty = food.qty;
+    }
+  });
+  return currentQty;
+};
 
 const NumberPickerContent = ({
   setNumberPickerShow,
@@ -26,7 +45,6 @@ const NumberPickerContent = ({
   minQty,
   freeShippingPrice,
   shippingPrice,
-  priceBySeller,
 }: {
   setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
   platformNm: string;
@@ -36,22 +54,32 @@ const NumberPickerContent = ({
   minQty: string;
   freeShippingPrice: string;
   shippingPrice: string;
-  priceBySeller: {
-    [key: string]: number;
-  };
 }) => {
   // redux
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
 
   // react-query
+  const {data: dietDetailData} = useListDietDetail(currentDietNo);
+  const {data: dietAllData} = useListDietDetailAll();
   const updateDietDetailMutation = useUpdateDietDetail();
 
+  const currentQty = dietDetailData
+    ? getCurrentQty(productNm, dietDetailData)
+    : '1';
+
   // state
-  const [number, setNumber] = useState(parseInt(minQty));
+  const [number, setNumber] = useState(parseInt(currentQty));
 
   // etc
-  const currentSellerPrice = priceBySeller[platformNm];
-  const totalPrice = currentSellerPrice + number * parseInt(price);
+  // 판매자별 총액계산
+  const reGroupedProducts = dietAllData && reGroupBySeller(dietAllData);
+  const priceBySeller =
+    reGroupedProducts && makePriceObjBySeller(reGroupedProducts);
+  const currentSellerPrice = priceBySeller ? priceBySeller[platformNm] : 0;
+
+  // 현재 설정하는 수량 포함한 총 가격
+  const totalPrice =
+    currentSellerPrice + (number - parseInt(currentQty)) * parseInt(price);
   const isFreeShipping = totalPrice >= parseInt(freeShippingPrice);
   const minCheck = parseInt(minQty) <= number ? true : false;
 
@@ -149,6 +177,7 @@ const FreeShippingNotice = styled(TextMain)`
 `;
 
 const BtnPlusMinus = styled.TouchableOpacity`
+  margin-left: 8px;
   width: 48px;
   height: 48px;
   justify-content: center;

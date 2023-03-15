@@ -153,7 +153,7 @@ const Manual = ({
   };
 
   useEffect(() => {
-    handleSubmit(() => console.log('submit!'))();
+    handleSubmit(() => {})();
   }, []);
 
   return (

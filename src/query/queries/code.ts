@@ -2,7 +2,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import axios from 'axios';
 import {queryFn, mutationFn} from './requestFn';
 import {validateToken} from './token';
-import {COMMON_CODE} from './urls';
+import {COMMON_CODE, FILTER} from './urls';
 import {
   DIET_PURPOSE_CODE,
   WEIGHT_PURPOSE_CODE,
@@ -11,6 +11,7 @@ import {
 
 interface IQuery {
   code: string;
+  type: string;
 }
 // GET //
 export const useDietPurposeCode = (code: IQuery) => {
@@ -35,5 +36,14 @@ export const useAerobicPurposeCode = (code: IQuery) => {
     queryFn: () => queryFn(`${COMMON_CODE}/${code}`),
     retry: 1,
     onSuccess: data => {},
+  });
+};
+
+export const useFilterCode = (type: IQuery) => {
+  return useQuery({
+    queryKey: ['filter'],
+    queryFn: () => queryFn(`${FILTER}/${type}`),
+    onSuccess: () => console.log('filterSuccess'),
+    onError: e => console.log(e),
   });
 };

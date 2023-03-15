@@ -9,10 +9,13 @@ import AddressEdit from '../screens/orderScreen/AddressEdit';
 import BackArrow from '../components/common/BackArrow';
 import PaymentComplete from '../screens/orderScreen/PaymentComplete';
 import PaymentHistory from '../screens/orderScreen/PaymentHistory';
+import {useNavigation} from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 
 const OrderNav = ({navigation: {navigate}}: NavigationProps) => {
+  const navigation = useNavigation();
+  const {goBack} = navigation;
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -27,11 +30,7 @@ const OrderNav = ({navigation: {navigate}}: NavigationProps) => {
             fontWeight: 'bold',
             color: colors.textMain,
           },
-          headerLeft: () => (
-            <BackArrow
-              goBackFn={() => navigate('BottomTabNav', {screen: 'Cart'})}
-            />
-          ),
+          headerLeft: () => <BackArrow goBackFn={goBack} />,
         }}
       />
       <Stack.Screen
@@ -48,7 +47,7 @@ const OrderNav = ({navigation: {navigate}}: NavigationProps) => {
                   params: {from: 'AddressEdit'},
                 })
               }>
-              <BackArrow goBackFn={() => navigate('Order')} />
+              <BackArrow goBackFn={goBack} />
             </TouchableOpacity>
           ),
         }}

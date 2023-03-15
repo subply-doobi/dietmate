@@ -1,4 +1,5 @@
-import {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {SetStateAction, useState} from 'react';
 import {ActivityIndicator, Text} from 'react-native';
 import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
@@ -30,16 +31,22 @@ import DBottomSheet from '../common/DBottomSheet';
 import NumberPickerContent from './NumberPickerContent';
 import QuantityControl from './QuantityControl';
 
-const CartFoodList = () => {
+const CartFoodList = ({
+  selectedFoods,
+  setSelectedFoods,
+}: {
+  selectedFoods: {[key: string]: string[]};
+  setSelectedFoods: React.Dispatch<SetStateAction<{[key: string]: string[]}>>;
+}) => {
+  // navigation
+  const navigation = useNavigation();
+
   // redux
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
 
   // react-query
   const {data: dietData} = useListDiet();
-  const {data: dietDetailData, isFetching: dietDetailIsFetching} =
-    useListDietDetail(currentDietNo);
-  const {data: dietAllData} = useListDietDetailAll();
-  const updateMutation = useUpdateDietDetail();
+  const {data: dietDetailData} = useListDietDetail(currentDietNo);
   const deleteMutation = useDeleteDietDetail();
 
   // state
@@ -66,20 +73,62 @@ const CartFoodList = () => {
     setDeleteAlertShow(false);
   };
 
-  // 판매자별 총액계산
-  const reGroupedProducts = dietAllData && reGroupBySeller(dietAllData);
-  const priceBySeller =
-    reGroupedProducts && makePriceObjBySeller(reGroupedProducts);
+  const addToSelected = (productNo: string) => {
+    const newArr = selectedFoods[currentDietNo]
+      ? [...selectedFoods[currentDietNo], productNo]
+      : [productNo];
+    const newObj = {
+      ...selectedFoods,
+      [currentDietNo]: newArr,
+    };
+    setSelectedFoods(newObj);
+  };
+  const deleteFromSelected = (productNo: string) => {
+    const newObj = {
+      ...selectedFoods,
+      [currentDietNo]: [
+        ...selectedFoods[currentDietNo]?.filter(v => v !== productNo),
+      ],
+    };
+    setSelectedFoods(newObj);
+  };
+
   return (
     <Container>
       {dietDetailData?.map((food, idx) => (
-        <FoodBox key={idx}>
+        <FoodBox
+          key={idx}
+          onPress={() => {
+            navigation.navigate('FoodDetail', {item: food});
+          }}>
           <Row
             style={{
               width: '100%',
               alignItems: 'flex-start',
             }}>
-            <ThumbnailImage source={{uri: `${BASE_URL}${food.mainAttUrl}`}} />
+            <ThumbnailImage
+              source={{uri: `${BASE_URL}${food.mainAttUrl}`}}
+              resizeMode="center"
+            />
+            {selectedFoods[currentDietNo]?.includes(food.productNo) ? (
+              <SelectedBtn
+                onPress={() => {
+                  deleteFromSelected(food.productNo);
+                }}>
+                <SelectedCheckImage
+                  source={require('../../assets/icons/24_checkbox_selected.png')}
+                />
+              </SelectedBtn>
+            ) : (
+              <SelectedBtn
+                onPress={() => {
+                  addToSelected(food.productNo);
+                }}>
+                <SelectedCheckImage
+                  source={require('../../assets/icons/24_checkbox.png')}
+                />
+              </SelectedBtn>
+            )}
             <Col style={{marginLeft: 8, flex: 1}}>
               <Row style={{justifyContent: 'space-between'}}>
                 <SellerText>{food.platformNm}</SellerText>
@@ -128,23 +177,18 @@ const CartFoodList = () => {
       <DBottomSheet
         alertShow={numberPickerShow}
         setAlertShow={setNumberPickerShow}
-        renderContent={() =>
-          priceBySeller ? (
-            <NumberPickerContent
-              setNumberPickerShow={setNumberPickerShow}
-              platformNm={numberPickerInfo.platformNm}
-              productNo={numberPickerInfo.productNo}
-              productNm={numberPickerInfo.productNm}
-              price={numberPickerInfo.price}
-              minQty={numberPickerInfo.minQty}
-              freeShippingPrice={numberPickerInfo.freeShippingPrice}
-              shippingPrice={numberPickerInfo.shippingPrice}
-              priceBySeller={priceBySeller}
-            />
-          ) : (
-            <></>
-          )
-        }
+        renderContent={() => (
+          <NumberPickerContent
+            setNumberPickerShow={setNumberPickerShow}
+            platformNm={numberPickerInfo.platformNm}
+            productNo={numberPickerInfo.productNo}
+            productNm={numberPickerInfo.productNm}
+            price={numberPickerInfo.price}
+            minQty={numberPickerInfo.minQty}
+            freeShippingPrice={numberPickerInfo.freeShippingPrice}
+            shippingPrice={numberPickerInfo.shippingPrice}
+          />
+        )}
         onCancel={() => setNumberPickerShow(false)}
       />
     </Container>
@@ -158,9 +202,20 @@ const Container = styled.View`
   margin-top: 12px;
 `;
 
-const FoodBox = styled.View`
+const FoodBox = styled.TouchableOpacity`
   width: 100%;
   margin-top: 12px;
+`;
+
+const SelectedBtn = styled.TouchableOpacity`
+  position: absolute;
+  width: 24px;
+  height: 24px;
+`;
+
+const SelectedCheckImage = styled.Image`
+  width: 24px;
+  height: 24px;
 `;
 
 const ThumbnailImage = styled.Image`

@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import styled from 'styled-components/native';
@@ -35,13 +36,20 @@ import axios from 'axios';
 import PaymentWebView from '../../components/order/PaymentWebView';
 import {useKakaoPayReady} from '../../query/queries/order';
 import {setOrderSummary} from '../../stores/slices/orderSlice';
+import {useListDietDetailAll} from '../../query/queries/diet';
 
 const Order = ({navigation: {navigate}, route}: NavigationProps) => {
   // cart information -> 장바구니에서 route에 담아 보내줄 것.
   // 근데 그냥 장바구니식품 불러와서, 수량은 장바구니 qty쓰면 되는 거 아닌가...?!
   // TBD | 장바구니 담긴 식품 판매자별로 정리 및 식품가격 배송비 각각 변수에
   // useKakaoPayReady
-  const {isLoading, isError, error, paymentUrl, pay} = useKakaoPayReady();
+  const {
+    isLoading: isKakaoPayLoading,
+    isError: isKakaoPayError,
+    error: KakaoPayError,
+    paymentUrl,
+    pay,
+  } = useKakaoPayReady();
 
   const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
 
@@ -92,6 +100,7 @@ const Order = ({navigation: {navigate}, route}: NavigationProps) => {
   // accordion
   // activeSections[0] == 1 : 두비가 알아서 / 탄단지 비율 / 영양성분 직접 입력
   const [activeSections, setActiveSections] = useState<number[]>([]);
+
   const CONTENT = [
     {
       title: '주문식품',
@@ -101,7 +110,7 @@ const Order = ({navigation: {navigate}, route}: NavigationProps) => {
           <HeaderSubTitle>외</HeaderSubTitle>
         </Row>
       ),
-      // content: <FoodToOrder cartInfo={cart} />,
+      content: <FoodToOrder />,
     },
     {
       title: '주문자',

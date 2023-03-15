@@ -57,7 +57,7 @@ const CalChangeAlert = ({
   );
   const {data, isLoading} = useGetBaseLine();
   useEffect(() => {
-    handleSubmit(() => console.log('handleSubmit!'))();
+    handleSubmit(() => {})();
   }, []);
 
   return (

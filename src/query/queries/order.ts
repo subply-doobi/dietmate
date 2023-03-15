@@ -26,25 +26,28 @@ export const useKakaoPayReady = () => {
     },
   };
 
-  const mutation = useMutation(async (price: number) => {
-    const res = await axios.post(
-      'https://kapi.kakao.com/v1/payment/ready',
-      null,
-      {
-        ...kakaoPayConfig,
-        params: {
-          ...kakaoPayConfig.params,
-          total_amount: price,
-          vat_amount: 0.1 * price,
+  const mutation = useMutation(
+    async (price: number) => {
+      const res = await axios.post(
+        'https://kapi.kakao.com/v1/payment/ready',
+        null,
+        {
+          ...kakaoPayConfig,
+          params: {
+            ...kakaoPayConfig.params,
+            total_amount: price,
+            vat_amount: 0.1 * price,
+          },
         },
-      },
-    );
-    //TBD : ShippingFee 는 정책에 따라 결정할 것
-    dispatch(
-      setOrderSummary({foodPrice: price, tid: res.data.tid, shippingFee: 0}),
-    );
-    return res.data;
-  });
+      );
+      //TBD : ShippingFee 는 정책에 따라 결정할 것
+      dispatch(
+        setOrderSummary({foodPrice: price, tid: res.data.tid, shippingFee: 0}),
+      );
+      return res.data;
+    },
+    {enabled: false},
+  );
 
   return {
     isLoading: mutation.isLoading,

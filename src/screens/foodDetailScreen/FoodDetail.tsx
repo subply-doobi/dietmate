@@ -27,14 +27,17 @@ import {
   useCreateProductMark,
   useDeleteProductMark,
 } from '../../query/queries/product';
-import {useCreateDietDetail, useListDietDetail} from '../../query/queries/diet';
+import {
+  useCreateDietDetail,
+  useDeleteDietDetail,
+  useListDietDetail,
+} from '../../query/queries/diet';
 import NutrientPart from './foodDetailSubScreen/NutrientPart';
 import ShippingPart from './foodDetailSubScreen/ShippingPart';
 import FoodPart from './foodDetailSubScreen/FoodPart';
 import ReviewPart from './foodDetailSubScreen/ReviewPart';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {IProductData} from '../../query/types/product';
-import DAlert from '../../components/common/alert/DAlert';
 import {useSelector} from 'react-redux';
 
 export interface TableItem {
@@ -47,17 +50,17 @@ export interface TableItem {
 const FoodDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const food: IProductData = route.params.item;
+  const item: IProductData = route.params.item;
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
   const detailMenu = ['영양성분', '식품상세', '후기', '배송정책'];
   const [clicked, setClicked] = useState(0);
-  const [alertShow, setAlertShow] = useState(false);
   const createProductMarkMutation = useCreateProductMark();
   const deleteProductMarkMutation = useDeleteProductMark();
   const createDietDetailMutation = useCreateDietDetail();
+  const deleteDietDetailMutation = useDeleteDietDetail();
+
   const {data: dietDetailData, isFetching: dietDetailIsFetching} =
     useListDietDetail(currentDietNo, {enabled: currentDietNo ? true : false});
-  console.log(dietDetailData);
 
   const checkProductIncluded = (productNo: string, menu: IProductData[]) => {
     let isIncluded = false;
@@ -76,6 +79,7 @@ const FoodDetail = () => {
       headerTitleContainerStyle: {
         flexDirection: 'row',
         alignItems: 'center',
+        headerBackVisible: false,
       },
       headerTitle: () => {
         return (
@@ -87,66 +91,65 @@ const FoodDetail = () => {
                   color: colors.textMain,
                   fontWeight: 'bold',
                 }}>
-                {food.productNm}
+                {item.productNm}
               </Text>
             </View>
           </>
         );
       },
     });
-  }, [navigation, food.productNm]);
+  }, [navigation, item.productNm]);
 
   const handlePressLikeBtn = () => {
     //TODO : 찜된 목록인지 알 수 있는 API나오면 좋아요기능 완성하기
-    // createProductMarkMutation.mutate(food.productNo);
-    // deleteProductMarkMutation.mutate(food.productNo);
+    // createProductMarkMutation.mutate(item.productNo);
+    // deleteProductMarkMutation.mutate(item.productNo);
   };
   if (createProductMarkMutation.isLoading) {
     return <Text>Loading</Text>;
   }
 
+  const isIncluded =
+    dietDetailData && checkProductIncluded(item.productNo, dietDetailData);
+
   const handlePressAddCartBtn = () => {
-    //dietNo =
-    // createDietDetailMutation.mutate({
-    //   dietNo: food.dietNo,
-    //   productNo: food.productNo,
-    // });
-
-    setAlertShow(true);
-  };
-  console.log(food);
-
-  const handlePressConfirm = () => {
-    createDietDetailMutation.mutate({
-      dietNo: currentDietNo,
-      productNo: food.productNo,
-    });
-    setAlertShow(false);
+    if (isIncluded) {
+      deleteDietDetailMutation.mutate({
+        dietNo: currentDietNo,
+        productNo: item.productNo,
+      });
+    } else {
+      createDietDetailMutation.mutate({
+        dietNo: currentDietNo,
+        productNo: item.productNo,
+        item,
+      });
+    }
   };
 
   const table: TableItem[] = [
     {
       name: 'calorie',
       column1: '칼로리',
-      column2: `${Math.ceil(Number(food.calorie))}`,
+      column2: `${Math.ceil(Number(item.calorie))}`,
       color: colors.main,
     },
     {
       name: 'carb',
       column1: '탄수화물',
-      column2: `${Math.ceil(Number(food.carb))}`,
+      column2: `${Math.ceil(Number(item.carb))}`,
       color: colors.blue,
     },
     {
       name: 'protein',
       column1: '단백질',
-      column2: `${Math.ceil(Number(food.protein))}`,
+      column2: `${Math.ceil(Number(item.protein))}`,
       color: colors.green,
     },
     {
       name: 'fat',
       column1: '지방',
-      column2: `${Math.ceil(Number(food.fat))}`,
+      column2: `${Math.ceil(Number(item.fat))}`,
       color: colors.orange,
     },
   ];
@@ -173,49 +176,47 @@ const FoodDetail = () => {
           <View>
             <FoodImageContainer
               source={{
-                uri: `${BASE_URL}${food.mainAttUrl}`,
+                uri: `${BASE_URL}${item.mainAttUrl}`,
               }}
             />
             <FoodImageBottom />
             <NutritionInImage>
-              {table.slice(0, 4).map((el, index) => {
+              {table.slice(0, 4).map(el => {
                 return (
-                  <>
-                    <View
-                      key={`${el.name}-${index}`}
+                  <View
+                    key={el.name}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      flex: 0.25,
+                    }}>
+                    <Dot
                       style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        flex: 0.25,
-                      }}>
-                      <Dot
-                        style={{
-                          backgroundColor: el.color,
-                          marginHorizontal: 8,
-                        }}
-                      />
-                      <Text style={{color: 'white', fontSize: 12}}>
-                        {el.column2}
-                      </Text>
-                    </View>
-                  </>
+                        backgroundColor: el.color,
+                        marginHorizontal: 8,
+                      }}
+                    />
+                    <Text style={{color: 'white', fontSize: 12}}>
+                      {el.column2}
+                    </Text>
+                  </View>
                 );
               })}
             </NutritionInImage>
           </View>
 
-          <SellerText style={{marginTop: 20}}>[{food.platformNm}]</SellerText>
-          <ProductName>{food.productNm}</ProductName>
+          <SellerText style={{marginTop: 20}}>[{item.platformNm}]</SellerText>
+          <ProductName>{item.productNm}</ProductName>
           <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
             <Col>
               <ShippingText>20000원 이상 무료배송 </ShippingText>
-              <ShippingText>최소수량: 2개</ShippingText>
+              <ShippingText>최소주문수량: 2개</ShippingText>
             </Col>
-            <Price>{food.price}원</Price>
+            <Price>{item.price}원</Price>
           </Row>
           <Row
             style={{
-              justifyContent: 'space-between',
+              justifyContent: 'flex-start',
             }}>
             {detailMenu.map((el, index) => {
               return (
@@ -250,27 +251,14 @@ const FoodDetail = () => {
             btnStyle={'activated'}
             style={{flex: 4}}
             onPress={handlePressAddCartBtn}>
-            <BtnText>현재끼니에 추가</BtnText>
+            {isIncluded ? (
+              <BtnText>현재끼니에서 제거</BtnText>
+            ) : (
+              <BtnText>현재끼니에 추가</BtnText>
+            )}
           </BtnCTA>
         </StickyFooter>
       </View>
-      <DAlert
-        alertShow={alertShow}
-        onCancel={() => setAlertShow(false)}
-        onConfirm={handlePressConfirm}
-        renderContent={() => (
-          <View
-            style={{
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text style={{fontSize: 18, color: colors.textMain}}>
-              현재 끼니에 추가하시겠습니까?
-            </Text>
-          </View>
-        )}
-      />
     </SafeAreaView>
   );
 };

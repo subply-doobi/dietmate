@@ -5,6 +5,43 @@ import {StyledProps} from '../../styles/styledConsts';
 import {SCREENWIDTH} from '../../constants/constants';
 import colors from '../../styles/colors';
 
+interface IDBottomSheet {
+  alertShow: boolean;
+  setAlertShow: React.Dispatch<React.SetStateAction<boolean>>;
+  renderContent: () => React.ReactElement;
+  onCancel: Function;
+  filterHeight: boolean;
+}
+const DBottomSheet = ({
+  alertShow,
+  setAlertShow,
+  renderContent,
+  onCancel,
+  filterHeight,
+}: IDBottomSheet) => {
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={alertShow}
+      onRequestClose={() => {
+        onCancel ? onCancel() : null;
+      }}>
+      <ModalBackGround
+        onPress={() => {
+          setAlertShow(false);
+        }}>
+        <PopUpContainer filterHeight={filterHeight} activeOpacity={1}>
+          <PopupIndicator />
+          <ContentContainer>{renderContent()}</ContentContainer>
+        </PopUpContainer>
+      </ModalBackGround>
+    </Modal>
+  );
+};
+
+export default DBottomSheet;
+
 const ModalBackGround = styled.TouchableOpacity`
   flex: 1;
   background-color: #000000a6;
@@ -13,7 +50,7 @@ const ModalBackGround = styled.TouchableOpacity`
 
 const PopUpContainer = styled.TouchableOpacity`
   width: 100%;
-  height: auto;
+  height: ${({filterHeight}) => (filterHeight ? '530px' : 'auto')}
   padding: 0px 16px 16px 16px;
   align-items: center;
   background-color: ${({backgroundColor}: StyledProps) =>
@@ -33,38 +70,3 @@ const PopupIndicator = styled.View`
 const ContentContainer = styled.View`
   width: 100%;
 `;
-
-interface IDBottomSheet {
-  alertShow: boolean;
-  setAlertShow: React.Dispatch<React.SetStateAction<boolean>>;
-  renderContent: () => React.ReactElement;
-  onCancel: Function;
-}
-const DBottomSheet = ({
-  alertShow,
-  setAlertShow,
-  renderContent,
-  onCancel,
-}: IDBottomSheet) => {
-  return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={alertShow}
-      onRequestClose={() => {
-        onCancel ? onCancel() : null;
-      }}>
-      <ModalBackGround
-        onPress={() => {
-          setAlertShow(false);
-        }}>
-        <PopUpContainer activeOpacity={1}>
-          <PopupIndicator />
-          <ContentContainer>{renderContent()}</ContentContainer>
-        </PopUpContainer>
-      </ModalBackGround>
-    </Modal>
-  );
-};
-
-export default DBottomSheet;

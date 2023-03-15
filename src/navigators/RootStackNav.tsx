@@ -10,6 +10,7 @@ import PaymentHistoryNav from './PaymentHistoryNav';
 import colors from '../styles/colors';
 import BackArrow from '../components/common/BackArrow';
 import {useNavigation} from '@react-navigation/native';
+
 const Stack = createNativeStackNavigator();
 
 const RootStackNav = () => {
@@ -36,6 +37,7 @@ const RootStackNav = () => {
             fontWeight: 'bold',
             color: colors.textMain,
           },
+          headerBackVisible: false,
           headerLeft: () => <BackArrow goBackFn={goBack} />,
         }}
       />

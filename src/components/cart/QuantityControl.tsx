@@ -3,8 +3,6 @@ import {IProductData} from '../../query/types/product';
 import styled from 'styled-components/native';
 import {TextMain} from '../../styles/styledConsts';
 import {SetStateAction, useState} from 'react';
-import {makePickerItem} from '../../util/numberPickerItem';
-import DropDownPicker from 'react-native-dropdown-picker';
 
 const QuantityControl = ({
   food,
@@ -15,11 +13,6 @@ const QuantityControl = ({
   setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
   setNumberPickerInfo: React.Dispatch<SetStateAction<any>>;
 }) => {
-  // state
-  const [pickerOpen, setPickerOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState(makePickerItem('5'));
-
   return (
     <QuantityControlBox
       onPress={() => {

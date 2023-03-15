@@ -13,6 +13,7 @@ import {setCurrentDietNo} from '../../stores/slices/cartSlice';
 import {
   useCreateDiet,
   useCreateDietDetail,
+  useGetDietDetailEmptyYn,
   useListDiet,
   useListDietDetail,
 } from '../../query/queries/diet';
@@ -29,6 +30,7 @@ const BottomMenuSelect = () => {
 
   // react-query
   const {data: dietData} = useListDiet();
+  const {data: dietEmptyData} = useGetDietDetailEmptyYn();
   const createDietMutation = useCreateDiet({
     onSuccess: data => {
       dispatch(setCurrentDietNo(data.dietNo));
@@ -43,11 +45,11 @@ const BottomMenuSelect = () => {
   const NoOfDiet = dietData?.length;
   const addAlertStatus =
     NoOfDiet === undefined
-      ? 'error'
-      : checkEmptyMenuIndex(dietData)
-      ? 'empty'
+      ? 'noData'
       : NoOfDiet >= 3
       ? 'limit'
+      : dietEmptyData?.emptyYn === 'Y'
+      ? 'empty'
       : 'possible';
 
   const onCreateDiet = () => {
@@ -75,7 +77,9 @@ const BottomMenuSelect = () => {
               <BtnSmall
                 isActivated={isActivated}
                 style={{marginBottom: 8}}
-                onPress={() => dispatch(setCurrentDietNo(menu.dietNo))}>
+                onPress={() => {
+                  dispatch(setCurrentDietNo(menu.dietNo));
+                }}>
                 <BtnSmallText isActivated={isActivated}>
                   {menu?.dietSeq}
                 </BtnSmallText>

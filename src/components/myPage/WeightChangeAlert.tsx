@@ -69,7 +69,7 @@ const WeightChangeAlert = ({
   setAutoCalculate: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   useEffect(() => {
-    handleSubmit(() => console.log('handleSubmit!'))();
+    handleSubmit(() => {})();
   }, []);
   return (
     <Container>

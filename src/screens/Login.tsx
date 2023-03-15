@@ -7,35 +7,37 @@ import {useGetBaseLine} from '../query/queries/baseLine';
 import {validateToken} from '../query/queries/token';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../stores/store';
+import {useNavigation} from '@react-navigation/native';
 
-const Login = ({navigation: {navigate}}: NavigationProps) => {
+const Login = () => {
+  const navigation = useNavigation();
+  const {navigate, reset} = navigation;
+
   //redux
-  const dispatch = useDispatch();
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
-
   //유저값 check 후 화면 이동
   const {data, isLoading} = useGetBaseLine();
-
-  const signInWithKakao = useCallback(async (): Promise<void> => {
+  const signInWithKakao = async (): Promise<void> => {
     const isTokenValid = await validateToken();
-
     isTokenValid && !isLoading
-      ? Object.keys(data).length === 0
+      ? data && data.constructor === Object && Object.keys(data).length === 0
         ? navigate('InputNav', {screen: 'FirstInput'})
-        : navigate('BottomTabNav', {screen: 'Home'})
+        : reset({
+            index: 0,
+            routes: [
+              {
+                name: 'BottomTabNav',
+                params: {
+                  screen: 'Home',
+                },
+              },
+            ],
+          })
       : navigate('Login', {screen: 'Login'});
-  }, [isLoading, data, navigate]);
-
+  };
   useEffect(() => {
     signInWithKakao();
-  }, [signInWithKakao]);
+  }, []);
 
-  // const signInWithKakao = async (): Promise<void> => {
-  //   const {isTokenValid} = await validateToken();
-  //   if (isTokenValid) {
-  //     navigate('InputNav', {screen: 'FirstInput'});
-  //   }
-  // };
   return (
     <Container>
       <Box>

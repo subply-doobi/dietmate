@@ -11,10 +11,13 @@ interface Props {
 }
 const NutrientPart = ({table}: Props) => {
   const userProfileQuery = useUserProfile();
-  const {isLoading, data} = userProfileQuery;
+  const {isLoading, data, isError, error} = userProfileQuery;
 
   if (isLoading) {
     return <Text>Loading</Text>;
+  }
+  if (isError) {
+    console.error(error);
   }
 
   return (
@@ -44,10 +47,13 @@ interface RenderProps {
 
 function RenderItem({item}: RenderProps) {
   const userBaseLine = useGetBaseLine();
-  const {data, isLoading} = userBaseLine;
+  const {data, isLoading, error, isError} = userBaseLine;
 
   if (isLoading) {
     return <Text>Loading...</Text>;
+  }
+  if (isError) {
+    console.error(error);
   }
 
   return (

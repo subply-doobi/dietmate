@@ -30,69 +30,6 @@ import {
 } from '../../constants/constants';
 import {Controller, useWatch} from 'react-hook-form';
 
-const AddressBox = styled.View`
-  flex-direction: row;
-  width: 100%;
-  height: 58px;
-  padding-top: 24px;
-`;
-
-const SelectContainer = styled.TouchableOpacity`
-  flex: 1;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const AddressBase = styled(TextSub)`
-  font-size: 14px;
-  margin-left: 8px;
-`;
-const AddressDetail = styled(TextMain)`
-  font-size: 16px;
-  margin-left: 8px;
-  margin-top: 2px;
-`;
-
-const EditBtn = styled.TouchableOpacity`
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-`;
-
-const CheckIcon = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-const EditIcon = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-const PlusSquareIcon = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const AddressAddBtn = styled(BtnCTA)`
-  height: 48px;
-  margin-top: 16px;
-`;
-const AddressAddBtnText = styled(TextSub)`
-  font-size: 14px;
-  margin-left: 8px;
-`;
-
-const ContentTitle = styled(TextMain)`
-  font-size: 18px;
-  font-weight: bold;
-`;
-const GuideText = styled(TextMain)`
-  font-size: 16px;
-`;
-
-const Checkbox = styled.TouchableOpacity`
-  margin-left: 8px;
-`;
-
 interface IAddress {
   control: any;
   handleSubmit: any;
@@ -112,8 +49,6 @@ const Address = ({
     (state: RootState) => state.order,
   );
   // 렌더링이 6번되는데....
-  console.log('Address: selectedId: ', selectedAddressId);
-  console.log('orderInfo: ', orderInfo);
 
   // navigation
   const navigation = useNavigation();
@@ -289,3 +224,66 @@ const Address = ({
 };
 
 export default Address;
+
+const AddressBox = styled.View`
+  flex-direction: row;
+  width: 100%;
+  height: 58px;
+  padding-top: 24px;
+`;
+
+const SelectContainer = styled.TouchableOpacity`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const AddressBase = styled(TextSub)`
+  font-size: 14px;
+  margin-left: 8px;
+`;
+const AddressDetail = styled(TextMain)`
+  font-size: 16px;
+  margin-left: 8px;
+  margin-top: 2px;
+`;
+
+const EditBtn = styled.TouchableOpacity`
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CheckIcon = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+const EditIcon = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+const PlusSquareIcon = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const AddressAddBtn = styled(BtnCTA)`
+  height: 48px;
+  margin-top: 16px;
+`;
+const AddressAddBtnText = styled(TextSub)`
+  font-size: 14px;
+  margin-left: 8px;
+`;
+
+const ContentTitle = styled(TextMain)`
+  font-size: 18px;
+  font-weight: bold;
+`;
+const GuideText = styled(TextMain)`
+  font-size: 16px;
+`;
+
+const Checkbox = styled.TouchableOpacity`
+  margin-left: 8px;
+`;
