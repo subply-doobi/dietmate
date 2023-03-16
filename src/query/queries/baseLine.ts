@@ -30,7 +30,7 @@ export const useGetBaseLine = (options?: IQueryOptions) => {
     // enabled,
     onSuccess: data => {},
     onError: e => {
-      console.log(e);
+      console.log('useGetBaseLine error:', e);
     },
   });
 };

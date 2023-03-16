@@ -3,13 +3,14 @@ import {IProductData} from '../../query/types/product';
 import styled from 'styled-components/native';
 import {TextMain} from '../../styles/styledConsts';
 import {SetStateAction, useState} from 'react';
+import {IDietDetailProductData} from '../../query/types/diet';
 
 const QuantityControl = ({
   food,
   setNumberPickerShow,
   setNumberPickerInfo,
 }: {
-  food: IProductData;
+  food: IDietDetailProductData;
   setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
   setNumberPickerInfo: React.Dispatch<SetStateAction<any>>;
 }) => {
@@ -21,10 +22,9 @@ const QuantityControl = ({
           productNo: food.productNo,
           productNm: food.productNm,
           price: food.price,
-          // TBD | 서버에서 정보 더 가져와야함
-          minQty: '1',
-          freeShippingPrice: '30000',
-          shippingPrice: '3000',
+          minQty: food.minQty,
+          freeShippingPrice: food.freeShippingPrice,
+          shippingPrice: food.shippingPrice,
         });
         setNumberPickerShow(true);
       }}>

@@ -65,7 +65,7 @@ const renderAgeInput = (
 const renderHeightInput = (
   {field: {onChange, onBlur, value}}: any,
   userInfo1Refs?: React.MutableRefObject<any[]>,
-  scrollRef?: any, // TBD | scrollView ref type?!
+  scrollRef?: any,
 ) => {
   return (
     <>

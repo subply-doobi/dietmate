@@ -137,6 +137,9 @@ export const useListDiet = (options?: IQueryOptions) => {
     onSuccess: data => {
       options?.onSuccess && options.onSuccess(data);
     },
+    onError: e => {
+      console.log('useListDiet error: ', e);
+    },
   });
 };
 
@@ -147,6 +150,9 @@ export const useListDietDetail = (dietNo: string, options?: IQueryOptions) => {
     queryFn: () => queryFn(`${LIST_DIET_DETAIL}/${dietNo}`),
     enabled,
     onSuccess: data => {},
+    onError: e => {
+      console.log('useListDietDetail error:', e);
+    },
   });
 };
 
@@ -157,6 +163,9 @@ export const useListDietDetailAll = (options?: IQueryOptions) => {
     queryFn: () => queryFn(LIST_DIET_DETAIL_ALL),
     enabled,
     onSuccess: data => {},
+    onError: e => {
+      console.log('useListDietDetailAll error:', e);
+    },
   });
 };
 
@@ -167,6 +176,9 @@ export const useGetDietDetailEmptyYn = (options?: IQueryOptions) => {
     queryFn: () => queryFn(GET_DIET_DETAIL_EMPTY_YN),
     enabled,
     onSuccess: data => {},
+    onError: e => {
+      console.log('useGetDietDetailEmptyYn error:', e);
+    },
   });
 };
 

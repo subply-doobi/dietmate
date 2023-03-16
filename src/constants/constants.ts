@@ -177,7 +177,6 @@ export const validationRules: IValidationRules = {
         '300~1500 kcal 사이로 입력해주세요',
     },
   },
-  // TBD | carbManual -> carb로 고쳐서 mypage에서 validationRulesByNutr 단계 없애기
   carbManual: {
     maxlength: 4,
     validate: {
@@ -214,7 +213,6 @@ export const validationRules: IValidationRules = {
 export const kakaoAppAdminKey = 'f1fddabbeb50a2054c9b82ced4017b11';
 
 // type
-// TBD | react navigation ts 적용 아직 모름
 export interface NavigationProps {
   navigation?: {
     navigate: Function;

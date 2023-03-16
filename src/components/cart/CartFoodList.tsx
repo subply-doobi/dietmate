@@ -172,7 +172,7 @@ const CartFoodList = ({
         onCancel={() => {
           setDeleteAlertShow(false);
         }}
-        renderContent={() => <DeleteAlertContent dietSeq={'해당식품을'} />}
+        renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
       />
       <DBottomSheet
         alertShow={numberPickerShow}

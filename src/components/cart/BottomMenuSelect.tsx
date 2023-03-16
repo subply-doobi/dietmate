@@ -22,6 +22,7 @@ import CreateLimitAlertContent from '../common/alert/CreateLimitAlertContent';
 import colors from '../../styles/colors';
 import {checkEmptyMenuIndex} from '../../util/checkEmptyMenu';
 import MenuEmptyAlertContent from '../common/alert/MenuEmptyAlertContent';
+import {getDietAddStatus} from '../../util/getDietAddStatus';
 
 const BottomMenuSelect = () => {
   // redux
@@ -41,21 +42,12 @@ const BottomMenuSelect = () => {
   // state
   const [createAlertShow, setCreateAlertShow] = useState(false);
 
-  // TBD | MenuSelect랑 겹치는 기능  //
-  const NoOfDiet = dietData?.length;
-  const addAlertStatus =
-    NoOfDiet === undefined
-      ? 'noData'
-      : NoOfDiet >= 3
-      ? 'limit'
-      : dietEmptyData?.emptyYn === 'Y'
-      ? 'empty'
-      : 'possible';
+  // MenuSelect랑 겹치는 기능  //
+  const addAlertStatus = getDietAddStatus(dietData, dietEmptyData);
 
   const onCreateDiet = () => {
     if (addAlertStatus === 'possible') {
       createDietMutation.mutate();
-      // TBD | 여기서 빈 끼니 있는지도 확인
       return;
     }
     setCreateAlertShow(true);

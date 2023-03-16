@@ -39,6 +39,8 @@ import {
 import {useGetBaseLine} from '../query/queries/baseLine';
 import CartSummary from '../components/cart/CartSummary';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import DAlert from '../components/common/alert/DAlert';
+import DeleteAlertContent from '../components/common/alert/DeleteAlertContent';
 
 const Cart = () => {
   // redux
@@ -57,10 +59,17 @@ const Cart = () => {
   const [selectedFoods, setSelectedFoods] = useState<{[key: string]: string[]}>(
     {},
   );
+  const [deleteModalShow, setDeleteModalShow] = useState(false);
 
   // etc
   // navigation
   const navigation = useNavigation();
+
+  useEffect(() => {
+    selectedFoods[currentDietNo]?.length !== dietDetailData?.length &&
+      setCheckAllClicked(false);
+  }, [selectedFoods]);
+
   // 현재 끼니의 식품들이 목표섭취량에 부합하는지 확인
   // empty/notEnough/exceed 에 따라 autoMenuBtn 디자인이 다름
   const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
@@ -88,12 +97,10 @@ const Cart = () => {
 
     reGroupedProducts?.forEach(seller => {
       const sellerProductPrice = sumUpPrice(seller);
-      // TBD | 아직 freeShippingPrice 서버에서 값 못받아서 수기로
-      // const sellershippingPrice =
-      //   sellerProductPrice < seller[0].freeShippingPrice
-      //     ? seller[0].shippingPrice
-      //     : 0;
-      const sellershippingPrice = sellerProductPrice < 30000 ? 3000 : 0;
+      const sellershippingPrice =
+        sellerProductPrice < parseInt(seller[0].freeShippingPrice)
+          ? parseInt(seller[0].shippingPrice)
+          : 0;
       totalProductPrice += sellerProductPrice;
       totalShippingPrice += sellershippingPrice;
     });
@@ -110,7 +117,6 @@ const Cart = () => {
     setSelectedFoods({[currentDietNo]: []});
   };
 
-  // TBD | 에러처리는 어떻게??
   const deleteSelected = () => {
     setCheckAllClicked(false);
     Promise.all(
@@ -154,10 +160,24 @@ const Cart = () => {
 
             <SelectAllText>전체 선택</SelectAllText>
           </SelectAllBox>
-          <BtnSmall onPress={deleteSelected}>
+          <BtnSmall
+            onPress={() =>
+              selectedFoods[currentDietNo]?.length >= 1
+                ? setDeleteModalShow(true)
+                : {}
+            }>
             <BtnSmallText isActivated={true}>선택 삭제</BtnSmallText>
           </BtnSmall>
         </SelectedDeleteRow>
+        <DAlert
+          alertShow={deleteModalShow}
+          confirmLabel="삭제"
+          onConfirm={deleteSelected}
+          onCancel={() => setDeleteModalShow(false)}
+          renderContent={() => (
+            <DeleteAlertContent deleteText="선택된 식품을" />
+          )}
+        />
 
         {/* 끼니 카드 */}
         <Card>

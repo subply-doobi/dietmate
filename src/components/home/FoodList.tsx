@@ -119,7 +119,7 @@ const FoodList = ({item, dietDetailData}: IFoodList) => {
         onCancel={() => {
           setDeleteAlertShow(false);
         }}
-        renderContent={() => <DeleteAlertContent dietSeq={'해당식품을'} />}
+        renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
       />
     </Container>
   );

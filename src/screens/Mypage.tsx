@@ -26,7 +26,6 @@ import {
 import {useForm, useWatch} from 'react-hook-form';
 import WeightChangeAlert from '../components/myPage/WeightChangeAlert';
 import {updateUserInfo} from '../stores/slices/userInfoSlice';
-import {changeNutrByWeight} from '../util/alertActions';
 import {useGetBaseLine, useUpdateBaseLine} from '../query/queries/baseLine';
 
 interface INavigateByBtnId {
