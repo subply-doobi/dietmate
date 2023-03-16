@@ -4,7 +4,6 @@ import styled from 'styled-components/native';
 
 const FilterHeader = props => {
   const {onPress, setFilterIndex} = props;
-  console.log(props);
   return (
     <>
       <Row>

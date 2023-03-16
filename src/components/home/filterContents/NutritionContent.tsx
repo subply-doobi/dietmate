@@ -13,7 +13,8 @@ import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
 import DSlider from '../../common/slider/DSlider';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-const NutritionContent = () => {
+const NutritionContent = props => {
+  console.log(props.setNutritionParam);
   const [clicked, setClicked] = useState(false);
   const [reset, setReset] = useState(false);
   const [calorieValue, setCalorieValue] = useState<number[]>([400, 800]);
@@ -22,6 +23,7 @@ const NutritionContent = () => {
   const [fatValue, setFatValue] = useState<number[]>([0, 40]);
   let kcal = 'kcal';
   let g = 'g';
+  console.log(calorieValue);
   return (
     <SafeAreaView>
       <SliderTitle>칼로리</SliderTitle>

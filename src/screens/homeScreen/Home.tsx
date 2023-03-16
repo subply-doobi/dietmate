@@ -39,8 +39,10 @@ const Home = () => {
   const [filterIndex, setFilterIndex] = useState(0);
   const [sortParam, setSortParam] = useState('');
   const [sortImageToggle, setSortImageToggle] = useState(0);
+  const [filterCategoryParam, setFilterCategoryParam] = useState('');
+  console.log('HOME/FILTERCATEGORYPARAM:', filterCategoryParam);
   // console.log('HOME/sortParam:', sortParam);
-
+  //Home => filterModalContent => categoryContent
   //sortParam 안에 DSC면 아래모양, ASC면 위모양 , 없으면 기본모양
   const checkSortImageToggle = () => {
     sortParam.includes('DESC')
@@ -57,7 +59,6 @@ const Home = () => {
   const dispatch = useDispatch();
   const {listTitle} = useSelector((state: RootState) => state.filter);
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
-
   // react-query
   const {
     data: tData,
@@ -167,7 +168,13 @@ const Home = () => {
         <DBottomSheet
           alertShow={filterModalShow}
           setAlertShow={setFilterModalShow}
-          renderContent={() => <FilterModalContent filterIndex={filterIndex} />}
+          renderContent={() => (
+            <FilterModalContent
+              closeModal={setSortModalShow}
+              setFilterCategoryParam={setFilterCategoryParam}
+              filterIndex={filterIndex}
+            />
+          )}
           onCancel={() => {
             console.log('oncancel');
           }}

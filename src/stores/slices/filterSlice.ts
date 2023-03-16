@@ -7,6 +7,7 @@ export interface IFilterState {
   filterContents: any[];
   loading: string;
   filterList: any[];
+  filterParams: string[];
 }
 
 const initialState: IFilterState = {
@@ -14,6 +15,7 @@ const initialState: IFilterState = {
   filterContents: [],
   loading: '',
   filterList: [],
+  filterParams: [],
 };
 // const getRefreshToken = () => {
 //   let refreshToken = AsyncStorage.getItem('REFRESH_TOKEN');
@@ -43,6 +45,9 @@ const filterSlice = createSlice({
     setListTitle: (state, action: PayloadAction<string>) => {
       state.listTitle = action.payload;
     },
+    setFilterParam: (state, action: PayloadAction<string[]>) => {
+      state.filterParams = action.payload;
+    },
     // clickFilter: (state, action) => {
     //   state.filterList = action.payload;
     // },
@@ -65,4 +70,4 @@ const filterSlice = createSlice({
 });
 
 export default filterSlice.reducer;
-export const {setListTitle} = filterSlice.actions;
+export const {setListTitle, setFilterParam} = filterSlice.actions;
