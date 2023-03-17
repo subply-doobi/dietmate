@@ -40,10 +40,10 @@ const Home = () => {
   const [sortParam, setSortParam] = useState('');
   const [sortImageToggle, setSortImageToggle] = useState(0);
   const [filterCategoryParam, setFilterCategoryParam] = useState('');
-  console.log('HOME/FILTERCATEGORYPARAM:', filterCategoryParam);
+  const [filterParams, setFilterParams] = useState({});
+  // console.log('HOME/FILTERCATEGORYPARAM:', filterParams);
   // console.log('HOME/sortParam:', sortParam);
-  //Home => filterModalContent => categoryContent
-  //sortParam 안에 DSC면 아래모양, ASC면 위모양 , 없으면 기본모양
+
   const checkSortImageToggle = () => {
     sortParam.includes('DESC')
       ? setSortImageToggle(1)
@@ -60,12 +60,19 @@ const Home = () => {
   const {listTitle} = useSelector((state: RootState) => state.filter);
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
   // react-query
+  // const filter.Calorie = params?.filter?.Calorie ? 'Calorie',params?.filter?.Calorie[0],params?.filter?.Calorie[1] : ''
+
   const {
     data: tData,
     refetch: refetchProduct,
     isFetching: productIsFetching,
   } = useListProduct(
-    {dietNo: currentDietNo, categoryCd: '', sort: sortParam},
+    {
+      dietNo: currentDietNo,
+      categoryCd: filterParams.categoryParam,
+      sort: sortParam,
+      filter: {filterParams},
+    },
     {
       enabled: currentDietNo ? true : false,
       onSuccess: () => {
@@ -75,7 +82,7 @@ const Home = () => {
   );
   useEffect(() => {
     currentDietNo && refetchProduct();
-  }, [sortParam]);
+  }, [sortParam, filterParams]);
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {
     enabled: currentDietNo ? true : false,
   });
@@ -170,8 +177,8 @@ const Home = () => {
           setAlertShow={setFilterModalShow}
           renderContent={() => (
             <FilterModalContent
-              closeModal={setSortModalShow}
-              setFilterCategoryParam={setFilterCategoryParam}
+              closeModal={setFilterModalShow}
+              setFilterParams={setFilterParams}
               filterIndex={filterIndex}
             />
           )}

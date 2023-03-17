@@ -7,23 +7,27 @@ import {SetStateAction} from 'react';
 interface IDSlider {
   sliderValue: number[];
   setSliderValue: React.Dispatch<SetStateAction<number[]>>;
+  onSlidingComplete: React.Dispatch;
   minimumValue: number;
   maximumValue: number;
   step: number;
   sliderWidth?: number;
-  kcal: string;
-  g: string;
+  kcal?: string;
+  g?: string;
+  text?: string;
 }
 /** sliderWidth만 선택사항. props 안넘기면 width: 100% 적용 */
 const DSlider = ({
   sliderValue,
   setSliderValue,
+  onSlidingComplete,
   minimumValue,
   maximumValue,
   step,
   sliderWidth,
   kcal,
   g,
+  text,
 }: IDSlider) => {
   const width = sliderWidth ? sliderWidth : '100%';
   return (
@@ -32,6 +36,7 @@ const DSlider = ({
         <Slider
           value={sliderValue}
           onValueChange={value => Array.isArray(value) && setSliderValue(value)}
+          onSlidingComplete={onSlidingComplete}
           minimumValue={minimumValue}
           maximumValue={maximumValue}
           step={step}

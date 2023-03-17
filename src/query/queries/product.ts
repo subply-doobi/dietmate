@@ -6,8 +6,11 @@ import {
   DELETE_PRODUCT_MARK,
   CREATE_PRODUCT_AUTO,
   LIST_PRODUCT,
+  FILTER,
 } from './urls';
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {validateToken} from './token';
+
+import {useMutation, useQueries, useQuery} from '@tanstack/react-query';
 import {mutationFn, queryFn} from './requestFn';
 import {DIET_DETAIL, PRODUCT, PRODUCT_AUTO} from '../keys';
 import {IMutationOptions, IQueryOptions} from '../types/common';
@@ -84,12 +87,34 @@ export const useListProduct = (
   const categoryCd = params?.categoryCd ? params?.categoryCd : '';
   const sort = params?.sort ? params?.sort : '';
   const filter = params?.filter ? params?.filter : '';
+  const calorie = filter.filterParams?.nutritionParam?.calorieParam
+    ? filter.filterParams?.nutritionParam?.calorieParam
+    : '';
+  const protein = filter.filterParams?.nutritionParam?.proteinParam
+    ? filter.filterParams?.nutritionParam?.proteinParam
+    : '';
+  const carb = filter.filterParams?.nutritionParam?.carbParam
+    ? filter.filterParams?.nutritionParam?.carbParam
+    : '';
+  const fat = filter.filterParams?.nutritionParam?.fatParam
+    ? filter.filterParams?.nutritionParam?.fatParam
+    : '';
+  const price = filter.filterParams?.priceParam
+    ? filter.filterParams?.priceParam
+    : '';
+  const cateogryParam = categoryCd === '' ? '' : categoryCd;
+  const calorieParam = calorie ? `Calorie,${calorie[0]},${calorie[1]}` : '';
+  const carbParam = carb ? `Carb,${carb[0]},${carb[1]}` : '';
+  const proteinParam = protein ? `Protein,${protein[0]},${protein[1]}` : '';
+  const priceParam = price ? `Price,${price[0]},${price[1]}` : '';
+
+  // console.log('product:', priceParam);
 
   return useQuery({
     queryKey: [PRODUCT],
     queryFn: () =>
       queryFn(
-        `${LIST_PRODUCT}/${dietNo}?searchText=${searchText}&categoryCd=${categoryCd}&sort=${sort}&filter=${filter}`,
+        `${LIST_PRODUCT}/${dietNo}?searchText=${searchText}&categoryCd=${cateogryParam}&sort=${sort}&filter=${calorieParam}|${carbParam}|${priceParam}`,
       ),
     enabled,
     onSuccess: data => {
@@ -98,6 +123,41 @@ export const useListProduct = (
     onError: e => {
       console.log('useListProduct Error: ', e);
     },
+  });
+};
+
+export const useFilterRange = filtertype => {
+  return useQuery({
+    queryKey: ['filterRange'],
+    queryFn: () => queryFn(`${FILTER}/${filtertype}`),
+    onSuccess: data => {},
+    onError: e => {
+      console.log('useFilterRange Error: ', e);
+    },
+  });
+};
+export const useTest = async () => {
+  const {isTokenValid, validToken} = await validateToken();
+  const requestConfig = {headers: {authorization: `Bearer ${validToken}`}};
+  useQueries({
+    queries: [
+      {
+        queryKey: ['a'],
+        queryFn: () => axios.get(`${FILTER}/Protein`, requestConfig),
+        onError: e => {
+          console.log('a Error: ', e);
+        },
+        suspense: true,
+      },
+      {
+        queryKey: ['b'],
+        queryFn: () => axios.get(`${FILTER}/fat`, requestConfig),
+        onError: e => {
+          console.log('b Error: ', e);
+        },
+        suspense: true,
+      },
+    ],
   });
 };
 

@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useMemo} from 'react';
+import React, {useState, useCallback, useMemo, useEffect} from 'react';
 import styled from 'styled-components/native';
 import {
   Row,
@@ -7,24 +7,34 @@ import {
   BtnBottomCTA,
   TextMain,
 } from '../../styles/styledConsts';
+import {SafeAreaView} from 'react-native-safe-area-context';
+
 import colors from '../../styles/colors';
 import {useWeightPurposeCode, useFilterCode} from '../../query/queries/code';
 import {useListProduct} from '../../query/queries/product';
 import {useListCategory, useCountCategory} from '../../query/queries/category';
 import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
 import DSlider from '../common/slider/DSlider';
+
 import CategoryContent from './filterContents/CategoryContent';
 import NutritionContent from './filterContents/NutritionContent';
 import PriceContent from './filterContents/PriceContent';
+import AutoDietContent from './filterContents/AutoDietContent';
 
 const FilterModalContent = props => {
-  const {filterIndex} = props;
-  const {setFilterCategoryParam} = props;
+  const {filterIndex, closeModal, setFilterParams} = props;
   const [clicked, setClicked] = useState(filterIndex);
   const [categoryParam, setCategoryParam] = useState('');
   const [nutritionParam, setNutritionParam] = useState('');
   const [priceParam, setPriceParam] = useState('');
-  console.log('filterModalContent:', categoryParam);
+  const params = {
+    categoryParam,
+    nutritionParam,
+    priceParam,
+  };
+  console.log('categoryParam:', categoryParam);
+  console.log('nutritionParam:', nutritionParam);
+  console.log('priceParam:', priceParam);
   const resetType = [
     {
       text: '카테고리 초기화',
@@ -54,9 +64,7 @@ const FilterModalContent = props => {
       },
     },
   ];
-  const AutoDietContent = () => {
-    return <Text>auto</Text>;
-  };
+
   const FilterHeaderText = () => {
     return (
       <>
@@ -110,9 +118,12 @@ const FilterModalContent = props => {
         categoryParam={categoryParam}
       />
     ) : i.index === 1 ? (
-      <NutritionContent setNutritionParam={setNutritionParam} />
+      <NutritionContent
+        setNutritionParam={setNutritionParam}
+        nutritionParam={nutritionParam}
+      />
     ) : i.index === 2 ? (
-      <PriceContent />
+      <PriceContent setPriceParam={setPriceParam} priceParam={priceParam} />
     ) : i.index === 3 ? (
       <AutoDietContent />
     ) : null;
@@ -138,7 +149,10 @@ const FilterModalContent = props => {
             style={{marginTop: 5}}
             btnStyle={'activated'}
             width="180"
-            onPress={resetType[clicked].onPress}>
+            onPress={() => {
+              setFilterParams(params);
+              closeModal(false);
+            }}>
             <BottomText>확인</BottomText>
           </BtnCTA>
         </BottomRow>

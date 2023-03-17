@@ -1,23 +1,31 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components/native';
 import {Row, TextMain} from '../../../styles/styledConsts';
+import {useFilterRange, useTest} from '../../../query/queries/product';
 
 import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
 import DSlider from '../../common/slider/DSlider';
 
-const PriceContent = () => {
-  const [sliderValue, setSliderValue] = useState<number[]>([4000, 12000]);
+const PriceContent = props => {
+  const priceRange = useFilterRange('price');
+  const {data} = priceRange;
+  const [priceValue, setPriceValue] = useState<number[]>([0, 25000]);
+  const {setPriceParam, priceParam} = props;
+  useEffect(() => {
+    priceParam && setPriceValue(priceParam);
+  }, [priceParam]);
 
   return (
     <ScrollView>
       <SliderTitle>가격</SliderTitle>
       <DSlider
-        sliderValue={sliderValue}
-        setSliderValue={setSliderValue}
-        minimumValue={4000}
-        maximumValue={12000}
-        step={1000}
+        sliderValue={priceValue}
+        setSliderValue={setPriceValue}
+        minimumValue={700}
+        maximumValue={25000}
+        step={500}
         sliderWidth={SLIDER_WIDTH}
+        onSlidingComplete={() => setPriceParam(priceValue)}
       />
     </ScrollView>
   );
