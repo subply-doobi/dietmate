@@ -1,12 +1,9 @@
 import styled from 'styled-components/native';
 import {BtnCTA, BtnText} from '../styles/styledConsts';
 import colors from '../styles/colors';
-import {NavigationProps} from '../constants/constants';
 import React, {useEffect, useCallback} from 'react';
 import {useGetBaseLine} from '../query/queries/baseLine';
 import {validateToken} from '../query/queries/token';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../stores/store';
 import {useNavigation} from '@react-navigation/native';
 
 const Login = () => {

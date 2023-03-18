@@ -160,9 +160,6 @@ const ProductNm = styled(TextMain)`
 const FreeShippingPriceText = styled(TextMain)`
   font-size: 14px;
 `;
-const CurrentPriceText = styled(TextMain)`
-  font-size: 14px;
-`;
 
 const MinQtyText = styled(TextMain)`
   font-size: 14px;
@@ -187,6 +184,6 @@ const BtnPlusMinus = styled.TouchableOpacity`
 `;
 
 const BtnImage = styled.Image`
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
 `;

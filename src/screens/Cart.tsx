@@ -119,6 +119,7 @@ const Cart = () => {
 
   const deleteSelected = () => {
     setCheckAllClicked(false);
+    setDeleteModalShow(false);
     Promise.all(
       selectedFoods[currentDietNo]?.map(productNo =>
         deleteDietDetailMutation.mutateAsync({

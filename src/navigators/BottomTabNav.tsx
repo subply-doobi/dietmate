@@ -1,5 +1,3 @@
-import {View, Text} from 'react-native';
-import React from 'react';
 import styled from 'styled-components/native';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -9,10 +7,8 @@ import Cart from '../screens/Cart';
 import colors from '../styles/colors';
 import BackArrow from '../components/common/BackArrow';
 import Home from '../screens/homeScreen/Home';
-import {NavigationProps} from '../constants/constants';
 import {useNavigation} from '@react-navigation/native';
 import {useListDietDetailAll} from '../query/queries/diet';
-import DTooltip from '../components/common/DTooltip';
 
 const Tab = createBottomTabNavigator();
 

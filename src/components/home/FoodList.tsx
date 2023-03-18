@@ -1,31 +1,22 @@
-import {View, Text, Image} from 'react-native';
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import colors from '../../styles/colors';
 import {Col, Row, TextMain, TextSub} from '../../styles/styledConsts';
 import {BASE_URL} from '../../query/queries/urls';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {RootState} from '../../stores/store';
-import {NavigationProps} from '../../constants/constants';
 import {SCREENWIDTH} from '../../constants/constants';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
-  useListDietDetail,
 } from '../../query/queries/diet';
 import {IProductData} from '../../query/types/product';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import {commaToNum} from '../../util/sumUp';
 import {useNavigation} from '@react-navigation/native';
-import {addNutr, minusNutr} from '../../stores/slices/cartSlice';
 
-interface IFoodList extends NavigationProps {
-  item: IProductData;
-  dietDetailData: IProductData[];
-}
-
-const FoodList = ({item, dietDetailData}: IFoodList) => {
+const FoodList = ({item}: {item: IProductData}) => {
   const navigation = useNavigation();
   // redux
   const {currentDietNo} = useSelector((state: RootState) => state.cart);

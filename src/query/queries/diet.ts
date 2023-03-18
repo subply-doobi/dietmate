@@ -126,7 +126,6 @@ export const useCreateDietDetail = () => {
 };
 
 // GET //
-
 export const useListDiet = (options?: IQueryOptions) => {
   const enabled = options?.enabled ?? true;
   const additionalQK = options?.additionalQuerykey ?? [];
