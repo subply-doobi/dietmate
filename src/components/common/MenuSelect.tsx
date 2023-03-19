@@ -139,7 +139,7 @@ export default MenuSelect;
 const SelectContainer = styled.View`
   position: absolute;
   top: 48px;
-  left: ${({center}: {center?: boolean}) => (center ? `32%` : `16px`)};
+  left: ${({center}: {center?: boolean}) => (center ? '32%' : '16px')};
   width: 144px;
   background-color: ${colors.white};
   border-radius: 3px;

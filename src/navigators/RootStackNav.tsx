@@ -38,6 +38,7 @@ const RootStackNav = () => {
             fontWeight: 'bold',
             color: colors.textMain,
           },
+          headerShadowVisible: false,
           headerBackVisible: false,
           headerLeft: () => <BackArrow goBackFn={goBack} />,
           headerRight: () => {

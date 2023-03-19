@@ -40,11 +40,14 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {IProductData} from '../../query/types/product';
 import {useSelector} from 'react-redux';
 import {SCREENWIDTH} from '../../constants/constants';
+import {useGetBaseLine} from '../../query/queries/baseLine';
+import {commaToNum} from '../../util/sumUp';
 
 export interface TableItem {
   name: string;
   column1: string;
   column2: string;
+  rate?: string;
   color?: string;
 }
 
@@ -59,7 +62,7 @@ const FoodDetail = () => {
   const deleteProductMarkMutation = useDeleteProductMark();
   const createDietDetailMutation = useCreateDietDetail();
   const deleteDietDetailMutation = useDeleteDietDetail();
-
+  const {data: userData} = useGetBaseLine();
   const {data: dietDetailData, isFetching: dietDetailIsFetching} =
     useListDietDetail(currentDietNo, {enabled: currentDietNo ? true : false});
 
@@ -73,7 +76,7 @@ const FoodDetail = () => {
     }
     return isIncluded;
   };
-  console.log(SCREENWIDTH);
+
   //TODO : route.params.item 타입 관련 해결 및 만약 null값일 시 에러처리
   useEffect(() => {
     navigation.setOptions({
@@ -130,31 +133,87 @@ const FoodDetail = () => {
       });
     }
   };
-
+  console.log(userData);
   const table: TableItem[] = [
     {
       name: 'calorie',
       column1: '칼로리',
-      column2: `${Math.ceil(Number(item.calorie))}`,
+      column2: `${Math.ceil(Number(item.calorie))} g`,
+      rate: `${Math.ceil(
+        (Number(item.calorie) / Number(userData.calorie)) * 100,
+      )}%`,
       color: colors.main,
     },
     {
       name: 'carb',
       column1: '탄수화물',
-      column2: `${Math.ceil(Number(item.carb))}`,
+      column2: `${Math.ceil(Number(item.carb))} g`,
+      rate: `${Math.ceil((Number(item.carb) / Number(userData.carb)) * 100)}%`,
       color: colors.blue,
     },
     {
       name: 'protein',
       column1: '단백질',
-      column2: `${Math.ceil(Number(item.protein))}`,
+      column2: `${Math.ceil(Number(item.protein))} g`,
+      rate: `${Math.ceil(
+        (Number(item.protein) / Number(userData.protein)) * 100,
+      )}%`,
       color: colors.green,
     },
     {
       name: 'fat',
       column1: '지방',
-      column2: `${Math.ceil(Number(item.fat))}`,
+      column2: `${Math.ceil(Number(item.fat))} g`,
+      rate: `${Math.ceil((Number(item.fat) / Number(userData.fat)) * 100)}%`,
       color: colors.orange,
+    },
+    {
+      name: 'sodium',
+      column1: '나트륨',
+      column2: `${Math.ceil(Number(item.sodium))} mg`,
+      rate: `${Math.ceil((Number(item.sodium) / 2300) * 100)}%`,
+    },
+    {
+      name: 'sugar',
+      column1: '당류',
+      column2: `${Math.ceil(Number(item.sugar))} g`,
+      rate: `${Math.ceil(
+        (Number(item.sugar) / 0.2 / Number(userData.calorie)) * 100,
+      )}%`,
+    },
+
+    {
+      name: 'transFat',
+      column1: '트랜스지방',
+      column2: `${Math.ceil(Number(item.transFat))} g`,
+      rate: `${Math.ceil(
+        (Number(item.transFat) / 0.1 / Number(userData.calorie)) * 100,
+      )}%`,
+    },
+    {
+      name: 'saturatedFat',
+      column1: '포화지방',
+      column2: `${Math.ceil(Number(item.saturatedFat))} g`,
+      rate: `${Math.ceil(
+        (Number(item.saturatedFat) / 0.7 / Number(userData.calorie)) * 100,
+      )}%`,
+    },
+    {
+      name: 'cholesterol',
+      column1: '콜레스테롤',
+      column2: `${Math.ceil(Number(item.cholesterol))} mg`,
+      rate: `${Math.ceil((Number(item.cholesterol) / 300) * 100)}%`,
+    },
+
+    {
+      name: 'manufacturerBizNo',
+      column1: '품목보고번호',
+      column2: `${item.manufacturerBizNo}`,
+    },
+    {
+      name: 'manufacturerNm',
+      column1: '제조사',
+      column2: `${item.manufacturerNm}`,
     },
   ];
 
@@ -175,13 +234,14 @@ const FoodDetail = () => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <Container>
+        {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
         <ScrollView style={{marginBottom: 20, flex: 1}}>
-          {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
           <View>
             <FoodImageContainer
               source={{
                 uri: `${BASE_URL}${item.mainAttUrl}`,
               }}
+              // style={{resizeMode: 'stretch'}}
             />
             <FoodImageBottom />
             <NutritionInImage>
@@ -214,9 +274,12 @@ const FoodDetail = () => {
           <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
             <Col>
               <ShippingText>20000원 이상 무료배송 </ShippingText>
-              <ShippingText>최소주문수량: 2개</ShippingText>
+              <Row>
+                <ShippingText>최소주문수량: </ShippingText>
+                <ShippingText style={{color: '#ff6060'}}>2개</ShippingText>
+              </Row>
             </Col>
-            <Price>{item.price}원</Price>
+            <Price>{commaToNum(item.price)}원</Price>
           </Row>
           <Row
             style={{
