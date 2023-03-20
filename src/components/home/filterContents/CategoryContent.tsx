@@ -16,7 +16,7 @@ import {
   useCountCategory,
 } from '../../../query/queries/category';
 import colors from '../../../styles/colors';
-import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
+import {ProgressBarAndroidComponent, ScrollView, View} from 'react-native';
 import DSlider from '../common/slider/DSlider';
 
 import {setFilterParam} from '../../../stores/slices/filterSlice';
@@ -28,6 +28,7 @@ interface CategoryItem {
 }
 const CategoryContent = props => {
   const {setCategoryParam, categoryParam} = props;
+
   const dispatch = useDispatch();
   // const filter = useFilterCode('Protein');
   // console.log('filterTest:', filter);
@@ -35,21 +36,27 @@ const CategoryContent = props => {
   // console.log('filterModal/listproduct:', list);
   const [clicked, setClicked] = useState('');
   const count = useCountCategory();
+
   const Contents = () => {
-    return count.data?.map((e, i) => (
-      <CategoryButton
-        key={e.categoryCd}
-        onPress={() => {
-          // setClicked(e.categoryCd);
-          setCategoryParam(e.categoryCd);
-          // dispatch(setFilterParam(e.categoryCd));
-        }}>
-        <CategoryText id={e.categoryCd} clicked={categoryParam}>
-          {e.categoryCdNm}( {e.productCnt})
-        </CategoryText>
-        <HorizontalLine />
-      </CategoryButton>
-    ));
+    return (
+      <View style={{marginTop: 16}}>
+        {count.data?.map((e, i) => (
+          <View key={e.categoryCd}>
+            <CategoryButton
+              onPress={() => {
+                // setClicked(e.categoryCd);
+                setCategoryParam(e.categoryCd);
+                // dispatch(setFilterParam(e.categoryCd));
+              }}>
+              <CategoryText id={e.categoryCd} clicked={categoryParam}>
+                {e.categoryCdNm}( {e.productCnt})
+              </CategoryText>
+            </CategoryButton>
+            <HorizontalLine />
+          </View>
+        ))}
+      </View>
+    );
   };
   return (
     <>
@@ -67,10 +74,12 @@ const Text = styled.Text`
 const CategoryText = styled.Text`
 font-size: 16px;
 color: ${({id, clicked}) => (id === clicked ? colors.main : colors.textSub)}
-margin: 15px;
 text-align: center;
 `;
-const CategoryButton = styled.TouchableOpacity``;
+const CategoryButton = styled.TouchableOpacity`
+  height: 58px;
+  justify-content: center;
+`;
 
 const BottomText = styled.Text`
   font-size: 16px;

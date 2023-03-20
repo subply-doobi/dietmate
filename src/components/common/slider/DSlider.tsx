@@ -12,8 +12,7 @@ interface IDSlider {
   maximumValue: number;
   step: number;
   sliderWidth?: number;
-  kcal?: string;
-  g?: string;
+
   text?: string;
 }
 /** sliderWidth만 선택사항. props 안넘기면 width: 100% 적용 */
@@ -25,8 +24,6 @@ const DSlider = ({
   maximumValue,
   step,
   sliderWidth,
-  kcal,
-  g,
   text,
 }: IDSlider) => {
   const width = sliderWidth ? sliderWidth : '100%';
@@ -48,7 +45,7 @@ const DSlider = ({
             <AboveThumbComponent thumbIdx={index}>
               <ThumbText>
                 {sliderValue[index]}
-                {kcal ? kcal : g ? g : '원'}
+                {text}
               </ThumbText>
             </AboveThumbComponent>
           )}

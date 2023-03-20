@@ -103,10 +103,11 @@ export const useListProduct = (
     ? filter.filterParams?.priceParam
     : '';
   const cateogryParam = categoryCd === '' ? '' : categoryCd;
-  const calorieParam = calorie ? `Calorie,${calorie[0]},${calorie[1]}` : '';
-  const carbParam = carb ? `Carb,${carb[0]},${carb[1]}` : '';
-  const proteinParam = protein ? `Protein,${protein[0]},${protein[1]}` : '';
-  const priceParam = price ? `Price,${price[0]},${price[1]}` : '';
+  const calorieParam = calorie ? `Calorie,${calorie[0]},${calorie[1]}|` : '';
+  const carbParam = carb ? `Carb,${carb[0]},${carb[1]}|` : '';
+  const proteinParam = protein ? `Protein,${protein[0]},${protein[1]}|` : '';
+  const priceParam = price ? `Price,${price[0]},${price[1]}|` : '';
+  const fatParam = fat ? `Fat,${fat[0]},${fat[1]}|` : '';
 
   // console.log('product:', priceParam);
 
@@ -114,7 +115,7 @@ export const useListProduct = (
     queryKey: [PRODUCT],
     queryFn: () =>
       queryFn(
-        `${LIST_PRODUCT}/${dietNo}?searchText=${searchText}&categoryCd=${cateogryParam}&sort=${sort}&filter=${calorieParam}|${carbParam}|${priceParam}`,
+        `${LIST_PRODUCT}/${dietNo}?searchText=${searchText}&categoryCd=${cateogryParam}&sort=${sort}&filter=${calorieParam}${carbParam}${proteinParam}${fatParam}${priceParam}`,
       ),
     enabled,
     onSuccess: data => {
@@ -126,10 +127,10 @@ export const useListProduct = (
   });
 };
 
-export const useFilterRange = filtertype => {
+export const useFilterRange = filterType => {
   return useQuery({
-    queryKey: ['filterRange'],
-    queryFn: () => queryFn(`${FILTER}/${filtertype}`),
+    queryKey: ['filterRange', filterType],
+    queryFn: () => queryFn(`${FILTER}/${filterType}`),
     onSuccess: data => {},
     onError: e => {
       console.log('useFilterRange Error: ', e);

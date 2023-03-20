@@ -13,12 +13,14 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/styledConsts';
+import {categoryCode} from '../../constants/constants';
 
 import NutrientsProgress from '../../components/common/NutrientsProgress';
 import colors from '../../styles/colors';
 import MenuSelect from '../../components/common/MenuSelect';
 import MenuHeader from '../../components/common/MenuHeader';
 import {queryFn} from '../../query/queries/requestFn';
+import {useListCategory, useCountCategory} from '../../query/queries/category';
 import {LIST_DIET} from '../../query/queries/urls';
 import {setCurrentDietNo} from '../../stores/slices/cartSlice';
 import {useListProduct} from '../../query/queries/product';
@@ -41,7 +43,7 @@ const Home = () => {
   const [sortImageToggle, setSortImageToggle] = useState(0);
   const [filterCategoryParam, setFilterCategoryParam] = useState('');
   const [filterParams, setFilterParams] = useState({});
-  // console.log('HOME/FILTERCATEGORYPARAM:', filterParams);
+  // console.log('HOME/filterParam:', filterParams);
   // console.log('HOME/sortParam:', sortParam);
 
   const checkSortImageToggle = () => {
@@ -61,7 +63,10 @@ const Home = () => {
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
   // react-query
   // const filter.Calorie = params?.filter?.Calorie ? 'Calorie',params?.filter?.Calorie[0],params?.filter?.Calorie[1] : ''
-
+  const keyOfcategoryCode = Object.keys(categoryCode);
+  const key = keyOfcategoryCode.find(
+    key => categoryCode[key] === filterParams.categoryParam,
+  );
   const {
     data: tData,
     refetch: refetchProduct,
@@ -76,10 +81,12 @@ const Home = () => {
     {
       enabled: currentDietNo ? true : false,
       onSuccess: () => {
-        dispatch(setListTitle('도시락'));
+        dispatch(setListTitle('전체'));
       },
     },
   );
+  const count = useCountCategory();
+  console.log(count);
   useEffect(() => {
     currentDietNo && refetchProduct();
   }, [sortParam, filterParams]);
@@ -133,7 +140,7 @@ const Home = () => {
         {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
         <Row style={{justifyContent: 'space-between', marginTop: 32}}>
           <Row>
-            <ListTitle>{listTitle}</ListTitle>
+            <ListTitle>{key ? key : '검색된 결과:'}</ListTitle>
             <NoOfFoods> {tData?.length}개</NoOfFoods>
           </Row>
           <SortBtn onPress={() => setSortModalShow(true)}>
@@ -158,6 +165,7 @@ const Home = () => {
             <SortModalContent
               closeModal={setSortModalShow}
               setSortParam={setSortParam}
+              sortParam={sortParam}
             />
           )}
           onCancel={() => {
@@ -171,6 +179,7 @@ const Home = () => {
           onPress={() => {
             setFilterModalShow(true);
           }}
+          filterParams={filterParams}
         />
         <DBottomSheet
           alertShow={filterModalShow}
@@ -178,6 +187,7 @@ const Home = () => {
           renderContent={() => (
             <FilterModalContent
               closeModal={setFilterModalShow}
+              filterParams={filterParams}
               setFilterParams={setFilterParams}
               filterIndex={filterIndex}
             />

@@ -51,6 +51,15 @@ export const myPageBtns = [
   {title: '주문내역', btnId: 'PaymentHistory'},
 ];
 
+export const categoryCode = {
+  도시락: 'CG001',
+  닭가슴살: 'CG002',
+  샐러드: 'CG003',
+  영양간식: 'CG004',
+  과자: 'CG005',
+  음료: 'CG006',
+};
+
 interface ITimeToMinutes {
   [key: string]: number;
 }

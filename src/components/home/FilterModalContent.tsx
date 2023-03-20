@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useMemo, useEffect} from 'react';
+import React, {useState, useCallback, useMemo, useEffect, View} from 'react';
 import styled from 'styled-components/native';
 import {
   Row,
@@ -6,6 +6,8 @@ import {
   BtnCTA,
   BtnBottomCTA,
   TextMain,
+  StickyFooter,
+  HorizontalSpace,
 } from '../../styles/styledConsts';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -22,9 +24,11 @@ import PriceContent from './filterContents/PriceContent';
 import AutoDietContent from './filterContents/AutoDietContent';
 
 const FilterModalContent = props => {
-  const {filterIndex, closeModal, setFilterParams} = props;
+  const {filterIndex, closeModal, setFilterParams, filterParams} = props;
   const [clicked, setClicked] = useState(filterIndex);
-  const [categoryParam, setCategoryParam] = useState('');
+  const [categoryParam, setCategoryParam] = useState(
+    filterParams.categoryParam,
+  );
   const [nutritionParam, setNutritionParam] = useState('');
   const [priceParam, setPriceParam] = useState('');
   const params = {
@@ -32,34 +36,31 @@ const FilterModalContent = props => {
     nutritionParam,
     priceParam,
   };
-  console.log('categoryParam:', categoryParam);
-  console.log('nutritionParam:', nutritionParam);
-  console.log('priceParam:', priceParam);
   const resetType = [
     {
       text: '카테고리 초기화',
       reset: () => {
-        console.log('카테고리 reset');
-      },
-      onPress: () => {
-        console.log('카테고리 확인');
+        setCategoryParam('');
+        setFilterParams({...filterParams, categoryParam: ''});
       },
     },
     {
       text: '영양성분 초기화',
-      onPress: () => {
-        console.log('영양성분 확인');
+      reset: () => {
+        setNutritionParam('');
+        setFilterParams({...filterParams, nutritionParam: ''});
       },
     },
     {
       text: '가격 초기화',
-      onPress: () => {
-        console.log('가격 확인');
+      reset: () => {
+        setPriceParam('');
+        setFilterParams({...filterParams, priceParam: ''});
       },
     },
     {
       text: '식단구성 초기화',
-      onPress: () => {
+      reset: () => {
         console.log('식단구성 확인');
       },
     },
@@ -73,33 +74,62 @@ const FilterModalContent = props => {
             onPress={() => {
               setClicked(0);
             }}>
-            <Text id="0" clicked={clicked}>
-              카테고리
-            </Text>
+            {params.categoryParam || filterParams.categoryParam ? (
+              <Row>
+                <Text id="0" clicked={clicked}>
+                  카테고리
+                </Text>
+                <Badge />
+              </Row>
+            ) : (
+              <Text id="0" clicked={clicked}>
+                카테고리
+              </Text>
+            )}
           </Button>
           <Button
             onPress={() => {
               setClicked(1);
             }}>
-            <Text id="1" clicked={clicked}>
-              영양성분
-            </Text>
+            {params.nutritionParam || filterParams.nutritionParam ? (
+              <Row>
+                <Text id="1" clicked={clicked}>
+                  영양성분
+                </Text>
+                <Badge />
+              </Row>
+            ) : (
+              <Text id="1" clicked={clicked}>
+                영양성분
+              </Text>
+            )}
           </Button>
           <Button
             onPress={() => {
               setClicked(2);
             }}>
-            <Text id="2" clicked={clicked}>
-              가격
-            </Text>
+            {params.priceParam || filterParams.priceParam ? (
+              <Row>
+                <Text id="2" clicked={clicked}>
+                  가격
+                </Text>
+                <Badge />
+              </Row>
+            ) : (
+              <Text id="2" clicked={clicked}>
+                가격
+              </Text>
+            )}
           </Button>
           <Button
             onPress={() => {
               setClicked(3);
             }}>
-            <Text id="3" clicked={clicked}>
-              식단구성
-            </Text>
+            <Row>
+              <Text id="3" clicked={clicked}>
+                식단구성
+              </Text>
+            </Row>
           </Button>
           <Button>
             <Image
@@ -121,9 +151,14 @@ const FilterModalContent = props => {
       <NutritionContent
         setNutritionParam={setNutritionParam}
         nutritionParam={nutritionParam}
+        filterParams={filterParams}
       />
     ) : i.index === 2 ? (
-      <PriceContent setPriceParam={setPriceParam} priceParam={priceParam} />
+      <PriceContent
+        setPriceParam={setPriceParam}
+        priceParam={priceParam}
+        filterParams={filterParams}
+      />
     ) : i.index === 3 ? (
       <AutoDietContent />
     ) : null;
@@ -137,18 +172,21 @@ const FilterModalContent = props => {
         <ShowContent index={clicked} />
         <BottomRow>
           <BtnCTA
-            style={{marginRight: 8, marginTop: 5}}
+            style={{
+              flex: 1,
+            }}
             btnStyle={'border'}
-            width="180"
-            onPress={() => console.log('초기화')}>
+            onPress={resetType[clicked].reset}>
             <BottomText style={{color: colors.textSub}}>
               {resetType[clicked].text}
             </BottomText>
           </BtnCTA>
           <BtnCTA
-            style={{marginTop: 5}}
+            style={{
+              flex: 1,
+              marginLeft: 8,
+            }}
             btnStyle={'activated'}
-            width="180"
             onPress={() => {
               setFilterParams(params);
               closeModal(false);
@@ -187,12 +225,23 @@ const FilterRow = styled(Row)`
 `;
 const BottomRow = styled.View`
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
+  margin-top: 10px;
 `;
+
 const SliderTitle = styled(TextMain)`
   font-size: 16px;
   font-weight: bold;
   margin-top: 40px;
+`;
+const Badge = styled.View`
+  width: 6px;
+  height: 6px;
+  border-radius: 8px;
+  background-color: ${colors.main};
+  position: absolute;
+  top: 0px;
+  right: 20px;
 `;
 const MODAL_WIDTH = 328;
 const MODAL_INNER_WIDTH = MODAL_WIDTH - 32;
