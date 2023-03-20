@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {TouchableWithoutFeedback, ActivityIndicator} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components/native';
+import {icons} from '../../assets/icons/iconSource';
 import {
   useCreateDiet,
   useDeleteDiet,
@@ -80,9 +81,7 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
                     setDietNoToDelete(menu.dietNo);
                     setDeleteAlertShow(true);
                   }}>
-                  <DeleteImg
-                    source={require('../../assets/icons/24_icon=close.png')}
-                  />
+                  <DeleteImg source={icons.cancelRound_24} />
                 </DeleteBtn>
               )}
             </Menu>

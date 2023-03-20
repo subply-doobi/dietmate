@@ -15,6 +15,7 @@ import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import {commaToNum} from '../../util/sumUp';
 import {useNavigation} from '@react-navigation/native';
+import {icons} from '../../assets/icons/iconSource';
 
 const FoodList = ({item}: {item: IProductData}) => {
   const navigation = useNavigation();
@@ -73,13 +74,9 @@ const FoodList = ({item}: {item: IProductData}) => {
               }
             }}>
             {item.productChoiceYn === 'Y' ? (
-              <AddToCartBtnImage
-                source={require('../../assets/icons/24_foodDelete.png')}
-              />
+              <AddToCartBtnImage source={icons.minusRound_24} />
             ) : (
-              <AddToCartBtnImage
-                source={require('../../assets/icons/24_foodAdd.png')}
-              />
+              <AddToCartBtnImage source={icons.plusRound_24} />
             )}
           </AddOrDeleteBtn>
         </Row>

@@ -2,6 +2,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useDispatch, useSelector} from 'react-redux';
 import {setCurrentDietNo} from '../../stores/slices/cartSlice';
 import {RootState} from '../../stores/store';
+import {useHandleError} from '../../util/handleError';
 import {sumUpNutrients} from '../../util/sumUp';
 import {
   DIET,
@@ -32,6 +33,7 @@ import {
   LIST_PRODUCT,
   UPDATE_DIET_DETAIL,
 } from './urls';
+
 // PUT //
 export const useCreateDiet = (options?: IMutationOptions) => {
   const dispatch = useDispatch();
@@ -44,12 +46,12 @@ export const useCreateDiet = (options?: IMutationOptions) => {
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL_EMPTY_YN]});
       queryClient.invalidateQueries({queryKey: [PRODUCT]});
     },
-    onError: e => console.log('useCreateDiet error: ', e),
   });
   return mutation;
 };
 
 export const useCreateDietDetail = () => {
+  const handleError = useHandleError();
   const mutation = useMutation({
     mutationFn: ({dietNo, productNo}: {dietNo: string; productNo: string}) =>
       mutationFn(
@@ -116,6 +118,7 @@ export const useCreateDietDetail = () => {
         [DIET_DETAIL, dietNo],
         context?.prevDietDetailData,
       );
+      handleError(e);
       console.log('useCreateDietDetail error: ', e);
     },
     // onSettled: (data, err, {dietNo, productNo}) => {
@@ -136,9 +139,6 @@ export const useListDiet = (options?: IQueryOptions) => {
     onSuccess: data => {
       options?.onSuccess && options.onSuccess(data);
     },
-    onError: e => {
-      console.log('useListDiet error: ', e);
-    },
   });
 };
 
@@ -149,9 +149,6 @@ export const useListDietDetail = (dietNo: string, options?: IQueryOptions) => {
     queryFn: () => queryFn(`${LIST_DIET_DETAIL}/${dietNo}`),
     enabled,
     onSuccess: data => {},
-    onError: e => {
-      console.log('useListDietDetail error:', e);
-    },
   });
 };
 
@@ -162,9 +159,6 @@ export const useListDietDetailAll = (options?: IQueryOptions) => {
     queryFn: () => queryFn(LIST_DIET_DETAIL_ALL),
     enabled,
     onSuccess: data => {},
-    onError: e => {
-      console.log('useListDietDetailAll error:', e);
-    },
   });
 };
 
@@ -175,9 +169,6 @@ export const useGetDietDetailEmptyYn = (options?: IQueryOptions) => {
     queryFn: () => queryFn(GET_DIET_DETAIL_EMPTY_YN),
     enabled,
     onSuccess: data => {},
-    onError: e => {
-      console.log('useGetDietDetailEmptyYn error:', e);
-    },
   });
 };
 
@@ -201,7 +192,6 @@ export const useUpdateDietDetail = () => {
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL, dietNo]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
     },
-    onError: e => console.log('useUpdateDietDetail error: ', e),
   });
   return mutation;
 };
@@ -232,12 +222,12 @@ export const useDeleteDiet = () => {
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL_EMPTY_YN]});
       queryClient.invalidateQueries({queryKey: [PRODUCT]});
     },
-    onError: e => console.log('useDeleteDiet error: ', e),
   });
   return mutation;
 };
 
 export const useDeleteDietDetail = () => {
+  const handleError = useHandleError();
   const mutation = useMutation({
     mutationFn: ({dietNo, productNo}: {dietNo: string; productNo: string}) =>
       mutationFn(
@@ -295,7 +285,7 @@ export const useDeleteDietDetail = () => {
         [DIET_DETAIL, dietNo],
         context?.prevDietDetailData,
       );
-      console.log('useDeleteDietDetail error: ', e);
+      handleError(e);
     },
     // onSettled: (data, err, {dietNo, productNo}) => {
     //   queryClient.invalidateQueries({queryKey: [DIET_DETAIL, dietNo]});

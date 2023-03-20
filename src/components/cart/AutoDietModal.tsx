@@ -16,6 +16,7 @@ import colors from '../../styles/colors';
 import DSlider from '../common/slider/DSlider';
 import {useCreateProductAuto} from '../../query/queries/product';
 import DAlert from '../common/alert/DAlert';
+import {icons} from '../../assets/icons/iconSource';
 
 interface IAutoDietModal {
   modalVisible: boolean;
@@ -88,13 +89,9 @@ const AutoDietModal = ({modalVisible, setModalVisible}: IAutoDietModal) => {
                   });
                 }}>
                 {selectedCategory[idx] ? (
-                  <CheckboxImage
-                    source={require(`../../assets/icons/24_checkbox_selected.png`)}
-                  />
+                  <CheckboxImage source={icons.checkboxCheckedGreen_24} />
                 ) : (
-                  <CheckboxImage
-                    source={require(`../../assets/icons/24_checkbox.png`)}
-                  />
+                  <CheckboxImage source={icons.checkbox_24} />
                 )}
                 <CategoryText>{btn.categoryCdNm}</CategoryText>
               </CheckboxBtn>

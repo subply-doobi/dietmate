@@ -39,6 +39,7 @@ import ReviewPart from './foodDetailSubScreen/ReviewPart';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {IProductData} from '../../query/types/product';
 import {useSelector} from 'react-redux';
+import {icons} from '../../assets/icons/iconSource';
 
 export interface TableItem {
   name: string;
@@ -244,7 +245,7 @@ const FoodDetail = () => {
               // 조건에 따라서 서로 다른 좋아요 버튼 갖게 할 것
               // source={require('../../assets/icons/36_likePage_selected.png')}
               style={{width: 52, height: 52}}
-              source={require('../../assets/icons/48_like_activated.png')}
+              source={icons.likeActivated_48}
             />
           </Pressable>
           <BtnCTA

@@ -1,7 +1,5 @@
 import styled from 'styled-components/native';
-import {useListDiet} from '../../../query/queries/diet';
 import {Col, TextMain} from '../../../styles/styledConsts';
-import {checkEmptyMenuIndex} from '../../../util/checkEmptyMenu';
 
 const MenuEmptyAlertContent = () => {
   return (

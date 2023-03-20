@@ -5,6 +5,7 @@ import likeReducer from './slices/likeSlice';
 import orderReducer from './slices/orderSlice';
 import filterReducer from './slices/filterSlice';
 import homeReducer from './slices/homeSlice';
+import commonAlertReducer from './slices/commonAlertSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     like: likeReducer,
     order: orderReducer,
     filter: filterReducer,
+    commonAlert: commonAlertReducer,
   },
 });
 

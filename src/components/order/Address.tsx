@@ -29,6 +29,7 @@ import {
   validationRules,
 } from '../../constants/constants';
 import {Controller, useWatch} from 'react-hook-form';
+import {icons} from '../../assets/icons/iconSource';
 
 interface IAddress {
   control: any;
@@ -113,8 +114,8 @@ const Address = ({
               <CheckIcon
                 source={
                   selectedAddressId === index
-                    ? require('../../assets/icons/24_checkbox_selected_purple.png')
-                    : require('../../assets/icons/24_checkbox.png')
+                    ? icons.checkboxCheckedPurple_24
+                    : icons.checkbox_24
                 }
               />
               <Col>
@@ -128,7 +129,7 @@ const Address = ({
                   currentAddressId: index,
                 });
               }}>
-              <EditIcon source={require('../../assets/icons/24_edit.png')} />
+              <EditIcon source={icons.edit_24} />
             </EditBtn>
           </AddressBox>
           <HorizontalLine style={{marginTop: 16}} />
@@ -162,8 +163,8 @@ const Address = ({
           <PlusSquareIcon
             source={
               orderInfo.address.length === 0
-                ? require('../../assets/icons/24_autoMenu_activated.png')
-                : require('../../assets/icons/24_autoMenu_inactivated.png')
+                ? icons.plusSquareActivated_24
+                : icons.plusSquare_24
             }
           />
           <AddressAddBtnText>배송지 추가</AddressAddBtnText>
@@ -187,9 +188,7 @@ const Address = ({
             }}>
             <CheckIcon
               source={
-                isChecked
-                  ? require('../../assets/icons/24_checkbox_selected_purple.png')
-                  : require('../../assets/icons/24_checkbox.png')
+                isChecked ? icons.checkboxCheckedPurple_24 : icons.checkbox_24
               }
             />
           </Checkbox>

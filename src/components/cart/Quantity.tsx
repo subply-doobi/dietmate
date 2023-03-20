@@ -21,6 +21,7 @@ import {
   minusProductQuantity,
 } from '../../stores/slices/cartSlice';
 import {RootState} from '../../stores/store';
+import {icons} from '../../assets/icons/iconSource';
 
 const Number = styled(TextMain)`
   font-size: 16px;
@@ -40,14 +41,12 @@ const Quantity = props => {
     <>
       <TouchableOpacity
         onPress={() => dispatch(minusProductQuantity(props.product))}>
-        <NumberImage
-          source={require('../../assets/icons/12_numberMinus.png')}
-        />
+        <NumberImage source={icons.numberMinus_12} />
       </TouchableOpacity>
       <Number>{cart[menuIndex][props.index].qty}</Number>
       <TouchableOpacity
         onPress={() => dispatch(plusProductQuantity(props.product))}>
-        <NumberImage source={require('../../assets/icons/12_numberPlus.png')} />
+        <NumberImage source={icons.numberPlus_12} />
       </TouchableOpacity>
     </>
   );

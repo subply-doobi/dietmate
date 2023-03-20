@@ -6,6 +6,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../stores/store';
 import {useListDiet} from '../../query/queries/diet';
 import {findDietSeq} from '../../util/findDietSeq';
+import {icons} from '../../assets/icons/iconSource';
 
 interface IMenuHeader {
   menuSelectOpen: boolean;
@@ -26,9 +27,9 @@ const MenuHeader = ({menuSelectOpen, setMenuSelectOpen}: IMenuHeader) => {
     <Header onPress={() => setMenuSelectOpen(v => !v)}>
       <HeaderText>{findDietSeq(dietData, currentDietNo)}</HeaderText>
       {menuSelectOpen ? (
-        <Arrow source={require('../../assets/icons/24_dropdown_up.png')} />
+        <Arrow source={icons.triangleUp_24} />
       ) : (
-        <Arrow source={require('../../assets/icons/24_dropdown_down.png')} />
+        <Arrow source={icons.triangleDown_24} />
       )}
     </Header>
   );

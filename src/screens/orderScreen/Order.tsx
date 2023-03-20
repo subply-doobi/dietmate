@@ -38,6 +38,7 @@ import {useKakaoPayReady} from '../../query/queries/order';
 import {setOrderSummary} from '../../stores/slices/orderSlice';
 import {useListDietDetailAll} from '../../query/queries/diet';
 import {useNavigation} from '@react-navigation/native';
+import {icons} from '../../assets/icons/iconSource';
 
 const Order = () => {
   const navigation = useNavigation();
@@ -168,9 +169,9 @@ const Order = () => {
           )}
         </Col>
         {isActive ? (
-          <UpDownArrow source={require('../../assets/icons/20_up.png')} />
+          <UpDownArrow source={icons.arrowUp_20} />
         ) : (
-          <UpDownArrow source={require('../../assets/icons/20_down.png')} />
+          <UpDownArrow source={icons.arrowDown_20} />
         )}
       </AccordionHeader>
     );

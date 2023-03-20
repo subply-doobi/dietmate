@@ -4,6 +4,7 @@ import styled from 'styled-components/native';
 import {TextMain} from '../../styles/styledConsts';
 import {SetStateAction, useState} from 'react';
 import {IDietDetailProductData} from '../../query/types/diet';
+import {icons} from '../../assets/icons/iconSource';
 
 const QuantityControl = ({
   food,
@@ -29,15 +30,11 @@ const QuantityControl = ({
         setNumberPickerShow(true);
       }}>
       <PlusMinusBtn>
-        <PlusMinusImage
-          source={require(`../../assets/icons/12_numberMinus.png`)}
-        />
+        <PlusMinusImage source={icons.numberMinus_12} />
       </PlusMinusBtn>
       <Quantity>{food.qty}</Quantity>
       <PlusMinusBtn>
-        <PlusMinusImage
-          source={require(`../../assets/icons/12_numberPlus.png`)}
-        />
+        <PlusMinusImage source={icons.numberPlus_12} />
       </PlusMinusBtn>
     </QuantityControlBox>
   );

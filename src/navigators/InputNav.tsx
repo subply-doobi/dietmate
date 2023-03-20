@@ -5,6 +5,7 @@ import styled from 'styled-components/native';
 import FirstInput from '../screens/userInputScreen/FirstInput';
 import SecondInput from '../screens/userInputScreen/SecondInput';
 import ThirdInput from '../screens/userInputScreen/ThirdInput';
+import {icons} from '../assets/icons/iconSource';
 
 const Stack = createNativeStackNavigator();
 const InputNav = () => {
@@ -18,9 +19,7 @@ const InputNav = () => {
         component={FirstInput}
         options={{
           headerTitle: '',
-          headerRight: () => (
-            <StepIcon source={require('../assets/icons/36_step1.png')} />
-          ),
+          headerRight: () => <StepIcon source={icons.step1_36} />,
         }}
       />
       <Stack.Screen
@@ -28,9 +27,7 @@ const InputNav = () => {
         component={SecondInput}
         options={{
           headerTitle: '',
-          headerRight: () => (
-            <StepIcon source={require('../assets/icons/36_step2.png')} />
-          ),
+          headerRight: () => <StepIcon source={icons.step2_36} />,
         }}
       />
       <Stack.Screen
@@ -38,9 +35,7 @@ const InputNav = () => {
         component={ThirdInput}
         options={{
           headerTitle: '',
-          headerRight: () => (
-            <StepIcon source={require('../assets/icons/36_step3.png')} />
-          ),
+          headerRight: () => <StepIcon source={icons.step3_36} />,
         }}
       />
     </Stack.Navigator>

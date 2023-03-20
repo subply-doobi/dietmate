@@ -3,6 +3,7 @@ import {SetStateAction, useState} from 'react';
 import {ActivityIndicator, Text} from 'react-native';
 import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
+import {icons} from '../../assets/icons/iconSource';
 import {
   useDeleteDietDetail,
   useListDiet,
@@ -115,18 +116,14 @@ const CartFoodList = ({
                 onPress={() => {
                   deleteFromSelected(food.productNo);
                 }}>
-                <SelectedCheckImage
-                  source={require('../../assets/icons/24_checkbox_selected.png')}
-                />
+                <SelectedCheckImage source={icons.checkboxCheckedGreen_24} />
               </SelectedBtn>
             ) : (
               <SelectedBtn
                 onPress={() => {
                   addToSelected(food.productNo);
                 }}>
-                <SelectedCheckImage
-                  source={require('../../assets/icons/24_checkbox.png')}
-                />
+                <SelectedCheckImage source={icons.checkbox_24} />
               </SelectedBtn>
             )}
             <Col style={{marginLeft: 8, flex: 1}}>
@@ -137,9 +134,7 @@ const CartFoodList = ({
                     setProductNoToDelete(food.productNo);
                     setDeleteAlertShow(true);
                   }}>
-                  <DeleteImage
-                    source={require('../../assets/icons/24_cancel_round.png')}
-                  />
+                  <DeleteImage source={icons.cancelRound_24} />
                 </DeleteBtn>
               </Row>
               <ProductNmText numberOfLines={1} ellipsizeMode="tail">

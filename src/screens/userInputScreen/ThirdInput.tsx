@@ -26,6 +26,7 @@ import {
 } from '../../query/queries/baseLine';
 import {useCreateDiet, useListDiet} from '../../query/queries/diet';
 import {useNavigation} from '@react-navigation/native';
+import {icons} from '../../assets/icons/iconSource';
 
 interface IFormData {
   ratioType: string;
@@ -125,9 +126,9 @@ const ThirdInput = () => {
           {section.title}
         </AccordionHeaderTitle>
         {isActive ? (
-          <ArrowIcon source={require('../../assets/icons/20_up.png')} />
+          <ArrowIcon source={icons.arrowUpPurple_20} />
         ) : (
-          <ArrowIcon source={require('../../assets/icons/20_down.png')} />
+          <ArrowIcon source={icons.arrowDown_20} />
         )}
       </AccordionHeader>
     );

@@ -16,6 +16,7 @@ import DSlider from '../common/slider/DSlider';
 import CategoryContent from './filterContents/CategoryContent';
 import NutritionContent from './filterContents/NutritionContent';
 import PriceContent from './filterContents/PriceContent';
+import {icons} from '../../assets/icons/iconSource';
 
 const FilterModalContent = props => {
   const [clicked, setClicked] = useState(0);
@@ -81,10 +82,7 @@ const FilterModalContent = props => {
             <Text>식단구성</Text>
           </Button>
           <Button>
-            <Image
-              style={{marginTop: 5}}
-              source={require('../../assets/icons/24_filterInitialize.png')}
-            />
+            <Image style={{marginTop: 5}} source={icons.initialize_24} />
           </Button>
         </FilterRow>
       </>

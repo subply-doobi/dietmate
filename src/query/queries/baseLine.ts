@@ -13,7 +13,6 @@ export const useCreateBaseLine = () => {
     mutationFn: (baseLine: IBaseLine) =>
       mutationFn<IBaseLine>(CREATE_BASE_LINE, 'put', baseLine),
     onSuccess: data => queryClient.invalidateQueries({queryKey: [BASE_LINE]}),
-    onError: e => console.log('useCreateBaseLine error: ', e),
   });
   return mutation;
 };
@@ -21,17 +20,12 @@ export const useCreateBaseLine = () => {
 // GET
 
 export const useGetBaseLine = (options?: IQueryOptions) => {
-  // const enabled = options?.enabled ?? true;
+  const enabled = options?.enabled ?? true;
   return useQuery<IBaseLine>({
     queryKey: [BASE_LINE],
     queryFn: () => queryFn(GET_BASE_LINE),
     retry: 0,
-
-    // enabled,
-    onSuccess: data => {},
-    onError: e => {
-      console.log('useGetBaseLine error:', e);
-    },
+    enabled,
   });
 };
 
@@ -43,7 +37,6 @@ export const useUpdateBaseLine = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: [BASE_LINE]});
     },
-    onError: e => console.log('useUpdateBaseLine error: ', e),
   });
   return mutation;
 };

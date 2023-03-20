@@ -33,6 +33,7 @@ import FilterHeader from '../../components/home/FilterHeader';
 import DTooltip from '../../components/common/DTooltip';
 import {SCREENWIDTH} from '../../constants/constants';
 import {useNavigation} from '@react-navigation/native';
+import {icons} from '../../assets/icons/iconSource';
 
 const Home = () => {
   // navigation
@@ -140,15 +141,11 @@ const Home = () => {
           <SortBtn onPress={() => setSortModalShow(true)}>
             <SortBtnText>정렬</SortBtnText>
             {sortImageToggle === 0 ? (
-              <SortImage source={require('../../assets/icons/24_sort.png')} />
+              <SortImage source={icons.sort_24} />
             ) : sortImageToggle === 1 ? (
-              <SortImage
-                source={require('../../assets/icons/24_sort_descending.png')}
-              />
+              <SortImage source={icons.sortDescending_24} />
             ) : (
-              <SortImage
-                source={require('../../assets/icons/24_sort_ascending.png')}
-              />
+              <SortImage source={icons.sortAscending_24} />
             )}
           </SortBtn>
         </Row>

@@ -41,6 +41,7 @@ import CartSummary from '../components/cart/CartSummary';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import DAlert from '../components/common/alert/DAlert';
 import DeleteAlertContent from '../components/common/alert/DeleteAlertContent';
+import {icons} from '../assets/icons/iconSource';
 
 const Cart = () => {
   // redux
@@ -149,13 +150,9 @@ const Cart = () => {
                 setCheckAllClicked(clicked => !clicked);
               }}>
               {checkAllClicked ? (
-                <CheckboxImage
-                  source={require('../assets/icons/24_checkbox_selected.png')}
-                />
+                <CheckboxImage source={icons.checkboxCheckedGreen_24} />
               ) : (
-                <CheckboxImage
-                  source={require('../assets/icons/24_checkbox.png')}
-                />
+                <CheckboxImage source={icons.checkbox_24} />
               )}
             </SelectAllCheckbox>
 

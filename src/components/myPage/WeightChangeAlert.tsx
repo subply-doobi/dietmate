@@ -13,6 +13,7 @@ import {
   TextSub,
   UserInfoTextInput,
 } from '../../styles/styledConsts';
+import {icons} from '../../assets/icons/iconSource';
 
 const Container = styled.View`
   padding: 0px 16px 24px 16px;
@@ -87,11 +88,9 @@ const WeightChangeAlert = ({
       <Row style={{marginTop: 24, alignItems: 'flex-start'}}>
         <CheckboxContainer onPress={() => setAutoCalculate(check => !check)}>
           {autoCalculate ? (
-            <Checkbox
-              source={require('../../assets/icons/24_checkbox_selected.png')}
-            />
+            <Checkbox source={icons.checkboxCheckedPurple_24} />
           ) : (
-            <Checkbox source={require('../../assets/icons/24_checkbox.png')} />
+            <Checkbox source={icons.checkbox_24} />
           )}
         </CheckboxContainer>
         <Col style={{marginLeft: 10}}>
