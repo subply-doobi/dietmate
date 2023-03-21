@@ -17,7 +17,8 @@ const Login = () => {
     const isTokenValid = await validateToken();
     isTokenValid && !isLoading
       ? data && data.constructor === Object && Object.keys(data).length === 0
-        ? navigate('InputNav', {screen: 'FirstInput'})
+        ? // ? navigate('InputNav', {screen: 'FirstInput'})
+          navigate('BottomTabNav', {screen: 'Home'})
         : reset({
             index: 0,
             routes: [
@@ -29,7 +30,7 @@ const Login = () => {
               },
             ],
           })
-      : navigate('Login', {screen: 'Login'});
+      : navigate('BottomTabNav', {screen: 'Home'});
   };
   useEffect(() => {
     signInWithKakao();

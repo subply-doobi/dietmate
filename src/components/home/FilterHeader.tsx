@@ -1,10 +1,10 @@
 import React from 'react';
 import {Row, TextMain} from '../../styles/styledConsts';
 import styled from 'styled-components/native';
+import colors from '../../styles/colors';
 
 const FilterHeader = props => {
-  const {onPress, setFilterIndex} = props;
-  // console.log(props);
+  const {onPress, setFilterIndex, filterParams} = props;
   return (
     <>
       <Row>
@@ -13,21 +13,42 @@ const FilterHeader = props => {
             onPress();
             setFilterIndex(0);
           }}>
-          <FilterBtnText>카테고리</FilterBtnText>
+          {filterParams.categoryParam ? (
+            <>
+              <FilterBtnText>카테고리</FilterBtnText>
+              <Badge />
+            </>
+          ) : (
+            <FilterBtnText>카테고리</FilterBtnText>
+          )}
         </FilterBtn>
         <FilterBtn
           onPress={() => {
             onPress();
             setFilterIndex(1);
           }}>
-          <FilterBtnText>영양성분</FilterBtnText>
+          {filterParams.nutritionParam ? (
+            <>
+              <FilterBtnText>영양성분</FilterBtnText>
+              <Badge />
+            </>
+          ) : (
+            <FilterBtnText>영양성분</FilterBtnText>
+          )}
         </FilterBtn>
         <FilterBtn
           onPress={() => {
             onPress();
             setFilterIndex(2);
           }}>
-          <FilterBtnText>가격</FilterBtnText>
+          {filterParams.priceParam ? (
+            <>
+              <FilterBtnText>가격</FilterBtnText>
+              <Badge />
+            </>
+          ) : (
+            <FilterBtnText>가격</FilterBtnText>
+          )}
         </FilterBtn>
         <FilterBtn
           onPress={() => {
@@ -48,4 +69,13 @@ const FilterBtn = styled.TouchableOpacity`
 `;
 const FilterBtnText = styled(TextMain)`
   font-size: 14px;
+`;
+const Badge = styled.View`
+  width: 6px;
+  height: 6px;
+  border-radius: 8px;
+  background-color: ${colors.main};
+  position: absolute;
+  top: 0px;
+  right: -8px;
 `;

@@ -68,6 +68,7 @@ export const compareNutrToTarget = (
 
 export const reGroupBySeller = (dietDetailData: IDietDetailData) => {
   let reGroupedProducts: Array<IDietDetailData> = [[]];
+  if (dietDetailData.length === 0) return undefined;
   for (let i = 0; i < dietDetailData.length; i++) {
     if (i === 0) {
       reGroupedProducts[0].push(dietDetailData[i]);

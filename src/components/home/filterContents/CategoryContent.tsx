@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo, useCallback, useEffect, useRef} from 'react';
 import styled from 'styled-components/native';
 import {
   Row,
@@ -7,44 +7,60 @@ import {
   BtnBottomCTA,
   TextMain,
 } from '../../../styles/styledConsts';
+import {useDispatch, useSelector} from 'react-redux';
+
 import {useWeightPurposeCode, useFilterCode} from '../../query/queries/code';
 import {useListProduct} from '../../../query/queries/product';
 import {
   useListCategory,
   useCountCategory,
 } from '../../../query/queries/category';
-import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
+import colors from '../../../styles/colors';
+import {ProgressBarAndroidComponent, ScrollView, View} from 'react-native';
 import DSlider from '../common/slider/DSlider';
+
+import {setFilterParam} from '../../../stores/slices/filterSlice';
 
 interface CategoryItem {
   categoryCd: string;
   CategoryCdNm: string;
   productCnt: number;
 }
-const CategoryContent = () => {
+const CategoryContent = props => {
+  const {setCategoryParam, categoryParam} = props;
+
+  const dispatch = useDispatch();
   // const filter = useFilterCode('Protein');
   // console.log('filterTest:', filter);
   // const list = useListProduct();
   // console.log('filterModal/listproduct:', list);
+  const [clicked, setClicked] = useState('');
   const count = useCountCategory();
-  const onPress = arg => {
-    console.log('pressed', arg);
-  };
 
+  const Contents = () => {
+    return (
+      <View style={{marginTop: 16}}>
+        {count.data?.map((e, i) => (
+          <View key={e.categoryCd}>
+            <CategoryButton
+              onPress={() => {
+                // setClicked(e.categoryCd);
+                setCategoryParam(e.categoryCd);
+                // dispatch(setFilterParam(e.categoryCd));
+              }}>
+              <CategoryText id={e.categoryCd} clicked={categoryParam}>
+                {e.categoryCdNm}( {e.productCnt})
+              </CategoryText>
+            </CategoryButton>
+            <HorizontalLine />
+          </View>
+        ))}
+      </View>
+    );
+  };
   return (
     <>
-      {count.data?.map((e, i) => (
-        <>
-          <CategoryButton
-            key={e.categoryCd}
-            onPress={() => onPress(e.categoryCd)}>
-            <CategoryText>
-              {e.categoryCdNm}( {e.productCnt})
-            </CategoryText>
-            <HorizontalLine />
-          </CategoryButton>
-        </>
-      ))}
+      <Contents />
     </>
   );
 };
@@ -54,12 +70,16 @@ const Text = styled.Text`
   font-size: 18px;
   margin: 15px;
 `;
+
 const CategoryText = styled.Text`
-  font-size: 16px;
-  margin: 15px;
-  text-align: center;
+font-size: 16px;
+color: ${({id, clicked}) => (id === clicked ? colors.main : colors.textSub)}
+text-align: center;
 `;
-const CategoryButton = styled.TouchableOpacity``;
+const CategoryButton = styled.TouchableOpacity`
+  height: 58px;
+  justify-content: center;
+`;
 
 const BottomText = styled.Text`
   font-size: 16px;

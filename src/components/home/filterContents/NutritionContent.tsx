@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import styled from 'styled-components/native';
 import {
   Row,
@@ -13,57 +13,119 @@ import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
 import DSlider from '../../common/slider/DSlider';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-const NutritionContent = () => {
-  const [clicked, setClicked] = useState(false);
-  const [reset, setReset] = useState(false);
-  const [calorieValue, setCalorieValue] = useState<number[]>([400, 800]);
-  const [carbValue, setCarbrValue] = useState<number[]>([0, 40]);
-  const [proteinValue, setProteinValue] = useState<number[]>([0, 40]);
-  const [fatValue, setFatValue] = useState<number[]>([0, 40]);
-  let kcal = 'kcal';
-  let g = 'g';
+import {useFilterRange, useTest} from '../../../query/queries/product';
+
+const NutritionContent = props => {
+  const calorieRange = useFilterRange('calorie');
+  const carbRange = useFilterRange('carb');
+  const fatRange = useFilterRange('fat');
+  const proteinRange = useFilterRange('protein');
+  const {setNutritionParam, nutritionParam, filterParams} = props;
+  const minCalorie = Math.floor(calorieRange?.data?.minData);
+  const maxCalorie = Math.floor(calorieRange?.data?.maxData);
+  const minCarb = Math.floor(carbRange?.data?.minData);
+  const maxCarb = Math.floor(carbRange?.data?.maxData);
+  const minProtein = Math.floor(proteinRange?.data?.minData);
+  const maxProtein = Math.floor(proteinRange?.data?.maxData);
+  const minFat = Math.floor(fatRange?.data?.minData);
+  const maxFat = Math.floor(fatRange?.data?.maxData);
+  const [calorieValue, setCalorieValue] = useState([
+    filterParams.nutritionParam?.calorieParam
+      ? filterParams.nutritionParam?.calorieParam[0]
+      : Math.floor(minCalorie),
+    filterParams.nutritionParam?.calorieParam
+      ? filterParams.nutritionParam?.calorieParam[1]
+      : Math.floor(maxCalorie),
+  ]);
+  const [carbValue, setCarbrValue] = useState([
+    filterParams.nutritionParam?.carbParam
+      ? filterParams.nutritionParam?.carbParam[0]
+      : Math.floor(minCarb),
+    filterParams.nutritionParam?.carbParam
+      ? filterParams.nutritionParam?.carbParam[1]
+      : Math.floor(maxCarb),
+  ]);
+  const [proteinValue, setProteinValue] = useState([
+    filterParams.nutritionParam?.proteinParam
+      ? filterParams.nutritionParam?.proteinParam[0]
+      : Math.floor(minProtein),
+    filterParams.nutritionParam?.proteinParam
+      ? filterParams.nutritionParam?.proteinParam[1]
+      : Math.floor(maxProtein),
+  ]);
+  const [fatValue, setFatValue] = useState([
+    filterParams.nutritionParam?.fatParam
+      ? filterParams.nutritionParam?.fatParam[0]
+      : Math.floor(minFat),
+    filterParams.nutritionParam?.fatParam
+      ? filterParams.nutritionParam?.fatParam[1]
+      : Math.floor(maxFat),
+  ]);
+  const params = useMemo(
+    () => ({
+      calorieParam: calorieValue,
+      carbParam: carbValue,
+      proteinParam: proteinValue,
+      fatParam: fatValue,
+    }),
+    [calorieValue, carbValue, proteinValue, fatValue],
+  );
+
+  useEffect(() => {
+    nutritionParam && setCalorieValue(nutritionParam?.calorieParam);
+    nutritionParam && setCarbrValue(nutritionParam?.carbParam);
+    nutritionParam && setProteinValue(nutritionParam?.proteinParam);
+    nutritionParam && setFatValue(nutritionParam?.fatParam);
+  }, [nutritionParam]);
+
   return (
     <SafeAreaView>
-      <SliderTitle>칼로리</SliderTitle>
-      <DSlider
-        sliderValue={calorieValue}
-        setSliderValue={setCalorieValue}
-        minimumValue={200}
-        maximumValue={800}
-        step={100}
-        sliderWidth={SLIDER_WIDTH}
-        kcal={kcal}
-      />
-      <SliderTitle>탄수화물</SliderTitle>
-      <DSlider
-        sliderValue={carbValue}
-        setSliderValue={setCarbrValue}
-        minimumValue={0}
-        maximumValue={40}
-        step={2}
-        sliderWidth={SLIDER_WIDTH}
-        g={g}
-      />
-      <SliderTitle>단백질</SliderTitle>
-      <DSlider
-        sliderValue={proteinValue}
-        setSliderValue={setProteinValue}
-        minimumValue={0}
-        maximumValue={40}
-        step={2}
-        sliderWidth={SLIDER_WIDTH}
-        g={g}
-      />
-      <SliderTitle>지방</SliderTitle>
-      <DSlider
-        sliderValue={fatValue}
-        setSliderValue={setFatValue}
-        minimumValue={0}
-        maximumValue={40}
-        step={2}
-        sliderWidth={SLIDER_WIDTH}
-        g={g}
-      />
+      <ScrollView>
+        <SliderTitle>칼로리</SliderTitle>
+        <DSlider
+          sliderValue={calorieValue}
+          setSliderValue={setCalorieValue}
+          minimumValue={calorieRange.isLoading ? 0 : Math.floor(minCalorie)}
+          maximumValue={calorieRange.isLoading ? 1 : Math.floor(maxCalorie)}
+          step={1}
+          sliderWidth={SLIDER_WIDTH}
+          text={'kcal'}
+          onSlidingComplete={() => setNutritionParam(params)}
+        />
+        <SliderTitle>탄수화물</SliderTitle>
+        <DSlider
+          sliderValue={carbValue}
+          setSliderValue={setCarbrValue}
+          minimumValue={carbRange.isLoading ? 0 : Math.floor(minCarb)}
+          maximumValue={carbRange.isLoading ? 1 : Math.floor(maxCarb)}
+          step={1}
+          sliderWidth={SLIDER_WIDTH}
+          text={'g'}
+          onSlidingComplete={() => setNutritionParam(params)}
+        />
+        <SliderTitle>단백질</SliderTitle>
+        <DSlider
+          sliderValue={proteinValue}
+          setSliderValue={setProteinValue}
+          minimumValue={proteinRange.isLoading ? 0 : Math.floor(minProtein)}
+          maximumValue={proteinRange.isLoading ? 1 : Math.floor(maxProtein)}
+          step={1}
+          sliderWidth={SLIDER_WIDTH}
+          text={'g'}
+          onSlidingComplete={() => setNutritionParam(params)}
+        />
+        <SliderTitle>지방</SliderTitle>
+        <DSlider
+          sliderValue={fatValue}
+          setSliderValue={setFatValue}
+          minimumValue={fatRange.isLoading ? 0 : Math.floor(minFat)}
+          maximumValue={fatRange.isLoading ? 1 : Math.floor(maxFat)}
+          step={1}
+          sliderWidth={SLIDER_WIDTH}
+          text={'g'}
+          onSlidingComplete={() => setNutritionParam(params)}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 };

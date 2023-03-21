@@ -220,6 +220,7 @@ export const useDeleteDiet = () => {
 
       queryClient.invalidateQueries({queryKey: [DIET]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL_EMPTY_YN]});
+      queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
       queryClient.invalidateQueries({queryKey: [PRODUCT]});
     },
   });

@@ -16,6 +16,9 @@ interface IDtooltip {
   onPressFn?: Function;
 }
 
+/** tooltip 박스는 bottom | top | left | right 값 없을 때 bottom, left 기준.
+ * triangleLeft, Right 는 tooltip박스 기준 꼭지점 위치
+ */
 const DTooltip = ({
   tooltipShow,
   text,
@@ -28,17 +31,24 @@ const DTooltip = ({
   onPressFn,
 }: IDtooltip) => {
   const boxVerticalStyle =
-    boxTop !== undefined
+    boxBottom !== undefined
+      ? {bottom: boxBottom}
+      : boxTop !== undefined
       ? {top: boxTop}
-      : {bottom: boxBottom !== undefined ? boxBottom : 0};
+      : {bottom: 0};
   const boxHorizontalStyle =
-    boxRight !== undefined
+    boxLeft !== undefined
+      ? {left: boxLeft}
+      : boxRight !== undefined
       ? {right: boxRight}
-      : {left: boxLeft !== undefined ? boxLeft : 0};
+      : {left: 0};
   const triangleHorizontalStyle =
-    triangleRight !== undefined
+    triangleLeft !== undefined
+      ? {left: triangleLeft - 6}
+      : triangleRight !== undefined
       ? {right: triangleRight - 6}
-      : {left: triangleLeft !== undefined ? triangleLeft - 6 : 10};
+      : {left: 10};
+
   return tooltipShow ? (
     <Container
       style={{...boxVerticalStyle, ...boxHorizontalStyle}}

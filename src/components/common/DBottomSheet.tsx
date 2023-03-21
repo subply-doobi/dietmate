@@ -2,7 +2,6 @@ import {View, Text, Modal, ScrollView} from 'react-native';
 import React from 'react';
 import styled from 'styled-components/native';
 import {StyledProps} from '../../styles/styledConsts';
-import {SCREENWIDTH} from '../../constants/constants';
 import colors from '../../styles/colors';
 
 interface IDBottomSheet {
@@ -50,7 +49,7 @@ const ModalBackGround = styled.TouchableOpacity`
 
 const PopUpContainer = styled.TouchableOpacity`
   width: 100%;
-  height: ${({filterHeight}: StyledProps) => (filterHeight ? '530px' : 'auto')};
+  height: ${({filterHeight}) => (filterHeight ? '514px' : 'auto')};
   padding: 0px 16px 16px 16px;
   align-items: center;
   background-color: ${({backgroundColor}: StyledProps) =>

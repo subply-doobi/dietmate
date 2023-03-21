@@ -13,12 +13,14 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/styledConsts';
+import {categoryCode} from '../../constants/constants';
 
 import NutrientsProgress from '../../components/common/NutrientsProgress';
 import colors from '../../styles/colors';
 import MenuSelect from '../../components/common/MenuSelect';
 import MenuHeader from '../../components/common/MenuHeader';
 import {queryFn} from '../../query/queries/requestFn';
+import {useListCategory, useCountCategory} from '../../query/queries/category';
 import {LIST_DIET} from '../../query/queries/urls';
 import {setCurrentDietNo} from '../../stores/slices/cartSlice';
 import {useListProduct} from '../../query/queries/product';
@@ -48,9 +50,11 @@ const Home = () => {
   const [filterIndex, setFilterIndex] = useState(0);
   const [sortParam, setSortParam] = useState('');
   const [sortImageToggle, setSortImageToggle] = useState(0);
+  const [filterCategoryParam, setFilterCategoryParam] = useState('');
+  const [filterParams, setFilterParams] = useState({});
+  // console.log('HOME/filterParam:', filterParams);
   // console.log('HOME/sortParam:', sortParam);
 
-  //sortParam 안에 DSC면 아래모양, ASC면 위모양 , 없으면 기본모양
   const checkSortImageToggle = () => {
     sortParam.includes('DESC')
       ? setSortImageToggle(1)
@@ -66,27 +70,37 @@ const Home = () => {
   const dispatch = useDispatch();
   const {listTitle} = useSelector((state: RootState) => state.filter);
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
-
   // react-query
+  // const filter.Calorie = params?.filter?.Calorie ? 'Calorie',params?.filter?.Calorie[0],params?.filter?.Calorie[1] : ''
+  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
+    enabled: currentDietNo ? true : false,
+  });
+  const keyOfcategoryCode = Object.keys(categoryCode);
+  const key = keyOfcategoryCode.find(
+    key => categoryCode[key] === filterParams.categoryParam,
+  );
   const {
     data: tData,
     refetch: refetchProduct,
     isFetching: productIsFetching,
   } = useListProduct(
-    {dietNo: currentDietNo, categoryCd: '', sort: sortParam},
+    {
+      dietNo: currentDietNo,
+      categoryCd: filterParams.categoryParam,
+      sort: sortParam,
+      filter: {filterParams},
+    },
     {
       enabled: currentDietNo ? true : false,
       onSuccess: () => {
-        dispatch(setListTitle('도시락'));
+        dispatch(setListTitle('전체'));
       },
     },
   );
+
   useEffect(() => {
     currentDietNo && refetchProduct();
-  }, [sortParam]);
-  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
-    enabled: currentDietNo ? true : false,
-  });
+  }, [sortParam, filterParams]);
 
   useEffect(() => {
     // 앱 시작할 때 내가 어떤 끼니를 보고 있는지 redux에 저장해놓기 위해 필요함
@@ -135,7 +149,7 @@ const Home = () => {
         {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
         <Row style={{justifyContent: 'space-between', marginTop: 32}}>
           <Row>
-            <ListTitle>{listTitle}</ListTitle>
+            <ListTitle>{key ? key : '검색된 결과:'}</ListTitle>
             <NoOfFoods> {tData?.length}개</NoOfFoods>
           </Row>
           <SortBtn onPress={() => setSortModalShow(true)}>
@@ -156,6 +170,7 @@ const Home = () => {
             <SortModalContent
               closeModal={setSortModalShow}
               setSortParam={setSortParam}
+              sortParam={sortParam}
             />
           )}
           onCancel={() => {
@@ -169,11 +184,19 @@ const Home = () => {
           onPress={() => {
             setFilterModalShow(true);
           }}
+          filterParams={filterParams}
         />
         <DBottomSheet
           alertShow={filterModalShow}
           setAlertShow={setFilterModalShow}
-          renderContent={() => <FilterModalContent filterIndex={filterIndex} />}
+          renderContent={() => (
+            <FilterModalContent
+              closeModal={setFilterModalShow}
+              filterParams={filterParams}
+              setFilterParams={setFilterParams}
+              filterIndex={filterIndex}
+            />
+          )}
           onCancel={() => {
             console.log('oncancel');
           }}
