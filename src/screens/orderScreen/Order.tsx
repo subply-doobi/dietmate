@@ -37,8 +37,12 @@ import PaymentWebView from '../../components/order/PaymentWebView';
 import {useKakaoPayReady} from '../../query/queries/order';
 import {setOrderSummary} from '../../stores/slices/orderSlice';
 import {useListDietDetailAll} from '../../query/queries/diet';
+import {useNavigation} from '@react-navigation/native';
+import {icons} from '../../assets/icons/iconSource';
 
-const Order = ({navigation: {navigate}, route}: NavigationProps) => {
+const Order = () => {
+  const navigation = useNavigation();
+  const {navigate} = navigation;
   // cart information -> 장바구니에서 route에 담아 보내줄 것.
   // 근데 그냥 장바구니식품 불러와서, 수량은 장바구니 qty쓰면 되는 거 아닌가...?!
   // TBD | 장바구니 담긴 식품 판매자별로 정리 및 식품가격 배송비 각각 변수에
@@ -165,9 +169,9 @@ const Order = ({navigation: {navigate}, route}: NavigationProps) => {
           )}
         </Col>
         {isActive ? (
-          <UpDownArrow source={require('../../assets/icons/20_up.png')} />
+          <UpDownArrow source={icons.arrowUp_20} />
         ) : (
-          <UpDownArrow source={require('../../assets/icons/20_down.png')} />
+          <UpDownArrow source={icons.arrowDown_20} />
         )}
       </AccordionHeader>
     );

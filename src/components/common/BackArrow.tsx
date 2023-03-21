@@ -1,17 +1,23 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import {TouchableOpacity} from 'react-native';
+import {icons} from '../../assets/icons/iconSource';
 
 const Back = styled.Image`
-  margin-left: 16px;
   width: 24px;
   height: 24px;
 `;
 
-const BackArrow = ({goBackFn}: {goBackFn: Function}) => {
+const BackArrow = ({
+  goBackFn,
+  style,
+}: {
+  goBackFn: Function;
+  style?: {marginLeft?: number};
+}) => {
   return (
-    <TouchableOpacity onPress={() => goBackFn()}>
-      <Back source={require('../../assets/icons/24_back.png')} />
+    <TouchableOpacity onPress={() => goBackFn()} style={{...style}}>
+      <Back source={icons.back_24} />
     </TouchableOpacity>
   );
 };

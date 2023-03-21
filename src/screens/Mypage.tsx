@@ -26,8 +26,8 @@ import {
 import {useForm, useWatch} from 'react-hook-form';
 import WeightChangeAlert from '../components/myPage/WeightChangeAlert';
 import {updateUserInfo} from '../stores/slices/userInfoSlice';
-import {changeNutrByWeight} from '../util/alertActions';
 import {useGetBaseLine, useUpdateBaseLine} from '../query/queries/baseLine';
+import {icons} from '../assets/icons/iconSource';
 
 interface INavigateByBtnId {
   [key: string]: (btnId: string, navigate: Function) => void;
@@ -202,7 +202,7 @@ const Mypage = ({navigation: {navigate}}: NavigationProps) => {
               navigate('InputNav', {screen: 'FirstInput'});
             }}>
             <UserInfoBtnText>정보변경</UserInfoBtnText>
-            <RightArrow source={require('../assets/icons/20_rightArrow.png')} />
+            <RightArrow source={icons.arrowRight_20} />
           </UserInfoBtnContainer>
         </ProfileContainer>
         <RecommendationContainer>
@@ -245,9 +245,7 @@ const Mypage = ({navigation: {navigate}}: NavigationProps) => {
               }}>
               <Row style={{justifyContent: 'space-between'}}>
                 <PageBtnText>{item.title}</PageBtnText>
-                <RightArrow
-                  source={require('../assets/icons/20_rightArrow.png')}
-                />
+                <RightArrow source={icons.arrowRight_20} />
               </Row>
             </PageBtn>
             {myPageBtns.length - 1 !== index && <HorizontalLine />}

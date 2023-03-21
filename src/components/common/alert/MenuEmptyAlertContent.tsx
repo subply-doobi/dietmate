@@ -1,12 +1,7 @@
 import styled from 'styled-components/native';
-import {useListDiet} from '../../../query/queries/diet';
 import {Col, TextMain} from '../../../styles/styledConsts';
-import {checkEmptyMenuIndex} from '../../../util/checkEmptyMenu';
 
 const MenuEmptyAlertContent = () => {
-  // TBD | dietData 가 아니라 끼니별 식품들 데이터 넣어줘야함
-  const {data: dietData} = useListDiet();
-  const emptyMenuIndex = checkEmptyMenuIndex(dietData);
   return (
     <Container>
       <Col style={{marginTop: 28, alignItems: 'center'}}>

@@ -39,6 +39,7 @@ import {
   updateAddress,
 } from '../../stores/slices/orderSlice';
 import DAlert from '../../components/common/alert/DAlert';
+import {icons} from '../../assets/icons/iconSource';
 
 const PostalCode = styled(TextSub)`
   font-size: 16px;
@@ -203,9 +204,7 @@ const AddressEdit = ({
                     onPress={() => {
                       setAddressDeleteAlertShow(true);
                     }}>
-                    <AddressDeleteIcon
-                      source={require('../../assets/icons/24_icon=close.png')}
-                    />
+                    <AddressDeleteIcon source={icons.cancelRound_24} />
                   </AddressDeleteBtn>
                 </Row>
                 <AddressBase>{addressBase}</AddressBase>
@@ -239,9 +238,7 @@ const AddressEdit = ({
                     justifyContent: 'flex-start',
                   }}>
                   <Pressable onPress={() => setPostModalVisible(false)}>
-                    <BackBtn
-                      source={require('../../assets/icons/24_back.png')}
-                    />
+                    <BackBtn source={icons.back_24} />
                   </Pressable>
                 </View>
                 <Postcode

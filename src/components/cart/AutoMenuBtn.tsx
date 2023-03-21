@@ -1,5 +1,6 @@
 import {View, Text} from 'react-native';
 import styled from 'styled-components/native';
+import {icons} from '../../assets/icons/iconSource';
 
 import {BtnCTA, Row, TextSub} from '../../styles/styledConsts';
 
@@ -31,9 +32,7 @@ const AutoMenuBtn = ({
   const btnText =
     status === 'empty' ? '귀찮을 땐 자동구성' : '남은 영양만큼 자동구성';
   const btnImageRequire =
-    status === 'empty'
-      ? require('../../assets/icons/24_autoMenu_activated.png')
-      : require('../../assets/icons/24_autoMenu.png');
+    status === 'empty' ? icons.plusSquareActivated_24 : icons.plusSquare_24;
   return (
     <View>
       {status === 'empty' && <GuideText>식품을 추가해보세요</GuideText>}

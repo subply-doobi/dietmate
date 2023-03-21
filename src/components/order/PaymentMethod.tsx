@@ -10,6 +10,7 @@ import {
 } from '../../styles/styledConsts';
 import {Controller, useWatch} from 'react-hook-form';
 import {IFormField, validationRules} from '../../constants/constants';
+import {icons} from '../../assets/icons/iconSource';
 
 const KakaoPayBtn = styled(BtnCTA)`
   height: 48px;
@@ -49,7 +50,7 @@ const PaymentMethod = ({control, setValue}: IPaymentMethod) => {
           setValue('paymentMethod', paymentMethodValue ? '' : 'kakao');
         }}>
         <Row>
-          <KakaoLogo source={require('../../assets/icons/kakaoPay.png')} />
+          <KakaoLogo source={icons.kakaoPay} />
           <KakaoPayBtnText>카카오페이</KakaoPayBtnText>
         </Row>
       </KakaoPayBtn>

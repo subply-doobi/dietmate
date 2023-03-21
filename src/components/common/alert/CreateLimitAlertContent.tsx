@@ -1,5 +1,3 @@
-import {View, Text} from 'react-native';
-import React from 'react';
 import styled from 'styled-components/native';
 import {Col, TextMain} from '../../../styles/styledConsts';
 

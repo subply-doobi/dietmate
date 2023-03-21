@@ -14,7 +14,7 @@ export interface IListDietDetailParams {
   dietNo: string;
 }
 
-interface IDietDetailProductData extends IProductData {
+export interface IDietDetailProductData extends IProductData {
   qty: string;
 }
 

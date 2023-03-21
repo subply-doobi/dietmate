@@ -9,6 +9,7 @@ import {AppDispatch, RootState} from '../../stores/store';
 import {PayloadAction} from '@reduxjs/toolkit';
 import {SCREENWIDTH} from '../../constants/constants';
 import {deleteLikeFood} from '../../stores/slices/likeSlice';
+import {icons} from '../../assets/icons/iconSource';
 
 const Container = styled.View``;
 
@@ -135,13 +136,9 @@ const FoodList = ({item, menuIndex}: IFoodList) => {
               itemExist ? console.log('item삭제') : console.log('item추가');
             }}>
             {itemExist ? (
-              <AddToCartBtnImage
-                source={require('../../assets/icons/24_foodDelete.png')}
-              />
+              <AddToCartBtnImage source={icons.minusRound_24} />
             ) : (
-              <AddToCartBtnImage
-                source={require('../../assets/icons/24_foodAdd.png')}
-              />
+              <AddToCartBtnImage source={icons.plusRound_24} />
             )}
           </AddOrDeleteBtn>
           <DeleteLikeFoodBtn onPress={deleteFood}>

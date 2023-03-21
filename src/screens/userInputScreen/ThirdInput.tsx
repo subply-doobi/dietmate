@@ -25,6 +25,8 @@ import {
   useUpdateBaseLine,
 } from '../../query/queries/baseLine';
 import {useCreateDiet, useListDiet} from '../../query/queries/diet';
+import {useNavigation} from '@react-navigation/native';
+import {icons} from '../../assets/icons/iconSource';
 
 interface IFormData {
   ratioType: string;
@@ -34,7 +36,11 @@ interface IFormData {
   fatManual: string;
 }
 
-const ThirdInput = ({navigation}: NavigationProps) => {
+const ThirdInput = () => {
+  // navigation
+  const navigation = useNavigation();
+  const {navigate} = navigation;
+
   // react-query
   const {data} = useGetBaseLine();
   const updateMutation = useUpdateBaseLine();
@@ -120,9 +126,9 @@ const ThirdInput = ({navigation}: NavigationProps) => {
           {section.title}
         </AccordionHeaderTitle>
         {isActive ? (
-          <ArrowIcon source={require('../../assets/icons/20_up.png')} />
+          <ArrowIcon source={icons.arrowUpPurple_20} />
         ) : (
-          <ArrowIcon source={require('../../assets/icons/20_down.png')} />
+          <ArrowIcon source={icons.arrowDown_20} />
         )}
       </AccordionHeader>
     );
@@ -167,7 +173,7 @@ const ThirdInput = ({navigation}: NavigationProps) => {
     } else {
       updateMutation.mutate(requestBody);
     }
-    navigation.navigate('BottomTabNav', {screen: 'Home'});
+    navigate('BottomTabNav', {screen: 'Home'});
   };
   // TBD | 스크롤뷰 ref를 Manual에 넘겨서 단백질입력 활성화시 스크롤 내려주기
   return (

@@ -66,8 +66,8 @@ export const compareNutrToTarget = (
   return exceedNumber === 0 ? 'notEnough' : 'exceed';
 };
 
-export const reGroupBySeller = (dietDetailData: IProductData[]) => {
-  let reGroupedProducts: Array<Array<IProductData>> = [[]];
+export const reGroupBySeller = (dietDetailData: IDietDetailData) => {
+  let reGroupedProducts: Array<IDietDetailData> = [[]];
   for (let i = 0; i < dietDetailData.length; i++) {
     if (i === 0) {
       reGroupedProducts[0].push(dietDetailData[i]);

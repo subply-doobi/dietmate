@@ -15,6 +15,7 @@ import {mutationFn, queryFn} from './requestFn';
 import {DIET_DETAIL, PRODUCT, PRODUCT_AUTO} from '../keys';
 import {IMutationOptions, IQueryOptions} from '../types/common';
 import {ICreateProductAutoParams, IListProductParams} from '../types/product';
+import {useDispatch} from 'react-redux';
 // const getProductList = async () => {
 //   try {
 //     const res = await axios.get(PRODUCT_LIST);
@@ -28,7 +29,6 @@ export const useCreateProductMark = () => {
   const mutation = useMutation({
     mutationFn: (productNo: string) =>
       mutationFn(`${CREATE_PRODUCT_MARK}/${productNo}`, 'put'),
-    onError: e => console.error('useCreateProductMark error', e),
   });
   return mutation;
 };
@@ -38,7 +38,6 @@ export const useDeleteProductMark = () => {
     mutationFn: (productNo: string) =>
       mutationFn(`${DELETE_PRODUCT_MARK}/${productNo}`, 'delete'),
     onSuccess: data => console.log(data),
-    onError: e => console.log('useCreateProductMark error', e),
   });
   return mutation;
 };
@@ -64,7 +63,6 @@ export const useCreateProductAuto = () => {
       console.log(data);
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
     },
-    onError: e => console.log('useCreateProductAuto error: ', e),
   });
   return mutation;
 };
@@ -81,6 +79,7 @@ export const useListProduct = (
   },
   options?: IQueryOptions,
 ) => {
+  const dispatch = useDispatch();
   const dietNo = params?.dietNo ? params.dietNo : '';
   const enabled = options?.enabled ?? true;
   const searchText = params?.searchText ? params?.searchText : '';
@@ -115,7 +114,7 @@ export const useListProduct = (
     queryKey: [PRODUCT],
     queryFn: () =>
       queryFn(
-        `${LIST_PRODUCT}/${dietNo}?searchText=${searchText}&categoryCd=${cateogryParam}&sort=${sort}&filter=${calorieParam}${carbParam}${proteinParam}${fatParam}${priceParam}`,
+        `${LIST_PRODUCT}${dietNo}?searchText=${searchText}&categoryCd=${categoryCd}&sort=${sort}&filter=${filter}`,
       ),
     enabled,
     onSuccess: data => {
@@ -123,17 +122,6 @@ export const useListProduct = (
     },
     onError: e => {
       console.log('useListProduct Error: ', e);
-    },
-  });
-};
-
-export const useFilterRange = filterType => {
-  return useQuery({
-    queryKey: ['filterRange', filterType],
-    queryFn: () => queryFn(`${FILTER}/${filterType}`),
-    onSuccess: data => {},
-    onError: e => {
-      console.log('useFilterRange Error: ', e);
     },
   });
 };
@@ -159,6 +147,17 @@ export const useTest = async () => {
         suspense: true,
       },
     ],
+  });
+};
+
+export const useFilterRange = filterType => {
+  return useQuery({
+    queryKey: ['filterRange', filterType],
+    queryFn: () => queryFn(`${FILTER}/${filterType}`),
+    onSuccess: data => {},
+    onError: e => {
+      console.log('useFilterRange Error: ', e);
+    },
   });
 };
 

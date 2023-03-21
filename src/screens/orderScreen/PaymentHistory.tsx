@@ -20,6 +20,7 @@ import {kakaoAppAdminKey} from '../../constants/constants';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../stores/store';
 import {useKakaopayApprove} from '../../query/queries/order';
+import { icons } from '../../assets/icons/iconSource';
 
 interface IOrder {
   id: string;
@@ -146,7 +147,7 @@ const PaymentHistory = ({navigation, route}: NavigationProps) => {
       </Row>
       <HorizontalLine style={{marginTop: 8}} />
       <Row>
-        <Arrow source={require('../../assets/icons/20_leftArrow.png')} />
+        <Arrow source={icons.arrowLeft_20} />
         <FlatList
           horizontal={true}
           data={item.menu}
@@ -159,7 +160,7 @@ const PaymentHistory = ({navigation, route}: NavigationProps) => {
             />
           )}
         />
-        <Arrow source={require('../../assets/icons/20_rightArrow.png')} />
+        <Arrow source={icons.arrowRight_20} />
       </Row>
       <TotalPrice>{item.totalPrice} 원</TotalPrice>
     </>

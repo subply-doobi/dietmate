@@ -1,31 +1,23 @@
-import {View, Text, Image} from 'react-native';
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import colors from '../../styles/colors';
 import {Col, Row, TextMain, TextSub} from '../../styles/styledConsts';
 import {BASE_URL} from '../../query/queries/urls';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {RootState} from '../../stores/store';
-import {NavigationProps} from '../../constants/constants';
 import {SCREENWIDTH} from '../../constants/constants';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
-  useListDietDetail,
 } from '../../query/queries/diet';
 import {IProductData} from '../../query/types/product';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import {commaToNum} from '../../util/sumUp';
 import {useNavigation} from '@react-navigation/native';
-import {addNutr, minusNutr} from '../../stores/slices/cartSlice';
+import {icons} from '../../assets/icons/iconSource';
 
-interface IFoodList extends NavigationProps {
-  item: IProductData;
-  dietDetailData: IProductData[];
-}
-
-const FoodList = ({item, dietDetailData}: IFoodList) => {
+const FoodList = ({item}: {item: IProductData}) => {
   const navigation = useNavigation();
   // redux
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
@@ -82,13 +74,9 @@ const FoodList = ({item, dietDetailData}: IFoodList) => {
               }
             }}>
             {item.productChoiceYn === 'Y' ? (
-              <AddToCartBtnImage
-                source={require('../../assets/icons/24_foodDelete.png')}
-              />
+              <AddToCartBtnImage source={icons.minusRound_24} />
             ) : (
-              <AddToCartBtnImage
-                source={require('../../assets/icons/24_foodAdd.png')}
-              />
+              <AddToCartBtnImage source={icons.plusRound_24} />
             )}
           </AddOrDeleteBtn>
         </Row>
@@ -119,7 +107,7 @@ const FoodList = ({item, dietDetailData}: IFoodList) => {
         onCancel={() => {
           setDeleteAlertShow(false);
         }}
-        renderContent={() => <DeleteAlertContent dietSeq={'해당식품을'} />}
+        renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
       />
     </Container>
   );

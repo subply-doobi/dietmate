@@ -21,7 +21,7 @@ import DSlider from '../common/slider/DSlider';
 import CategoryContent from './filterContents/CategoryContent';
 import NutritionContent from './filterContents/NutritionContent';
 import PriceContent from './filterContents/PriceContent';
-import AutoDietContent from './filterContents/AutoDietContent';
+import {icons} from '../../assets/icons/iconSource';
 
 const FilterModalContent = props => {
   const {filterIndex, closeModal, setFilterParams, filterParams} = props;
@@ -132,10 +132,7 @@ const FilterModalContent = props => {
             </Row>
           </Button>
           <Button>
-            <Image
-              style={{marginTop: 5}}
-              source={require('../../assets/icons/24_filterInitialize.png')}
-            />
+            <Image style={{marginTop: 5}} source={icons.initialize_24} />
           </Button>
         </FilterRow>
       </>

@@ -19,7 +19,6 @@ export const useDietPurposeCode = (code: IQuery) => {
     queryKey: [DIET_PURPOSE_CODE],
     queryFn: () => queryFn(`${COMMON_CODE}/${code}`),
     retry: 1,
-    onSuccess: data => {},
   });
 };
 export const useWeightPurposeCode = (code: IQuery) => {
@@ -27,7 +26,6 @@ export const useWeightPurposeCode = (code: IQuery) => {
     queryKey: [WEIGHT_PURPOSE_CODE],
     queryFn: () => queryFn(`${COMMON_CODE}/${code}`),
     retry: 1,
-    onSuccess: data => {},
   });
 };
 export const useAerobicPurposeCode = (code: IQuery) => {
@@ -35,7 +33,6 @@ export const useAerobicPurposeCode = (code: IQuery) => {
     queryKey: [AEROBIC_PURPOSE_CODE],
     queryFn: () => queryFn(`${COMMON_CODE}/${code}`),
     retry: 1,
-    onSuccess: data => {},
   });
 };
 
@@ -43,7 +40,5 @@ export const useFilterCode = (type: IQuery) => {
   return useQuery({
     queryKey: ['filter'],
     queryFn: () => queryFn(`${FILTER}/${type}`),
-    onSuccess: () => console.log('filterSuccess'),
-    onError: e => console.log(e),
   });
 };

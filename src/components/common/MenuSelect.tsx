@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {TouchableWithoutFeedback, ActivityIndicator} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components/native';
+import {icons} from '../../assets/icons/iconSource';
 import {
   useCreateDiet,
   useDeleteDiet,
@@ -13,6 +14,7 @@ import {RootState} from '../../stores/store';
 import colors from '../../styles/colors';
 import {Col, HorizontalLine, TextMain} from '../../styles/styledConsts';
 import {findDietSeq} from '../../util/findDietSeq';
+import {getDietAddStatus} from '../../util/getDietAddStatus';
 import CreateLimitAlertContent from './alert/CreateLimitAlertContent';
 import DAlert from './alert/DAlert';
 import DeleteAlertContent from './alert/DeleteAlertContent';
@@ -38,22 +40,13 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
   const [createAlertShow, setCreateAlertShow] = useState(false);
   const [dietNoToDelete, setDietNoToDelete] = useState<string>();
 
-  // TBD | BottomMenuSelect랑 겹치는 기능
-  const NoOfDiet = dietData?.length;
-  const addAlertStatus =
-    NoOfDiet === undefined
-      ? 'noData'
-      : NoOfDiet >= 3
-      ? 'limit'
-      : dietEmptyData?.emptyYn === 'Y'
-      ? 'empty'
-      : 'possible';
+  // BottomMenuSelect랑 겹치는 기능
+  const addAlertStatus = getDietAddStatus(dietData, dietEmptyData);
 
   const onCreateDiet = () => {
     if (addAlertStatus === 'possible') {
       createDietMutation.mutate();
       setOpen(false);
-      // TBD | 여기서 빈 끼니 있는지도 확인
       return;
     }
 
@@ -88,9 +81,7 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
                     setDietNoToDelete(menu.dietNo);
                     setDeleteAlertShow(true);
                   }}>
-                  <DeleteImg
-                    source={require('../../assets/icons/24_icon=close.png')}
-                  />
+                  <DeleteImg source={icons.cancelRound_24} />
                 </DeleteBtn>
               )}
             </Menu>
@@ -106,7 +97,7 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
           alertShow={deleteAlertShow}
           renderContent={() => (
             <DeleteAlertContent
-              dietSeq={dietData ? findDietSeq(dietData, dietNoToDelete) : ''}
+              deleteText={dietData ? findDietSeq(dietData, dietNoToDelete) : ''}
             />
           )}
           onConfirm={() => onDeleteDiet()}

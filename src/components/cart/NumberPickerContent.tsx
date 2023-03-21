@@ -25,6 +25,7 @@ import {
 import {RootState} from '../../stores/store';
 import {useSelector} from 'react-redux';
 import {IDietDetailData} from '../../query/types/diet';
+import {icons} from '../../assets/icons/iconSource';
 
 const getCurrentQty = (productNm: string, dietDetail: IDietDetailData) => {
   let currentQty = '';
@@ -124,12 +125,12 @@ const NumberPickerContent = ({
         </Col>
         <Col>
           <BtnPlusMinus onPress={() => setNumber(v => v + 1)}>
-            <BtnImage source={require(`../../assets/icons/48_btnPlus.png`)} />
+            <BtnImage source={icons.plus_48} />
           </BtnPlusMinus>
           <HorizontalSpace height={12} />
           <BtnPlusMinus
             onPress={() => number > parseInt(minQty) && setNumber(v => v - 1)}>
-            <BtnImage source={require(`../../assets/icons/48_btnMinus.png`)} />
+            <BtnImage source={icons.minus_48} />
           </BtnPlusMinus>
         </Col>
       </Row>
@@ -160,9 +161,6 @@ const ProductNm = styled(TextMain)`
 const FreeShippingPriceText = styled(TextMain)`
   font-size: 14px;
 `;
-const CurrentPriceText = styled(TextMain)`
-  font-size: 14px;
-`;
 
 const MinQtyText = styled(TextMain)`
   font-size: 14px;
@@ -187,6 +185,6 @@ const BtnPlusMinus = styled.TouchableOpacity`
 `;
 
 const BtnImage = styled.Image`
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
 `;

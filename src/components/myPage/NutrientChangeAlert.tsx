@@ -15,10 +15,9 @@ import {validationRules} from '../../constants/constants';
 import {IFormField} from '../../constants/constants';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 
-// TBD | renderInput 이것도 겹치는 것 꽤 많은 듯. (useRef같은 것 쓰는건 컴포넌트로 못빼겠지..?!)
 const renderNutrInput = (
   {field: {onChange, onBlur, value}}: IFormField,
-  nutrText: number,
+  nutrText: string,
 ) => {
   return (
     <>
@@ -70,7 +69,7 @@ const NutrChangeAlert = ({
       </Col>
       <Controller
         control={control}
-        rules={validationRules[type]}
+        rules={validationRules[type + 'Manual']} // validationRules가 "calManual" 이렇게 정리되어있음
         render={field => renderNutrInput(field, nutrText)}
         name={type}
       />

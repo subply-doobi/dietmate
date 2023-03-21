@@ -10,6 +10,7 @@ import {
 import colors from '../../styles/colors';
 import {useListProduct} from '../../query/queries/product';
 import {useSelector} from 'react-redux';
+import {icons} from '../../assets/icons/iconSource';
 
 const SortModalContent = props => {
   const {closeModal, sortParam, setSortParam} = props;
@@ -119,15 +120,11 @@ const SortModalContent = props => {
         <SortRow>
           <Text>가격</Text>
           {priceToggle === 0 ? (
-            <Image source={require('../../assets/icons/24_sort.png')} />
+            <Image source={icons.sort_24} />
           ) : priceToggle === 1 ? (
-            <Image
-              source={require('../../assets/icons/24_sort_descending.png')}
-            />
+            <Image source={icons.sortDescending_24} />
           ) : (
-            <Image
-              source={require('../../assets/icons/24_sort_ascending.png')}
-            />
+            <Image source={icons.sortAscending_24} />
           )}
         </SortRow>
       </Button>
@@ -146,15 +143,11 @@ const SortModalContent = props => {
         <SortRow>
           <Text>가칼비</Text>
           {calorieToggle === 0 ? (
-            <Image source={require('../../assets/icons/24_sort.png')} />
+            <Image source={icons.sort_24} />
           ) : calorieToggle === 1 ? (
-            <Image
-              source={require('../../assets/icons/24_sort_descending.png')}
-            />
+            <Image source={icons.sortDescending_24} />
           ) : (
-            <Image
-              source={require('../../assets/icons/24_sort_ascending.png')}
-            />
+            <Image source={icons.sortAscending_24} />
           )}
         </SortRow>
       </Button>
@@ -174,15 +167,11 @@ const SortModalContent = props => {
         <SortRow>
           <Text>가단비</Text>
           {proteinToggle === 0 ? (
-            <Image source={require('../../assets/icons/24_sort.png')} />
+            <Image source={icons.sort_24} />
           ) : proteinToggle === 1 ? (
-            <Image
-              source={require('../../assets/icons/24_sort_descending.png')}
-            />
+            <Image source={icons.sortDescending_24} />
           ) : (
-            <Image
-              source={require('../../assets/icons/24_sort_ascending.png')}
-            />
+            <Image source={icons.sortAscending_24} />
           )}
         </SortRow>
       </Button>

@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import {Col, Row, TextMain, TextSub} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
+import {icons} from '../../assets/icons/iconSource';
 
 const ThumbnailImage = styled.Image`
   width: 72px;
@@ -63,9 +64,7 @@ const OrderedList = ({food}: {food: Array<number>}) => {
             존맛존맛
           </Seller>
           <BtnPlusNCancel>
-            <BtnImage
-              source={require('../../assets/icons/24_plus_round_small.png')}
-            />
+            <BtnImage source={icons.plusRoundSmall_24} />
           </BtnPlusNCancel>
         </Row>
         <ProductName numberOfLines={1} ellipsizeMode="tail">

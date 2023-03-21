@@ -24,6 +24,7 @@ import {
 } from 'react-native-image-picker';
 import axios from 'axios';
 import {useChangeHeaderRight, useChangeHeaderTitle} from '../util/customHooks';
+import {icons} from '../assets/icons/iconSource';
 
 const Container = styled.View`
   flex: 1;
@@ -190,7 +191,7 @@ const HistoryDetail = ({
         onPress={() => {
           console.log('delete!');
         }}>
-        <DeleteImage source={require('../assets/icons/24_icon=close.png')} />
+        <DeleteImage source={icons.cancelRound_24} />
       </ImageDeleteBtn>
     </ImageBox>
   );
@@ -304,7 +305,7 @@ const HistoryDetail = ({
             onPress={() => {
               setImageAddAlertShow(true);
             }}>
-            <AddImage source={require('../assets/icons/24_autoMenu.png')} />
+            <AddImage source={icons.plusSquare_24} />
           </ImageAddBtn>
         </HistoryImageRow>
       </Card>

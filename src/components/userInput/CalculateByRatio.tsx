@@ -117,8 +117,6 @@ const InputHeader = styled(InputHeaderText)`
 `;
 const Input = styled(UserInfoTextInput)``;
 
-// TBD | CalculateByRatio.tsx, Auto.tsx, Manual.tsx 모두
-// ContentsContainer or SummaryContainer 겹침
 const SummaryContainer = styled.View`
   margin-top: 12px;
   border-width: 1px;

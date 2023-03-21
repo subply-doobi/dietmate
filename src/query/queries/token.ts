@@ -56,6 +56,7 @@ export const validateToken = async () => {
         },
       });
       isTokenValid = true;
+      isTokenValid && console.log('인증 완료');
       validToken = accessToken;
     } catch (e) {
       console.log('인증되지 않은 토큰: ', e);
@@ -73,6 +74,7 @@ export const validateToken = async () => {
       console.log();
       await storeToken(reIssue.data.accessToken, reIssue.data.refreshToken);
       isTokenValid = true;
+      isTokenValid && console.log('재발급 완료');
       validToken = reIssue.data.accessToken;
     } catch (e) {
       console.log('토큰 재발급 실패: ', e);
@@ -83,6 +85,7 @@ export const validateToken = async () => {
     try {
       validToken = await kakaoLogin();
       isTokenValid = true;
+      isTokenValid && console.log('카카오로그인 완료');
     } catch (e) {
       console.log('카카오로그인 실패', e);
     }

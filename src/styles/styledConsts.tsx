@@ -10,7 +10,7 @@ export interface StyledProps {
   backgroundColor?: string;
   lineColor?: string;
   thumbIdx?: number;
-  filterHeight: boolean;
+  filterHeight?: boolean;
 }
 
 export const Container = styled.View`

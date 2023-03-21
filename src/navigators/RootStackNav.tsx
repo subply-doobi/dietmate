@@ -10,6 +10,11 @@ import PaymentHistoryNav from './PaymentHistoryNav';
 import colors from '../styles/colors';
 import BackArrow from '../components/common/BackArrow';
 import {useNavigation} from '@react-navigation/native';
+import {RootState} from '../stores/store';
+import {useDispatch, useSelector} from 'react-redux';
+import DAlert from '../components/common/alert/DAlert';
+import {setCommonAlertShow} from '../stores/slices/commonAlertSlice';
+import RequestAlertContent from '../components/common/alert/RequestAlertContent';
 
 const Stack = createNativeStackNavigator();
 

@@ -16,7 +16,7 @@ export const changeNutrByWeight = (
     weightValue,
     userInfo.weightTimeCd,
     userInfo.aerobicTimeCd,
-    userInfo.dietPurposecd,
+    userInfo.dietPurposeCd,
     bmr,
   );
   return res;
