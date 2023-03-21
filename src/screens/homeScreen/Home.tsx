@@ -85,8 +85,7 @@ const Home = () => {
       },
     },
   );
-  const count = useCountCategory();
-  console.log(count);
+  // const count = useCountCategory();
   useEffect(() => {
     currentDietNo && refetchProduct();
   }, [sortParam, filterParams]);

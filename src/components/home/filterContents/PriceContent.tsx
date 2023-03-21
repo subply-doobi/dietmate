@@ -3,33 +3,39 @@ import styled from 'styled-components/native';
 import {Row, TextMain} from '../../../styles/styledConsts';
 import {useFilterRange, useTest} from '../../../query/queries/product';
 
-import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
+import {ActivityIndicator, ScrollView} from 'react-native';
 import DSlider from '../../common/slider/DSlider';
 
 const PriceContent = props => {
   const {setPriceParam, priceParam, filterParams} = props;
   const priceRange = useFilterRange('price');
-  const {data} = priceRange;
+  const {data, isLoading} = priceRange;
+  console.log(isLoading);
+
   const [priceValue, setPriceValue] = useState([
     filterParams?.priceParam ? filterParams?.priceParam[0] : data?.minData,
     filterParams?.priceParam ? filterParams?.priceParam[1] : data?.maxData,
   ]);
-  useEffect(() => {
-    priceParam && setPriceValue(priceParam);
-  }, [priceParam]);
+  // useEffect(() => {
+  //   priceParam && setPriceValue(priceParam);
+  // }, [priceParam]);
   return (
     <ScrollView>
       <SliderTitle>가격</SliderTitle>
-      <DSlider
-        sliderValue={priceValue}
-        setSliderValue={setPriceValue}
-        minimumValue={priceRange.isLoading ? 0 : Math.floor(data?.minData)}
-        maximumValue={priceRange.isLoading ? 1 : Math.floor(data?.maxData)}
-        step={500}
-        text={'원'}
-        sliderWidth={SLIDER_WIDTH}
-        onSlidingComplete={() => setPriceParam(priceValue)}
-      />
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <DSlider
+          sliderValue={priceValue}
+          setSliderValue={setPriceValue}
+          minimumValue={Math.floor(data?.minData)}
+          maximumValue={Math.floor(data?.maxData)}
+          step={500}
+          text={'원'}
+          sliderWidth={SLIDER_WIDTH}
+          onSlidingComplete={() => setPriceParam(priceValue)}
+        />
+      )}
     </ScrollView>
   );
 };
