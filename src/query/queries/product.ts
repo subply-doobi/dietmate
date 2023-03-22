@@ -121,9 +121,6 @@ export const useFilterRange = (filterType, options?: IQueryOptions) => {
     queryKey: ['filterRange', filterType],
     queryFn: () => queryFn(`${FILTER}/${filterType}`),
     onSuccess: data => {},
-    onError: e => {
-      console.log('useListProduct Error: ', e);
-    },
     enabled,
   });
 };

@@ -23,6 +23,7 @@ export const useHandleError = () => {
   const dispatch = useDispatch();
   const handleError = useCallback((e: any) => {
     const errorMsg = getErrorMsg(e);
+    console.log('useHandleError: errMsg: ', errorMsg);
     dispatch(openCommonAlert(errorMsg));
   }, []);
 

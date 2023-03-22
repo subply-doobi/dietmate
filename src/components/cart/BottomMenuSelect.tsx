@@ -20,9 +20,8 @@ import {
 import DAlert from '../common/alert/DAlert';
 import CreateLimitAlertContent from '../common/alert/CreateLimitAlertContent';
 import colors from '../../styles/colors';
-import {checkEmptyMenuIndex} from '../../util/checkEmptyMenu';
-import MenuEmptyAlertContent from '../common/alert/MenuEmptyAlertContent';
 import {getDietAddStatus} from '../../util/getDietAddStatus';
+import CommonAlertContent from '../common/alert/CommonAlertContent';
 
 const BottomMenuSelect = () => {
   // redux
@@ -97,7 +96,9 @@ const BottomMenuSelect = () => {
           addAlertStatus === 'limit' ? (
             <CreateLimitAlertContent />
           ) : addAlertStatus === 'empty' ? (
-            <MenuEmptyAlertContent />
+            <CommonAlertContent
+              text={`비어있는 끼니를\n먼저 구성하고 이용해보세요`}
+            />
           ) : (
             <></>
           )

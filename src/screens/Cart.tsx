@@ -103,10 +103,11 @@ const Cart = () => {
           ? parseInt(seller[0].shippingPrice)
           : 0;
       totalProductPrice += sellerProductPrice;
-      totalShippingPrice += sellershippingPrice;
+      // totalShippingPrice += sellershippingPrice; // 배송비는 장바구니에서만 보이게 할 것
     });
 
-    const totalPrice = totalProductPrice + totalShippingPrice;
+    // const totalPrice = totalProductPrice + totalShippingPrice;
+    const totalPrice = totalProductPrice;
     return totalPrice;
   }, [dietDetailAllData]);
 
@@ -224,7 +225,7 @@ const Cart = () => {
             navigation.navigate('OrderNav', {screen: 'Order'});
           }}>
           <BtnText>
-            총 {totalPrice && commaToNum(totalPrice)}원 주문하기
+            식품 총 {totalPrice && commaToNum(totalPrice)}원 주문하기
           </BtnText>
         </BtnBottomCTA>
       </Container>

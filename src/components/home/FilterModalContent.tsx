@@ -30,6 +30,8 @@ import NutritionContent from './filterContents/NutritionContent';
 import PriceContent from './filterContents/PriceContent';
 import {icons} from '../../assets/icons/iconSource';
 import AutoDietContent from './filterContents/AutoDietContent';
+import DAlert from '../common/alert/DAlert';
+import CommonAlertContent from '../common/alert/CommonAlertContent';
 
 const FilterModalContent = props => {
   const {filterIndex, closeModal, setFilterParams, filterParams} = props;
@@ -44,6 +46,8 @@ const FilterModalContent = props => {
     nutritionParam,
     priceParam,
   };
+  const [initializeModalShow, setInitializeModalShow] = useState(false);
+  const [isTotalInitailize, setIsTotalInitailize] = useState<boolean>();
   const resetType = [
     {
       text: '카테고리 초기화',
@@ -139,8 +143,12 @@ const FilterModalContent = props => {
               </Text>
             </Row>
           </Button>
-          <Button>
-            <Image style={{marginTop: 5}} source={icons.initialize_24} />
+          <Button
+            onPress={() => {
+              setIsTotalInitailize(true);
+              setInitializeModalShow(true);
+            }}>
+            <Image source={icons.initialize_24} />
           </Button>
         </FilterRow>
       </>
@@ -179,17 +187,41 @@ const FilterModalContent = props => {
         <ShowContent index={clicked} />
       </ScrollView>
 
+      {/* 초기화 | 확인 버튼 */}
       <BottomRow>
         <BtnCTA
           style={{
             flex: 1,
           }}
           btnStyle={'border'}
-          onPress={resetType[clicked].reset}>
+          onPress={() => {
+            setIsTotalInitailize(false);
+            setInitializeModalShow(true);
+          }}>
           <BottomText style={{color: colors.textSub}}>
             {resetType[clicked].text}
           </BottomText>
         </BtnCTA>
+        <DAlert
+          alertShow={initializeModalShow}
+          onConfirm={() => {
+            if (isTotalInitailize) {
+              setCategoryParam('');
+              setFilterParams('');
+              setNutritionParam('');
+              setPriceParam('');
+              setInitializeModalShow(false);
+            } else {
+              resetType[clicked].reset();
+              setInitializeModalShow(false);
+            }
+          }}
+          onCancel={() => setInitializeModalShow(false)}
+          renderContent={() => (
+            <CommonAlertContent text={`적용된 필터가\n초기화 됩니다`} />
+          )}
+          confirmLabel="초기화"
+        />
         <BtnCTA
           style={{
             flex: 1,

@@ -18,7 +18,7 @@ import {getDietAddStatus} from '../../util/getDietAddStatus';
 import CreateLimitAlertContent from './alert/CreateLimitAlertContent';
 import DAlert from './alert/DAlert';
 import DeleteAlertContent from './alert/DeleteAlertContent';
-import MenuEmptyAlertContent from './alert/MenuEmptyAlertContent';
+import CommonAlertContent from './alert/CommonAlertContent';
 
 interface IMenuSelect {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -109,7 +109,9 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
             addAlertStatus === 'limit' ? (
               <CreateLimitAlertContent />
             ) : addAlertStatus === 'empty' ? (
-              <MenuEmptyAlertContent />
+              <CommonAlertContent
+                text={`비어있는 끼니를\n먼저 구성하고 이용해보세요`}
+              />
             ) : (
               <></>
             )

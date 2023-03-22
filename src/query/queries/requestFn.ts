@@ -6,7 +6,7 @@ export const queryFn = async (url: string) => {
   if (!isTokenValid) return null;
   const requestConfig = {
     headers: {authorization: `Bearer ${validToken}`},
-    timeout: 2000,
+    timeout: 4000,
   };
   const res = await axios.get(url, requestConfig);
 

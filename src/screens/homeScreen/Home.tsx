@@ -94,7 +94,7 @@ const Home = () => {
       filter: {filterParams},
     },
     {
-      enabled: currentDietNo ? true : false,
+      enabled: false,
       onSuccess: () => {
         dispatch(setListTitle('전체'));
       },

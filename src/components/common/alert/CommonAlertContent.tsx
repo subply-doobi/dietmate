@@ -1,18 +1,17 @@
 import styled from 'styled-components/native';
 import {Col, TextMain} from '../../../styles/styledConsts';
 
-const MenuEmptyAlertContent = () => {
+const CommonAlertContent = ({text}: {text: string}) => {
   return (
     <Container>
       <Col style={{marginTop: 28, alignItems: 'center'}}>
-        <AlertText>{`비어있는 끼니를 `}</AlertText>
-        <AlertText>{`먼저 구성하고 이용해보세요`}</AlertText>
+        <AlertText>{text}</AlertText>
       </Col>
     </Container>
   );
 };
 
-export default MenuEmptyAlertContent;
+export default CommonAlertContent;
 
 const Container = styled.View`
   padding: 0px 16px 24px 16px;
