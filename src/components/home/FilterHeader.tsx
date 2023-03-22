@@ -5,7 +5,6 @@ import colors from '../../styles/colors';
 
 const FilterHeader = props => {
   const {onPress, setFilterIndex, filterParams} = props;
-  console.log('filterHeader:', filterParams);
   return (
     <>
       <Row>

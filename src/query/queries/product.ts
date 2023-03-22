@@ -16,14 +16,6 @@ import {DIET_DETAIL, PRODUCT, PRODUCT_AUTO} from '../keys';
 import {IMutationOptions, IQueryOptions} from '../types/common';
 import {ICreateProductAutoParams, IListProductParams} from '../types/product';
 import {useDispatch} from 'react-redux';
-// const getProductList = async () => {
-//   try {
-//     const res = await axios.get(PRODUCT_LIST);
-//     return res.data;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
 
 export const useCreateProductMark = () => {
   const mutation = useMutation({
@@ -79,7 +71,6 @@ export const useListProduct = (
   },
   options?: IQueryOptions,
 ) => {
-  const dispatch = useDispatch();
   const dietNo = params?.dietNo ? params.dietNo : '';
   const enabled = options?.enabled ?? true;
   const searchText = params?.searchText ? params?.searchText : '';
@@ -101,7 +92,7 @@ export const useListProduct = (
   const price = filter.filterParams?.priceParam
     ? filter.filterParams?.priceParam
     : '';
-  const cateogryParam = categoryCd === '' ? '' : categoryCd;
+  const categoryParam = categoryCd === '' ? '' : categoryCd;
   const calorieParam = calorie ? `Calorie,${calorie[0]},${calorie[1]}|` : '';
   const carbParam = carb ? `Carb,${carb[0]},${carb[1]}|` : '';
   const proteinParam = protein ? `Protein,${protein[0]},${protein[1]}|` : '';
@@ -114,7 +105,7 @@ export const useListProduct = (
     queryKey: [PRODUCT],
     queryFn: () =>
       queryFn(
-        `${LIST_PRODUCT}${dietNo}?searchText=${searchText}&categoryCd=${categoryCd}&sort=${sort}&filter=${filter}`,
+        `${LIST_PRODUCT}/${dietNo}?searchText=${searchText}&categoryCd=${categoryParam}&sort=${sort}&filter=${calorieParam}${carbParam}${proteinParam}${fatParam}${priceParam}`,
       ),
     enabled,
     onSuccess: data => {

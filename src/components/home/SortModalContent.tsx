@@ -1,15 +1,12 @@
-import React, {useEffect, useState, View} from 'react';
+import {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 import {
   Row,
   HorizontalLine,
   BtnCTA,
-  BtnBottomCTA,
   HorizontalSpace,
 } from '../../styles/styledConsts';
 import colors from '../../styles/colors';
-import {useListProduct} from '../../query/queries/product';
-import {useSelector} from 'react-redux';
 import {icons} from '../../assets/icons/iconSource';
 
 const SortModalContent = props => {
@@ -18,7 +15,6 @@ const SortModalContent = props => {
   const [calorieToggle, setCalorieToggle] = useState(0);
   const [proteinToggle, setProteinToggle] = useState(0);
   const [param, setParam] = useState('');
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
 
   const toggleButton = arg => {
     const {price, calorie, protein} = arg;

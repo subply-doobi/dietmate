@@ -72,6 +72,9 @@ const Home = () => {
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
   // react-query
   // const filter.Calorie = params?.filter?.Calorie ? 'Calorie',params?.filter?.Calorie[0],params?.filter?.Calorie[1] : ''
+  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
+    enabled: currentDietNo ? true : false,
+  });
   const keyOfcategoryCode = Object.keys(categoryCode);
   const key = keyOfcategoryCode.find(
     key => categoryCode[key] === filterParams.categoryParam,
@@ -94,13 +97,10 @@ const Home = () => {
       },
     },
   );
-  // const count = useCountCategory();
+
   useEffect(() => {
     currentDietNo && refetchProduct();
   }, [sortParam, filterParams]);
-  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
-    enabled: currentDietNo ? true : false,
-  });
 
   useEffect(() => {
     // 앱 시작할 때 내가 어떤 끼니를 보고 있는지 redux에 저장해놓기 위해 필요함

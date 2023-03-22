@@ -24,12 +24,8 @@ export const useGetBaseLine = (options?: IQueryOptions) => {
   return useQuery<IBaseLine>({
     queryKey: [BASE_LINE],
     queryFn: () => queryFn(GET_BASE_LINE),
-
-    // enabled,
-    onSuccess: data => {},
-    onError: e => {
-      console.log(e);
-    },
+    enabled,
+    retry: 5,
   });
 };
 

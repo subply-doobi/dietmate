@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState, StrictMode} from 'react';
 import {TouchableWithoutFeedback, ScrollView, View} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -89,9 +89,9 @@ const Cart = () => {
   // 추가된 식품 하나도 없으면 주문버튼 비활성
   const isEmpty = dietDetailAllData ? dietDetailAllData.length === 0 : false;
   const totalPrice = useMemo(() => {
+    if (isEmpty) return 0;
     const reGroupedProducts =
       dietDetailAllData && reGroupBySeller(dietDetailAllData);
-    if (!reGroupBySeller) return undefined;
 
     let totalProductPrice = 0;
     let totalShippingPrice = 0;

@@ -2,7 +2,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InputNav from './InputNav';
 import BottomTabNav from './BottomTabNav';
 import Login from '../screens/Login';
-import React from 'react';
 import OrderNav from './OrderNav';
 import FoodDetail from '../screens/foodDetailScreen/FoodDetail';
 import HistoryNav from './HistoryNav';
@@ -10,11 +9,6 @@ import PaymentHistoryNav from './PaymentHistoryNav';
 import colors from '../styles/colors';
 import BackArrow from '../components/common/BackArrow';
 import {useNavigation} from '@react-navigation/native';
-import {RootState} from '../stores/store';
-import {useDispatch, useSelector} from 'react-redux';
-import DAlert from '../components/common/alert/DAlert';
-import {setCommonAlertShow} from '../stores/slices/commonAlertSlice';
-import RequestAlertContent from '../components/common/alert/RequestAlertContent';
 
 const Stack = createNativeStackNavigator();
 

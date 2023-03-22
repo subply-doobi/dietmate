@@ -2,7 +2,6 @@ import {View, Text, Modal, ScrollView} from 'react-native';
 import React from 'react';
 import styled from 'styled-components/native';
 import {StyledProps} from '../../styles/styledConsts';
-import {SCREENWIDTH} from '../../constants/constants';
 import colors from '../../styles/colors';
 
 interface IDBottomSheet {

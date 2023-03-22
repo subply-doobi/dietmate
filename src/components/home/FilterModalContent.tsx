@@ -1,4 +1,10 @@
-import React, {useState, useCallback, useMemo, useEffect, View} from 'react';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  StrictMode,
+} from 'react';
 import styled from 'styled-components/native';
 import {
   Row,
@@ -8,6 +14,7 @@ import {
   TextMain,
   StickyFooter,
   HorizontalSpace,
+  Col,
 } from '../../styles/styledConsts';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -15,13 +22,14 @@ import colors from '../../styles/colors';
 import {useWeightPurposeCode, useFilterCode} from '../../query/queries/code';
 import {useListProduct} from '../../query/queries/product';
 import {useListCategory, useCountCategory} from '../../query/queries/category';
-import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
+import {ScrollView} from 'react-native';
 import DSlider from '../common/slider/DSlider';
 
 import CategoryContent from './filterContents/CategoryContent';
 import NutritionContent from './filterContents/NutritionContent';
 import PriceContent from './filterContents/PriceContent';
 import {icons} from '../../assets/icons/iconSource';
+import AutoDietContent from './filterContents/AutoDietContent';
 
 const FilterModalContent = props => {
   const {filterIndex, closeModal, setFilterParams, filterParams} = props;
@@ -160,39 +168,40 @@ const FilterModalContent = props => {
       <AutoDietContent />
     ) : null;
   };
-
+  //useEffect에 맞춰서 초기값 설정하게 하고싶음
+  //
   return (
-    <>
-      <ScrollView>
+    <Col style={{height: '100%'}}>
+      <ScrollView contentContainerStyle={{paddingBottom: 64}}>
         <FilterHeaderText />
-
         <ShowContent index={clicked} />
-        <BottomRow>
-          <BtnCTA
-            style={{
-              flex: 1,
-            }}
-            btnStyle={'border'}
-            onPress={resetType[clicked].reset}>
-            <BottomText style={{color: colors.textSub}}>
-              {resetType[clicked].text}
-            </BottomText>
-          </BtnCTA>
-          <BtnCTA
-            style={{
-              flex: 1,
-              marginLeft: 8,
-            }}
-            btnStyle={'activated'}
-            onPress={() => {
-              setFilterParams(params);
-              closeModal(false);
-            }}>
-            <BottomText>확인</BottomText>
-          </BtnCTA>
-        </BottomRow>
       </ScrollView>
-    </>
+
+      <BottomRow>
+        <BtnCTA
+          style={{
+            flex: 1,
+          }}
+          btnStyle={'border'}
+          onPress={resetType[clicked].reset}>
+          <BottomText style={{color: colors.textSub}}>
+            {resetType[clicked].text}
+          </BottomText>
+        </BtnCTA>
+        <BtnCTA
+          style={{
+            flex: 1,
+            marginLeft: 8,
+          }}
+          btnStyle={'activated'}
+          onPress={() => {
+            setFilterParams(params);
+            closeModal(false);
+          }}>
+          <BottomText>확인</BottomText>
+        </BtnCTA>
+      </BottomRow>
+    </Col>
   );
 };
 
@@ -221,9 +230,10 @@ const FilterRow = styled(Row)`
   margin-top: 24px;
 `;
 const BottomRow = styled.View`
+  position: absolute;
+  bottom: 0px;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 10px;
 `;
 
 const SliderTitle = styled(TextMain)`

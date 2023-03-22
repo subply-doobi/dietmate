@@ -17,12 +17,10 @@ const AutoDietContent = () => {
         <Text>무작위 5개 식품들만 보여줍니다.</Text>
       </Container>
       <Button>
-        <Row>
-          <CheckboxImage
-            source={require(`../../../assets/icons/24_checkbox.png`)}
-          />
-          <ButtonText>식단구성 쉽게하기</ButtonText>
-        </Row>
+        <CheckboxImage
+          source={require(`../../../assets/icons/24_checkbox.png`)}
+        />
+        <ButtonText>식단구성 쉽게하기</ButtonText>
       </Button>
     </>
   );
@@ -38,14 +36,16 @@ const Text = styled.Text`
   font-size: 16px;
   color: ${colors.textMain};
 `;
+const Button = styled.TouchableOpacity`
+  margin-top: 118px;
+  jutify-content: center;
+  flex-direction: row;
+`;
 const ButtonText = styled.Text`
   font-size: 18px;
   color: ${colors.textMain};
   font-weight: bold;
-`;
-const Button = styled.TouchableOpacity`
-  height: 58px;
-  justify-content: center;
+  margin-left: 8px;
 `;
 const CheckboxImage = styled.Image`
   width: 24px;
