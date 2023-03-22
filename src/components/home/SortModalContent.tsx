@@ -8,13 +8,19 @@ import {
 } from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 import {icons} from '../../assets/icons/iconSource';
+import DTooltip from '../common/DTooltip';
 
 const SortModalContent = props => {
+  // state
   const {closeModal, sortParam, setSortParam} = props;
   const [priceToggle, setPriceToggle] = useState(0);
   const [calorieToggle, setCalorieToggle] = useState(0);
   const [proteinToggle, setProteinToggle] = useState(0);
   const [param, setParam] = useState('');
+
+  // tooltip
+  const [priceCalCompareShow, setPriceCalCompareShow] = useState(false);
+  const [priceProtCompareShow, setPriceProtCompareShow] = useState(false);
 
   const toggleButton = arg => {
     const {price, calorie, protein} = arg;
@@ -41,37 +47,6 @@ const SortModalContent = props => {
       : arg.protein === 2
       ? setParam('')
       : null;
-    // if (price) {
-    //   setCalorieToggle(0);
-    //   setProteinToggle(0);
-    //   price === 0
-    //     ? setParam('Price,DESC')
-    //     : price === 1
-    //     ? setParam('Price,ASC')
-    //     : price === 2
-    //     ? setParam('ㄴㄴ')
-    //     : null;
-    // } else if (calorie) {
-    //   setPriceToggle(0);
-    //   setProteinToggle(0);
-    //   calorie === 0
-    //     ? setParam('Calorie,DESC')
-    //     : arg.calorie === 1
-    //     ? setParam('Calorie,ASC')
-    //     : arg.calorie === 2
-    //     ? setParam('')
-    //     : null;
-    // } else if (protein) {
-    //   setPriceToggle(0);
-    //   setCalorieToggle(0);
-    //   protein === 0
-    //     ? setParam('Protein,DESC')
-    //     : arg.protein === 1
-    //     ? setParam('Protein,ASC')
-    //     : arg.protein === 2
-    //     ? setParam('')
-    //     : null;
-    // }
   };
   const imageFunction = () => {
     switch (sortParam) {
@@ -100,7 +75,6 @@ const SortModalContent = props => {
   useEffect(() => {
     imageFunction();
   }, []);
-  console.log('sort', sortParam);
   return (
     <>
       <HorizontalSpace height={16} />
@@ -146,6 +120,18 @@ const SortModalContent = props => {
             <Image source={icons.sortAscending_24} />
           )}
         </SortRow>
+        <TooltipBtn
+          onPressIn={() => setPriceCalCompareShow(true)}
+          onPressOut={() => setPriceCalCompareShow(false)}>
+          <TooltipImage source={icons.question_24} />
+        </TooltipBtn>
+        <DTooltip
+          tooltipShow={priceCalCompareShow}
+          text={`가격대비 칼로리로 정렬합니다\n한국인은 효율!`}
+          boxLeft={0}
+          boxBottom={42}
+          triangleLeft={12}
+        />
       </Button>
       <HorizontalLine />
 
@@ -170,6 +156,18 @@ const SortModalContent = props => {
             <Image source={icons.sortAscending_24} />
           )}
         </SortRow>
+        <TooltipBtn
+          onPressIn={() => setPriceProtCompareShow(true)}
+          onPressOut={() => setPriceProtCompareShow(false)}>
+          <TooltipImage source={icons.question_24} />
+        </TooltipBtn>
+        <DTooltip
+          tooltipShow={priceProtCompareShow}
+          text={`가격대비 단백질양으로 정렬합니다\n헬창판별버튼이라는 소문이...`}
+          boxLeft={0}
+          boxBottom={42}
+          triangleLeft={12}
+        />
       </Button>
       <BottomRow>
         <BtnCTA
@@ -225,4 +223,18 @@ const BottomRow = styled.View`
   margin-top: 16px;
   flex-direction: row;
   justify-content: center;
+`;
+
+const TooltipBtn = styled.Pressable`
+  position: absolute;
+  left: 0px;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const TooltipImage = styled.Image`
+  width: 24px;
+  height: 24px;
 `;

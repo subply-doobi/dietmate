@@ -16,6 +16,7 @@ import {DIET_DETAIL, PRODUCT, PRODUCT_AUTO} from '../keys';
 import {IMutationOptions, IQueryOptions} from '../types/common';
 import {ICreateProductAutoParams, IListProductParams} from '../types/product';
 import {useDispatch} from 'react-redux';
+import React, {SetStateAction} from 'react';
 
 export const useCreateProductMark = () => {
   const mutation = useMutation({
@@ -114,7 +115,8 @@ export const useListProduct = (
   });
 };
 
-export const useFilterRange = filterType => {
+export const useFilterRange = (filterType, options?: IQueryOptions) => {
+  const enabled = options?.enabled ?? true;
   return useQuery({
     queryKey: ['filterRange', filterType],
     queryFn: () => queryFn(`${FILTER}/${filterType}`),
@@ -122,6 +124,7 @@ export const useFilterRange = filterType => {
     onError: e => {
       console.log('useFilterRange Error: ', e);
     },
+    enabled,
   });
 };
 export const useTest = async () => {

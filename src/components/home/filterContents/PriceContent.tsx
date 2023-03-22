@@ -8,28 +8,37 @@ import DSlider from '../../common/slider/DSlider';
 
 const PriceContent = props => {
   const {setPriceParam, priceParam, filterParams} = props;
-  const priceRange = useFilterRange('price');
-  const {data} = priceRange;
-  const [priceValue, setPriceValue] = useState([
-    filterParams?.priceParam ? filterParams?.priceParam[0] : data?.minData,
-    filterParams?.priceParam ? filterParams?.priceParam[1] : data?.maxData,
-  ]);
+  const [priceValue, setPriceValue] = useState<number[]>([0, 25000]);
+  // const [priceValue, setPriceValue] = useState<[number, number]>([
+  //   filterParams?.priceParam ? filterParams?.priceParam[0] : 0,
+  //   filterParams?.priceParam ? filterParams?.priceParam[1] : 25000,
+  // ]);
+  const {data, isLoading} = useFilterRange('price');
   useEffect(() => {
     priceParam && setPriceValue(priceParam);
   }, [priceParam]);
+
+  useEffect(() => {
+    setPriceValue(data ? [data.minData, data.maxData] : [0, 25000]);
+  }, [data]);
+
   return (
     <ScrollView>
       <SliderTitle>가격</SliderTitle>
-      <DSlider
-        sliderValue={priceValue}
-        setSliderValue={setPriceValue}
-        minimumValue={priceRange.isLoading ? 0 : Math.floor(data?.minData)}
-        maximumValue={priceRange.isLoading ? 1 : Math.floor(data?.maxData)}
-        step={500}
-        text={'원'}
-        sliderWidth={SLIDER_WIDTH}
-        onSlidingComplete={() => setPriceParam(priceValue)}
-      />
+      {isLoading ? (
+        <></>
+      ) : (
+        <DSlider
+          sliderValue={priceValue}
+          setSliderValue={setPriceValue}
+          minimumValue={Math.floor(data?.minData ? data.minData : 0)}
+          maximumValue={Math.floor(data?.maxData ? data.maxData : 25000)}
+          step={500}
+          text={'원'}
+          sliderWidth={SLIDER_WIDTH}
+          onSlidingComplete={() => setPriceParam(priceValue)}
+        />
+      )}
     </ScrollView>
   );
 };

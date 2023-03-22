@@ -1,5 +1,5 @@
 import {View, Text, Modal, ScrollView} from 'react-native';
-import React from 'react';
+import React, {ReactNode} from 'react';
 import styled from 'styled-components/native';
 import {StyledProps} from '../../styles/styledConsts';
 import colors from '../../styles/colors';

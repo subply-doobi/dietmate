@@ -7,7 +7,7 @@ import {SetStateAction} from 'react';
 interface IDSlider {
   sliderValue: number[];
   setSliderValue: React.Dispatch<SetStateAction<number[]>>;
-  onSlidingComplete: (value: number | Array<number>) => void;
+  onSlidingComplete?: (value: number | Array<number>) => void;
   minimumValue: number;
   maximumValue: number;
   step: number;

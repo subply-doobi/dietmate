@@ -17,7 +17,7 @@ const Root = () => {
   const handleError = useHandleError();
   queryClient.setDefaultOptions({
     queries: {
-      retry: 0,
+      retry: 2,
       onError: handleError,
     },
     mutations: {

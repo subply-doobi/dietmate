@@ -6,6 +6,7 @@ import {RootState} from '../../stores/store';
 import {
   BtnCTA,
   BtnText,
+  Col,
   Container,
   HorizontalLine,
   HorizontalSpace,
@@ -70,6 +71,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const {listTitle} = useSelector((state: RootState) => state.filter);
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
+
   // react-query
   // const filter.Calorie = params?.filter?.Calorie ? 'Calorie',params?.filter?.Calorie[0],params?.filter?.Calorie[1] : ''
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {
@@ -86,6 +88,7 @@ const Home = () => {
   } = useListProduct(
     {
       dietNo: currentDietNo,
+      searchText,
       categoryCd: filterParams.categoryParam,
       sort: sortParam,
       filter: {filterParams},
@@ -139,12 +142,20 @@ const Home = () => {
             menuSelectOpen={menuSelectOpen}
             setMenuSelectOpen={setMenuSelectOpen}
           />
-          <SearchInput
-            onChangeText={setSearchText}
-            value={searchText}
-            placeholder="검색어 입력"
-            onSubmitEditing={() => console.log('search!!')}
-          />
+          <Col style={{flex: 1, justifyContent: 'center'}}>
+            <SearchInput
+              onChangeText={setSearchText}
+              value={searchText}
+              placeholder="검색어 입력"
+              onSubmitEditing={() => refetchProduct()}
+            />
+            <SearchCancelBtn
+              onPress={() => {
+                setSearchText('');
+              }}>
+              <SearchCancelImage source={icons.cancelRound_24} />
+            </SearchCancelBtn>
+          </Col>
         </MenuAndSearchBox>
         {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
         <Row style={{justifyContent: 'space-between', marginTop: 32}}>
@@ -257,7 +268,6 @@ const Arrow = styled.Image`
 `;
 
 const SearchInput = styled.TextInput`
-  flex: 1;
   height: 32px;
   margin-left: 8px;
   border-radius: 4px;
@@ -265,6 +275,20 @@ const SearchInput = styled.TextInput`
   padding: 5px 8px 5px 8px;
   font-size: 14px;
   color: ${colors.textSub};
+`;
+
+const SearchCancelBtn = styled.TouchableOpacity`
+  position: absolute;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SearchCancelImage = styled.Image`
+  width: 24px;
+  height: 24px;
 `;
 
 const ListTitle = styled(TextMain)`

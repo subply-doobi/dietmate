@@ -139,35 +139,63 @@ const FilterModalContent = props => {
       </>
     );
   };
-  const ShowContent = (i: any) => {
-    return i.index === 0 ? (
+  const showContent = clicked => {
+    return clicked === 0 ? (
       <CategoryContent
         setCategoryParam={setCategoryParam}
         categoryParam={categoryParam}
       />
-    ) : i.index === 1 ? (
+    ) : clicked === 1 ? (
       <NutritionContent
         setNutritionParam={setNutritionParam}
         nutritionParam={nutritionParam}
         filterParams={filterParams}
       />
-    ) : i.index === 2 ? (
+    ) : clicked === 2 ? (
       <PriceContent
         setPriceParam={setPriceParam}
         priceParam={priceParam}
         filterParams={filterParams}
       />
-    ) : i.index === 3 ? (
+    ) : clicked === 3 ? (
       <AutoDietContent />
-    ) : null;
+    ) : (
+      <></>
+    );
   };
 
   return (
     <>
       <ScrollView>
         <FilterHeaderText />
+        {/* <ShowContent index={clicked} /> */}
+        {/* <ShowContent /> 쓰면 mount 다시 된다*/}
+        {/* 이거 컴포넌트를 함수로 바꿔도 잘 작동함 */}
+        {/* {showContent(clicked)} */}
 
-        <ShowContent index={clicked} />
+        {clicked === 0 ? (
+          <CategoryContent
+            setCategoryParam={setCategoryParam}
+            categoryParam={categoryParam}
+          />
+        ) : clicked === 1 ? (
+          <NutritionContent
+            setNutritionParam={setNutritionParam}
+            nutritionParam={nutritionParam}
+            filterParams={filterParams}
+          />
+        ) : clicked === 2 ? (
+          <PriceContent
+            setPriceParam={setPriceParam}
+            priceParam={priceParam}
+            filterParams={filterParams}
+          />
+        ) : clicked === 3 ? (
+          <AutoDietContent />
+        ) : (
+          <></>
+        )}
+
         <BottomRow>
           <BtnCTA
             style={{

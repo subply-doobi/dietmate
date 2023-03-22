@@ -133,6 +133,8 @@ const Cart = () => {
       .catch(e => console.log('삭제 실패', e));
   };
 
+  console.log('cart');
+
   return (
     // <TouchableWithoutFeedback
     //   onPress={() => {
@@ -218,6 +220,7 @@ const Cart = () => {
       </ScrollView>
       <BtnBottomCTA
         btnStyle={isEmpty ? 'inactivated' : 'activated'}
+        disabled={isEmpty}
         onPress={() => {
           navigation.navigate('OrderNav', {screen: 'Order'});
         }}>

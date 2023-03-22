@@ -21,9 +21,7 @@ const renderNutrInput = (
 ) => {
   return (
     <>
-      <InputHeader isActivated={value ? true : false}>
-        {nutrText} (g)
-      </InputHeader>
+      <InputHeader isActivated={value ? true : false}>{nutrText}</InputHeader>
       <Input
         placeholder={nutrText}
         value={value}
@@ -50,11 +48,10 @@ const NutrChangeAlert = ({
   useEffect(() => {
     handleSubmit(() => console.log('handleSubmit!'))();
   }, []);
-  const {data} = useGetBaseLine();
   const nutrTextByNutr: {[key: string]: string} = {
-    carb: data.carb,
-    protein: data.protein,
-    fat: data.fat,
+    carb: '탄수화물 (g)',
+    protein: '단백질 (g)',
+    fat: '지방 (g)',
   };
   const nutrText = nutrTextByNutr[type];
   return (
@@ -85,7 +82,7 @@ const NutrChangeAlert = ({
 export default NutrChangeAlert;
 
 const Container = styled.View`
-  padding: 0px 16px 24px 16px;
+  padding: 0px 16px 32px 16px;
 `;
 
 const GuideText = styled(TextMain)`

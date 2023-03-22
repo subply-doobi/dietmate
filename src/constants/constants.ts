@@ -191,7 +191,7 @@ export const validationRules: IValidationRules = {
     validate: {
       range: (v: string) =>
         !v
-          ? '모든 영양성분을 입력해주세요'
+          ? '탄수화물 양을 입력해주세요'
           : (parseFloat(v) >= 10 && parseFloat(v) <= 375) ||
             `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
     },
@@ -201,7 +201,7 @@ export const validationRules: IValidationRules = {
     validate: {
       range: (v: string) =>
         !v
-          ? '모든 영양성분을 입력해주세요'
+          ? '단백질 양을 입력해주세요'
           : (parseFloat(v) >= 10 && parseFloat(v) <= 375) ||
             `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
     },
@@ -211,7 +211,7 @@ export const validationRules: IValidationRules = {
     validate: {
       range: (v: string) =>
         !v
-          ? '모든 영양성분을 입력해주세요'
+          ? '지방 양을 입력해주세요'
           : (parseFloat(v) >= 5 && parseFloat(v) <= 100) ||
             `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
     },
