@@ -140,7 +140,7 @@ const FilterModalContent = props => {
             </Row>
           </Button>
           <Button>
-            <Image style={{marginTop: 5}} source={icons.initialize_24} />
+            <Image source={icons.initialize_24} />
           </Button>
         </FilterRow>
       </>
@@ -151,6 +151,7 @@ const FilterModalContent = props => {
       <CategoryContent
         setCategoryParam={setCategoryParam}
         categoryParam={categoryParam}
+        며
       />
     ) : i.index === 1 ? (
       <NutritionContent

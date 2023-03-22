@@ -38,7 +38,6 @@ const Text = styled.Text`
 `;
 const Button = styled.TouchableOpacity`
   margin-top: 118px;
-  jutify-content: center;
   flex-direction: row;
 `;
 const ButtonText = styled.Text`
