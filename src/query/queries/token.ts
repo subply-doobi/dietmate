@@ -56,7 +56,6 @@ export const validateToken = async () => {
         },
       });
       isTokenValid = true;
-      isTokenValid && console.log('인증 완료');
       validToken = accessToken;
     } catch (e) {
       console.log('인증되지 않은 토큰: ', e);

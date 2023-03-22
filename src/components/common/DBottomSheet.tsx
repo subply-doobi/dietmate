@@ -49,7 +49,7 @@ const ModalBackGround = styled.TouchableOpacity`
 
 const PopUpContainer = styled.TouchableOpacity`
   width: 100%;
-  height: ${({filterHeight}) => (filterHeight ? '514px' : 'auto')};
+  height: ${({filterHeight}: StyledProps) => (filterHeight ? '530px' : 'auto')};
   padding: 0px 16px 16px 16px;
   align-items: center;
   background-color: ${({backgroundColor}: StyledProps) =>

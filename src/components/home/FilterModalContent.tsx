@@ -1,4 +1,10 @@
-import React, {useState, useCallback, useMemo, useEffect, View} from 'react';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  StrictMode,
+} from 'react';
 import styled from 'styled-components/native';
 import {
   Row,
@@ -8,6 +14,7 @@ import {
   TextMain,
   StickyFooter,
   HorizontalSpace,
+  Col,
 } from '../../styles/styledConsts';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -15,7 +22,7 @@ import colors from '../../styles/colors';
 import {useWeightPurposeCode, useFilterCode} from '../../query/queries/code';
 import {useListProduct} from '../../query/queries/product';
 import {useListCategory, useCountCategory} from '../../query/queries/category';
-import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
+import {ScrollView} from 'react-native';
 import DSlider from '../common/slider/DSlider';
 
 import CategoryContent from './filterContents/CategoryContent';
@@ -139,89 +146,64 @@ const FilterModalContent = props => {
       </>
     );
   };
-  const showContent = clicked => {
-    return clicked === 0 ? (
+  const ShowContent = ({index}) => {
+    return index === 0 ? (
       <CategoryContent
         setCategoryParam={setCategoryParam}
         categoryParam={categoryParam}
       />
-    ) : clicked === 1 ? (
+    ) : index === 1 ? (
       <NutritionContent
         setNutritionParam={setNutritionParam}
         nutritionParam={nutritionParam}
         filterParams={filterParams}
       />
-    ) : clicked === 2 ? (
+    ) : index === 2 ? (
       <PriceContent
         setPriceParam={setPriceParam}
         priceParam={priceParam}
         filterParams={filterParams}
       />
-    ) : clicked === 3 ? (
+    ) : index === 3 ? (
       <AutoDietContent />
     ) : (
       <></>
     );
   };
-
+  //useEffect에 맞춰서 초기값 설정하게 하고싶음
+  //
   return (
-    <>
-      <ScrollView>
+    <Col style={{height: '100%'}}>
+      <ScrollView contentContainerStyle={{paddingBottom: 64}}>
         <FilterHeaderText />
-        {/* <ShowContent index={clicked} /> */}
-        {/* <ShowContent /> 쓰면 mount 다시 된다*/}
-        {/* 이거 컴포넌트를 함수로 바꿔도 잘 작동함 */}
-        {/* {showContent(clicked)} */}
-
-        {clicked === 0 ? (
-          <CategoryContent
-            setCategoryParam={setCategoryParam}
-            categoryParam={categoryParam}
-          />
-        ) : clicked === 1 ? (
-          <NutritionContent
-            setNutritionParam={setNutritionParam}
-            nutritionParam={nutritionParam}
-            filterParams={filterParams}
-          />
-        ) : clicked === 2 ? (
-          <PriceContent
-            setPriceParam={setPriceParam}
-            priceParam={priceParam}
-            filterParams={filterParams}
-          />
-        ) : clicked === 3 ? (
-          <AutoDietContent />
-        ) : (
-          <></>
-        )}
-
-        <BottomRow>
-          <BtnCTA
-            style={{
-              flex: 1,
-            }}
-            btnStyle={'border'}
-            onPress={resetType[clicked].reset}>
-            <BottomText style={{color: colors.textSub}}>
-              {resetType[clicked].text}
-            </BottomText>
-          </BtnCTA>
-          <BtnCTA
-            style={{
-              flex: 1,
-              marginLeft: 8,
-            }}
-            btnStyle={'activated'}
-            onPress={() => {
-              setFilterParams(params);
-              closeModal(false);
-            }}>
-            <BottomText>확인</BottomText>
-          </BtnCTA>
-        </BottomRow>
+        <ShowContent index={clicked} />
       </ScrollView>
-    </>
+
+      <BottomRow>
+        <BtnCTA
+          style={{
+            flex: 1,
+          }}
+          btnStyle={'border'}
+          onPress={resetType[clicked].reset}>
+          <BottomText style={{color: colors.textSub}}>
+            {resetType[clicked].text}
+          </BottomText>
+        </BtnCTA>
+        <BtnCTA
+          style={{
+            flex: 1,
+            marginLeft: 8,
+          }}
+          btnStyle={'activated'}
+          onPress={() => {
+            setFilterParams(params);
+            closeModal(false);
+          }}>
+          <BottomText>확인</BottomText>
+        </BtnCTA>
+      </BottomRow>
+    </Col>
   );
 };
 
@@ -250,9 +232,10 @@ const FilterRow = styled(Row)`
   margin-top: 24px;
 `;
 const BottomRow = styled.View`
+  position: absolute;
+  bottom: 0px;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 10px;
 `;
 
 const SliderTitle = styled(TextMain)`

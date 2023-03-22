@@ -1,3 +1,4 @@
+import {StrictMode} from 'react';
 import {store} from './src/stores/store';
 import {Provider} from 'react-redux';
 import {QueryClientProvider} from '@tanstack/react-query';
@@ -12,11 +13,13 @@ if (__DEV__) {
 }
 function App(): JSX.Element {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <Root />
-      </Provider>
-    </QueryClientProvider>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <Root />
+        </Provider>
+      </QueryClientProvider>
+    </>
   );
 }
 

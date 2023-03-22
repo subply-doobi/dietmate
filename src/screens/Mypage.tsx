@@ -197,8 +197,6 @@ const Mypage = () => {
     setAlertShow(false);
   };
 
-  console.log('mypage');
-
   return (
     <Container>
       <Card>

@@ -15,22 +15,23 @@ const Login = () => {
 
   const signInWithKakao = async (): Promise<void> => {
     const isTokenValid = await validateToken();
-    isTokenValid && !isLoading
-      ? data && data.constructor === Object && Object.keys(data).length === 0
-        ? // ? navigate('InputNav', {screen: 'FirstInput'})
-          navigate('BottomTabNav', {screen: 'Home'})
-        : reset({
-            index: 0,
-            routes: [
-              {
-                name: 'BottomTabNav',
-                params: {
-                  screen: 'Home',
-                },
+    isTokenValid &&
+    !isLoading &&
+    data &&
+    data.constructor === Object &&
+    Object.keys(data).length === 0
+      ? navigate('InputNav', {screen: 'FirstInput'})
+      : reset({
+          index: 0,
+          routes: [
+            {
+              name: 'BottomTabNav',
+              params: {
+                screen: 'Home',
               },
-            ],
-          })
-      : navigate('BottomTabNav', {screen: 'Home'});
+            },
+          ],
+        });
   };
   useEffect(() => {
     signInWithKakao();

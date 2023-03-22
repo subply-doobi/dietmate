@@ -46,7 +46,7 @@ const NutrChangeAlert = ({
   errors: any;
 }) => {
   useEffect(() => {
-    handleSubmit(() => console.log('handleSubmit!'))();
+    handleSubmit(() => {})();
   }, []);
   const nutrTextByNutr: {[key: string]: string} = {
     carb: '탄수화물 (g)',

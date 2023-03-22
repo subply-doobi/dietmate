@@ -1,45 +1,51 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components/native';
-import {Row, TextMain} from '../../../styles/styledConsts';
+import {Col, Row, TextMain} from '../../../styles/styledConsts';
 import {useFilterRange, useTest} from '../../../query/queries/product';
 
-import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
+import {ActivityIndicator, ScrollView} from 'react-native';
 import DSlider from '../../common/slider/DSlider';
 
 const PriceContent = props => {
   const {setPriceParam, priceParam, filterParams} = props;
-  const [priceValue, setPriceValue] = useState<number[]>([0, 25000]);
-  // const [priceValue, setPriceValue] = useState<[number, number]>([
-  //   filterParams?.priceParam ? filterParams?.priceParam[0] : 0,
-  //   filterParams?.priceParam ? filterParams?.priceParam[1] : 25000,
-  // ]);
-  const {data, isLoading} = useFilterRange('price');
+  const priceRange = useFilterRange('price');
+  const {data, isLoading} = priceRange;
+  const minState = !data?.minData ? 0 : Number(data.minData);
+  const maxState = !data?.maxData ? 25000 : Number(data.maxData);
+
+  const initialState = [
+    filterParams?.priceParam ? filterParams?.priceParam[0] : 0,
+    filterParams?.priceParam ? filterParams?.priceParam[1] : maxState,
+  ];
+  const getInitialState = () => {
+    return initialState;
+  };
+  const [priceValue, setPriceValue] = useState(() => getInitialState());
+
   useEffect(() => {
     priceParam && setPriceValue(priceParam);
   }, [priceParam]);
 
-  useEffect(() => {
-    setPriceValue(data ? [data.minData, data.maxData] : [0, 25000]);
-  }, [data]);
-
   return (
-    <ScrollView>
+    <Col style={{marginTop: 120}}>
       <SliderTitle>가격</SliderTitle>
       {isLoading ? (
-        <></>
+        <ActivityIndicator />
       ) : (
-        <DSlider
-          sliderValue={priceValue}
-          setSliderValue={setPriceValue}
-          minimumValue={Math.floor(data?.minData ? data.minData : 0)}
-          maximumValue={Math.floor(data?.maxData ? data.maxData : 25000)}
-          step={500}
-          text={'원'}
-          sliderWidth={SLIDER_WIDTH}
-          onSlidingComplete={() => setPriceParam(priceValue)}
-        />
+        data && (
+          <DSlider
+            sliderValue={priceValue}
+            setSliderValue={setPriceValue}
+            minimumValue={0}
+            maximumValue={maxState}
+            step={1000}
+            text={'원'}
+            sliderWidth={SLIDER_WIDTH}
+            onSlidingComplete={() => setPriceParam(priceValue)}
+          />
+        )
       )}
-    </ScrollView>
+    </Col>
   );
 };
 

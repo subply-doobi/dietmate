@@ -24,6 +24,7 @@ const DSlider = ({
   step,
   sliderWidth,
   text,
+  debugTouchArea,
 }: IDSlider) => {
   const width = sliderWidth ? sliderWidth : '100%';
   return (
@@ -31,6 +32,7 @@ const DSlider = ({
       <SliderContainer style={{width}}>
         <Slider
           value={sliderValue}
+          debugTouchArea={debugTouchArea}
           onValueChange={value => Array.isArray(value) && setSliderValue(value)}
           onSlidingComplete={onSlidingComplete}
           minimumValue={minimumValue}

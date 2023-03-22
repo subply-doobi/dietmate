@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {TouchableWithoutFeedback, ScrollView, View} from 'react-native';
+import {Pressable, ScrollView, View} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -133,101 +133,102 @@ const Cart = () => {
       .catch(e => console.log('삭제 실패', e));
   };
 
-  console.log('cart');
-
   return (
-    // <TouchableWithoutFeedback
-    //   onPress={() => {
-    //     setMenuSelectOpen(false);
-    //   }}>
-    <Container>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 80}}>
-        <SelectedDeleteRow>
-          <SelectAllBox>
-            <SelectAllCheckbox
-              onPress={() => {
-                checkAllClicked ? unCheckAll() : checkAll();
-                setCheckAllClicked(clicked => !clicked);
-              }}>
-              {checkAllClicked ? (
-                <CheckboxImage source={icons.checkboxCheckedGreen_24} />
-              ) : (
-                <CheckboxImage source={icons.checkbox_24} />
-              )}
-            </SelectAllCheckbox>
+    <Pressable
+      style={{flex: 1}}
+      onPressIn={() => {
+        setMenuSelectOpen(false);
+      }}>
+      <Container>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom: 80}}>
+          <SelectedDeleteRow>
+            <SelectAllBox>
+              <SelectAllCheckbox
+                onPress={() => {
+                  checkAllClicked ? unCheckAll() : checkAll();
+                  setCheckAllClicked(clicked => !clicked);
+                }}>
+                {checkAllClicked ? (
+                  <CheckboxImage source={icons.checkboxCheckedGreen_24} />
+                ) : (
+                  <CheckboxImage source={icons.checkbox_24} />
+                )}
+              </SelectAllCheckbox>
 
-            <SelectAllText>전체 선택</SelectAllText>
-          </SelectAllBox>
-          <BtnSmall
-            onPress={() =>
-              selectedFoods[currentDietNo]?.length >= 1
-                ? setDeleteModalShow(true)
-                : {}
-            }>
-            <BtnSmallText isActivated={true}>선택 삭제</BtnSmallText>
-          </BtnSmall>
-        </SelectedDeleteRow>
-        <DAlert
-          alertShow={deleteModalShow}
-          confirmLabel="삭제"
-          onConfirm={deleteSelected}
-          onCancel={() => setDeleteModalShow(false)}
-          renderContent={() => (
-            <DeleteAlertContent deleteText="선택된 식품을" />
-          )}
-        />
-
-        {/* 끼니 카드 */}
-        <Card>
-          <CardMenuHeader>
-            <MenuHeader
-              menuSelectOpen={menuSelectOpen}
-              setMenuSelectOpen={setMenuSelectOpen}></MenuHeader>
-          </CardMenuHeader>
-          <HorizontalSpace height={24} />
-          <NutrientsProgress currentDietNo={currentDietNo} />
-
-          {/* 현재 끼니 식품들 */}
-          <CartFoodList
-            selectedFoods={selectedFoods}
-            setSelectedFoods={setSelectedFoods}
+              <SelectAllText>전체 선택</SelectAllText>
+            </SelectAllBox>
+            <BtnSmall
+              onPress={() =>
+                selectedFoods[currentDietNo]?.length >= 1
+                  ? setDeleteModalShow(true)
+                  : {}
+              }>
+              <BtnSmallText isActivated={true}>선택 삭제</BtnSmallText>
+            </BtnSmall>
+          </SelectedDeleteRow>
+          <DAlert
+            alertShow={deleteModalShow}
+            confirmLabel="삭제"
+            onConfirm={deleteSelected}
+            onCancel={() => setDeleteModalShow(false)}
+            renderContent={() => (
+              <DeleteAlertContent deleteText="선택된 식품을" />
+            )}
           />
 
-          {/* 자동구성 버튼 */}
-          <AutoMenuBtn
-            status={menuStatus}
-            onPress={() => setAutoDietModalShow(true)}
-          />
-          <AutoDietModal
-            modalVisible={autoDietModalShow}
-            setModalVisible={setAutoDietModalShow}
-          />
-          <MenuTotalPrice>
-            합계 {dietDetailData && commaToNum(sumUpPrice(dietDetailData))}원
-          </MenuTotalPrice>
-          {menuSelectOpen && (
-            <MenuSelect setOpen={setMenuSelectOpen} center={true} />
-          )}
-        </Card>
+          {/* 끼니 카드 */}
+          <Card>
+            <CardMenuHeader>
+              <MenuHeader
+                menuSelectOpen={menuSelectOpen}
+                setMenuSelectOpen={setMenuSelectOpen}></MenuHeader>
+            </CardMenuHeader>
+            <HorizontalSpace height={24} />
+            <NutrientsProgress currentDietNo={currentDietNo} />
 
-        {/* 카드 하단 끼니 선택 및 추가 */}
-        <BottomMenuSelect />
+            {/* 현재 끼니 식품들 */}
+            <CartFoodList
+              selectedFoods={selectedFoods}
+              setSelectedFoods={setSelectedFoods}
+            />
 
-        {/* 끼니 정보 요약 */}
-        <CartSummary />
-      </ScrollView>
-      <BtnBottomCTA
-        btnStyle={isEmpty ? 'inactivated' : 'activated'}
-        disabled={isEmpty}
-        onPress={() => {
-          navigation.navigate('OrderNav', {screen: 'Order'});
-        }}>
-        <BtnText>총 {totalPrice && commaToNum(totalPrice)}원 주문하기</BtnText>
-      </BtnBottomCTA>
-    </Container>
-    // </TouchableWithoutFeedback>
+            {/* 자동구성 버튼 */}
+            <AutoMenuBtn
+              status={menuStatus}
+              onPress={() => setAutoDietModalShow(true)}
+            />
+            <AutoDietModal
+              modalVisible={autoDietModalShow}
+              setModalVisible={setAutoDietModalShow}
+            />
+            <MenuTotalPrice>
+              합계 {dietDetailData && commaToNum(sumUpPrice(dietDetailData))}원
+            </MenuTotalPrice>
+            {menuSelectOpen && (
+              <MenuSelect setOpen={setMenuSelectOpen} center={true} />
+            )}
+          </Card>
+
+          {/* 카드 하단 끼니 선택 및 추가 */}
+          <BottomMenuSelect />
+
+          {/* 끼니 정보 요약 */}
+          <CartSummary />
+        </ScrollView>
+        <BtnBottomCTA
+          btnStyle={isEmpty ? 'inactivated' : 'activated'}
+          disabled={isEmpty}
+          onPress={() => {
+            navigation.navigate('OrderNav', {screen: 'Order'});
+          }}>
+          <BtnText>
+            총 {totalPrice && commaToNum(totalPrice)}원 주문하기
+          </BtnText>
+        </BtnBottomCTA>
+      </Container>
+    </Pressable>
   );
 };
 
