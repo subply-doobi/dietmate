@@ -1,50 +1,14 @@
+import React from 'react';
+import {ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
+import * as Progress from 'react-native-progress';
+
 import colors from '../../styles/colors';
 import {VerticalSpace} from '../../styles/styledConsts';
-import * as Progress from 'react-native-progress';
-import {ActivityIndicator} from 'react-native';
-import {useGetBaseLine} from '../../query/queries/baseLine';
-import {useListDietDetail} from '../../query/queries/diet';
 import {sumUpNutrients} from '../../util/sumUp';
 
-const ProgressBarContainer = styled.View`
-  flex: 1;
-  height: 70px;
-  justify-content: center;
-`;
-
-const ProgressBarTitle = styled.Text`
-  font-size: 12px;
-  color: ${colors.textMain};
-  text-align: left;
-`;
-const ProgressBarNumber = styled.Text`
-  font-size: 12px;
-  margin-top: 5px;
-  color: ${colors.textMain};
-  text-align: right;
-`;
-
-const Container = styled.View`
-  background-color: ${colors.white};
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-const indicatorColorsByTitle: {[key: string]: string} = {
-  '칼로리(kcal)': colors.main,
-  '탄수화물(g)': colors.blue,
-  '단백질(g)': colors.green,
-  '지방(g)': colors.orange,
-};
-
-const NutrUpperBoundByTitle: {[key: string]: number} = {
-  '칼로리(kcal)': 50,
-  '탄수화물(g)': 15,
-  '단백질(g)': 5,
-  '지방(g)': 5,
-};
+import {useGetBaseLine} from '../../query/queries/baseLine';
+import {useListDietDetail} from '../../query/queries/diet';
 
 /** props:
  * 1. title '칼로리(g)' | '탄수화물(g)' | '단백질(g)' | '지방(g)'
@@ -79,14 +43,8 @@ const ProgressBar = ({title, numerator, denominator}: INutrientProgress) => {
 
 const NutrientsProgress = ({currentDietNo}: {currentDietNo: string}) => {
   // react-query
-  const {
-    data: baseLineData,
-    isLoading: baseLineIsLoading,
-    isInitialLoading,
-    isFetching,
-  } = useGetBaseLine();
-  const {data: dietDetailData, isLoading: dietDetailIsLoading} =
-    useListDietDetail(currentDietNo);
+  const {data: baseLineData, isInitialLoading} = useGetBaseLine();
+  const {data: dietDetailData} = useListDietDetail(currentDietNo);
 
   const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
   return (
@@ -130,3 +88,42 @@ const NutrientsProgress = ({currentDietNo}: {currentDietNo: string}) => {
 };
 
 export default NutrientsProgress;
+
+const ProgressBarContainer = styled.View`
+  flex: 1;
+  height: 70px;
+  justify-content: center;
+`;
+
+const ProgressBarTitle = styled.Text`
+  font-size: 12px;
+  color: ${colors.textMain};
+  text-align: left;
+`;
+const ProgressBarNumber = styled.Text`
+  font-size: 12px;
+  margin-top: 5px;
+  color: ${colors.textMain};
+  text-align: right;
+`;
+
+const Container = styled.View`
+  background-color: ${colors.white};
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+const indicatorColorsByTitle: {[key: string]: string} = {
+  '칼로리(kcal)': colors.main,
+  '탄수화물(g)': colors.blue,
+  '단백질(g)': colors.green,
+  '지방(g)': colors.orange,
+};
+
+const NutrUpperBoundByTitle: {[key: string]: number} = {
+  '칼로리(kcal)': 50,
+  '탄수화물(g)': 15,
+  '단백질(g)': 5,
+  '지방(g)': 5,
+};

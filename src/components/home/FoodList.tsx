@@ -1,21 +1,24 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
+import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+
+import {RootState} from '../../stores/store';
+import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {Col, Row, TextMain, TextSub} from '../../styles/styledConsts';
-import {BASE_URL} from '../../query/queries/urls';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
 import {SCREENWIDTH} from '../../constants/constants';
+import {commaToNum} from '../../util/sumUp';
+import {IProductData} from '../../query/types/product';
+
+import DAlert from '../common/alert/DAlert';
+import DeleteAlertContent from '../common/alert/DeleteAlertContent';
+
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
 } from '../../query/queries/diet';
-import {IProductData} from '../../query/types/product';
-import DAlert from '../common/alert/DAlert';
-import DeleteAlertContent from '../common/alert/DeleteAlertContent';
-import {commaToNum} from '../../util/sumUp';
-import {useNavigation} from '@react-navigation/native';
-import {icons} from '../../assets/icons/iconSource';
+import {BASE_URL} from '../../query/queries/urls';
 
 const FoodList = ({item}: {item: IProductData}) => {
   const navigation = useNavigation();

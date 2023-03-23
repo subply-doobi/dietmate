@@ -1,25 +1,11 @@
 import React, {useState, useEffect, useMemo} from 'react';
+import {ScrollView, TouchableWithoutFeedback} from 'react-native';
 import styled from 'styled-components/native';
-import {
-  Row,
-  HorizontalLine,
-  BtnCTA,
-  BtnBottomCTA,
-  TextMain,
-  Col,
-} from '../../../styles/styledConsts';
-import colors from '../../../styles/colors';
 
-import {
-  ScrollView,
-  View,
-  Dimensions,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import {TextMain, Col} from '../../../styles/styledConsts';
 import DSlider from '../../common/slider/DSlider';
-import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {useFilterRange, useTest} from '../../../query/queries/product';
+import {useFilterRange} from '../../../query/queries/product';
 
 const NutritionContent = props => {
   const calorieRange = useFilterRange('calorie');
@@ -112,7 +98,6 @@ const NutritionContent = props => {
     nutritionParam && setProteinValue(nutritionParam?.proteinParam);
     nutritionParam && setFatValue(nutritionParam?.fatParam);
   }, [nutritionParam]);
-  const screenHeight = Dimensions.get('window').height;
 
   return (
     <ScrollView>

@@ -1,9 +1,4 @@
-import {
-  IUserInfo,
-  IUserTarget,
-  saveUserTarget,
-} from '../stores/slices/userInfoSlice';
-import {AppDispatch} from '../stores/store';
+import {IUserInfo, IUserTarget} from '../stores/slices/userInfoSlice';
 import {calculateCaloriesToNutr} from './targetCalculation';
 
 interface ISubmitParams {

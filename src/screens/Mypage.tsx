@@ -1,5 +1,14 @@
-import {View, Text, ScrollView, FlatList} from 'react-native';
 import React, {useMemo, useState} from 'react';
+import {Text, FlatList} from 'react-native';
+import {useSelector} from 'react-redux';
+import styled from 'styled-components/native';
+import {useForm, useWatch} from 'react-hook-form';
+import {useNavigation} from '@react-navigation/native';
+
+import {RootState} from '../stores/store';
+import {icons} from '../assets/icons/iconSource';
+import {myPageBtns} from '../constants/constants';
+import colors from '../styles/colors';
 import {
   Col,
   HorizontalLine,
@@ -9,26 +18,14 @@ import {
   TextSub,
   VerticalLine,
 } from '../styles/styledConsts';
-import styled from 'styled-components/native';
-import colors from '../styles/colors';
+
 import DAlert from '../components/common/alert/DAlert';
-import {myPageBtns, NavigationProps} from '../constants/constants';
 import NutrTarget from '../components/common/NutrientTarget';
-import {useSelector} from 'react-redux';
-import {RootState} from '../stores/store';
 import CalChangeAlert from '../components/myPage/CalorieChangeAlert';
 import NutrChangeAlert from '../components/myPage/NutrientChangeAlert';
-import {
-  calculateBMR,
-  calculateNutrTarget,
-  nutrConvert,
-} from '../util/targetCalculation';
-import {useForm, useWatch} from 'react-hook-form';
 import WeightChangeAlert from '../components/myPage/WeightChangeAlert';
-import {updateUserInfo} from '../stores/slices/userInfoSlice';
+
 import {useGetBaseLine, useUpdateBaseLine} from '../query/queries/baseLine';
-import {icons} from '../assets/icons/iconSource';
-import {useNavigation} from '@react-navigation/native';
 
 interface INavigateByBtnId {
   [key: string]: (btnId: string, navigate: Function) => void;

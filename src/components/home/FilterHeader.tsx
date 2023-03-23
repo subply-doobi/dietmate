@@ -1,6 +1,7 @@
 import React from 'react';
-import {Row, TextMain} from '../../styles/styledConsts';
 import styled from 'styled-components/native';
+
+import {Row, TextMain} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 
 const FilterHeader = props => {

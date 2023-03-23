@@ -1,6 +1,10 @@
+import {useState, SetStateAction} from 'react';
+import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
+
+import {RootState} from '../../stores/store';
+import {icons} from '../../assets/icons/iconSource';
 import {
-  BtnBottomCTA,
   BtnCTA,
   BtnText,
   Col,
@@ -9,23 +13,19 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/styledConsts';
-import {Text} from 'react-native';
 import {
   commaToNum,
   makePriceObjBySeller,
   reGroupBySeller,
 } from '../../util/sumUp';
 import colors from '../../styles/colors';
-import {useState, SetStateAction} from 'react';
+import {IDietDetailData} from '../../query/types/diet';
+
 import {
   useListDietDetail,
   useListDietDetailAll,
   useUpdateDietDetail,
 } from '../../query/queries/diet';
-import {RootState} from '../../stores/store';
-import {useSelector} from 'react-redux';
-import {IDietDetailData} from '../../query/types/diet';
-import {icons} from '../../assets/icons/iconSource';
 
 const getCurrentQty = (productNm: string, dietDetail: IDietDetailData) => {
   let currentQty = '';
@@ -69,7 +69,7 @@ const NumberPickerContent = ({
     : '1';
 
   // state
-  const [number, setNumber] = useState(parseInt(currentQty));
+  const [number, setNumber] = useState(parseInt(currentQty, 10));
 
   // etc
   // 판매자별 총액계산

@@ -1,93 +1,15 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import colors from '../../styles/colors';
-import {Col, Row, TextMain, TextSub} from '../../styles/styledConsts';
-import {BASE_URL} from '../../query/queries/urls';
-import {hasProduct} from '../../util/reduxUtil';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from '../../stores/store';
-import {PayloadAction} from '@reduxjs/toolkit';
-import {SCREENWIDTH} from '../../constants/constants';
+import {useDispatch} from 'react-redux';
+
 import {deleteLikeFood} from '../../stores/slices/likeSlice';
 import {icons} from '../../assets/icons/iconSource';
+import colors from '../../styles/colors';
+import {Col, Row, TextMain, TextSub} from '../../styles/styledConsts';
+import {hasProduct} from '../../util/reduxUtil';
+import {SCREENWIDTH} from '../../constants/constants';
 
-const Container = styled.View``;
-
-const Thumbnail = styled.Image`
-  width: 100px;
-  height: 100px;
-  /* background-color: ${colors.highlight}; */
-`;
-
-const ProductInfoContainer = styled.View`
-  flex: 1;
-  height: 100px;
-  margin-left: 16px;
-  justify-content: space-between;
-  /* background-color: ${colors.highlight}; */
-`;
-
-const NutrSummaryContainer = styled.View`
-  flex-direction: row;
-  width: 100%;
-  height: 22px;
-  border-radius: 5px;
-  margin-top: 10px;
-  padding: 3px 8px 3px 8px;
-  justify-content: space-between;
-  background-color: ${colors.bgBox};
-`;
-
-const SellerText = styled(TextMain)`
-  font-size: 14px;
-  font-weight: bold;
-`;
-
-const ProductName = styled(TextMain)`
-  margin-top: 4px;
-  font-size: 14px;
-`;
-
-const Price = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-`;
-
-const Nutr = styled.View`
-  flex-direction: row;
-  width: ${(SCREENWIDTH - 16) / 5}px;
-`;
-
-const NutrText = styled(TextSub)`
-  font-size: 12px;
-`;
-
-const NutrValue = styled(TextMain)`
-  font-size: 12px;
-`;
-
-const AddOrDeleteBtn = styled.TouchableOpacity`
-  align-self: flex-end;
-  background-color: ${colors.highlight};
-`;
-
-const AddToCartBtnImage = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const DeleteLikeFoodBtn = styled.TouchableOpacity`
-  width: 48px;
-  height: 24px;
-  justify-content: center;
-  align-items: center;
-  border-width: 1px;
-  border-radius: 5px;
-  border-color: ${colors.inactivated};
-`;
-const DeleteLikeFoodBtnText = styled(TextSub)`
-  font-size: 14px;
-`;
+import {BASE_URL} from '../../query/queries/urls';
 
 interface IFoodList {
   item: {
@@ -169,3 +91,81 @@ const FoodList = ({item, menuIndex}: IFoodList) => {
 };
 
 export default FoodList;
+
+const Container = styled.View``;
+
+const Thumbnail = styled.Image`
+  width: 100px;
+  height: 100px;
+  /* background-color: ${colors.highlight}; */
+`;
+
+const ProductInfoContainer = styled.View`
+  flex: 1;
+  height: 100px;
+  margin-left: 16px;
+  justify-content: space-between;
+  /* background-color: ${colors.highlight}; */
+`;
+
+const NutrSummaryContainer = styled.View`
+  flex-direction: row;
+  width: 100%;
+  height: 22px;
+  border-radius: 5px;
+  margin-top: 10px;
+  padding: 3px 8px 3px 8px;
+  justify-content: space-between;
+  background-color: ${colors.bgBox};
+`;
+
+const SellerText = styled(TextMain)`
+  font-size: 14px;
+  font-weight: bold;
+`;
+
+const ProductName = styled(TextMain)`
+  margin-top: 4px;
+  font-size: 14px;
+`;
+
+const Price = styled(TextMain)`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const Nutr = styled.View`
+  flex-direction: row;
+  width: ${(SCREENWIDTH - 16) / 5}px;
+`;
+
+const NutrText = styled(TextSub)`
+  font-size: 12px;
+`;
+
+const NutrValue = styled(TextMain)`
+  font-size: 12px;
+`;
+
+const AddOrDeleteBtn = styled.TouchableOpacity`
+  align-self: flex-end;
+  background-color: ${colors.highlight};
+`;
+
+const AddToCartBtnImage = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const DeleteLikeFoodBtn = styled.TouchableOpacity`
+  width: 48px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  border-width: 1px;
+  border-radius: 5px;
+  border-color: ${colors.inactivated};
+`;
+const DeleteLikeFoodBtnText = styled(TextSub)`
+  font-size: 14px;
+`;

@@ -1,8 +1,12 @@
-import {Linking, FlatList, SafeAreaView, Alert} from 'react-native';
 import React from 'react';
+import {FlatList, SafeAreaView} from 'react-native';
+import styled from 'styled-components/native';
+import {useSelector} from 'react-redux';
+
+import {RootState} from '../../stores/store';
+import {icons} from '../../assets/icons/iconSource';
 import {
   Col,
-  Container,
   HorizontalLine,
   HorizontalSpace,
   Row,
@@ -11,16 +15,8 @@ import {
   VerticalLine,
   VerticalSpace,
 } from '../../styles/styledConsts';
-import styled from 'styled-components/native';
 import colors from '../../styles/colors';
 import {NavigationProps} from '../../constants/constants';
-import {useEffect} from 'react';
-import axios, {all} from 'axios';
-import {kakaoAppAdminKey} from '../../constants/constants';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
-import {useKakaopayApprove} from '../../query/queries/order';
-import { icons } from '../../assets/icons/iconSource';
 
 interface IOrder {
   id: string;
@@ -209,7 +205,6 @@ const Arrow = styled.Image`
   height: 20px;
 `;
 
-const ThumbnailBtn = styled.TouchableOpacity``;
 const ThumbnailImage = styled.View`
   background-color: ${colors.backgroundLight};
   width: 56px;

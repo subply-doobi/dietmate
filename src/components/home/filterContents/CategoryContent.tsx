@@ -1,40 +1,17 @@
-import React, {useState, useMemo, useCallback, useEffect, useRef} from 'react';
 import styled from 'styled-components/native';
-import {
-  Row,
-  HorizontalLine,
-  BtnCTA,
-  BtnBottomCTA,
-  TextMain,
-} from '../../../styles/styledConsts';
-import {useDispatch, useSelector} from 'react-redux';
+import {View} from 'react-native';
 
-import {useWeightPurposeCode, useFilterCode} from '../../query/queries/code';
-import {useListProduct} from '../../../query/queries/product';
-import {
-  useListCategory,
-  useCountCategory,
-} from '../../../query/queries/category';
+import {HorizontalLine} from '../../../styles/styledConsts';
 import colors from '../../../styles/colors';
-import {ProgressBarAndroidComponent, ScrollView, View} from 'react-native';
-import DSlider from '../common/slider/DSlider';
 
-import {setFilterParam} from '../../../stores/slices/filterSlice';
+import {useCountCategory} from '../../../query/queries/category';
 
-interface CategoryItem {
-  categoryCd: string;
-  CategoryCdNm: string;
-  productCnt: number;
+interface IProps {
+  setCategoryParam: React.Dispatch;
+  categoryParam: string;
 }
-const CategoryContent = props => {
+const CategoryContent = (props: IProps) => {
   const {setCategoryParam, categoryParam} = props;
-
-  const dispatch = useDispatch();
-  // const filter = useFilterCode('Protein');
-  // console.log('filterTest:', filter);
-  // const list = useListProduct();
-  // console.log('filterModal/listproduct:', list);
-  const [clicked, setClicked] = useState('');
   const count = useCountCategory();
 
   const Contents = () => {
@@ -44,15 +21,13 @@ const CategoryContent = props => {
           <View key={e.categoryCd}>
             <CategoryButton
               onPress={() => {
-                // setClicked(e.categoryCd);
                 setCategoryParam(e.categoryCd);
-                // dispatch(setFilterParam(e.categoryCd));
               }}>
               <CategoryText id={e.categoryCd} clicked={categoryParam}>
                 {e.categoryCdNm}( {e.productCnt})
               </CategoryText>
             </CategoryButton>
-            <HorizontalLine />
+            {i === 5 ? <></> : <HorizontalLine />}
           </View>
         ))}
       </View>
@@ -66,10 +41,6 @@ const CategoryContent = props => {
 };
 
 export default CategoryContent;
-const Text = styled.Text`
-  font-size: 18px;
-  margin: 15px;
-`;
 
 const CategoryText = styled.Text`
 font-size: 16px;
@@ -81,26 +52,4 @@ const CategoryButton = styled.TouchableOpacity`
   justify-content: center;
 `;
 
-const BottomText = styled.Text`
-  font-size: 16px;
-`;
-const Button = styled.TouchableOpacity``;
-const Image = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-const FilterRow = styled(Row)`
-  justify-content: center;
-`;
-const BottomRow = styled.View`
-  flex-direction: row;
-  justify-content: center;
-`;
-const SliderTitle = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 40px;
-`;
 const MODAL_WIDTH = 328;
-const MODAL_INNER_WIDTH = MODAL_WIDTH - 32;
-const SLIDER_WIDTH = MODAL_INNER_WIDTH - 32;

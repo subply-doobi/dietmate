@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import {validateToken} from './token';
 
 export const queryFn = async (url: string) => {
@@ -16,7 +17,7 @@ export const mutationFn = async <T>(
   method: string,
   requestBody?: T,
 ) => {
-  const {isTokenValid, validToken} = await validateToken();
+  const {validToken} = await validateToken();
   // if (!isTokenValid) return null;
   const requestConfig = {
     url,

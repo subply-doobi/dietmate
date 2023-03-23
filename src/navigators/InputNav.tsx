@@ -1,11 +1,11 @@
-import {View, Text, TouchableOpacity} from 'react-native';
-import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import styled from 'styled-components/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+import {icons} from '../assets/icons/iconSource';
+
 import FirstInput from '../screens/userInputScreen/FirstInput';
 import SecondInput from '../screens/userInputScreen/SecondInput';
 import ThirdInput from '../screens/userInputScreen/ThirdInput';
-import {icons} from '../assets/icons/iconSource';
 
 const Stack = createNativeStackNavigator();
 const InputNav = () => {

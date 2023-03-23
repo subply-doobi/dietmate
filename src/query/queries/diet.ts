@@ -1,9 +1,10 @@
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {useDispatch, useSelector} from 'react-redux';
-import {setCurrentDietNo} from '../../stores/slices/cartSlice';
+
 import {RootState} from '../../stores/store';
+import {queryClient} from '../store';
+import {setCurrentDietNo} from '../../stores/slices/cartSlice';
 import {useHandleError} from '../../util/handleError';
-import {sumUpNutrients} from '../../util/sumUp';
 import {
   DIET,
   DIET_DETAIL,
@@ -11,16 +12,15 @@ import {
   DIET_DETAIL_EMPTY_YN,
   PRODUCT,
 } from '../keys';
-import {queryClient} from '../store';
 import {IMutationOptions, IQueryOptions} from '../types/common';
 import {
   IDietData,
   IDietDetailData,
   IDietDetailEmptyYnData,
-  IListDietDetailParams,
 } from '../types/diet';
 import {IProductData} from '../types/product';
 import {mutationFn, queryFn} from './requestFn';
+
 import {
   CREATE_DIET,
   CREATE_DIET_DETAIL,

@@ -1,6 +1,17 @@
-import {View, Text, Alert, TextInput} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
+import {Alert, TextInput} from 'react-native';
 import styled from 'styled-components/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {Controller, useWatch} from 'react-hook-form';
+
+import {RootState} from '../../stores/store';
+import {
+  setOrderer,
+  setReceiver,
+  setSelectedAddressId,
+} from '../../stores/slices/orderSlice';
+import {icons} from '../../assets/icons/iconSource';
 import {
   AccordionContentContainer,
   BtnCTA,
@@ -14,22 +25,7 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/styledConsts';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
-import colors from '../../styles/colors';
-import {useNavigation} from '@react-navigation/native';
-import {
-  setOrderer,
-  setReceiver,
-  setSelectedAddressId,
-} from '../../stores/slices/orderSlice';
-import {
-  IFormField,
-  NavigationProps,
-  validationRules,
-} from '../../constants/constants';
-import {Controller, useWatch} from 'react-hook-form';
-import {icons} from '../../assets/icons/iconSource';
+import {IFormField, validationRules} from '../../constants/constants';
 
 interface IAddress {
   control: any;

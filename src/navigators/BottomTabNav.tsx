@@ -1,15 +1,17 @@
 import styled from 'styled-components/native';
-
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {useNavigation} from '@react-navigation/native';
+
+import {icons} from '../assets/icons/iconSource';
+import colors from '../styles/colors';
+
+import Home from '../screens/homeScreen/Home';
 import Mypage from '../screens/Mypage';
 import Likes from '../screens/Likes';
 import Cart from '../screens/Cart';
-import colors from '../styles/colors';
 import BackArrow from '../components/common/BackArrow';
-import Home from '../screens/homeScreen/Home';
-import {useNavigation} from '@react-navigation/native';
+
 import {useListDietDetailAll} from '../query/queries/diet';
-import {icons} from '../assets/icons/iconSource';
 
 const Tab = createBottomTabNavigator();
 

@@ -1,10 +1,15 @@
-import {useNavigation} from '@react-navigation/native';
+// 3rd library
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+
+// doobi util
 import {openCommonAlert} from '../stores/slices/commonAlertSlice';
 
+// doobi Component
+
 interface IConvertCodeToMsg {
-  [key: string]: string;
+  [key: number]: string;
 }
 
 const convertCodeToMsg: IConvertCodeToMsg = {
@@ -25,9 +30,9 @@ export const useHandleError = () => {
   const {navigate} = useNavigation();
   const handleError = useCallback((e: any) => {
     const errorCode = e.response?.status;
-    console.log('useHandleError: errorCode: ', errorCode);
+    console.log('useHandleError: errorCode: ', errorCode, typeof errorCode);
     const errorMsg = getErrorMsg(errorCode);
-    if (e.response?.status === '401') {
+    if (errorCode === 401) {
       navigate('Login');
     }
 

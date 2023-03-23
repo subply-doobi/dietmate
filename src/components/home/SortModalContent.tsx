@@ -1,5 +1,7 @@
 import {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
+
+import {icons} from '../../assets/icons/iconSource';
 import {
   Row,
   HorizontalLine,
@@ -7,7 +9,7 @@ import {
   HorizontalSpace,
 } from '../../styles/styledConsts';
 import colors from '../../styles/colors';
-import {icons} from '../../assets/icons/iconSource';
+
 import DTooltip from '../common/DTooltip';
 
 const SortModalContent = props => {
@@ -175,7 +177,12 @@ const SortModalContent = props => {
             flex: 1,
           }}
           btnStyle={'border'}
-          onPress={() => setParam('')}>
+          onPress={() => {
+            setParam('');
+            setPriceToggle(0);
+            setProteinToggle(0);
+            setCalorieToggle(0);
+          }}>
           <BottomText style={{color: colors.textSub}}>초기화</BottomText>
         </BtnCTA>
         <BtnCTA

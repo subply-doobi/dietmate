@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+
 import {Col, TextMain} from '../../../styles/styledConsts';
 
 const DeleteAlertContent = ({deleteText}: {deleteText: string}) => {

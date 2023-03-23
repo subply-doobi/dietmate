@@ -1,34 +1,15 @@
-import React, {
-  useState,
-  useCallback,
-  useMemo,
-  useEffect,
-  StrictMode,
-} from 'react';
+import React, {useState} from 'react';
+import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
-import {
-  Row,
-  HorizontalLine,
-  BtnCTA,
-  BtnBottomCTA,
-  TextMain,
-  StickyFooter,
-  HorizontalSpace,
-  Col,
-} from '../../styles/styledConsts';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
+import {icons} from '../../assets/icons/iconSource';
+import {Row, BtnCTA, Col} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
-import {useWeightPurposeCode, useFilterCode} from '../../query/queries/code';
-import {useListProduct} from '../../query/queries/product';
-import {useListCategory, useCountCategory} from '../../query/queries/category';
-import {ScrollView} from 'react-native';
-import DSlider from '../common/slider/DSlider';
 
 import CategoryContent from './filterContents/CategoryContent';
 import NutritionContent from './filterContents/NutritionContent';
 import PriceContent from './filterContents/PriceContent';
-import {icons} from '../../assets/icons/iconSource';
 import AutoDietContent from './filterContents/AutoDietContent';
 import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
@@ -76,11 +57,17 @@ const FilterModalContent = props => {
         console.log('식단구성 확인');
       },
     },
+    {
+      text: '전부 초기화',
+      reset: () => {
+        console.log('전부 확인');
+      },
+    },
   ];
 
   const FilterHeaderText = () => {
     return (
-      <>
+      <SafeAreaView>
         <FilterRow>
           <Button
             onPress={() => {
@@ -151,7 +138,7 @@ const FilterModalContent = props => {
             <Image source={icons.initialize_24} />
           </Button>
         </FilterRow>
-      </>
+      </SafeAreaView>
     );
   };
   const ShowContent = ({index}) => {
@@ -159,6 +146,7 @@ const FilterModalContent = props => {
       <CategoryContent
         setCategoryParam={setCategoryParam}
         categoryParam={categoryParam}
+        며
       />
     ) : index === 1 ? (
       <NutritionContent
@@ -270,11 +258,6 @@ const BottomRow = styled.View`
   justify-content: space-between;
 `;
 
-const SliderTitle = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 40px;
-`;
 const Badge = styled.View`
   width: 6px;
   height: 6px;
@@ -285,5 +268,3 @@ const Badge = styled.View`
   right: 20px;
 `;
 const MODAL_WIDTH = 328;
-const MODAL_INNER_WIDTH = MODAL_WIDTH - 32;
-const SLIDER_WIDTH = MODAL_INNER_WIDTH - 32;

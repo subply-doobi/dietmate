@@ -1,24 +1,11 @@
-import {View, Text} from 'react-native';
 import React from 'react';
 import styled from 'styled-components/native';
+import {useSelector} from 'react-redux';
+
+import {RootState} from '../../stores/store';
 import colors from '../../styles/colors';
 import {Col} from '../../styles/styledConsts';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
 import {purposeCdToValue} from '../../constants/constants';
-
-const ContentsContainer = styled.View`
-  margin-top: 12px;
-  border-width: 1px;
-  border-color: ${colors.main};
-  border-radius: 5px;
-  padding: 16px;
-`;
-
-const NutrientSummaryText = styled.Text`
-  font-size: 12px;
-  color: ${colors.textMain};
-`;
 
 const Auto = () => {
   const {
@@ -54,3 +41,16 @@ const Auto = () => {
 };
 
 export default Auto;
+
+const ContentsContainer = styled.View`
+  margin-top: 12px;
+  border-width: 1px;
+  border-color: ${colors.main};
+  border-radius: 5px;
+  padding: 16px;
+`;
+
+const NutrientSummaryText = styled.Text`
+  font-size: 12px;
+  color: ${colors.textMain};
+`;
