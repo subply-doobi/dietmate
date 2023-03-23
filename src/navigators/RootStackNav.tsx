@@ -9,10 +9,28 @@ import PaymentHistoryNav from './PaymentHistoryNav';
 import colors from '../styles/colors';
 import BackArrow from '../components/common/BackArrow';
 import {useNavigation} from '@react-navigation/native';
+import {useHandleError} from '../util/handleError';
+import {queryClient} from '../query/store';
 
 const Stack = createNativeStackNavigator();
 
 const RootStackNav = () => {
+  // react-query defaultOptions
+  const handleError = useHandleError();
+  queryClient.setDefaultOptions({
+    queries: {
+      retry: 0,
+      staleTime: 30000,
+      cacheTime: 5 * 60 * 1000,
+      refetchOnMount: true,
+      refetchOnWindowFocus: false,
+      onError: handleError,
+    },
+    mutations: {
+      onError: handleError,
+    },
+  });
+
   const navigation = useNavigation();
   const {goBack} = navigation;
   return (

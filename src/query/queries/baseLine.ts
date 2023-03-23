@@ -25,7 +25,6 @@ export const useGetBaseLine = (options?: IQueryOptions) => {
     queryKey: [BASE_LINE],
     queryFn: () => queryFn(GET_BASE_LINE),
     enabled,
-    retry: 5,
   });
 };
 

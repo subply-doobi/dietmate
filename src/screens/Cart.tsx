@@ -130,7 +130,10 @@ const Cart = () => {
         }),
       ),
     )
-      .then(() => console.log('삭제 완료'))
+      .then(() => {
+        unCheckAll();
+        console.log('삭제 완료');
+      })
       .catch(e => console.log('삭제 실패', e));
   };
 
