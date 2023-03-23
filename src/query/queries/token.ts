@@ -53,31 +53,30 @@ export const validateToken = async () => {
         },
       });
       isTokenValid = true;
-      isTokenValid && console.log('validateToken: auth 완료');
+      // isTokenValid && console.log('validateToken: auth 완료');
       validToken = accessToken;
     } catch (e) {
       console.log('validateToken: auth 오류', e);
-      if (e.response?.status === 500) return {isTokenValid, validToken};
-      // TBD | e.response -> 500에러면 토큰 재발급은 안되도록 해야함
+      if (e.response.status === 401) {
+        try {
+          // 토큰 재발급
+          const reIssue = await axios.get(`${RE_ISSUE_TOKEN}`, {
+            headers: {
+              authorization: `Bearer ${refreshToken}`,
+            },
+          });
+          await storeToken(reIssue.data.accessToken, reIssue.data.refreshToken);
+          isTokenValid = true;
+          // isTokenValid && console.log('validateToken: reIssue 완료');
+          validToken = reIssue.data.accessToken;
+        } catch (e) {
+          console.log('validateToken: reIssue 오류: ', e);
+        }
+      } else {
+        return {isTokenValid, validToken};
+      }
     }
   }
 
-  if (!isTokenValid) {
-    try {
-      // 토큰 재발급
-      const reIssue = await axios.get(`${RE_ISSUE_TOKEN}`, {
-        headers: {
-          authorization: `Bearer ${refreshToken}`,
-        },
-      });
-      console.log();
-      await storeToken(reIssue.data.accessToken, reIssue.data.refreshToken);
-      isTokenValid = true;
-      isTokenValid && console.log('validateToken: reIssue 완료');
-      validToken = reIssue.data.accessToken;
-    } catch (e) {
-      console.log('validateToken: reIssue 오류: ', e);
-    }
-  }
   return {isTokenValid, validToken};
 };
