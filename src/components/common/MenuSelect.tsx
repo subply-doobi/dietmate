@@ -1,8 +1,10 @@
+// 3rd library
 import React, {useState} from 'react';
 import {TouchableWithoutFeedback} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components/native';
 
+// doobi util, type, etc
 import {RootState} from '../../stores/store';
 import {setCurrentDietNo} from '../../stores/slices/cartSlice';
 import {icons} from '../../assets/icons/iconSource';
@@ -11,11 +13,13 @@ import {Col, HorizontalLine} from '../../styles/styledConsts';
 import {findDietSeq} from '../../util/findDietSeq';
 import {getDietAddStatus} from '../../util/getDietAddStatus';
 
+// doobi component
 import CreateLimitAlertContent from './alert/CreateLimitAlertContent';
 import DAlert from './alert/DAlert';
 import DeleteAlertContent from './alert/DeleteAlertContent';
-import MenuEmptyAlertContent from './alert/MenuEmptyAlertContent';
+import CommonAlertContent from './alert/CommonAlertContent';
 
+// react-query
 import {
   useCreateDiet,
   useDeleteDiet,

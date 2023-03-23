@@ -53,10 +53,11 @@ export const validateToken = async () => {
         },
       });
       isTokenValid = true;
-      // isTokenValid && console.log('validateToken: auth 완료');
+      isTokenValid && console.log('validateToken: auth 완료');
       validToken = accessToken;
     } catch (e) {
-      // console.log('validateToken: auth 오류', e);
+      console.log('validateToken: auth 오류', e);
+      if (e.response?.status === 500) return {isTokenValid, validToken};
       // TBD | e.response -> 500에러면 토큰 재발급은 안되도록 해야함
     }
   }
@@ -72,22 +73,11 @@ export const validateToken = async () => {
       console.log();
       await storeToken(reIssue.data.accessToken, reIssue.data.refreshToken);
       isTokenValid = true;
-      // isTokenValid && console.log('validateToken: reIssue 완료');
+      isTokenValid && console.log('validateToken: reIssue 완료');
       validToken = reIssue.data.accessToken;
     } catch (e) {
-      // console.log('reIssue 오류: ', e);
+      console.log('validateToken: reIssue 오류: ', e);
     }
   }
-
-  // if (!isTokenValid) {
-  //   try {
-  //     validToken = await kakaoLogin();
-  //     isTokenValid = true;
-  //     isTokenValid && console.log('카카오로그인 완료');
-  //   } catch (e) {
-  //     console.log('카카오로그인 실패', e);
-  //   }
-  // }
-
   return {isTokenValid, validToken};
 };
