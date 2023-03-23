@@ -146,7 +146,9 @@ const Home = () => {
               onChangeText={setSearchText}
               value={searchText}
               placeholder="검색어 입력"
-              onSubmitEditing={() => refetchProduct()}
+              onSubmitEditing={() => {
+                refetchProduct();
+              }}
             />
             <SearchCancelBtn
               onPress={() => {
