@@ -17,7 +17,9 @@ const CommonAlert = () => {
       <DAlert
         alertShow={errorCode ? true : false}
         onConfirm={() => {
-          errorCode && errorActionByCode[errorCode](navigate);
+          errorCode &&
+            errorActionByCode[errorCode] &&
+            errorActionByCode[errorCode](navigate);
           dispatch(closeCommonAlert());
         }}
         onCancel={() => {

@@ -57,7 +57,7 @@ export const validateToken = async () => {
       validToken = accessToken;
     } catch (e) {
       console.log('validateToken: auth 오류', e);
-      if (e.response.status === 401) {
+      if (e.response?.status === 401) {
         try {
           // 토큰 재발급
           const reIssue = await axios.get(`${RE_ISSUE_TOKEN}`, {

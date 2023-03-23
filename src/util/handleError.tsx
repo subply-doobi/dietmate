@@ -25,6 +25,7 @@ export const errorActionByCode: IErrorActionByCode = {
   401: (navigate: Function) => {
     navigate('Login');
   },
+  400: (navigate: Function) => {},
 };
 
 export const useHandleError = () => {
