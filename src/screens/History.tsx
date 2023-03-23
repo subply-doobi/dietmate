@@ -1,33 +1,18 @@
-import {View, Text, FlatList} from 'react-native';
 import React, {useState} from 'react';
+import {FlatList} from 'react-native';
 import styled from 'styled-components/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useForm, useWatch} from 'react-hook-form';
+
+import {RootState} from '../stores/store';
+import {updateUserInfo} from '../stores/slices/userInfoSlice';
 import colors from '../styles/colors';
 import {NavigationProps, SCREENWIDTH} from '../constants/constants';
-import {useForm, useWatch} from 'react-hook-form';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../stores/store';
-import DAlert from '../components/common/alert/DAlert';
-import WeightChangeAlert from '../components/myPage/WeightChangeAlert';
-import {calculateBMR, calculateNutrTarget} from '../util/targetCalculation';
-import {updateUserInfo} from '../stores/slices/userInfoSlice';
 import {changeNutrByWeight} from '../util/alertActions';
 import {BtnBottomCTA, BtnText} from '../styles/styledConsts';
 
-const Container = styled.View`
-  flex: 1;
-  background-color: ${colors.white};
-`;
-
-const HistoryBox = styled.TouchableOpacity`
-  width: ${SCREENWIDTH / 3}px;
-  height: ${SCREENWIDTH / 3}px;
-  border-width: 1px;
-  border-color: ${colors.inactivated};
-`;
-const HistoryImage = styled.Image`
-  flex: 1;
-  background-color: ${colors.backgroundLight};
-`;
+import DAlert from '../components/common/alert/DAlert';
+import WeightChangeAlert from '../components/myPage/WeightChangeAlert';
 
 const History = ({navigation: {navigate}}: NavigationProps) => {
   const {userInfo} = useSelector((state: RootState) => state.userInfo);
@@ -120,3 +105,19 @@ const History = ({navigation: {navigate}}: NavigationProps) => {
 };
 
 export default History;
+
+const Container = styled.View`
+  flex: 1;
+  background-color: ${colors.white};
+`;
+
+const HistoryBox = styled.TouchableOpacity`
+  width: ${SCREENWIDTH / 3}px;
+  height: ${SCREENWIDTH / 3}px;
+  border-width: 1px;
+  border-color: ${colors.inactivated};
+`;
+const HistoryImage = styled.Image`
+  flex: 1;
+  background-color: ${colors.backgroundLight};
+`;

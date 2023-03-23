@@ -1,10 +1,11 @@
+import React, {useEffect, useCallback} from 'react';
 import styled from 'styled-components/native';
+import {useNavigation} from '@react-navigation/native';
 import {BtnCTA, BtnText} from '../styles/styledConsts';
 import colors from '../styles/colors';
-import React, {useEffect, useCallback, useState} from 'react';
+
 import {useGetBaseLine} from '../query/queries/baseLine';
 import {kakaoLogin, validateToken} from '../query/queries/token';
-import {useNavigation} from '@react-navigation/native';
 import {IBaseLine} from '../query/types/baseLine';
 
 const navigateByBaseLine = (data: IBaseLine | any, navigation) => {

@@ -1,6 +1,4 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 
 export interface IFilterState {
   listTitle: string;

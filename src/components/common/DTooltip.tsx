@@ -1,7 +1,5 @@
-import {SetStateAction} from 'react';
-import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
-import {RootState} from '../../stores/store';
+
 import colors from '../../styles/colors';
 
 interface IDtooltip {

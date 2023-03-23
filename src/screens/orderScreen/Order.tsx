@@ -1,13 +1,13 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-  ActivityIndicator,
-} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
+import {TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
 import styled from 'styled-components/native';
+import Accordion from 'react-native-collapsible/Accordion';
+import {useForm, useWatch} from 'react-hook-form';
+import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+
+import {RootState} from '../../stores/store';
+import {icons} from '../../assets/icons/iconSource';
 import {
   BtnBottomCTA,
   BtnText,
@@ -17,28 +17,16 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/styledConsts';
-import Accordion from 'react-native-collapsible/Accordion';
-import {useForm, useWatch} from 'react-hook-form';
 import colors from '../../styles/colors';
-import {useSelector, useDispatch} from 'react-redux';
-import {RootState} from '../../stores/store';
+import {SCREENWIDTH} from '../../constants/constants';
+
 import FoodToOrder from '../../components/order/FoodToOrder';
 import Orderer from '../../components/order/Orderer';
 import Address from '../../components/order/Address';
 import PaymentMethod from '../../components/order/PaymentMethod';
-import {
-  IProduct,
-  kakaoAppAdminKey,
-  NavigationProps,
-  SCREENWIDTH,
-} from '../../constants/constants';
-import axios from 'axios';
 import PaymentWebView from '../../components/order/PaymentWebView';
+
 import {useKakaoPayReady} from '../../query/queries/order';
-import {setOrderSummary} from '../../stores/slices/orderSlice';
-import {useListDietDetailAll} from '../../query/queries/diet';
-import {useNavigation} from '@react-navigation/native';
-import {icons} from '../../assets/icons/iconSource';
 
 const Order = () => {
   const navigation = useNavigation();

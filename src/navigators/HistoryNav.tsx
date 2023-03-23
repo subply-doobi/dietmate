@@ -1,13 +1,10 @@
-import {View, Text, TouchableOpacity} from 'react-native';
-import React from 'react';
-import styled from 'styled-components/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import History from '../screens/History';
-import Order from '../screens/orderScreen/Order';
+
 import colors from '../styles/colors';
 import {NavigationProps} from '../constants/constants';
+
+import History from '../screens/History';
 import HistoryDetail from '../screens/HistoryDetail';
-import {TextMain} from '../styles/styledConsts';
 import BackArrow from '../components/common/BackArrow';
 
 const Stack = createNativeStackNavigator();

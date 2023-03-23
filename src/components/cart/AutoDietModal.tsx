@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, StyleSheet} from 'react-native';
+import {Modal} from 'react-native';
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 
 import {RootState} from '../../stores/store';
-import {useListCategory} from '../../query/queries/category';
+import {icons} from '../../assets/icons/iconSource';
+import colors from '../../styles/colors';
 import {
   BtnCTA,
   BtnText,
@@ -12,11 +13,11 @@ import {
   HorizontalSpace,
   TextMain,
 } from '../../styles/styledConsts';
-import colors from '../../styles/colors';
+
 import DSlider from '../common/slider/DSlider';
+
 import {useCreateProductAuto} from '../../query/queries/product';
-import DAlert from '../common/alert/DAlert';
-import {icons} from '../../assets/icons/iconSource';
+import {useListCategory} from '../../query/queries/category';
 
 interface IAutoDietModal {
   modalVisible: boolean;
@@ -76,7 +77,9 @@ const AutoDietModal = ({modalVisible, setModalVisible}: IAutoDietModal) => {
       transparent={true}>
       <ModalBackGround>
         <ModalContainer>
-          <ModalTitle>{`추천받을 식품 유형 \n3가지 이상 선택해 주세요`}</ModalTitle>
+          <ModalTitle>
+            {'추천받을 식품 유형 \n3가지 이상 선택해 주세요'}
+          </ModalTitle>
           <CategoryBox>
             {categoryData?.map((btn, idx) => (
               <CheckboxBtn
@@ -117,7 +120,7 @@ const AutoDietModal = ({modalVisible, setModalVisible}: IAutoDietModal) => {
             disabled={btnDisabled}
             onPress={runAutoMenu}>
             <BtnText>
-              {btnDisabled ? `3가지 이상 선택해주세요` : `한 끼니 자동구성`}
+              {btnDisabled ? '3가지 이상 선택해주세요' : '한 끼니 자동구성'}
             </BtnText>
           </BtnCTA>
         </ModalContainer>

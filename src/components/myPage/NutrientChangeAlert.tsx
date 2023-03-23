@@ -1,6 +1,7 @@
-import {View, Text} from 'react-native';
 import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
+import {Controller} from 'react-hook-form';
+
 import {
   Col,
   ErrorBox,
@@ -9,14 +10,11 @@ import {
   TextMain,
   UserInfoTextInput,
 } from '../../styles/styledConsts';
-import {useSelector} from 'react-redux';
-import {Controller, useForm, useWatch} from 'react-hook-form';
 import {validationRules} from '../../constants/constants';
 import {IFormField} from '../../constants/constants';
-import {useGetBaseLine} from '../../query/queries/baseLine';
 
 const renderNutrInput = (
-  {field: {onChange, onBlur, value}}: IFormField,
+  {field: {onChange, value}}: IFormField,
   nutrText: string,
 ) => {
   return (

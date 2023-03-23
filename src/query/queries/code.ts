@@ -1,13 +1,12 @@
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import axios from 'axios';
-import {queryFn, mutationFn} from './requestFn';
-import {validateToken} from './token';
-import {COMMON_CODE, FILTER} from './urls';
+import {useQuery} from '@tanstack/react-query';
+import {queryFn} from './requestFn';
 import {
   DIET_PURPOSE_CODE,
   WEIGHT_PURPOSE_CODE,
   AEROBIC_PURPOSE_CODE,
 } from '../keys';
+
+import {COMMON_CODE, FILTER} from './urls';
 
 interface IQuery {
   code: string;

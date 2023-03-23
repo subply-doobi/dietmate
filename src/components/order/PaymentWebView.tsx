@@ -1,13 +1,16 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import React, {SetStateAction, useEffect, useState} from 'react';
-import {Modal, AppState} from 'react-native';
+import React, {SetStateAction, useEffect} from 'react';
+import {Modal} from 'react-native';
+import {useDispatch} from 'react-redux';
+import styled from 'styled-components/native';
+import {useNavigation} from '@react-navigation/native';
 import {Text} from 'react-native-svg';
 import WebView from 'react-native-webview';
-import {useDispatch, useSelector} from 'react-redux';
-import styled from 'styled-components/native';
+
 import {setOrderSummary} from '../../stores/slices/orderSlice';
-import {RootState} from '../../stores/store';
+import colors from '../../styles/colors';
+
 import {useKakaopayApprove} from '../../query/queries/order';
+
 const Cancel = styled.TouchableOpacity`
   width: 30px;
   height: 30px;

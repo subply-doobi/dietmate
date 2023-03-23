@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
+import {ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
-import {Col, Row, TextMain} from '../../../styles/styledConsts';
-import {useFilterRange, useTest} from '../../../query/queries/product';
 
-import {ActivityIndicator, ScrollView} from 'react-native';
+import {Col, TextMain} from '../../../styles/styledConsts';
 import DSlider from '../../common/slider/DSlider';
+
+import {useFilterRange} from '../../../query/queries/product';
 
 const PriceContent = props => {
   const {setPriceParam, priceParam, filterParams} = props;
@@ -51,26 +52,6 @@ const PriceContent = props => {
 
 export default PriceContent;
 
-const Text = styled.Text`
-  font-size: 18px;
-  margin: 15px;
-`;
-
-const BottomText = styled.Text`
-  font-size: 16px;
-`;
-const Button = styled.TouchableOpacity``;
-const Image = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-const FilterRow = styled(Row)`
-  justify-content: center;
-`;
-const BottomRow = styled.View`
-  flex-direction: row;
-  justify-content: center;
-`;
 const SliderTitle = styled(TextMain)`
   font-size: 16px;
   font-weight: bold;

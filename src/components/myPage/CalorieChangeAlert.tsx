@@ -1,30 +1,28 @@
-import {View, Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
+import {Controller} from 'react-hook-form';
+
+import {icons} from '../../assets/icons/iconSource';
 import {
   IFormField,
   purposeCdToValue,
   validationRules,
 } from '../../constants/constants';
 import {
-  AlertContentContainer,
   Col,
   ErrorBox,
   ErrorText,
   InputHeaderText,
-  Row,
   TextMain,
   TextSub,
   UserInfoTextInput,
 } from '../../styles/styledConsts';
-import {Controller, useForm, useWatch} from 'react-hook-form';
-import {useGetBaseLine} from '../../query/queries/baseLine';
-import {icons} from '../../assets/icons/iconSource';
+
 import DTooltip from '../common/DTooltip';
 
-const renderCalorieInput = ({field: {onChange, onBlur, value}}: IFormField) => {
+import {useGetBaseLine} from '../../query/queries/baseLine';
+
+const renderCalorieInput = ({field: {onChange, value}}: IFormField) => {
   return (
     <>
       <InputHeader isActivated={value ? true : false}>

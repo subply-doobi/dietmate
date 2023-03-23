@@ -11,11 +11,11 @@ import {useFlipper} from '@react-navigation/devtools';
 import RootStackNav from './src/navigators/RootStackNav';
 import CommonAlert from './src/components/common/CommonAlert';
 
-// if (__DEV__) {
-//   import('react-query-native-devtools').then(({addPlugin}) => {
-//     addPlugin({queryClient});
-//   });
-// }
+if (__DEV__) {
+  import('react-query-native-devtools').then(({addPlugin}) => {
+    addPlugin({queryClient});
+  });
+}
 
 function App(): JSX.Element {
   const navigationRef = useNavigationContainerRef();

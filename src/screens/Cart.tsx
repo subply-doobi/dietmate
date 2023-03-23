@@ -1,34 +1,12 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Pressable, ScrollView, View} from 'react-native';
+import {Pressable, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
 import {RootState} from '../stores/store';
+import {icons} from '../assets/icons/iconSource';
 import colors from '../styles/colors';
-import {
-  BtnSmall,
-  BtnSmallText,
-  TextMain,
-  Row,
-  HorizontalSpace,
-  TextSub,
-  BtnBottomCTA,
-  BtnText,
-} from '../styles/styledConsts';
-
-import NutrientsProgress from '../components/common/NutrientsProgress';
-import MenuHeader from '../components/common/MenuHeader';
-import MenuSelect from '../components/common/MenuSelect';
-import {
-  useDeleteDietDetail,
-  useListDiet,
-  useListDietDetail,
-  useListDietDetailAll,
-} from '../query/queries/diet';
-import AutoMenuBtn from '../components/cart/AutoMenuBtn';
-import BottomMenuSelect from '../components/cart/BottomMenuSelect';
-import AutoDietModal from '../components/cart/AutoDietModal';
-import CartFoodList from '../components/cart/CartFoodList';
 import {
   commaToNum,
   compareNutrToTarget,
@@ -36,12 +14,33 @@ import {
   sumUpNutrients,
   sumUpPrice,
 } from '../util/sumUp';
-import {useGetBaseLine} from '../query/queries/baseLine';
-import CartSummary from '../components/cart/CartSummary';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import DAlert from '../components/common/alert/DAlert';
+import {
+  BtnSmall,
+  BtnSmallText,
+  TextMain,
+  Row,
+  HorizontalSpace,
+  BtnBottomCTA,
+  BtnText,
+} from '../styles/styledConsts';
+
+import NutrientsProgress from '../components/common/NutrientsProgress';
+import MenuHeader from '../components/common/MenuHeader';
+import MenuSelect from '../components/common/MenuSelect';
+import AutoMenuBtn from '../components/cart/AutoMenuBtn';
+import BottomMenuSelect from '../components/cart/BottomMenuSelect';
+import AutoDietModal from '../components/cart/AutoDietModal';
+import CartFoodList from '../components/cart/CartFoodList';
 import DeleteAlertContent from '../components/common/alert/DeleteAlertContent';
-import {icons} from '../assets/icons/iconSource';
+import DAlert from '../components/common/alert/DAlert';
+import CartSummary from '../components/cart/CartSummary';
+
+import {useGetBaseLine} from '../query/queries/baseLine';
+import {
+  useDeleteDietDetail,
+  useListDietDetail,
+  useListDietDetailAll,
+} from '../query/queries/diet';
 
 const Cart = () => {
   // redux

@@ -1,11 +1,10 @@
-import {View, Text, FlatList, ScrollView} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
+import {FlatList} from 'react-native';
 import styled from 'styled-components/native';
-import MenuSelect from '../components/common/MenuSelect';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {RootState} from '../stores/store';
 import {
-  BtnCTA,
-  BtnText,
-  Col,
   Container,
   HorizontalLine,
   HorizontalSpace,
@@ -13,29 +12,11 @@ import {
   TextMain,
   TextSub,
 } from '../styles/styledConsts';
+
+import MenuSelect from '../components/common/MenuSelect';
 import MenuHeader from '../components/common/MenuHeader';
 import NutrientsProgress from '../components/common/NutrientsProgress';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../stores/store';
-import {IProduct} from '../constants/constants';
 import LikeFoodList from '../components/likes/LikeFoodList';
-import {setLikeFoods} from '../stores/slices/likeSlice';
-import colors from '../styles/colors';
-
-const MenuSelectContainer = styled.View`
-  width: 100%;
-  height: 48px;
-  justify-content: center;
-`;
-
-const ListTitle = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-`;
-
-const NoOfFoods = styled(TextSub)`
-  font-size: 16px;
-`;
 
 const Likes = () => {
   // redux
@@ -74,3 +55,18 @@ const Likes = () => {
 };
 
 export default Likes;
+
+const MenuSelectContainer = styled.View`
+  width: 100%;
+  height: 48px;
+  justify-content: center;
+`;
+
+const ListTitle = styled(TextMain)`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const NoOfFoods = styled(TextSub)`
+  font-size: 16px;
+`;

@@ -1,7 +1,9 @@
-import React, {useState, useMemo, useCallback, useEffect, useRef} from 'react';
 import styled from 'styled-components/native';
+
+import {icons} from '../../../assets/icons/iconSource';
 import colors from '../../../styles/colors';
 import {Col} from '../../../styles/styledConsts';
+
 import DTooltip from '../../common/DTooltip';
 
 const AutoDietContent = () => {
@@ -13,9 +15,7 @@ const AutoDietContent = () => {
       </Container>
       <Col>
         <Button>
-          <CheckboxImage
-            source={require(`../../../assets/icons/24_checkbox.png`)}
-          />
+          <CheckboxImage source={icons.checkbox_24} />
           <ButtonText>식단구성 쉽게하기</ButtonText>
         </Button>
         <DTooltip

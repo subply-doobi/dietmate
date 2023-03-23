@@ -1,4 +1,3 @@
-import React from 'react';
 import {IUserInfo} from '../stores/slices/userInfoSlice';
 import {calculateBMR, calculateNutrTarget} from './targetCalculation';
 
