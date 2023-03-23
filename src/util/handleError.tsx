@@ -32,9 +32,7 @@ export const useHandleError = () => {
     const errorCode = e.response?.status;
     console.log('useHandleError: errorCode: ', errorCode, typeof errorCode);
     const errorMsg = getErrorMsg(errorCode);
-    if (errorCode === 401) {
-      navigate('Login');
-    }
+    if (errorCode === 401) navigate('Login');
 
     dispatch(openCommonAlert(errorMsg));
   }, []);
