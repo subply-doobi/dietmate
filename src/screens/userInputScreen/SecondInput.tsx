@@ -1,14 +1,16 @@
-import {View, Text, ScrollView} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {
-  aerobicTrainingCategrory,
-  NavigationProps,
-  validationRules,
-  weightTrainingCategrory,
-} from '../../constants/constants';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
+import React, {useEffect} from 'react';
+import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {Controller, useForm, useWatch} from 'react-hook-form';
+
+import {RootState} from '../../stores/store';
+import {
+  IUserInfo,
+  saveUserInfo,
+  saveUserTarget,
+} from '../../stores/slices/userInfoSlice';
+import {NavigationProps, validationRules} from '../../constants/constants';
 import {
   BtnBottomCTA,
   BtnText,
@@ -19,19 +21,14 @@ import {
   TextMain,
   UserInfoTextInput,
 } from '../../styles/styledConsts';
-import {Controller, useForm, useWatch} from 'react-hook-form';
-import Dropdown from '../../components/userInput/Dropdown';
-import {
-  IUserInfo,
-  saveUserInfo,
-  saveUserTarget,
-} from '../../stores/slices/userInfoSlice';
 import {calculateNutrTarget} from '../../util/targetCalculation';
+
+import Dropdown from '../../components/userInput/Dropdown';
+
 import {
   useWeightPurposeCode,
   useAerobicPurposeCode,
 } from '../../query/queries/code';
-import {DrawerLayoutAndroid} from 'react-native';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 
 interface IFormData {

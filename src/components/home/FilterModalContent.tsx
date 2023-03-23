@@ -1,34 +1,15 @@
-import React, {
-  useState,
-  useCallback,
-  useMemo,
-  useEffect,
-  StrictMode,
-} from 'react';
+import React, {useState} from 'react';
+import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
-import {
-  Row,
-  HorizontalLine,
-  BtnCTA,
-  BtnBottomCTA,
-  TextMain,
-  StickyFooter,
-  HorizontalSpace,
-  Col,
-} from '../../styles/styledConsts';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
+import {icons} from '../../assets/icons/iconSource';
+import {Row, BtnCTA, Col} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
-import {useWeightPurposeCode, useFilterCode} from '../../query/queries/code';
-import {useListProduct} from '../../query/queries/product';
-import {useListCategory, useCountCategory} from '../../query/queries/category';
-import {ScrollView} from 'react-native';
-import DSlider from '../common/slider/DSlider';
 
 import CategoryContent from './filterContents/CategoryContent';
 import NutritionContent from './filterContents/NutritionContent';
 import PriceContent from './filterContents/PriceContent';
-import {icons} from '../../assets/icons/iconSource';
 import AutoDietContent from './filterContents/AutoDietContent';
 
 const FilterModalContent = props => {
@@ -72,11 +53,17 @@ const FilterModalContent = props => {
         console.log('식단구성 확인');
       },
     },
+    {
+      text: '전부 초기화',
+      reset: () => {
+        console.log('전부 확인');
+      },
+    },
   ];
 
   const FilterHeaderText = () => {
     return (
-      <>
+      <SafeAreaView>
         <FilterRow>
           <Button
             onPress={() => {
@@ -139,35 +126,42 @@ const FilterModalContent = props => {
               </Text>
             </Row>
           </Button>
-          <Button>
+          <Button
+            onPress={() => {
+              setCategoryParam('');
+              setNutritionParam('');
+              setPriceParam('');
+            }}>
             <Image source={icons.initialize_24} />
           </Button>
         </FilterRow>
-      </>
+      </SafeAreaView>
     );
   };
-  const ShowContent = (i: any) => {
-    return i.index === 0 ? (
+  const ShowContent = ({index}) => {
+    return index === 0 ? (
       <CategoryContent
         setCategoryParam={setCategoryParam}
         categoryParam={categoryParam}
         며
       />
-    ) : i.index === 1 ? (
+    ) : index === 1 ? (
       <NutritionContent
         setNutritionParam={setNutritionParam}
         nutritionParam={nutritionParam}
         filterParams={filterParams}
       />
-    ) : i.index === 2 ? (
+    ) : index === 2 ? (
       <PriceContent
         setPriceParam={setPriceParam}
         priceParam={priceParam}
         filterParams={filterParams}
       />
-    ) : i.index === 3 ? (
+    ) : index === 3 ? (
       <AutoDietContent />
-    ) : null;
+    ) : (
+      <></>
+    );
   };
   //useEffect에 맞춰서 초기값 설정하게 하고싶음
   //
@@ -237,11 +231,6 @@ const BottomRow = styled.View`
   justify-content: space-between;
 `;
 
-const SliderTitle = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 40px;
-`;
 const Badge = styled.View`
   width: 6px;
   height: 6px;
@@ -252,5 +241,3 @@ const Badge = styled.View`
   right: 20px;
 `;
 const MODAL_WIDTH = 328;
-const MODAL_INNER_WIDTH = MODAL_WIDTH - 32;
-const SLIDER_WIDTH = MODAL_INNER_WIDTH - 32;

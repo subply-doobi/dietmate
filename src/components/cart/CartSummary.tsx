@@ -1,9 +1,10 @@
-import {useSelector} from 'react-redux';
+import {View} from 'react-native';
 import styled from 'styled-components/native';
-import {useListDiet, useListDietDetailAll} from '../../query/queries/diet';
+
 import {TextMain, TextSub} from '../../styles/styledConsts';
 import {commaToNum, reGroupBySeller, sumUpPrice} from '../../util/sumUp';
-import {View} from 'react-native';
+
+import {useListDiet, useListDietDetailAll} from '../../query/queries/diet';
 
 const CartSummary = () => {
   // react-query

@@ -1,10 +1,11 @@
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import axios from 'axios';
-import {BASE_LINE} from '../keys';
+import {useMutation, useQuery} from '@tanstack/react-query';
+
 import {queryClient} from '../store';
 import {IBaseLine} from '../types/baseLine';
+import {BASE_LINE} from '../keys';
 import {IQueryOptions} from '../types/common';
 import {queryFn, mutationFn} from './requestFn';
+
 import {CREATE_BASE_LINE, GET_BASE_LINE, UPDATE_BASE_LINE} from './urls';
 
 // PUT

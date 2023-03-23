@@ -1,10 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  KakaoOAuthToken,
-  login,
-  loginWithKakaoAccount,
-} from '@react-native-seoul/kakao-login';
+import {KakaoOAuthToken, login} from '@react-native-seoul/kakao-login';
 import axios from 'axios';
+
 import {GET_TOKEN, GET_AUTH, RE_ISSUE_TOKEN} from './urls';
 
 // doobi server------------------ //

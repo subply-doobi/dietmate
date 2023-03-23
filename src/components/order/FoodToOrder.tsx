@@ -1,5 +1,7 @@
 import React from 'react';
+import {ActivityIndicator, Text, View} from 'react-native';
 import styled from 'styled-components/native';
+
 import {
   AccordionContentContainer,
   TextMain,
@@ -7,16 +9,14 @@ import {
   Row,
   HorizontalLine,
 } from '../../styles/styledConsts';
-import {BASE_URL} from '../../query/queries/urls';
-import {IProductData} from '../../query/types/product';
 import colors from '../../styles/colors';
-import {IDietDetailData} from '../../query/types/diet';
+
+import {BASE_URL} from '../../query/queries/urls';
 import {
   useListDiet,
   useListDietDetail,
   useListDietDetailAll,
 } from '../../query/queries/diet';
-import {ActivityIndicator, Text, View} from 'react-native';
 
 const FoodToOrder = () => {
   const {data: listDietDetailAll, isLoading: isListDietDetailLoading} =

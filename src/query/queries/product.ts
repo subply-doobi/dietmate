@@ -1,21 +1,19 @@
+import {useMutation, useQueries, useQuery} from '@tanstack/react-query';
 import axios from 'axios';
+
 import {queryClient} from '../store';
+import {validateToken} from './token';
+import {mutationFn, queryFn} from './requestFn';
+import {DIET_DETAIL, PRODUCT} from '../keys';
+import {IQueryOptions} from '../types/common';
+
 import {
-  BASE_URL,
   CREATE_PRODUCT_MARK,
   DELETE_PRODUCT_MARK,
   CREATE_PRODUCT_AUTO,
   LIST_PRODUCT,
   FILTER,
 } from './urls';
-import {validateToken} from './token';
-
-import {useMutation, useQueries, useQuery} from '@tanstack/react-query';
-import {mutationFn, queryFn} from './requestFn';
-import {DIET_DETAIL, PRODUCT, PRODUCT_AUTO} from '../keys';
-import {IMutationOptions, IQueryOptions} from '../types/common';
-import {ICreateProductAutoParams, IListProductParams} from '../types/product';
-import {useDispatch} from 'react-redux';
 
 export const useCreateProductMark = () => {
   const mutation = useMutation({
@@ -111,9 +109,19 @@ export const useListProduct = (
     onSuccess: data => {
       options?.onSuccess && options?.onSuccess();
     },
+  });
+};
+
+export const useFilterRange = (filterType, options?: IQueryOptions) => {
+  const enabled = options?.enabled ?? true;
+  return useQuery({
+    queryKey: ['filterRange', filterType],
+    queryFn: () => queryFn(`${FILTER}/${filterType}`),
+    onSuccess: data => {},
     onError: e => {
       console.log('useListProduct Error: ', e);
     },
+    enabled,
   });
 };
 export const useTest = async () => {
@@ -138,17 +146,6 @@ export const useTest = async () => {
         suspense: true,
       },
     ],
-  });
-};
-
-export const useFilterRange = filterType => {
-  return useQuery({
-    queryKey: ['filterRange', filterType],
-    queryFn: () => queryFn(`${FILTER}/${filterType}`),
-    onSuccess: data => {},
-    onError: e => {
-      console.log('useFilterRange Error: ', e);
-    },
   });
 };
 

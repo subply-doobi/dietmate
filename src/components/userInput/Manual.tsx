@@ -1,9 +1,10 @@
-import {View, Text} from 'react-native';
 import React, {useEffect, useRef} from 'react';
+import {View, Text} from 'react-native';
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
 import {Controller} from 'react-hook-form';
+
+import {RootState} from '../../stores/store';
 import {
   ErrorBox,
   ErrorText,
@@ -14,25 +15,6 @@ import {IDropdownField, validationRules} from '../../constants/constants';
 import {calculateManualCalorie} from '../../util/targetCalculation';
 import colors from '../../styles/colors';
 
-const ContentsContainer = styled.View``;
-
-const InputHeader = styled(InputHeaderText)`
-  margin-top: 24px;
-`;
-const Input = styled(UserInfoTextInput)``;
-
-const SummaryContainer = styled.View`
-  margin-top: 12px;
-  border-width: 1px;
-  border-color: ${colors.main};
-  border-radius: 5px;
-  padding: 16px;
-`;
-
-const NutrientSummaryText = styled.Text`
-  font-size: 12px;
-  color: ${colors.textMain};
-`;
 interface IManual {
   carbManual: string;
   proteinManual: string;
@@ -206,3 +188,23 @@ const Manual = ({
 };
 
 export default Manual;
+
+const ContentsContainer = styled.View``;
+
+const InputHeader = styled(InputHeaderText)`
+  margin-top: 24px;
+`;
+const Input = styled(UserInfoTextInput)``;
+
+const SummaryContainer = styled.View`
+  margin-top: 12px;
+  border-width: 1px;
+  border-color: ${colors.main};
+  border-radius: 5px;
+  padding: 16px;
+`;
+
+const NutrientSummaryText = styled.Text`
+  font-size: 12px;
+  color: ${colors.textMain};
+`;

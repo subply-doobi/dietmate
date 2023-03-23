@@ -1,11 +1,15 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TouchableWithoutFeedback, FlatList} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+
 import {RootState} from '../../stores/store';
+import {setCurrentDietNo} from '../../stores/slices/cartSlice';
+import {setListTitle} from '../../stores/slices/filterSlice';
+import {icons} from '../../assets/icons/iconSource';
 import {
-  BtnCTA,
-  BtnText,
+  Col,
   Container,
   HorizontalLine,
   HorizontalSpace,
@@ -14,28 +18,24 @@ import {
   TextSub,
 } from '../../styles/styledConsts';
 import {categoryCode} from '../../constants/constants';
+import colors from '../../styles/colors';
+import {queryFn} from '../../query/queries/requestFn';
+import {IProductData} from '../../query/types/product';
+import {SCREENWIDTH} from '../../constants/constants';
 
 import NutrientsProgress from '../../components/common/NutrientsProgress';
-import colors from '../../styles/colors';
 import MenuSelect from '../../components/common/MenuSelect';
 import MenuHeader from '../../components/common/MenuHeader';
-import {queryFn} from '../../query/queries/requestFn';
-import {useListCategory, useCountCategory} from '../../query/queries/category';
-import {LIST_DIET} from '../../query/queries/urls';
-import {setCurrentDietNo} from '../../stores/slices/cartSlice';
-import {useListProduct} from '../../query/queries/product';
-import {setListTitle} from '../../stores/slices/filterSlice';
 import FoodList from '../../components/home/FoodList';
-import {IProductData} from '../../query/types/product';
-import {useListDietDetail} from '../../query/queries/diet';
 import DBottomSheet from '../../components/common/DBottomSheet';
 import SortModalContent from '../../components/home/SortModalContent';
 import FilterModalContent from '../../components/home/FilterModalContent';
 import FilterHeader from '../../components/home/FilterHeader';
 import DTooltip from '../../components/common/DTooltip';
-import {SCREENWIDTH} from '../../constants/constants';
-import {useNavigation} from '@react-navigation/native';
-import {icons} from '../../assets/icons/iconSource';
+
+import {LIST_DIET} from '../../query/queries/urls';
+import {useListDietDetail} from '../../query/queries/diet';
+import {useListProduct} from '../../query/queries/product';
 
 const Home = () => {
   // navigation
@@ -70,6 +70,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const {listTitle} = useSelector((state: RootState) => state.filter);
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
+
   // react-query
   // const filter.Calorie = params?.filter?.Calorie ? 'Calorie',params?.filter?.Calorie[0],params?.filter?.Calorie[1] : ''
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {
@@ -86,6 +87,7 @@ const Home = () => {
   } = useListProduct(
     {
       dietNo: currentDietNo,
+      searchText,
       categoryCd: filterParams.categoryParam,
       sort: sortParam,
       filter: {filterParams},
@@ -139,12 +141,20 @@ const Home = () => {
             menuSelectOpen={menuSelectOpen}
             setMenuSelectOpen={setMenuSelectOpen}
           />
-          <SearchInput
-            onChangeText={setSearchText}
-            value={searchText}
-            placeholder="검색어 입력"
-            onSubmitEditing={() => console.log('search!!')}
-          />
+          <Col style={{flex: 1, justifyContent: 'center'}}>
+            <SearchInput
+              onChangeText={setSearchText}
+              value={searchText}
+              placeholder="검색어 입력"
+              onSubmitEditing={() => refetchProduct()}
+            />
+            <SearchCancelBtn
+              onPress={() => {
+                setSearchText('');
+              }}>
+              <SearchCancelImage source={icons.cancelRound_24} />
+            </SearchCancelBtn>
+          </Col>
         </MenuAndSearchBox>
         {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
         <Row style={{justifyContent: 'space-between', marginTop: 32}}>
@@ -257,7 +267,6 @@ const Arrow = styled.Image`
 `;
 
 const SearchInput = styled.TextInput`
-  flex: 1;
   height: 32px;
   margin-left: 8px;
   border-radius: 4px;
@@ -265,6 +274,20 @@ const SearchInput = styled.TextInput`
   padding: 5px 8px 5px 8px;
   font-size: 14px;
   color: ${colors.textSub};
+`;
+
+const SearchCancelBtn = styled.TouchableOpacity`
+  position: absolute;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SearchCancelImage = styled.Image`
+  width: 24px;
+  height: 24px;
 `;
 
 const ListTitle = styled(TextMain)`

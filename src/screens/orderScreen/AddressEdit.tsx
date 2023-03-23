@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Pressable,
@@ -6,8 +7,19 @@ import {
   Alert,
   SafeAreaView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {Controller, useForm, useWatch} from 'react-hook-form';
+import Postcode from '@actbase/react-daum-postcode';
+
+import {RootState} from '../../stores/store';
+import {
+  addAddress,
+  deleteAddress,
+  setSelectedAddressId,
+  updateAddress,
+} from '../../stores/slices/orderSlice';
+import {icons} from '../../assets/icons/iconSource';
 import {
   IFormField,
   NavigationProps,
@@ -27,72 +39,9 @@ import {
   TextSub,
   UserInfoTextInput,
 } from '../../styles/styledConsts';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
-import {Controller, useForm, useWatch} from 'react-hook-form';
-import Postcode from '@actbase/react-daum-postcode';
 import colors from '../../styles/colors';
-import {
-  addAddress,
-  deleteAddress,
-  setSelectedAddressId,
-  updateAddress,
-} from '../../stores/slices/orderSlice';
+
 import DAlert from '../../components/common/alert/DAlert';
-import {icons} from '../../assets/icons/iconSource';
-
-const PostalCode = styled(TextSub)`
-  font-size: 16px;
-`;
-
-const AddressDeleteBtn = styled.TouchableOpacity`
-  width: 24px;
-  height: 24px;
-`;
-
-const AddressDeleteIcon = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const BackBtn = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const AddressBase = styled(TextMain)`
-  font-size: 20px;
-  margin-top: 16px;
-`;
-
-const InputHeader = styled(InputHeaderText)`
-  margin-top: 24px;
-`;
-const Input = styled(UserInfoTextInput)``;
-
-const AddressEditBtn = styled(BtnCTA)`
-  height: 48px;
-`;
-const AddressConfirmBtn = styled(BtnCTA)`
-  margin-top: 8px;
-  margin-bottom: 8px;
-`;
-
-const AlertText = styled(TextMain)`
-  font-size: 16px;
-  align-self: center;
-`;
-const ModalBackground = styled.View`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #000000a6;
-`;
-
-const ShippingListContainer = styled.View`
-  width: 100%;
-`;
 
 const renderDeleteAlertContent = () => (
   <AlertContentContainer>
@@ -295,3 +244,52 @@ const AddressEdit = ({
 };
 
 export default AddressEdit;
+
+const PostalCode = styled(TextSub)`
+  font-size: 16px;
+`;
+
+const AddressDeleteBtn = styled.TouchableOpacity`
+  width: 24px;
+  height: 24px;
+`;
+
+const AddressDeleteIcon = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const BackBtn = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const AddressBase = styled(TextMain)`
+  font-size: 20px;
+  margin-top: 16px;
+`;
+
+const InputHeader = styled(InputHeaderText)`
+  margin-top: 24px;
+`;
+const Input = styled(UserInfoTextInput)``;
+
+const AddressEditBtn = styled(BtnCTA)`
+  height: 48px;
+`;
+const AddressConfirmBtn = styled(BtnCTA)`
+  margin-top: 8px;
+  margin-bottom: 8px;
+`;
+
+const AlertText = styled(TextMain)`
+  font-size: 16px;
+  align-self: center;
+`;
+const ModalBackground = styled.View`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000a6;
+`;

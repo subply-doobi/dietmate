@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import {validateToken} from './token';
 
 export const queryFn = async (url: string) => {
@@ -6,7 +7,7 @@ export const queryFn = async (url: string) => {
   if (!isTokenValid) return null;
   const requestConfig = {
     headers: {authorization: `Bearer ${validToken}`},
-    timeout: 2000,
+    timeout: 4000,
   };
   const res = await axios.get(url, requestConfig);
 
@@ -18,7 +19,7 @@ export const mutationFn = async <T>(
   method: string,
   requestBody?: T,
 ) => {
-  const {isTokenValid, validToken} = await validateToken();
+  const {validToken} = await validateToken();
   // if (!isTokenValid) return null;
   const requestConfig = {
     url,

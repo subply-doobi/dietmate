@@ -1,13 +1,14 @@
+import {SetStateAction} from 'react';
 import styled from 'styled-components/native';
+import {Slider} from '@miblanchard/react-native-slider';
+
 import colors from '../../../styles/colors';
 import {StyledProps, TextMain} from '../../../styles/styledConsts';
-import {Slider} from '@miblanchard/react-native-slider';
-import {SetStateAction} from 'react';
 
 interface IDSlider {
   sliderValue: number[];
   setSliderValue: React.Dispatch<SetStateAction<number[]>>;
-  onSlidingComplete: (value: number | Array<number>) => void;
+  onSlidingComplete?: (value: number | Array<number>) => void;
   minimumValue: number;
   maximumValue: number;
   step: number;
@@ -24,7 +25,6 @@ const DSlider = ({
   step,
   sliderWidth,
   text,
-  debugTouchArea,
 }: IDSlider) => {
   const width = sliderWidth ? sliderWidth : '100%';
   return (
@@ -32,7 +32,6 @@ const DSlider = ({
       <SliderContainer style={{width}}>
         <Slider
           value={sliderValue}
-          debugTouchArea={debugTouchArea}
           onValueChange={value => Array.isArray(value) && setSliderValue(value)}
           onSlidingComplete={onSlidingComplete}
           minimumValue={minimumValue}

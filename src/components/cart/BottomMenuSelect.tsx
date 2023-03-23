@@ -1,4 +1,8 @@
 import React, {useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {RootState} from '../../stores/store';
+import {setCurrentDietNo} from '../../stores/slices/cartSlice';
 import {
   BtnSmall,
   BtnSmallText,
@@ -6,23 +10,18 @@ import {
   Row,
   VerticalSpace,
 } from '../../styles/styledConsts';
-import {IDietData} from '../../query/types/diet';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
-import {setCurrentDietNo} from '../../stores/slices/cartSlice';
-import {
-  useCreateDiet,
-  useCreateDietDetail,
-  useGetDietDetailEmptyYn,
-  useListDiet,
-  useListDietDetail,
-} from '../../query/queries/diet';
+import colors from '../../styles/colors';
+import {getDietAddStatus} from '../../util/getDietAddStatus';
+
 import DAlert from '../common/alert/DAlert';
 import CreateLimitAlertContent from '../common/alert/CreateLimitAlertContent';
-import colors from '../../styles/colors';
-import {checkEmptyMenuIndex} from '../../util/checkEmptyMenu';
 import MenuEmptyAlertContent from '../common/alert/MenuEmptyAlertContent';
-import {getDietAddStatus} from '../../util/getDietAddStatus';
+
+import {
+  useCreateDiet,
+  useGetDietDetailEmptyYn,
+  useListDiet,
+} from '../../query/queries/diet';
 
 const BottomMenuSelect = () => {
   // redux
@@ -62,7 +61,7 @@ const BottomMenuSelect = () => {
           flexWrap: 'wrap',
           marginTop: 16,
         }}>
-        {dietData?.map((menu, index) => {
+        {dietData?.map(menu => {
           const isActivated = menu.dietNo === currentDietNo ? true : false;
           return (
             <Row key={menu.dietNo}>

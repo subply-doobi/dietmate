@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
+
 import {queryClient} from '../../query/store';
 import {PRODUCT} from '../../query/keys';
 

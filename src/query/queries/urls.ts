@@ -1,4 +1,3 @@
-// export const BASE_URL = 'http://52.79.208.191:8080';
 export const BASE_URL = 'http://52.78.164.105:8080';
 
 export const GET_TOKEN = `${BASE_URL}/api/every/token/get-token`; //토큰 조회

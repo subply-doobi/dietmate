@@ -1,14 +1,17 @@
+import React from 'react';
 import {useFlipper} from '@react-navigation/devtools';
 import {
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
+
+import {RootState} from '../../stores/store';
 import RootStackNav from '../../navigators/RootStackNav';
 import {queryClient} from '../../query/store';
 import {closeCommonAlert} from '../../stores/slices/commonAlertSlice';
-import {RootState} from '../../stores/store';
 import {useHandleError} from '../../util/handleError';
+
 import DAlert from './alert/DAlert';
 import RequestAlertContent from './alert/RequestAlertContent';
 
@@ -17,6 +20,7 @@ const Root = () => {
   const handleError = useHandleError();
   queryClient.setDefaultOptions({
     queries: {
+      staleTime: 20000,
       retry: 0,
       onError: handleError,
     },

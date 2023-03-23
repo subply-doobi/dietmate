@@ -1,6 +1,7 @@
-import {View, Text, Modal, ScrollView} from 'react-native';
 import React from 'react';
+import {Modal} from 'react-native';
 import styled from 'styled-components/native';
+
 import {StyledProps} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 
@@ -49,7 +50,7 @@ const ModalBackGround = styled.TouchableOpacity`
 
 const PopUpContainer = styled.TouchableOpacity`
   width: 100%;
-  height: ${({filterHeight}: StyledProps) => (filterHeight ? '530px' : 'auto')};
+  height: ${({filterHeight}: StyledProps) => (filterHeight ? '514px' : 'auto')};
   padding: 0px 16px 16px 16px;
   align-items: center;
   background-color: ${({backgroundColor}: StyledProps) =>

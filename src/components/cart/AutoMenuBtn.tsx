@@ -1,23 +1,8 @@
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import styled from 'styled-components/native';
+
 import {icons} from '../../assets/icons/iconSource';
-
 import {BtnCTA, Row, TextSub} from '../../styles/styledConsts';
-
-const GuideText = styled(TextSub)`
-  margin-top: 24px;
-  font-size: 14px;
-`;
-
-const PlusBtnImage = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const AutoMenuText = styled(TextSub)`
-  margin-left: 8px;
-  font-size: 14px;
-`;
 
 const AutoMenuBtn = ({
   status,
@@ -53,3 +38,18 @@ const AutoMenuBtn = ({
 };
 
 export default AutoMenuBtn;
+
+const GuideText = styled(TextSub)`
+  margin-top: 24px;
+  font-size: 14px;
+`;
+
+const PlusBtnImage = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const AutoMenuText = styled(TextSub)`
+  margin-left: 8px;
+  font-size: 14px;
+`;

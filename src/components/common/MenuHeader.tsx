@@ -1,12 +1,14 @@
-import {ActivityIndicator} from 'react-native';
 import React, {SetStateAction} from 'react';
+import {ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
-import {TextMain} from '../../styles/styledConsts';
 import {useSelector} from 'react-redux';
+
 import {RootState} from '../../stores/store';
-import {useListDiet} from '../../query/queries/diet';
-import {findDietSeq} from '../../util/findDietSeq';
 import {icons} from '../../assets/icons/iconSource';
+import {TextMain} from '../../styles/styledConsts';
+import {findDietSeq} from '../../util/findDietSeq';
+
+import {useListDiet} from '../../query/queries/diet';
 
 interface IMenuHeader {
   menuSelectOpen: boolean;
@@ -14,11 +16,7 @@ interface IMenuHeader {
 }
 const MenuHeader = ({menuSelectOpen, setMenuSelectOpen}: IMenuHeader) => {
   // react-query
-  const {
-    data: dietData,
-    isLoading: dietDataIsLoading,
-    isFetching: dietDataIsFetching,
-  } = useListDiet();
+  const {data: dietData, isLoading: dietDataIsLoading} = useListDiet();
   // redux
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
   return dietDataIsLoading ? (

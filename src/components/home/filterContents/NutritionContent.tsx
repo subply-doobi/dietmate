@@ -1,20 +1,11 @@
 import React, {useState, useEffect, useMemo} from 'react';
+import {ScrollView, TouchableWithoutFeedback} from 'react-native';
 import styled from 'styled-components/native';
-import {
-  Row,
-  HorizontalLine,
-  BtnCTA,
-  BtnBottomCTA,
-  TextMain,
-  Col,
-} from '../../../styles/styledConsts';
-import colors from '../../../styles/colors';
 
-import {ScrollView, View, Dimensions} from 'react-native';
+import {TextMain, Col} from '../../../styles/styledConsts';
 import DSlider from '../../common/slider/DSlider';
-import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {useFilterRange, useTest} from '../../../query/queries/product';
+import {useFilterRange} from '../../../query/queries/product';
 
 const NutritionContent = props => {
   const calorieRange = useFilterRange('calorie');
@@ -107,54 +98,57 @@ const NutritionContent = props => {
     nutritionParam && setProteinValue(nutritionParam?.proteinParam);
     nutritionParam && setFatValue(nutritionParam?.fatParam);
   }, [nutritionParam]);
-  const screenHeight = Dimensions.get('window').height;
 
   return (
     <ScrollView>
-      <SliderTitle>칼로리</SliderTitle>
-      <DSlider
-        sliderValue={calorieValue}
-        setSliderValue={setCalorieValue}
-        minimumValue={minCalorie}
-        maximumValue={maxCalorie}
-        step={calorieValue[1] - calorieValue[0] > 50 ? 1 : 50}
-        sliderWidth={SLIDER_WIDTH}
-        text={'kcal'}
-        onSlidingComplete={() => setNutritionParam(params)}
-      />
-      <SliderTitle>탄수화물</SliderTitle>
-      <DSlider
-        sliderValue={carbValue}
-        setSliderValue={setCarbrValue}
-        minimumValue={minCarb}
-        maximumValue={maxCarb}
-        step={carbValue[1] - carbValue[0] > 10 ? 1 : 10}
-        sliderWidth={SLIDER_WIDTH}
-        text={'g'}
-        onSlidingComplete={() => setNutritionParam(params)}
-      />
-      <SliderTitle>단백질</SliderTitle>
-      <DSlider
-        sliderValue={proteinValue}
-        setSliderValue={setProteinValue}
-        minimumValue={minProtein}
-        maximumValue={maxProtein}
-        step={proteinValue[1] - proteinValue[0] > 5 ? 1 : 5}
-        sliderWidth={SLIDER_WIDTH}
-        text={'g'}
-        onSlidingComplete={() => setNutritionParam(params)}
-      />
-      <SliderTitle>지방</SliderTitle>
-      <DSlider
-        sliderValue={fatValue}
-        setSliderValue={setFatValue}
-        minimumValue={minFat}
-        maximumValue={maxFat}
-        step={fatValue[1] - fatValue[0] > 2 ? 1 : 2}
-        sliderWidth={SLIDER_WIDTH}
-        text={'g'}
-        onSlidingComplete={() => setNutritionParam(params)}
-      />
+      <TouchableWithoutFeedback>
+        <Col>
+          <SliderTitle>칼로리</SliderTitle>
+          <DSlider
+            sliderValue={calorieValue}
+            setSliderValue={setCalorieValue}
+            minimumValue={minCalorie}
+            maximumValue={maxCalorie}
+            step={calorieValue[1] - calorieValue[0] > 50 ? 1 : 50}
+            sliderWidth={SLIDER_WIDTH}
+            text={'kcal'}
+            onSlidingComplete={() => setNutritionParam(params)}
+          />
+          <SliderTitle>탄수화물</SliderTitle>
+          <DSlider
+            sliderValue={carbValue}
+            setSliderValue={setCarbrValue}
+            minimumValue={minCarb}
+            maximumValue={maxCarb}
+            step={carbValue[1] - carbValue[0] > 10 ? 1 : 10}
+            sliderWidth={SLIDER_WIDTH}
+            text={'g'}
+            onSlidingComplete={() => setNutritionParam(params)}
+          />
+          <SliderTitle>단백질</SliderTitle>
+          <DSlider
+            sliderValue={proteinValue}
+            setSliderValue={setProteinValue}
+            minimumValue={minProtein}
+            maximumValue={maxProtein}
+            step={proteinValue[1] - proteinValue[0] > 5 ? 1 : 5}
+            sliderWidth={SLIDER_WIDTH}
+            text={'g'}
+            onSlidingComplete={() => setNutritionParam(params)}
+          />
+          <SliderTitle>지방</SliderTitle>
+          <DSlider
+            sliderValue={fatValue}
+            setSliderValue={setFatValue}
+            minimumValue={minFat}
+            maximumValue={maxFat}
+            step={fatValue[1] - fatValue[0] > 2 ? 1 : 2}
+            sliderWidth={SLIDER_WIDTH}
+            text={'g'}
+            onSlidingComplete={() => setNutritionParam(params)}
+          />
+        </Col>
+      </TouchableWithoutFeedback>
     </ScrollView>
   );
 };

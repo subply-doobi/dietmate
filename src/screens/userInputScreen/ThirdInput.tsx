@@ -1,15 +1,15 @@
 import React, {useRef, useState} from 'react';
-import {useForm, useWatch} from 'react-hook-form';
 import {ScrollView, Text, TouchableOpacity} from 'react-native';
-import Accordion from 'react-native-collapsible/Accordion';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
-import Auto from '../../components/userInput/Auto';
-import CalculateByRatio from '../../components/userInput/CalculateByRatio';
-import Manual from '../../components/userInput/Manual';
-import {NavigationProps, nutrRatioCategory} from '../../constants/constants';
+import {useForm, useWatch} from 'react-hook-form';
+import Accordion from 'react-native-collapsible/Accordion';
+import {useNavigation} from '@react-navigation/native';
+
 import {RootState} from '../../stores/store';
+import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
+import {nutrRatioCategory} from '../../constants/constants';
 import {
   BtnBottomCTA,
   BtnText,
@@ -19,14 +19,17 @@ import {
   TextMain,
 } from '../../styles/styledConsts';
 import {convertDataByMethod} from '../../util/userInfoSubmit';
+
+import Auto from '../../components/userInput/Auto';
+import CalculateByRatio from '../../components/userInput/CalculateByRatio';
+import Manual from '../../components/userInput/Manual';
+
 import {
   useCreateBaseLine,
   useGetBaseLine,
   useUpdateBaseLine,
 } from '../../query/queries/baseLine';
 import {useCreateDiet, useListDiet} from '../../query/queries/diet';
-import {useNavigation} from '@react-navigation/native';
-import {icons} from '../../assets/icons/iconSource';
 
 interface IFormData {
   ratioType: string;

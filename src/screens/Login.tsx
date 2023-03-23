@@ -1,10 +1,12 @@
+import React, {useEffect, useCallback} from 'react';
 import styled from 'styled-components/native';
+import {useNavigation} from '@react-navigation/native';
+
+import {validateToken} from '../query/queries/token';
 import {BtnCTA, BtnText} from '../styles/styledConsts';
 import colors from '../styles/colors';
-import React, {useEffect, useCallback} from 'react';
+
 import {useGetBaseLine} from '../query/queries/baseLine';
-import {validateToken} from '../query/queries/token';
-import {useNavigation} from '@react-navigation/native';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -15,22 +17,23 @@ const Login = () => {
 
   const signInWithKakao = async (): Promise<void> => {
     const isTokenValid = await validateToken();
-    isTokenValid && !isLoading
-      ? data && data.constructor === Object && Object.keys(data).length === 0
-        ? // ? navigate('InputNav', {screen: 'FirstInput'})
-          navigate('BottomTabNav', {screen: 'Home'})
-        : reset({
-            index: 0,
-            routes: [
-              {
-                name: 'BottomTabNav',
-                params: {
-                  screen: 'Home',
-                },
+    isTokenValid &&
+    !isLoading &&
+    data &&
+    data.constructor === Object &&
+    Object.keys(data).length === 0
+      ? navigate('InputNav', {screen: 'FirstInput'})
+      : reset({
+          index: 0,
+          routes: [
+            {
+              name: 'BottomTabNav',
+              params: {
+                screen: 'Home',
               },
-            ],
-          })
-      : navigate('BottomTabNav', {screen: 'Home'});
+            },
+          ],
+        });
   };
   useEffect(() => {
     signInWithKakao();

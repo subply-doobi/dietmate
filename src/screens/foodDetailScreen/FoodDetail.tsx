@@ -7,8 +7,12 @@ import {
   View,
   Pressable,
 } from 'react-native';
+import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
-import {BASE_URL} from '../../query/queries/urls';
+import {useNavigation, useRoute} from '@react-navigation/native';
+
+import {RootState} from '../../stores/store';
+import {icons} from '../../assets/icons/iconSource';
 import {
   BtnCTA,
   BtnText,
@@ -21,25 +25,24 @@ import {
   Dot,
 } from '../../styles/styledConsts';
 import colors from '../../styles/colors';
+import {IProductData} from '../../query/types/product';
+
 import NutrientsProgress from '../../components/common/NutrientsProgress';
-import {RootState} from '../../stores/store';
-import {
-  useCreateProductMark,
-  useDeleteProductMark,
-} from '../../query/queries/product';
+import NutrientPart from './foodDetailSubScreen/NutrientPart';
+import ShippingPart from './foodDetailSubScreen/ShippingPart';
+import FoodPart from './foodDetailSubScreen/FoodPart';
+import ReviewPart from './foodDetailSubScreen/ReviewPart';
+
+import {BASE_URL} from '../../query/queries/urls';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
   useListDietDetail,
 } from '../../query/queries/diet';
-import NutrientPart from './foodDetailSubScreen/NutrientPart';
-import ShippingPart from './foodDetailSubScreen/ShippingPart';
-import FoodPart from './foodDetailSubScreen/FoodPart';
-import ReviewPart from './foodDetailSubScreen/ReviewPart';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {IProductData} from '../../query/types/product';
-import {useSelector} from 'react-redux';
-import {icons} from '../../assets/icons/iconSource';
+import {
+  useCreateProductMark,
+  useDeleteProductMark,
+} from '../../query/queries/product';
 
 export interface TableItem {
   name: string;

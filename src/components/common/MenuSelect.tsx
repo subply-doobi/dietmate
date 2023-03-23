@@ -1,24 +1,27 @@
 import React, {useState} from 'react';
-import {TouchableWithoutFeedback, ActivityIndicator} from 'react-native';
+import {TouchableWithoutFeedback} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components/native';
+
+import {RootState} from '../../stores/store';
+import {setCurrentDietNo} from '../../stores/slices/cartSlice';
 import {icons} from '../../assets/icons/iconSource';
+import colors from '../../styles/colors';
+import {Col, HorizontalLine} from '../../styles/styledConsts';
+import {findDietSeq} from '../../util/findDietSeq';
+import {getDietAddStatus} from '../../util/getDietAddStatus';
+
+import CreateLimitAlertContent from './alert/CreateLimitAlertContent';
+import DAlert from './alert/DAlert';
+import DeleteAlertContent from './alert/DeleteAlertContent';
+import MenuEmptyAlertContent from './alert/MenuEmptyAlertContent';
+
 import {
   useCreateDiet,
   useDeleteDiet,
   useGetDietDetailEmptyYn,
   useListDiet,
 } from '../../query/queries/diet';
-import {setCurrentDietNo} from '../../stores/slices/cartSlice';
-import {RootState} from '../../stores/store';
-import colors from '../../styles/colors';
-import {Col, HorizontalLine, TextMain} from '../../styles/styledConsts';
-import {findDietSeq} from '../../util/findDietSeq';
-import {getDietAddStatus} from '../../util/getDietAddStatus';
-import CreateLimitAlertContent from './alert/CreateLimitAlertContent';
-import DAlert from './alert/DAlert';
-import DeleteAlertContent from './alert/DeleteAlertContent';
-import MenuEmptyAlertContent from './alert/MenuEmptyAlertContent';
 
 interface IMenuSelect {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -130,7 +133,7 @@ export default MenuSelect;
 const SelectContainer = styled.View`
   position: absolute;
   top: 48px;
-  left: ${({center}: {center?: boolean}) => (center ? `32%` : `16px`)};
+  left: ${({center}: {center?: boolean}) => (center ? '32%' : '16px')};
   width: 144px;
   background-color: ${colors.white};
   border-radius: 3px;
