@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useEffect, useMemo, useLayoutEffect} from 'react';
 import {ScrollView, TouchableWithoutFeedback} from 'react-native';
 import styled from 'styled-components/native';
 
@@ -92,7 +92,7 @@ const NutritionContent = props => {
     [calorieValue, carbValue, proteinValue, fatValue],
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     nutritionParam && setCalorieValue(nutritionParam?.calorieParam);
     nutritionParam && setCarbrValue(nutritionParam?.carbParam);
     nutritionParam && setProteinValue(nutritionParam?.proteinParam);

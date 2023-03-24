@@ -80,6 +80,7 @@ export const useKakaopayApprove = () => {
   };
 
   const mutation = useMutation(async () => {
+    console.log('useMutation: kakaoConfig: ', kakaoPayConfig);
     const res = await axios.post(
       'https://kapi.kakao.com/v1/payment/approve',
       null,

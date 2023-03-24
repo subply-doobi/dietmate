@@ -137,7 +137,6 @@ const FoodDetail = () => {
       });
     }
   };
-  console.log(userData);
   const table: TableItem[] = [
     {
       name: 'calorie',

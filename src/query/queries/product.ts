@@ -1,8 +1,6 @@
-import {useMutation, useQueries, useQuery} from '@tanstack/react-query';
-import axios from 'axios';
+import {useMutation, useQuery} from '@tanstack/react-query';
 
 import {queryClient} from '../store';
-import {validateToken} from './token';
 import {mutationFn, queryFn} from './requestFn';
 import {DIET_DETAIL, PRODUCT} from '../keys';
 import {IQueryOptions} from '../types/common';

@@ -1,11 +1,10 @@
 import axios from 'axios';
+import {getStoredToken} from '../../util/asyncStorage';
 
-import {validateToken} from './token';
-
-export const queryFn = async (url: string) => {
-  const {validToken} = await validateToken();
+export const queryFn = async <T>(url: string): Promise<T> => {
+  const {accessToken} = await getStoredToken();
   const requestConfig = {
-    headers: {authorization: `Bearer ${validToken}`},
+    headers: {authorization: `Bearer ${accessToken}`},
     timeout: 4000,
   };
   const res = await axios.get(url, requestConfig);
@@ -17,12 +16,11 @@ export const mutationFn = async <T>(
   method: string,
   requestBody?: T,
 ) => {
-  const {validToken} = await validateToken();
-  // if (!isTokenValid) return null;
+  const {accessToken} = await getStoredToken();
   const requestConfig = {
     url,
     method,
-    headers: {authorization: `Bearer ${validToken}`},
+    headers: {authorization: `Bearer ${accessToken}`},
     data: requestBody,
   };
   return axios(requestConfig).then(res => res.data);

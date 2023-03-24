@@ -141,12 +141,11 @@ const FilterModalContent = props => {
       </SafeAreaView>
     );
   };
-  const ShowContent = ({index}) => {
+  const showContent = index => {
     return index === 0 ? (
       <CategoryContent
         setCategoryParam={setCategoryParam}
         categoryParam={categoryParam}
-        며
       />
     ) : index === 1 ? (
       <NutritionContent
@@ -172,7 +171,9 @@ const FilterModalContent = props => {
     <Col style={{height: '100%'}}>
       <ScrollView contentContainerStyle={{paddingBottom: 64}}>
         <FilterHeaderText />
-        <ShowContent index={clicked} />
+        {/* <ShowContent index={clicked} /> */}
+        {/* 이유를 알려줘 */}
+        {showContent(clicked)}
       </ScrollView>
 
       {/* 초기화 | 확인 버튼 */}

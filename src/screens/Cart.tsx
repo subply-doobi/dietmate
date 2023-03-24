@@ -1,9 +1,11 @@
+// react, RN, 3rd
 import React, {useEffect, useMemo, useState} from 'react';
 import {Pressable, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
+// doobi util, redux, etc
 import {RootState} from '../stores/store';
 import {icons} from '../assets/icons/iconSource';
 import colors from '../styles/colors';
@@ -14,6 +16,8 @@ import {
   sumUpNutrients,
   sumUpPrice,
 } from '../util/sumUp';
+
+// doobi Component
 import {
   BtnSmall,
   BtnSmallText,
@@ -23,7 +27,6 @@ import {
   BtnBottomCTA,
   BtnText,
 } from '../styles/styledConsts';
-
 import NutrientsProgress from '../components/common/NutrientsProgress';
 import MenuHeader from '../components/common/MenuHeader';
 import MenuSelect from '../components/common/MenuSelect';
@@ -35,6 +38,7 @@ import DeleteAlertContent from '../components/common/alert/DeleteAlertContent';
 import DAlert from '../components/common/alert/DAlert';
 import CartSummary from '../components/cart/CartSummary';
 
+// react-query
 import {useGetBaseLine} from '../query/queries/baseLine';
 import {
   useDeleteDietDetail,
@@ -102,7 +106,7 @@ const Cart = () => {
           ? parseInt(seller[0].shippingPrice)
           : 0;
       totalProductPrice += sellerProductPrice;
-      // totalShippingPrice += sellershippingPrice; // 배송비는 장바구니에서만 보이게 할 것
+      // totalShippingPrice += sellershippingPrice; // 일단 배송비는 장바구니에서만 보이게 할 것
     });
 
     // const totalPrice = totalProductPrice + totalShippingPrice;
@@ -118,20 +122,19 @@ const Cart = () => {
     setSelectedFoods({[currentDietNo]: []});
   };
 
-  const deleteSelected = () => {
+  const deleteSelected = async () => {
     setCheckAllClicked(false);
     setDeleteModalShow(false);
-    Promise.all(
-      selectedFoods[currentDietNo]?.map(productNo =>
-        deleteDietDetailMutation.mutateAsync({
-          dietNo: currentDietNo,
-          productNo,
-        }),
-      ),
-    )
+    const deleteMutations = selectedFoods[currentDietNo]?.map(productNo =>
+      deleteDietDetailMutation.mutateAsync({
+        dietNo: currentDietNo,
+        productNo,
+      }),
+    );
+
+    await Promise.all(deleteMutations)
       .then(() => {
         unCheckAll();
-        console.log('삭제 완료');
       })
       .catch(e => console.log('삭제 실패', e));
   };
