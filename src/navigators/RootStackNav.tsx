@@ -26,8 +26,10 @@ const RootStackNav = () => {
   queryClient.setDefaultOptions({
     queries: {
       retry: 0,
-      staleTime: 30000,
-      cacheTime: 5 * 60 * 1000,
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      // staleTime: 30000,
+      // cacheTime: 5 * 60 * 1000,
       refetchOnMount: true,
       refetchOnWindowFocus: false,
       onError: handleError,

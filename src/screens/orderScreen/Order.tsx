@@ -29,12 +29,7 @@ import PaymentWebView from '../../components/order/PaymentWebView';
 import {useKakaoPayReady} from '../../query/queries/order';
 
 const Order = () => {
-  const navigation = useNavigation();
-  const {navigate} = navigation;
-  // cart information -> 장바구니에서 route에 담아 보내줄 것.
-  // 근데 그냥 장바구니식품 불러와서, 수량은 장바구니 qty쓰면 되는 거 아닌가...?!
-  // TBD | 장바구니 담긴 식품 판매자별로 정리 및 식품가격 배송비 각각 변수에
-  // useKakaoPayReady
+  // react-query
   const {
     isLoading: isKakaoPayLoading,
     isError: isKakaoPayError,
@@ -43,12 +38,20 @@ const Order = () => {
     pay,
   } = useKakaoPayReady();
 
+  // state
   const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
 
+  // redux
   const {orderInfo, selectedAddressId, orderSummary} = useSelector(
     (state: RootState) => state.order,
   );
 
+  // cart information -> 장바구니에서 route에 담아 보내줄 것.
+  // 근데 그냥 장바구니식품 불러와서, 수량은 장바구니 qty쓰면 되는 거 아닌가...?!
+  // TBD | 장바구니 담긴 식품 판매자별로 정리 및 식품가격 배송비 각각 변수에
+  // useKakaoPayReady
+
+  // etc
   let totalAmount = 2200;
   //totalAmount는 잠시 이렇게
   // let totalAmount: number = cart[0].reduce((acc: number, cur: IProduct) => {

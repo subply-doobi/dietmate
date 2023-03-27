@@ -26,6 +26,7 @@ import NutrChangeAlert from '../components/myPage/NutrientChangeAlert';
 import WeightChangeAlert from '../components/myPage/WeightChangeAlert';
 
 import {useGetBaseLine, useUpdateBaseLine} from '../query/queries/baseLine';
+import {convertNutr, convertNutrByWeight} from '../util/targetCalculation';
 
 interface INavigateByBtnId {
   [key: string]: (btnId: string, navigate: Function) => void;
@@ -183,11 +184,55 @@ const Mypage = () => {
   };
   const typeValue = typeData[alertType];
   const onAlertConfirm = () => {
-    baseLineData &&
+    if (!baseLineData) {
+      setAlertShow(false);
+      return;
+    }
+    const {calorie, carb, protein, fat} =
+      alertType !== 'weight'
+        ? convertNutr[alertType](baseLineData.calorie, typeValue)
+        : autoCalculate
+        ? convertNutrByWeight(weightValue, baseLineData)
+        : {
+            calorie: baseLineData.calorie,
+            carb: baseLineData.carb,
+            protein: baseLineData.protein,
+            fat: baseLineData.fat,
+          };
+
+    if (alertType !== 'weight') {
+      setValue('calorie', calorie);
+      setValue('carb', carb);
+      setValue('protein', protein);
+      setValue('fat', fat);
       updateMutation.mutate({
         ...baseLineData,
-        [alertType]: typeValue,
+        calorie,
+        carb,
+        protein,
+        fat,
       });
+    } else if (autoCalculate) {
+      setValue('calorie', calorie);
+      setValue('carb', carb);
+      setValue('protein', protein);
+      setValue('fat', fat);
+      setValue('weight', typeValue);
+      updateMutation.mutate({
+        ...baseLineData,
+        weight: typeValue,
+        calorie,
+        carb,
+        protein,
+        fat,
+      });
+    } else {
+      setValue('weight', typeValue);
+      updateMutation.mutate({
+        ...baseLineData,
+        weight: typeValue,
+      });
+    }
     setAlertShow(false);
   };
   const onAlertCancel = () => {

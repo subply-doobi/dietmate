@@ -187,7 +187,7 @@ export const validationRules: IValidationRules = {
     },
   },
   carbManual: {
-    maxlength: 4,
+    maxlength: 3,
     validate: {
       range: (v: string) =>
         !v
@@ -197,7 +197,7 @@ export const validationRules: IValidationRules = {
     },
   },
   proteinManual: {
-    maxlength: 4,
+    maxlength: 3,
     validate: {
       range: (v: string) =>
         !v
@@ -207,7 +207,7 @@ export const validationRules: IValidationRules = {
     },
   },
   fatManual: {
-    maxlength: 4,
+    maxlength: 3,
     validate: {
       range: (v: string) =>
         !v

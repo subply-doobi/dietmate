@@ -45,6 +45,8 @@ import {
   useListDietDetail,
   useListDietDetailAll,
 } from '../query/queries/diet';
+import {makeDietAutoTest} from '../util/autoDietTest';
+import {useListProduct} from '../query/queries/product';
 
 const Cart = () => {
   // redux
@@ -55,6 +57,7 @@ const Cart = () => {
   const {data: dietDetailData} = useListDietDetail(currentDietNo);
   const {data: dietDetailAllData} = useListDietDetailAll();
   const deleteDietDetailMutation = useDeleteDietDetail();
+  const {data: tData} = useListProduct({dietNo: currentDietNo});
 
   // useState
   const [menuSelectOpen, setMenuSelectOpen] = useState(false);
@@ -64,6 +67,7 @@ const Cart = () => {
     {},
   );
   const [deleteModalShow, setDeleteModalShow] = useState(false);
+  const [autoDietComplete, setAutoDietComplete] = useState(false);
 
   // etc
   // navigation
@@ -138,104 +142,124 @@ const Cart = () => {
       })
       .catch(e => console.log('삭제 실패', e));
   };
-
+  console.log('Cart: autodieComplete: ', autoDietComplete);
   return (
-    <Pressable
-      style={{flex: 1}}
-      onPressIn={() => {
-        setMenuSelectOpen(false);
-      }}>
-      <Container>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingBottom: 80}}>
-          <SelectedDeleteRow>
-            <SelectAllBox>
-              <SelectAllCheckbox
-                onPress={() => {
-                  checkAllClicked ? unCheckAll() : checkAll();
-                  setCheckAllClicked(clicked => !clicked);
-                }}>
-                {checkAllClicked ? (
-                  <CheckboxImage source={icons.checkboxCheckedGreen_24} />
-                ) : (
-                  <CheckboxImage source={icons.checkbox_24} />
-                )}
-              </SelectAllCheckbox>
+    // <Pressable
+    //   style={{flex: 1}}
+    //   onPressIn={() => {
+    //     setMenuSelectOpen(false);
+    //   }}>
+    <Container>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 80}}>
+        <SelectedDeleteRow>
+          <SelectAllBox>
+            <SelectAllCheckbox
+              onPress={() => {
+                checkAllClicked ? unCheckAll() : checkAll();
+                setCheckAllClicked(clicked => !clicked);
+              }}>
+              {checkAllClicked ? (
+                <CheckboxImage source={icons.checkboxCheckedGreen_24} />
+              ) : (
+                <CheckboxImage source={icons.checkbox_24} />
+              )}
+            </SelectAllCheckbox>
 
-              <SelectAllText>전체 선택</SelectAllText>
-            </SelectAllBox>
-            <BtnSmall
-              onPress={() =>
-                selectedFoods[currentDietNo]?.length >= 1
-                  ? setDeleteModalShow(true)
-                  : {}
-              }>
-              <BtnSmallText isActivated={true}>선택 삭제</BtnSmallText>
-            </BtnSmall>
-          </SelectedDeleteRow>
-          <DAlert
-            alertShow={deleteModalShow}
-            confirmLabel="삭제"
-            onConfirm={deleteSelected}
-            onCancel={() => setDeleteModalShow(false)}
-            renderContent={() => (
-              <DeleteAlertContent deleteText="선택된 식품을" />
-            )}
+            <SelectAllText>전체 선택</SelectAllText>
+          </SelectAllBox>
+          <BtnSmall
+            onPress={() =>
+              selectedFoods[currentDietNo]?.length >= 1
+                ? setDeleteModalShow(true)
+                : {}
+            }>
+            <BtnSmallText isActivated={true}>선택 삭제</BtnSmallText>
+          </BtnSmall>
+        </SelectedDeleteRow>
+        <DAlert
+          alertShow={deleteModalShow}
+          confirmLabel="삭제"
+          onConfirm={deleteSelected}
+          onCancel={() => setDeleteModalShow(false)}
+          renderContent={() => (
+            <DeleteAlertContent deleteText="선택된 식품을" />
+          )}
+        />
+
+        {/* 끼니 카드 */}
+        <Card>
+          <CardMenuHeader>
+            <MenuHeader
+              menuSelectOpen={menuSelectOpen}
+              setMenuSelectOpen={setMenuSelectOpen}></MenuHeader>
+          </CardMenuHeader>
+          <HorizontalSpace height={24} />
+          <NutrientsProgress currentDietNo={currentDietNo} />
+
+          {/* 현재 끼니 식품들 */}
+          <CartFoodList
+            selectedFoods={selectedFoods}
+            setSelectedFoods={setSelectedFoods}
           />
 
-          {/* 끼니 카드 */}
-          <Card>
-            <CardMenuHeader>
-              <MenuHeader
-                menuSelectOpen={menuSelectOpen}
-                setMenuSelectOpen={setMenuSelectOpen}></MenuHeader>
-            </CardMenuHeader>
-            <HorizontalSpace height={24} />
-            <NutrientsProgress currentDietNo={currentDietNo} />
+          {/* 자동구성 버튼 */}
+          <AutoMenuBtn
+            status={menuStatus}
+            // onPress={() => setAutoDietModalShow(true)}
+            onPress={async () => {
+              try {
+                tData &&
+                  dietDetailData &&
+                  baseLineData &&
+                  (await makeDietAutoTest(
+                    tData,
+                    dietDetailData,
+                    baseLineData,
+                    [0, 1, 2, 3, 4, 5],
+                    10000,
+                  ));
+                setAutoDietComplete(true);
+              } catch (e) {
+                console.log('자동구성 실패', e);
+                setAutoDietComplete(false);
+              }
+            }}
+          />
+          <AutoDietModal
+            modalVisible={autoDietModalShow}
+            setModalVisible={setAutoDietModalShow}
+          />
+          <MenuTotalPrice>
+            합계 {dietDetailData && commaToNum(sumUpPrice(dietDetailData))}원
+          </MenuTotalPrice>
+          {menuSelectOpen && (
+            <MenuSelect setOpen={setMenuSelectOpen} center={true} />
+          )}
+        </Card>
 
-            {/* 현재 끼니 식품들 */}
-            <CartFoodList
-              selectedFoods={selectedFoods}
-              setSelectedFoods={setSelectedFoods}
-            />
+        {/* 카드 하단 끼니 선택 및 추가 */}
+        <BottomMenuSelect />
 
-            {/* 자동구성 버튼 */}
-            <AutoMenuBtn
-              status={menuStatus}
-              onPress={() => setAutoDietModalShow(true)}
-            />
-            <AutoDietModal
-              modalVisible={autoDietModalShow}
-              setModalVisible={setAutoDietModalShow}
-            />
-            <MenuTotalPrice>
-              합계 {dietDetailData && commaToNum(sumUpPrice(dietDetailData))}원
-            </MenuTotalPrice>
-            {menuSelectOpen && (
-              <MenuSelect setOpen={setMenuSelectOpen} center={true} />
-            )}
-          </Card>
-
-          {/* 카드 하단 끼니 선택 및 추가 */}
-          <BottomMenuSelect />
-
-          {/* 끼니 정보 요약 */}
-          <CartSummary />
-        </ScrollView>
-        <BtnBottomCTA
-          btnStyle={isEmpty ? 'inactivated' : 'activated'}
-          disabled={isEmpty}
-          onPress={() => {
-            navigation.navigate('OrderNav', {screen: 'Order'});
-          }}>
-          <BtnText>
-            식품 총 {totalPrice && commaToNum(totalPrice)}원 주문하기
-          </BtnText>
-        </BtnBottomCTA>
-      </Container>
-    </Pressable>
+        {/* 끼니 정보 요약 */}
+        <CartSummary />
+      </ScrollView>
+      <BtnBottomCTA
+        btnStyle={isEmpty ? 'inactivated' : 'activated'}
+        disabled={isEmpty}
+        onPress={() => {
+          navigation.navigate('OrderNav', {screen: 'Order'});
+        }}>
+        <BtnText>
+          식품 총 {totalPrice && commaToNum(totalPrice)}원 주문하기
+        </BtnText>
+      </BtnBottomCTA>
+    </Container>
   );
+  {
+    /* </Pressable> */
+  }
 };
 
 export default Cart;
