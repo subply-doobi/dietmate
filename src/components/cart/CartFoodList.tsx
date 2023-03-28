@@ -227,8 +227,8 @@ const DeleteBtn = styled.TouchableOpacity`
 `;
 
 const DeleteImage = styled.Image`
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
 `;
 
 const ProductNmText = styled(TextMain)`

@@ -83,35 +83,35 @@ const FoodList = ({item}: {item: IProductData}) => {
             )}
           </AddOrDeleteBtn>
         </Row>
-      </FoodDetailBtn>
 
-      <NutrSummaryContainer>
-        <Nutr>
-          <NutrText>칼로리</NutrText>
-          <NutrValue> {parseInt(item.calorie)} kcal</NutrValue>
-        </Nutr>
-        <Nutr>
-          <NutrText>탄수화물</NutrText>
-          <NutrValue> {parseInt(item.carb)} g</NutrValue>
-        </Nutr>
-        <Nutr>
-          <NutrText>단백질</NutrText>
-          <NutrValue> {parseInt(item.protein)} g</NutrValue>
-        </Nutr>
-        <Nutr>
-          <NutrText>지방</NutrText>
-          <NutrValue> {parseInt(item.fat)} g</NutrValue>
-        </Nutr>
-      </NutrSummaryContainer>
-      <DAlert
-        alertShow={deleteAlertShow}
-        confirmLabel="삭제"
-        onConfirm={onDelete}
-        onCancel={() => {
-          setDeleteAlertShow(false);
-        }}
-        renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
-      />
+        <NutrSummaryContainer>
+          <Nutr>
+            <NutrText>칼로리</NutrText>
+            <NutrValue> {parseInt(item.calorie)} kcal</NutrValue>
+          </Nutr>
+          <Nutr>
+            <NutrText>탄수화물</NutrText>
+            <NutrValue> {parseInt(item.carb)} g</NutrValue>
+          </Nutr>
+          <Nutr>
+            <NutrText>단백질</NutrText>
+            <NutrValue> {parseInt(item.protein)} g</NutrValue>
+          </Nutr>
+          <Nutr>
+            <NutrText>지방</NutrText>
+            <NutrValue> {parseInt(item.fat)} g</NutrValue>
+          </Nutr>
+        </NutrSummaryContainer>
+        <DAlert
+          alertShow={deleteAlertShow}
+          confirmLabel="삭제"
+          onConfirm={onDelete}
+          onCancel={() => {
+            setDeleteAlertShow(false);
+          }}
+          renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
+        />
+      </FoodDetailBtn>
     </Container>
   );
 };

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {TouchableWithoutFeedback, FlatList} from 'react-native';
+import {TouchableWithoutFeedback, FlatList, View} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
@@ -50,7 +50,6 @@ const Home = () => {
   const [filterIndex, setFilterIndex] = useState(0);
   const [sortParam, setSortParam] = useState('');
   const [sortImageToggle, setSortImageToggle] = useState(0);
-  const [filterCategoryParam, setFilterCategoryParam] = useState('');
   const [filterParams, setFilterParams] = useState({});
   // console.log('HOME/filterParam:', filterParams);
   // console.log('HOME/sortParam:', sortParam);
@@ -130,120 +129,123 @@ const Home = () => {
   // );
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        setMenuSelectOpen(false);
-        setTooltipShow(false);
-      }}>
-      <Container>
-        <MenuAndSearchBox>
-          <MenuHeader
-            menuSelectOpen={menuSelectOpen}
-            setMenuSelectOpen={setMenuSelectOpen}
-          />
-          <Col style={{flex: 1, justifyContent: 'center'}}>
-            <SearchInput
-              onChangeText={setSearchText}
-              value={searchText}
-              placeholder="검색어 입력"
-              onSubmitEditing={() => refetchProduct()}
+    <Container>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          setMenuSelectOpen(false);
+          setTooltipShow(false);
+        }}>
+        <View>
+          <MenuAndSearchBox>
+            <MenuHeader
+              menuSelectOpen={menuSelectOpen}
+              setMenuSelectOpen={setMenuSelectOpen}
             />
-            <SearchCancelBtn
-              onPress={() => {
-                setSearchText('');
-              }}>
-              <SearchCancelImage source={icons.cancelRound_24} />
-            </SearchCancelBtn>
-          </Col>
-        </MenuAndSearchBox>
-        {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
-        <Row style={{justifyContent: 'space-between', marginTop: 32}}>
-          <Row>
-            <ListTitle>{key ? key : '검색된 결과:'}</ListTitle>
-            <NoOfFoods> {tData?.length}개</NoOfFoods>
+
+            <Col style={{flex: 1, justifyContent: 'center'}}>
+              <SearchInput
+                onChangeText={setSearchText}
+                value={searchText}
+                placeholder="검색어 입력"
+                onSubmitEditing={() => refetchProduct()}
+              />
+              <SearchCancelBtn
+                onPress={() => {
+                  setSearchText('');
+                }}>
+                <SearchCancelImage source={icons.cancelRound_24} />
+              </SearchCancelBtn>
+            </Col>
+          </MenuAndSearchBox>
+
+          {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
+          <Row style={{justifyContent: 'space-between', marginTop: 32}}>
+            <Row>
+              <ListTitle>{key ? key : '검색된 결과:'}</ListTitle>
+              <NoOfFoods> {tData?.length}개</NoOfFoods>
+            </Row>
+            <SortBtn onPress={() => setSortModalShow(true)}>
+              <SortBtnText>정렬</SortBtnText>
+              {sortImageToggle === 0 ? (
+                <SortImage source={icons.sort_24} />
+              ) : sortImageToggle === 1 ? (
+                <SortImage source={icons.sortDescending_24} />
+              ) : (
+                <SortImage source={icons.sortAscending_24} />
+              )}
+            </SortBtn>
           </Row>
-          <SortBtn onPress={() => setSortModalShow(true)}>
-            <SortBtnText>정렬</SortBtnText>
-            {sortImageToggle === 0 ? (
-              <SortImage source={icons.sort_24} />
-            ) : sortImageToggle === 1 ? (
-              <SortImage source={icons.sortDescending_24} />
-            ) : (
-              <SortImage source={icons.sortAscending_24} />
+          <DBottomSheet
+            alertShow={sortModalShow}
+            setAlertShow={setSortModalShow}
+            renderContent={() => (
+              <SortModalContent
+                closeModal={setSortModalShow}
+                setSortParam={setSortParam}
+                sortParam={sortParam}
+              />
             )}
-          </SortBtn>
-        </Row>
-        <DBottomSheet
-          alertShow={sortModalShow}
-          setAlertShow={setSortModalShow}
-          renderContent={() => (
-            <SortModalContent
-              closeModal={setSortModalShow}
-              setSortParam={setSortParam}
-              sortParam={sortParam}
-            />
-          )}
-          onCancel={() => {
-            console.log('oncancel');
-          }}
-        />
-        <HorizontalLine style={{marginTop: 8}} />
-        <HorizontalSpace height={16} />
-        <FilterHeader
-          setFilterIndex={setFilterIndex}
-          onPress={() => {
-            setFilterModalShow(true);
-          }}
-          filterParams={filterParams}
-        />
-        <DBottomSheet
-          alertShow={filterModalShow}
-          setAlertShow={setFilterModalShow}
-          renderContent={() => (
-            <FilterModalContent
-              closeModal={setFilterModalShow}
-              filterParams={filterParams}
-              setFilterParams={setFilterParams}
-              filterIndex={filterIndex}
-            />
-          )}
-          onCancel={() => {
-            console.log('oncancel');
-          }}
-          filterHeight={filterHeight}
-        />
-        <HorizontalSpace height={16} />
-
-        {tData && dietDetailData && (
-          <FlatList
-            data={tData}
-            keyExtractor={item => item.productNo}
-            renderItem={renderFoodList}
-            ItemSeparatorComponent={() => <HorizontalSpace height={16} />}
-            initialNumToRender={2}
-            windowSize={2}
-            maxToRenderPerBatch={1}
-            removeClippedSubviews={true}
-            onEndReachedThreshold={0.4}
-            showsVerticalScrollIndicator={false}
-            refreshing={productIsFetching}
-            onRefresh={refetchProduct}
+            onCancel={() => {
+              console.log('oncancel');
+            }}
           />
-        )}
+          <HorizontalLine style={{marginTop: 8}} />
+          <HorizontalSpace height={16} />
+          <FilterHeader
+            setFilterIndex={setFilterIndex}
+            onPress={() => {
+              setFilterModalShow(true);
+            }}
+            filterParams={filterParams}
+          />
+          <DBottomSheet
+            alertShow={filterModalShow}
+            setAlertShow={setFilterModalShow}
+            renderContent={() => (
+              <FilterModalContent
+                closeModal={setFilterModalShow}
+                filterParams={filterParams}
+                setFilterParams={setFilterParams}
+                filterIndex={filterIndex}
+              />
+            )}
+            onCancel={() => {
+              console.log('oncancel');
+            }}
+            filterHeight={filterHeight}
+          />
+          <HorizontalSpace height={16} />
+        </View>
+      </TouchableWithoutFeedback>
 
-        {menuSelectOpen && <MenuSelect setOpen={setMenuSelectOpen} />}
-        <DTooltip
-          tooltipShow={tooltipShow}
-          text={`식단 고민하기 싫다면\n자동구성을 이용해보세요`}
-          boxRight={8}
-          triangleRight={SCREENWIDTH / 8 - 8}
-          onPressFn={() => {
-            setTooltipShow(false);
-            navigate('BottomTabNav', {screen: 'Cart'});
-          }}
+      {tData && dietDetailData && (
+        <FlatList
+          data={tData}
+          keyExtractor={item => item.productNo}
+          renderItem={renderFoodList}
+          ItemSeparatorComponent={() => <HorizontalSpace height={16} />}
+          initialNumToRender={2}
+          windowSize={2}
+          maxToRenderPerBatch={1}
+          removeClippedSubviews={true}
+          onEndReachedThreshold={0.4}
+          showsVerticalScrollIndicator={false}
+          refreshing={productIsFetching}
+          onRefresh={refetchProduct}
         />
-      </Container>
-    </TouchableWithoutFeedback>
+      )}
+      {menuSelectOpen && <MenuSelect setOpen={setMenuSelectOpen} />}
+      <DTooltip
+        tooltipShow={tooltipShow}
+        text={`식단 고민하기 싫다면\n자동구성을 이용해보세요`}
+        boxRight={8}
+        triangleRight={SCREENWIDTH / 8 - 8}
+        onPressFn={() => {
+          setTooltipShow(false);
+          navigate('BottomTabNav', {screen: 'Cart'});
+        }}
+      />
+    </Container>
   );
 };
 

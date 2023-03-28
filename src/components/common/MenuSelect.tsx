@@ -70,67 +70,65 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => {}}>
-      <SelectContainer center={center}>
-        {dietData?.map(menu => (
-          <Col key={menu.dietNo}>
-            <Menu
-              onPress={() => {
-                dispatch(setCurrentDietNo(menu.dietNo));
-                setOpen(false);
-              }}>
-              <MenuText isActivated={menu.dietNo === currentDietNo}>
-                {menu.dietSeq}
-              </MenuText>
-              {dietData.length === 1 || (
-                <DeleteBtn
-                  onPress={() => {
-                    setDietNoToDelete(menu.dietNo);
-                    setDeleteAlertShow(true);
-                  }}>
-                  <DeleteImg source={icons.cancelRound_24} />
-                </DeleteBtn>
-              )}
-            </Menu>
-            <HorizontalLine />
-          </Col>
-        ))}
+    <SelectContainer center={center}>
+      {dietData?.map(menu => (
+        <Col key={menu.dietNo}>
+          <Menu
+            onPress={() => {
+              dispatch(setCurrentDietNo(menu.dietNo));
+              setOpen(false);
+            }}>
+            <MenuText isActivated={menu.dietNo === currentDietNo}>
+              {menu.dietSeq}
+            </MenuText>
+            {dietData.length === 1 || (
+              <DeleteBtn
+                onPress={() => {
+                  setDietNoToDelete(menu.dietNo);
+                  setDeleteAlertShow(true);
+                }}>
+                <DeleteImg source={icons.cancelRound_24} />
+              </DeleteBtn>
+            )}
+          </Menu>
+          <HorizontalLine />
+        </Col>
+      ))}
 
-        <Menu onPress={onCreateDiet}>
-          <MenuText>끼니 추가하기</MenuText>
-        </Menu>
+      <Menu onPress={onCreateDiet}>
+        <MenuText>끼니 추가하기</MenuText>
+      </Menu>
 
-        <DAlert
-          alertShow={deleteAlertShow}
-          renderContent={() => (
-            <DeleteAlertContent
-              deleteText={dietData ? findDietSeq(dietData, dietNoToDelete) : ''}
+      <DAlert
+        alertShow={deleteAlertShow}
+        renderContent={() => (
+          <DeleteAlertContent
+            deleteText={dietData ? findDietSeq(dietData, dietNoToDelete) : ''}
+          />
+        )}
+        onConfirm={() => onDeleteDiet()}
+        onCancel={() => setDeleteAlertShow(false)}
+      />
+      <DAlert
+        alertShow={createAlertShow}
+        renderContent={() =>
+          addAlertStatus === 'limit' ? (
+            <CreateLimitAlertContent />
+          ) : addAlertStatus === 'empty' ? (
+            <CommonAlertContent
+              text={`비어있는 끼니를\n먼저 구성하고 이용해보세요`}
             />
-          )}
-          onConfirm={() => onDeleteDiet()}
-          onCancel={() => setDeleteAlertShow(false)}
-        />
-        <DAlert
-          alertShow={createAlertShow}
-          renderContent={() =>
-            addAlertStatus === 'limit' ? (
-              <CreateLimitAlertContent />
-            ) : addAlertStatus === 'empty' ? (
-              <CommonAlertContent
-                text={`비어있는 끼니를\n먼저 구성하고 이용해보세요`}
-              />
-            ) : (
-              <></>
-            )
-          }
-          onConfirm={() => {
-            setCreateAlertShow(false);
-          }}
-          onCancel={() => setCreateAlertShow(false)}
-          NoOfBtn={1}
-        />
-      </SelectContainer>
-    </TouchableWithoutFeedback>
+          ) : (
+            <></>
+          )
+        }
+        onConfirm={() => {
+          setCreateAlertShow(false);
+        }}
+        onCancel={() => setCreateAlertShow(false)}
+        NoOfBtn={1}
+      />
+    </SelectContainer>
   );
 };
 
