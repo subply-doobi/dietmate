@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import styled from 'styled-components/native';
 
 import {RootState} from '../../stores/store';
 import {setCurrentDietNo} from '../../stores/slices/cartSlice';
@@ -9,6 +10,7 @@ import {
   Col,
   Row,
   VerticalSpace,
+  StyledProps,
 } from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 import {getDietAddStatus} from '../../util/getDietAddStatus';
@@ -24,7 +26,7 @@ import {
   useListDiet,
 } from '../../query/queries/diet';
 
-const BottomMenuSelect = () => {
+const MenuSelectCard = () => {
   // redux
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
@@ -58,32 +60,26 @@ const BottomMenuSelect = () => {
       {/* 끼니선택 및 추가 버튼 */}
       <Row
         style={{
-          width: '100%',
-          flexWrap: 'wrap',
-          marginTop: 16,
+          marginTop: 8,
         }}>
         {dietData?.map(menu => {
           const isActivated = menu.dietNo === currentDietNo ? true : false;
           return (
             <Row key={menu.dietNo}>
-              <BtnSmall
+              <CardBtn
                 isActivated={isActivated}
-                style={{marginBottom: 8}}
                 onPress={() => {
                   dispatch(setCurrentDietNo(menu.dietNo));
                 }}>
-                <BtnSmallText isActivated={isActivated}>
-                  {menu?.dietSeq}
-                </BtnSmallText>
-              </BtnSmall>
-              <VerticalSpace width={8} />
+                <CardText isActivated={isActivated}>{menu?.dietSeq}</CardText>
+              </CardBtn>
             </Row>
           );
         })}
         <Row>
-          <BtnSmall style={{marginBottom: 8}} onPress={() => onCreateDiet()}>
-            <BtnSmallText style={{color: colors.inactivated}}>+</BtnSmallText>
-          </BtnSmall>
+          <CardBtn onPress={() => onCreateDiet()}>
+            <CardText style={{color: colors.textSub}}>+</CardText>
+          </CardBtn>
         </Row>
       </Row>
       <DAlert
@@ -109,4 +105,24 @@ const BottomMenuSelect = () => {
   );
 };
 
-export default BottomMenuSelect;
+export default MenuSelectCard;
+
+const CardText = styled.Text`
+  font-size: 14px;
+  color: ${({isActivated}: StyledProps) =>
+    isActivated ? colors.textMain : colors.textSub};
+`;
+const CardBtn = styled.TouchableOpacity`
+  height: ${({isActivated}: StyledProps) => (isActivated ? '32px' : '28px')};
+  width: 74px;
+  justify-content: center;
+  align-items: center;
+
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  background-color: ${({isActivated}: StyledProps) =>
+    isActivated ? colors.white : colors.inactivated};
+  border-color: ${colors.white};
+  margin-right: -4px;
+  margin-left: 8px;
+`;

@@ -1,11 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KakaoOAuthToken, login} from '@react-native-seoul/kakao-login';
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
+import {storeToken} from '../../util/asyncStorage';
+import {IGetAuthData} from '../types/member';
+import {IReIssueTokenData} from '../types/token';
+import {queryFn} from './requestFn';
 
 import {GET_TOKEN, GET_AUTH, RE_ISSUE_TOKEN} from './urls';
 
-// doobi server------------------ //
-// 카카오 토큰으로 DoobiToken 발급
 export const getDoobiToken = async (kakaoAccessToken: string | null) => {
   try {
     const result = await axios.get(`${GET_TOKEN}/${kakaoAccessToken}`);
@@ -13,21 +15,6 @@ export const getDoobiToken = async (kakaoAccessToken: string | null) => {
   } catch (e) {
     console.log('getDoobiToken: ', e);
   }
-};
-
-// asyncStorage ------------------------ //
-export const storeToken = async (accessToken: string, refreshToken: string) => {
-  await AsyncStorage.setItem('ACCESS_TOKEN', accessToken);
-  await AsyncStorage.setItem('REFRESH_TOKEN', refreshToken);
-};
-
-export const getStoredToken = async () => {
-  const accessToken = await AsyncStorage.getItem('ACCESS_TOKEN');
-  const refreshToken = await AsyncStorage.getItem('REFRESH_TOKEN');
-  return {
-    accessToken,
-    refreshToken,
-  };
 };
 
 export const kakaoLogin = async () => {
@@ -41,42 +28,30 @@ export const kakaoLogin = async () => {
 };
 
 export const validateToken = async () => {
-  let isTokenValid = false;
-  let validToken: string | null = '';
-  const {accessToken, refreshToken} = await getStoredToken();
-  if (!isTokenValid) {
+  let isValidated = false;
+  try {
+    // 인증 여부 조회
+    await queryFn<IGetAuthData>(GET_AUTH);
+    isValidated = true;
+
+    // 인증 오류 처리
+  } catch (e) {
+    if (!(e instanceof AxiosError)) return {isValidated};
+    console.log('validateToken: auth 오류', e.response?.status);
+
+    // 토큰 재발급 (401에러인 경우만 재발급 시도)
+    if (e.response?.status !== 401) return {isValidated};
     try {
-      // 인증여부 조회
-      const auth = await axios.get(`${GET_AUTH}`, {
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
-      isTokenValid = true;
-      // isTokenValid && console.log('validateToken: auth 완료');
-      validToken = accessToken;
+      const reIssue = await queryFn<IReIssueTokenData>(RE_ISSUE_TOKEN);
+      await storeToken(reIssue.accessToken, reIssue.refreshToken);
+      isValidated = true;
+
+      // 토큰 재발급 오류
     } catch (e) {
-      console.log('validateToken: auth 오류', e);
-      if (e.response.status === 401) {
-        try {
-          // 토큰 재발급
-          const reIssue = await axios.get(`${RE_ISSUE_TOKEN}`, {
-            headers: {
-              authorization: `Bearer ${refreshToken}`,
-            },
-          });
-          await storeToken(reIssue.data.accessToken, reIssue.data.refreshToken);
-          isTokenValid = true;
-          // isTokenValid && console.log('validateToken: reIssue 완료');
-          validToken = reIssue.data.accessToken;
-        } catch (e) {
-          console.log('validateToken: reIssue 오류: ', e);
-        }
-      } else {
-        return {isTokenValid, validToken};
-      }
+      if (!(e instanceof AxiosError)) return {isValidated};
+      console.log('validateToken: reIssue 오류: ', e.response?.status);
     }
   }
-
-  return {isTokenValid, validToken};
+  console.log('validateToken: isValidated: ', isValidated);
+  return {isValidated};
 };

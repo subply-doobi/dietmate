@@ -17,4 +17,5 @@ export default {
   modalBg: '#000000A6',
   kakaoColor: '#ffe812',
   backgroundModal: '#000000a6',
+  homeBackgroundColor: '#F2F2F2',
 };

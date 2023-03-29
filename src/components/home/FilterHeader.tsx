@@ -56,7 +56,7 @@ const FilterHeader = props => {
             onPress();
             setFilterIndex(3);
           }}>
-          <FilterBtnText>식단구성</FilterBtnText>
+          <FilterBtnText>영양맞춤</FilterBtnText>
         </FilterBtn>
       </Row>
     </>

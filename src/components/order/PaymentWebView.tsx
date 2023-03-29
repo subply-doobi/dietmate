@@ -39,12 +39,9 @@ const PaymentWebView = ({
 
   const {isLoading, isError, error, getPaymentResult} = useKakaopayApprove();
 
-  useEffect(() => {
-    getPaymentResult();
-  }, []);
-
   const handleNavigationStateChange = navState => {
     const {url} = navState;
+    // console.log(url);
     if (url.includes('http:')) {
       console.log('changed: ', url);
     }

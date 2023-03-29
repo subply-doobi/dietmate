@@ -34,7 +34,7 @@ const renderCalorieInput = ({field: {onChange, value}}: IFormField) => {
         onChangeText={onChange}
         isActivated={value ? true : false}
         keyboardType="numeric"
-        maxLength={3}
+        maxLength={4}
       />
     </>
   );

@@ -2,22 +2,22 @@ import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 
 interface ICommonAlertSlice {
-  message: string;
+  errorCode: number | undefined;
 }
 
 const initialState: ICommonAlertSlice = {
-  message: '',
+  errorCode: undefined,
 };
 
 export const commonAlertSlice = createSlice({
   name: 'commonAlert',
   initialState,
   reducers: {
-    openCommonAlert: (state, action: PayloadAction<string>) => {
-      state.message = action.payload;
+    openCommonAlert: (state, action: PayloadAction<number>) => {
+      state.errorCode = action.payload;
     },
     closeCommonAlert: state => {
-      state.message = '';
+      state.errorCode = undefined;
     },
   },
 });

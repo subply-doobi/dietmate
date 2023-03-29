@@ -45,3 +45,5 @@ export interface IProductData {
   sugar: string;
   transFat: string;
 }
+
+export type IUseListProductData = IProductData[];

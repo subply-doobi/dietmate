@@ -4,6 +4,7 @@ import {
   ratioCdToValue,
   timeCdToMinutes,
 } from '../constants/constants';
+import {IBaseLine} from '../query/types/baseLine';
 
 /** gender, age, height, weight  => BMR */
 export const calculateBMR = (
@@ -113,27 +114,6 @@ export const calculateManualCalorie = (
   };
 };
 
-export const calculateCartNutr = (menu: Array<IProduct>) => {
-  let calorie = 0;
-  let carb = 0;
-  let protein = 0;
-  let fat = 0;
-  if (menu) {
-    menu.forEach(product => {
-      calorie += parseInt(product?.calorie);
-      carb += parseInt(product?.carb);
-      protein += parseInt(product?.protein);
-      fat += parseInt(product?.fat);
-    });
-  }
-  return {
-    calorie,
-    carb,
-    protein,
-    fat,
-  };
-};
-
 const convertByCalorie = (
   targetCalorie: string,
   calorieValueForMod: string,
@@ -200,7 +180,7 @@ const convertByFat = (targetCalorie: string, fatForMod: string) => {
   };
 };
 
-export const nutrConvert: {
+export const convertNutr: {
   [key: string]: (
     targetCalorie: string,
     input: string,
@@ -210,4 +190,24 @@ export const nutrConvert: {
   carb: (targetCalorie, nutr) => convertByCarb(targetCalorie, nutr),
   protein: (targetCalorie, nutr) => convertByProtein(targetCalorie, nutr),
   fat: (targetCalorie, nutr) => convertByFat(targetCalorie, nutr),
+};
+
+export const convertNutrByWeight = (
+  weight: string,
+  baseLine: IBaseLine,
+): {calorie: string; carb: string; protein: string; fat: string} => {
+  const bmr = calculateBMR(
+    baseLine.gender,
+    baseLine.age,
+    baseLine.height,
+    weight,
+  );
+  const {tmr, calorie, carb, protein, fat} = calculateNutrTarget(
+    weight,
+    baseLine.weightTimeCd,
+    baseLine.aerobicTimeCd,
+    baseLine.dietPurposeCd,
+    bmr,
+  );
+  return {calorie, carb, protein, fat};
 };

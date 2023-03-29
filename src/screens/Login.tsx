@@ -40,8 +40,8 @@ const Login = () => {
   // etc
   useEffect(() => {
     const useCheckUser = async () => {
-      const {isTokenValid} = await validateToken();
-      if (!isTokenValid) return;
+      const {isValidated} = await validateToken();
+      if (!isValidated) return;
       const refetchedData = await refetch();
       refetchedData && navigateByBaseLine(refetchedData, navigation);
     };
