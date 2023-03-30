@@ -51,11 +51,7 @@ const FilterHeader = props => {
             <FilterBtnText>가격</FilterBtnText>
           )}
         </FilterBtn>
-        <FilterBtn
-          onPress={() => {
-            onPress();
-            setFilterIndex(3);
-          }}>
+        <FilterBtn onPress={() => console.log('영양맞춤 refetch 함수')}>
           <FilterBtnText>영양맞춤</FilterBtnText>
         </FilterBtn>
       </Row>
