@@ -25,3 +25,5 @@ export type IDietDetailData = Array<IDietDetailProductData>;
 export interface IDietDetailEmptyYnData {
   emptyYn: 'N' | 'Y';
 }
+
+export type IDietTotalData = Array<IDietDetailData>;

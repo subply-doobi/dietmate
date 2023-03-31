@@ -6,7 +6,7 @@ import styled from 'styled-components/native';
 
 // doobi util, type, etc
 import {RootState} from '../../stores/store';
-import {setCurrentDietNo} from '../../stores/slices/cartSlice';
+import {setCurrentDiet} from '../../stores/slices/cartSlice';
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {Col, HorizontalLine} from '../../styles/styledConsts';
@@ -72,11 +72,11 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
   return (
     <TouchableWithoutFeedback onPress={() => {}}>
       <SelectContainer center={center}>
-        {dietData?.map(menu => (
+        {dietData?.map((menu, idx) => (
           <Col key={menu.dietNo}>
             <Menu
               onPress={() => {
-                dispatch(setCurrentDietNo(menu.dietNo));
+                dispatch(setCurrentDiet(menu.dietNo));
                 setOpen(false);
               }}>
               <MenuText isActivated={menu.dietNo === currentDietNo}>
@@ -104,7 +104,9 @@ const MenuSelect = ({setOpen, center}: IMenuSelect) => {
           alertShow={deleteAlertShow}
           renderContent={() => (
             <DeleteAlertContent
-              deleteText={dietData ? findDietSeq(dietData, dietNoToDelete) : ''}
+              deleteText={
+                dietData ? findDietSeq(dietData, dietNoToDelete).dietSeq : ''
+              }
             />
           )}
           onConfirm={() => onDeleteDiet()}

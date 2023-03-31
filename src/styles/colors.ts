@@ -1,8 +1,10 @@
 export default {
   white: '#FFFFFF',
   black: '#000000',
+  dark: `#444444`,
   inactivated: '#E5E5E5',
   backgroundLight: '#F8F8F8',
+  backgroundLight2: `#F2F2F2`,
   bgBox: '#F0F0F0',
   main: '#590DE1',
   blue: '#3D9AFF',

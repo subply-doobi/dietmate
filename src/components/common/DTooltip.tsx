@@ -66,6 +66,7 @@ export default DTooltip;
 const Container = styled.TouchableOpacity`
   position: absolute;
   margin: 0px 0px 6px 0px;
+  z-index: 1000;
 `;
 
 const TooltipBox = styled.View`

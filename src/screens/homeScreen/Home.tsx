@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
 import {RootState} from '../../stores/store';
-import {setCurrentDietNo} from '../../stores/slices/cartSlice';
+import {setCurrentDiet} from '../../stores/slices/cartSlice';
 import {setListTitle} from '../../stores/slices/filterSlice';
 import {icons} from '../../assets/icons/iconSource';
 import {
@@ -107,7 +107,7 @@ const Home = () => {
   useEffect(() => {
     // 앱 시작할 때 내가 어떤 끼니를 보고 있는지 redux에 저장해놓기 위해 필요함
     queryFn(LIST_DIET).then(res => {
-      res[0] && dispatch(setCurrentDietNo(res[0]?.dietNo));
+      res[0] && dispatch(setCurrentDiet(res[0]?.dietNo));
     });
   }, []);
 

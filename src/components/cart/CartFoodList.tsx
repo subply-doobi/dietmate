@@ -28,64 +28,53 @@ import {
   useListDietDetail,
 } from '../../query/queries/diet';
 
+interface ICartFoodList {
+  selectedFoods: {[key: string]: string[]};
+  setSelectedFoods: React.Dispatch<SetStateAction<{[key: string]: string[]}>>;
+  dietNo: string;
+}
+
 const CartFoodList = ({
   selectedFoods,
   setSelectedFoods,
-}: {
-  selectedFoods: {[key: string]: string[]};
-  setSelectedFoods: React.Dispatch<SetStateAction<{[key: string]: string[]}>>;
-}) => {
+  dietNo,
+}: ICartFoodList) => {
   // navigation
   const navigation = useNavigation();
 
-  // redux
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
-
   // react-query
   const {data: dietData} = useListDiet();
-  const {data: dietDetailData} = useListDietDetail(currentDietNo);
+  const {data: dietDetailData} = useListDietDetail(dietNo);
   const deleteMutation = useDeleteDietDetail();
 
   // state
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
   const [productNoToDelete, setProductNoToDelete] = useState('');
-  const [numberPickerShow, setNumberPickerShow] = useState(false);
-  const [numberPickerInfo, setNumberPickerInfo] = useState({
-    platformNm: '',
-    productNo: '',
-    productNm: '',
-    price: '',
-    minQty: '',
-    freeShippingPrice: '',
-    shippingPrice: '',
-  });
 
   // etc
   const onDelete = () => {
     dietData &&
       deleteMutation.mutate({
-        dietNo: currentDietNo,
+        dietNo: dietNo,
         productNo: productNoToDelete,
       });
     setDeleteAlertShow(false);
   };
 
   const addToSelected = (productNo: string) => {
-    const newArr = selectedFoods[currentDietNo]
-      ? [...selectedFoods[currentDietNo], productNo]
+    const newArr = selectedFoods[dietNo]
+      ? [...selectedFoods[dietNo], productNo]
       : [productNo];
     const newObj = {
       ...selectedFoods,
-      [currentDietNo]: newArr,
+      [dietNo]: newArr,
     };
     setSelectedFoods(newObj);
   };
   const deleteFromSelected = (productNo: string) => {
     const newObj = {
       ...selectedFoods,
-      [currentDietNo]: [
-        ...selectedFoods[currentDietNo]?.filter(v => v !== productNo),
-      ],
+      [dietNo]: [...selectedFoods[dietNo]?.filter(v => v !== productNo)],
     };
     setSelectedFoods(newObj);
   };
@@ -107,7 +96,7 @@ const CartFoodList = ({
               source={{uri: `${BASE_URL}${food.mainAttUrl}`}}
               resizeMode="center"
             />
-            {selectedFoods[currentDietNo]?.includes(food.productNo) ? (
+            {selectedFoods[dietNo]?.includes(food.productNo) ? (
               <SelectedBtn
                 onPress={() => {
                   deleteFromSelected(food.productNo);
@@ -145,11 +134,6 @@ const CartFoodList = ({
               </NutrientText>
               <Row style={{marginTop: 12, justifyContent: 'space-between'}}>
                 <ProductPrice>{commaToNum(food.price)}원</ProductPrice>
-                <QuantityControl
-                  food={food}
-                  setNumberPickerShow={setNumberPickerShow}
-                  setNumberPickerInfo={setNumberPickerInfo}
-                />
               </Row>
             </Col>
           </Row>
@@ -164,23 +148,6 @@ const CartFoodList = ({
           setDeleteAlertShow(false);
         }}
         renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
-      />
-      <DBottomSheet
-        alertShow={numberPickerShow}
-        setAlertShow={setNumberPickerShow}
-        renderContent={() => (
-          <NumberPickerContent
-            setNumberPickerShow={setNumberPickerShow}
-            platformNm={numberPickerInfo.platformNm}
-            productNo={numberPickerInfo.productNo}
-            productNm={numberPickerInfo.productNm}
-            price={numberPickerInfo.price}
-            minQty={numberPickerInfo.minQty}
-            freeShippingPrice={numberPickerInfo.freeShippingPrice}
-            shippingPrice={numberPickerInfo.shippingPrice}
-          />
-        )}
-        onCancel={() => setNumberPickerShow(false)}
       />
     </Container>
   );

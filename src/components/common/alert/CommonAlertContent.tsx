@@ -20,4 +20,5 @@ const Container = styled.View`
 
 const AlertText = styled(TextMain)`
   font-size: 16px;
+  text-align: center;
 `;

@@ -40,7 +40,7 @@ const AutoMenuBtn = ({
 export default AutoMenuBtn;
 
 const GuideText = styled(TextSub)`
-  margin-top: 24px;
+  margin-top: 16px;
   font-size: 14px;
 `;
 

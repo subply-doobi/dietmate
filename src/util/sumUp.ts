@@ -74,16 +74,18 @@ export const reGroupBySeller = (dietDetailData: IDietDetailData) => {
       reGroupedProducts[0].push(dietDetailData[i]);
       continue;
     }
+    let isNewSeller = true;
     for (let j = 0; j < reGroupedProducts.length; j++) {
       if (
         reGroupedProducts[j][0]?.platformNm === dietDetailData[i]?.platformNm
       ) {
         reGroupedProducts[j].push(dietDetailData[i]);
-        break;
-      } else {
-        reGroupedProducts.push([dietDetailData[i]]);
+        isNewSeller = false;
         break;
       }
+    }
+    if (isNewSeller) {
+      reGroupedProducts.push([dietDetailData[i]]);
     }
   }
   return reGroupedProducts;

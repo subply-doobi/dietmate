@@ -6,7 +6,7 @@ export const getDietAddStatus = (
 ) => {
   return !dietData || !dietEmptyData
     ? 'noData'
-    : dietData.length >= 3
+    : dietData.length >= 5
     ? 'limit'
     : dietEmptyData.emptyYn === 'Y'
     ? 'empty'

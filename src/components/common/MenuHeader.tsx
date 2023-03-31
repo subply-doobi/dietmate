@@ -23,7 +23,7 @@ const MenuHeader = ({menuSelectOpen, setMenuSelectOpen}: IMenuHeader) => {
     <ActivityIndicator />
   ) : (
     <Header onPress={() => setMenuSelectOpen(v => !v)}>
-      <HeaderText>{findDietSeq(dietData, currentDietNo)}</HeaderText>
+      <HeaderText>{findDietSeq(dietData, currentDietNo).dietSeq}</HeaderText>
       {menuSelectOpen ? (
         <Arrow source={icons.triangleUp_24} />
       ) : (

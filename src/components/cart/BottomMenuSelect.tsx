@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '../../stores/store';
-import {setCurrentDietNo} from '../../stores/slices/cartSlice';
+import {setCurrentDiet} from '../../stores/slices/cartSlice';
 import {
   BtnSmall,
   BtnSmallText,
@@ -12,10 +12,8 @@ import {
 } from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 import {getDietAddStatus} from '../../util/getDietAddStatus';
-
 import DAlert from '../common/alert/DAlert';
 import CreateLimitAlertContent from '../common/alert/CreateLimitAlertContent';
-import MenuEmptyAlertContent from '../common/alert/MenuEmptyAlertContent';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
 
 import {
@@ -34,7 +32,7 @@ const BottomMenuSelect = () => {
   const {data: dietEmptyData} = useGetDietDetailEmptyYn();
   const createDietMutation = useCreateDiet({
     onSuccess: data => {
-      dispatch(setCurrentDietNo(data.dietNo));
+      dispatch(setCurrentDiet(data.dietNo));
     },
   });
   // const createDietDetailMutation = useCreateDietDetail();
@@ -70,7 +68,7 @@ const BottomMenuSelect = () => {
                 isActivated={isActivated}
                 style={{marginBottom: 8}}
                 onPress={() => {
-                  dispatch(setCurrentDietNo(menu.dietNo));
+                  dispatch(setCurrentDiet(menu.dietNo));
                 }}>
                 <BtnSmallText isActivated={isActivated}>
                   {menu?.dietSeq}
