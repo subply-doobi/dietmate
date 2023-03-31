@@ -12,7 +12,7 @@ import {
   LIST_PRODUCT,
   FILTER,
 } from './urls';
-import {IUseListProductData} from '../types/product';
+import {IListProductData} from '../types/product';
 
 export const useCreateProductMark = () => {
   const mutation = useMutation({
@@ -98,7 +98,7 @@ export const useListProduct = (
 
   // console.log('product:', priceParam);
 
-  return useQuery<IUseListProductData>({
+  return useQuery<IListProductData>({
     queryKey: [PRODUCT],
     queryFn: () =>
       queryFn(

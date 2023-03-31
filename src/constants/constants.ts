@@ -4,9 +4,9 @@ import {Dimensions, Platform} from 'react-native';
 export const {width, height} = Dimensions.get('screen');
 export const SCREENWIDTH = Math.min(width, height);
 export const SCREENHEIGHT = Math.max(width, height);
-
 export const IS_ANDROID = Platform.OS === 'android';
 export const IS_IOS = Platform.OS === 'ios';
+export const FOOD_LIST_ITEM_HEIGHT = 132;
 
 // Doobi server category etc.
 export const DIET_PURPOSE_CD = {
@@ -238,27 +238,4 @@ export interface IFormField {
     onBlur: () => void;
     value: string;
   };
-}
-
-export interface IProduct {
-  calorie: number;
-  carb: number;
-  categoryCd: string;
-  categoryNm: string;
-  distributerBizNo: string;
-  distributerNm: string;
-  fat: number;
-  mainAttId: string;
-  mainAttUrl: string;
-  platformNm: string;
-  price: number;
-  priceCalorieCompare: number;
-  priceProteinCompare: number;
-  productNm: string;
-  productNo: string;
-  protein: number;
-  qty: number;
-  subCategoryCd: string;
-  subCategoryNm: string;
-  [key: string]: string | number;
 }

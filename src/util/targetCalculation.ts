@@ -1,5 +1,4 @@
 import {
-  IProduct,
   purposeCdToValue,
   ratioCdToValue,
   timeCdToMinutes,

@@ -12,6 +12,7 @@ export interface StyledProps {
   lineColor?: string;
   thumbIdx?: number;
   filterHeight?: boolean;
+  willExceed?: boolean;
 }
 export const NotoSansLight = styled.Text`
   font-family: 'NotoSansKRLight';

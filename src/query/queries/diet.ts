@@ -85,7 +85,8 @@ export const useCreateDiet = (options?: IMutationOptions) => {
   return mutation;
 };
 
-export const useCreateDietDetail = () => {
+export const useCreateDietDetail = (options?: IMutationOptions) => {
+  const onSuccess = options?.onSuccess;
   const dispatch = useDispatch();
   const handleError = useHandleError();
   const mutation = useMutation({
@@ -147,6 +148,8 @@ export const useCreateDietDetail = () => {
       };
     },
     onSuccess: (data, {dietNo, productNo}) => {
+      // 컴포넌트로부터 전달받은 onSuccess 실행
+      onSuccess && onSuccess();
       // 현재 구성중인 끼니의 dietNo, dietIdx를 redux에 저장 => 장바구니와 동기화
       dispatch(setCurrentDiet(data.dietNo));
 
@@ -299,7 +302,7 @@ export const useDeleteDiet = () => {
       }
 
       // invalidation
-      // queryClient.invalidateQueries({queryKey: [DIET]});
+      queryClient.invalidateQueries({queryKey: [DIET]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL_EMPTY_YN]});
@@ -314,7 +317,8 @@ export const useDeleteDiet = () => {
   return mutation;
 };
 
-export const useDeleteDietDetail = () => {
+export const useDeleteDietDetail = (options?: IMutationOptions) => {
+  const onSuccess = options?.onSuccess;
   const dispatch = useDispatch();
   const handleError = useHandleError();
   const mutation = useMutation({
@@ -365,6 +369,8 @@ export const useDeleteDietDetail = () => {
       };
     },
     onSuccess: (data, {dietNo, productNo}) => {
+      // 컴포넌트로부터 option으로 받은 onSuccess 실행
+      onSuccess && onSuccess();
       // 현재 구성중인 끼니의 dietNo, dietIdx를 redux에 저장 => 장바구니와 동기화
       dispatch(setCurrentDiet(dietNo));
 

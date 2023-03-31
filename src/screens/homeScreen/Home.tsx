@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {TouchableWithoutFeedback, FlatList} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -17,10 +17,10 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/styledConsts';
-import {categoryCode} from '../../constants/constants';
+import {FOOD_LIST_ITEM_HEIGHT, categoryCode} from '../../constants/constants';
 import colors from '../../styles/colors';
 import {queryFn} from '../../query/queries/requestFn';
-import {IProductData} from '../../query/types/product';
+import {IListProductData, IProductData} from '../../query/types/product';
 import {SCREENWIDTH} from '../../constants/constants';
 
 import NutrientsProgress from '../../components/common/NutrientsProgress';
@@ -114,20 +114,26 @@ const Home = () => {
   //modal
   const [sortModalShow, setSortModalShow] = useState(false);
   const [filterModalShow, setFilterModalShow] = useState(false);
-  const renderFoodList = ({item}: {item: IProductData}) =>
-    dietDetailData ? (
-      <FoodList item={item} dietDetailData={dietDetailData} />
-    ) : (
-      <></>
-    );
 
-  // const renderFoods = useCallback(
-  //   ({item}: {item: IProductData}) =>
-  //     dietDetailData ? (
-  //       <FoodList item={item} dietDetailData={dietDetailData} />
-  //     ) : null,
-  //   [],
-  // );
+  // flatList render fn
+  const renderFoodList = useCallback(
+    ({item}: {item: IProductData}) =>
+      dietDetailData ? <FoodList item={item} /> : <></>,
+    [tData],
+  );
+  const extractListKey = useCallback(
+    (item: IProductData) => item.productNo,
+    [tData],
+  );
+  const getItemLayout = useCallback(
+    (_, index: number) => ({
+      length: FOOD_LIST_ITEM_HEIGHT + 20,
+      offset: (FOOD_LIST_ITEM_HEIGHT + 20) * index,
+      index,
+    }),
+    [tData],
+  );
+  const getSeperator = useCallback(() => <HorizontalSpace height={20} />, []);
 
   return (
     <TouchableWithoutFeedback
@@ -219,12 +225,13 @@ const Home = () => {
         {tData && dietDetailData && (
           <FlatList
             data={tData}
-            keyExtractor={item => item.productNo}
+            keyExtractor={extractListKey}
             renderItem={renderFoodList}
-            ItemSeparatorComponent={() => <HorizontalSpace height={16} />}
-            initialNumToRender={2}
+            getItemLayout={getItemLayout}
+            // ItemSeparatorComponent={getSeperator}
+            initialNumToRender={5}
             windowSize={2}
-            maxToRenderPerBatch={1}
+            maxToRenderPerBatch={7}
             removeClippedSubviews={true}
             onEndReachedThreshold={0.4}
             showsVerticalScrollIndicator={false}

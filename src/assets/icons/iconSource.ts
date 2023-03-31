@@ -48,4 +48,5 @@ export const icons = {
   minus_48: require(`./48_minus.png`),
   kakaoPay: require(`./kakao_pay.png`),
   upDown_24: require(`./24_up_down.png`),
+  cartWhite_40: require(`./40_cart_white.png`),
 };
