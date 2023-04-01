@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 
 import {queryClient} from '../../query/store';
-import {DIET, PRODUCT} from '../../query/keys';
+import {DIET, PRODUCTS} from '../../query/keys';
 import {IDietData} from '../../query/types/diet';
 import {findDietSeq} from '../../util/findDietSeq';
 
@@ -22,7 +22,7 @@ export const cartSlice = createSlice({
   reducers: {
     setCurrentDiet: (state, action: PayloadAction<string>) => {
       state.currentDietNo = action.payload;
-      queryClient.invalidateQueries([PRODUCT]);
+      queryClient.invalidateQueries([PRODUCTS]);
     },
   },
 });

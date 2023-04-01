@@ -98,7 +98,7 @@ const FoodList = ({item}: IFoodList) => {
   });
   const aniScaleByPosition = aniPValue.interpolate({
     inputRange: [addedP, removedP],
-    outputRange: [1, 0.6],
+    outputRange: [1, 0],
     extrapolate: 'clamp',
   });
 
@@ -150,7 +150,8 @@ const FoodList = ({item}: IFoodList) => {
   return (
     <AniContainer {...panResponder.panHandlers}>
       {/* 전체 범위 클릭하면 식품 상세정보로 이동 */}
-      <Button onPress={() => navigate('FoodDetail', {item: item})}>
+      <Button
+        onPress={() => navigate('FoodDetail', {productNo: item.productNo})}>
         <Thumbnail
           source={{
             uri: `${BASE_URL}${item?.mainAttUrl}`,

@@ -2,9 +2,8 @@ import {Text, StyleSheet, View} from 'react-native';
 
 import colors from '../../../styles/colors';
 import {Dot} from '../../../styles/styledConsts';
-
-import {TableItem} from '../FoodDetail';
 import {useUserProfile} from '../../../query/queries/member';
+import {TableItem} from '../FoodDetail';
 
 interface Props {
   table: TableItem[];

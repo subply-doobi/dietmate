@@ -2,7 +2,7 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 
 import {queryClient} from '../store';
 import {mutationFn, queryFn} from './requestFn';
-import {DIET_DETAIL, PRODUCT} from '../keys';
+import {DIET_DETAIL, PRODUCTS, PRODUCT} from '../keys';
 import {IQueryOptions} from '../types/common';
 
 import {
@@ -11,8 +11,9 @@ import {
   CREATE_PRODUCT_AUTO,
   LIST_PRODUCT,
   FILTER,
+  GET_PRODUCT,
 } from './urls';
-import {IListProductData} from '../types/product';
+import {IListProductData, IProductData} from '../types/product';
 
 export const useCreateProductMark = () => {
   const mutation = useMutation({
@@ -58,6 +59,20 @@ export const useCreateProductAuto = () => {
 // optional params 어떻게 받을 것인지
 
 // GET //
+export const useGetProduct = (
+  params: {dietNo: string; productNo: string},
+  options?: IQueryOptions,
+) => {
+  const dietNo = params.dietNo;
+  const productNo = params.productNo;
+  const enabled = options?.enabled ?? true;
+  return useQuery<IProductData>({
+    queryKey: [PRODUCT],
+    queryFn: () => queryFn(`${GET_PRODUCT}/${dietNo}?productNo=${productNo}`),
+    enabled,
+  });
+};
+
 export const useListProduct = (
   params: {
     dietNo: string;
@@ -99,7 +114,7 @@ export const useListProduct = (
   // console.log('product:', priceParam);
 
   return useQuery<IListProductData>({
-    queryKey: [PRODUCT],
+    queryKey: [PRODUCTS],
     queryFn: () =>
       queryFn(
         `${LIST_PRODUCT}/${dietNo}?searchText=${searchText}&categoryCd=${categoryParam}&sort=${sort}&filter=${calorieParam}${carbParam}${proteinParam}${fatParam}${priceParam}`,

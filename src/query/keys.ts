@@ -15,4 +15,5 @@ export const CATEGORY = `CATEGORY`;
 
 // product
 export const PRODUCT_AUTO = 'PRODUCT_AUTO';
+export const PRODUCTS = 'PRODUCTS';
 export const PRODUCT = 'PRODUCT';

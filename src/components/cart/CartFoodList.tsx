@@ -85,7 +85,9 @@ const CartFoodList = ({
         <FoodBox
           key={idx}
           onPress={() => {
-            navigation.navigate('FoodDetail', {item: food});
+            navigation.navigate('FoodDetail', {
+              productNo: food.productNo,
+            });
           }}>
           <Row
             style={{

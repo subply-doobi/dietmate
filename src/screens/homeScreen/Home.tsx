@@ -133,7 +133,7 @@ const Home = () => {
     }),
     [tData],
   );
-  const getSeperator = useCallback(() => <HorizontalSpace height={20} />, []);
+  // const getSeperator = useCallback(() => <HorizontalSpace height={20} />, []);
 
   return (
     <TouchableWithoutFeedback

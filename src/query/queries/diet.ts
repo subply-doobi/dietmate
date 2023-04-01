@@ -10,7 +10,7 @@ import {
   DIET_DETAIL,
   DIET_DETAIL_ALL,
   DIET_DETAIL_EMPTY_YN,
-  PRODUCT,
+  PRODUCTS,
 } from '../keys';
 import {IMutationOptions, IQueryOptions} from '../types/common';
 import {
@@ -69,7 +69,7 @@ export const useCreateDiet = (options?: IMutationOptions) => {
       // invalidation
       queryClient.invalidateQueries({queryKey: [DIET]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
-      queryClient.invalidateQueries({queryKey: [PRODUCT]});
+      queryClient.invalidateQueries({queryKey: [PRODUCTS]});
     },
     onError: (error, variables, context) => {
       handleError(error);
@@ -99,12 +99,12 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
       // optimistic update
       // 1. Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries({queryKey: [PRODUCT]});
+      await queryClient.cancelQueries({queryKey: [PRODUCTS]});
       await queryClient.cancelQueries({queryKey: [DIET_DETAIL, dietNo]});
 
       // 2. Snapshot the previous value
       const prevProductData = queryClient.getQueryData<IProductData[]>([
-        PRODUCT,
+        PRODUCTS,
       ]);
       const prevDietDetailData = queryClient.getQueryData<IDietDetailData>([
         DIET_DETAIL,
@@ -133,7 +133,7 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
 
       // 3. Optimistically update to the new value
       // (실패할 경우 onError에서 이전 데이터로 돌려주기 -> 5번)
-      queryClient.setQueryData([PRODUCT], () => {
+      queryClient.setQueryData([PRODUCTS], () => {
         return newProductData;
       });
       queryClient.setQueryData([DIET_DETAIL, dietNo], () => {
@@ -160,7 +160,7 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
     onError: (e, {dietNo, productNo}, context) => {
       // optimistic update
       // 5. Rollback to the previous value
-      queryClient.setQueryData([PRODUCT], context?.prevProductData);
+      queryClient.setQueryData([PRODUCTS], context?.prevProductData);
       queryClient.setQueryData(
         [DIET_DETAIL, dietNo],
         context?.prevDietDetailData,
@@ -306,7 +306,7 @@ export const useDeleteDiet = () => {
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL_EMPTY_YN]});
-      queryClient.invalidateQueries({queryKey: [PRODUCT]});
+      queryClient.invalidateQueries({queryKey: [PRODUCTS]});
     },
     onError: (error, {dietNo}, context) => {
       // optimistic update 5. If the mutation fails, use the context returned
@@ -330,10 +330,10 @@ export const useDeleteDietDetail = (options?: IMutationOptions) => {
     onMutate: async ({dietNo, productNo}) => {
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries({queryKey: [PRODUCT]});
+      await queryClient.cancelQueries({queryKey: [PRODUCTS]});
       // Snapshot the previous value
       const prevProductData = queryClient.getQueryData<IProductData[]>([
-        PRODUCT,
+        PRODUCTS,
       ]);
       const prevDietDetailData = queryClient.getQueryData<IDietDetailData>([
         DIET_DETAIL,
@@ -354,7 +354,7 @@ export const useDeleteDietDetail = (options?: IMutationOptions) => {
         });
 
       // Optimistically update to the new value
-      queryClient.setQueryData([PRODUCT], () => {
+      queryClient.setQueryData([PRODUCTS], () => {
         return newProductData;
       });
       queryClient.setQueryData([DIET_DETAIL, dietNo], () => {
@@ -379,7 +379,7 @@ export const useDeleteDietDetail = (options?: IMutationOptions) => {
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL_EMPTY_YN]});
     },
     onError: (e, {dietNo, productNo}, context) => {
-      queryClient.setQueryData([PRODUCT], context?.prevProductData);
+      queryClient.setQueryData([PRODUCTS], context?.prevProductData);
       queryClient.setQueryData(
         [DIET_DETAIL, dietNo],
         context?.prevDietDetailData,
