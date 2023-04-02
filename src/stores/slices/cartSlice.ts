@@ -2,18 +2,19 @@ import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 
 import {queryClient} from '../../query/store';
-import {DIET, PRODUCTS} from '../../query/keys';
-import {IDietData} from '../../query/types/diet';
-import {findDietSeq} from '../../util/findDietSeq';
+import {PRODUCTS} from '../../query/keys';
+import {IProductsData} from '../../query/types/product';
 
 export interface ICartState {
   currentDietNo: string;
-  currentDietIdx: number;
+  totalFoodList: IProductsData;
+  totalFoodListIsLoaded: boolean;
 }
 
 const initialState: ICartState = {
   currentDietNo: '',
-  currentDietIdx: 0,
+  totalFoodList: [],
+  totalFoodListIsLoaded: false,
 };
 
 export const cartSlice = createSlice({
@@ -24,8 +25,12 @@ export const cartSlice = createSlice({
       state.currentDietNo = action.payload;
       queryClient.invalidateQueries([PRODUCTS]);
     },
+    setTotalFoodList: (state, action: PayloadAction<IProductsData>) => {
+      state.totalFoodList = action.payload;
+      state.totalFoodListIsLoaded = true;
+    },
   },
 });
 
-export const {setCurrentDiet} = cartSlice.actions;
+export const {setCurrentDiet, setTotalFoodList} = cartSlice.actions;
 export default cartSlice.reducer;

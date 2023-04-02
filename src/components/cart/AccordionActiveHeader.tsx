@@ -22,12 +22,13 @@ import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import {queryClient} from '../../query/store';
 import {DIET_DETAIL} from '../../query/keys';
 import {IDietDetailData} from '../../query/types/diet';
+import AutoDietModal from './AutoDietModal';
 
 interface IAccordionActiveHeader {
   idx: number;
   dietNo: string;
   dietSeq: string;
-  dietDetailData: IDietDetailData | undefined;
+  dietDetailData: IDietDetailData;
 }
 const AccordionActiveHeader = ({
   idx,
@@ -41,6 +42,7 @@ const AccordionActiveHeader = ({
 
   // state
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
+  const [autoDietModalShow, setAutoDietModalShow] = useState(false);
 
   // etc
   const priceSum = sumUpPrice(dietDetailData);
@@ -78,6 +80,12 @@ const AccordionActiveHeader = ({
           )}
         </DeleteBtn>
       </Row>
+      <AutoDietModal
+        modalVisible={autoDietModalShow}
+        setModalVisible={setAutoDietModalShow}
+        dietNo={dietNo}
+        dietDetailData={dietDetailData}
+      />
       <DAlert
         alertShow={deleteAlertShow}
         renderContent={() => <DeleteAlertContent deleteText={dietSeq} />}

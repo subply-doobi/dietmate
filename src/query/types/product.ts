@@ -46,4 +46,4 @@ export interface IProductData {
   transFat: string;
 }
 
-export type IListProductData = IProductData[];
+export type IProductsData = IProductData[];

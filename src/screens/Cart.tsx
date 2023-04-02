@@ -54,6 +54,7 @@ const Cart = () => {
   const [numberPickerShow, setNumberPickerShow] = useState(false);
   const [detailDataToNoControl, setdetailDataToNoControl] =
     useState<IDietDetailData>([]);
+  const [autoDietModalShow, setAutoDietModalShow] = useState(false);
 
   const totalStatus =
     dietTotalData &&

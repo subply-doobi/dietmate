@@ -48,6 +48,7 @@ import {
   useGetProduct,
 } from '../../query/queries/product';
 import {makeTableData} from '../../util/foodDetail/makeNutrTable';
+import {ActivityIndicator} from 'react-native';
 
 export interface TableItem {
   name: string;
@@ -85,7 +86,11 @@ const FoodDetail = () => {
 
   // react-query
   // TBD | 식품 상세정보 없음
-  const {data: productData, refetch: refetchProduct} = useGetProduct(
+  const {
+    data: productData,
+    refetch: refetchProduct,
+    isFetching,
+  } = useGetProduct(
     {
       dietNo: currentDietNo,
       productNo: route?.params?.productNo,
@@ -93,8 +98,9 @@ const FoodDetail = () => {
     {enabled: false},
   );
   const {data: baseLineData} = useGetBaseLine();
-  const {data: dietDetailData, isFetching: dietDetailIsFetching} =
-    useListDietDetail(currentDietNo, {enabled: currentDietNo ? true : false});
+  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
+    enabled: currentDietNo ? true : false,
+  });
   const createProductMarkMutation = useCreateProductMark();
   const deleteProductMarkMutation = useDeleteProductMark();
   const createDietDetailMutation = useCreateDietDetail();
@@ -182,109 +188,108 @@ const FoodDetail = () => {
     return makeTableData(productData, baseLineData);
   }, [baseLineData, productData]);
 
-  return (
-    productData &&
-    baseLineData && (
-      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-        <Container>
-          {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
-          <ScrollView
-            style={{marginBottom: 20, flex: 1}}
-            showsVerticalScrollIndicator={false}>
-            <View>
-              <FoodImageContainer
-                source={{
-                  uri: `${BASE_URL}${productData.mainAttUrl}`,
-                }}
-                // style={{resizeMode: 'stretch'}}
-              />
-              <FoodImageBottom />
-              <NutritionInImage>
-                {table.slice(0, 4).map(el => {
-                  return (
-                    <View
-                      key={el.name}
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        flex: 0.25,
-                      }}>
-                      <Dot
-                        style={{
-                          backgroundColor: el.color,
-                          marginHorizontal: 8,
-                        }}
-                      />
-                      <Text style={{color: 'white', fontSize: 12}}>
-                        {el.column2}
-                      </Text>
-                    </View>
-                  );
-                })}
-              </NutritionInImage>
-            </View>
-
-            <SellerText style={{marginTop: 20}}>
-              [{productData.platformNm}]
-            </SellerText>
-            <ProductName>{productData.productNm}</ProductName>
-            <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
-              <Col>
-                <ShippingText>20000원 이상 무료배송 </ShippingText>
-                <Row>
-                  <ShippingText>최소주문수량: </ShippingText>
-                  <ShippingText style={{color: '#ff6060'}}>2개</ShippingText>
-                </Row>
-              </Col>
-              <Price>{commaToNum(productData.price)}원</Price>
-            </Row>
-            <Row
-              style={{
-                justifyContent: 'flex-start',
-              }}>
-              {detailMenu.map((el, index) => {
+  return isFetching || !productData || !baseLineData ? (
+    <ActivityIndicator />
+  ) : (
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <Container>
+        {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
+        <ScrollView
+          style={{marginBottom: 20, flex: 1}}
+          showsVerticalScrollIndicator={false}>
+          <View>
+            <FoodImageContainer
+              source={{
+                uri: `${BASE_URL}${productData.mainAttUrl}`,
+              }}
+              // style={{resizeMode: 'stretch'}}
+            />
+            <FoodImageBottom />
+            <NutritionInImage>
+              {table.slice(0, 4).map(el => {
                 return (
-                  <React.Fragment key={`${el}-${index}`}>
-                    <DetailMenu
-                      onPress={() => setClicked(index)}
-                      selected={index === clicked}>
-                      <DetailMenuText>{el}</DetailMenuText>
-                    </DetailMenu>
-                  </React.Fragment>
+                  <View
+                    key={el.name}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      flex: 0.25,
+                    }}>
+                    <Dot
+                      style={{
+                        backgroundColor: el.color,
+                        marginHorizontal: 8,
+                      }}
+                    />
+                    <Text style={{color: 'white', fontSize: 12}}>
+                      {el.column2}
+                    </Text>
+                  </View>
                 );
               })}
-            </Row>
-            <PartContainer>
-              <ShowPart index={clicked} table={table} />
-            </PartContainer>
-          </ScrollView>
-        </Container>
-        <View>
-          <StickyFooter style={{flexDirection: 'row'}}>
-            <Pressable
-              style={{marginRight: 8, width: 52, height: 52}}
-              onPress={handlePressLikeBtn}>
-              <Image
-                // 조건에 따라서 서로 다른 좋아요 버튼 갖게 할 것
-                // source={require('../../assets/icons/36_likePage_selected.png')}
-                style={{width: 52, height: 52}}
-                source={icons.likeActivated_48}
-              />
-            </Pressable>
-            <BtnCTA
-              btnStyle={'activated'}
-              style={{flex: 4}}
-              onPress={handlePressAddCartBtn}>
-              {isIncluded ? (
-                <BtnText>현재끼니에서 제거</BtnText>
-              ) : (
-                <BtnText>현재끼니에 추가</BtnText>
-              )}
-            </BtnCTA>
-          </StickyFooter>
-        </View>
-      </SafeAreaView>
-    )
+            </NutritionInImage>
+          </View>
+
+          <SellerText style={{marginTop: 20}}>
+            [{productData.platformNm}]
+          </SellerText>
+          <ProductName>{productData.productNm}</ProductName>
+          <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
+            <Col>
+              <ShippingText>20000원 이상 무료배송 </ShippingText>
+              <Row>
+                <ShippingText>최소주문수량: </ShippingText>
+                <ShippingText style={{color: '#ff6060'}}>2개</ShippingText>
+              </Row>
+            </Col>
+            <Price>{commaToNum(productData.price)}원</Price>
+          </Row>
+          <Row
+            style={{
+              justifyContent: 'flex-start',
+            }}>
+            {detailMenu.map((el, index) => {
+              return (
+                <React.Fragment key={`${el}-${index}`}>
+                  <DetailMenu
+                    onPress={() => setClicked(index)}
+                    selected={index === clicked}>
+                    <DetailMenuText>{el}</DetailMenuText>
+                  </DetailMenu>
+                </React.Fragment>
+              );
+            })}
+          </Row>
+          <PartContainer>
+            <ShowPart index={clicked} table={table} />
+          </PartContainer>
+        </ScrollView>
+      </Container>
+      <View>
+        <StickyFooter style={{flexDirection: 'row'}}>
+          <Pressable
+            style={{marginRight: 8, width: 52, height: 52}}
+            onPress={handlePressLikeBtn}>
+            <Image
+              // 조건에 따라서 서로 다른 좋아요 버튼 갖게 할 것
+              // source={require('../../assets/icons/36_likePage_selected.png')}
+              style={{width: 52, height: 52}}
+              source={icons.likeActivated_48}
+            />
+          </Pressable>
+          <BtnCTA
+            btnStyle={'activated'}
+            style={{flex: 4}}
+            onPress={handlePressAddCartBtn}>
+            {isIncluded ? (
+              <BtnText>현재끼니에서 제거</BtnText>
+            ) : (
+              <BtnText>현재끼니에 추가</BtnText>
+            )}
+          </BtnCTA>
+        </StickyFooter>
+      </View>
+    </SafeAreaView>
   );
 };
 

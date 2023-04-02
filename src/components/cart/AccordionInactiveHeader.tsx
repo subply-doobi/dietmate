@@ -32,12 +32,13 @@ import {
 } from '../../query/queries/diet';
 import {IDietDetailData} from '../../query/types/diet';
 import DTooltip from '../common/DTooltip';
+import AutoDietModal from './AutoDietModal';
 
 interface IAccordionInactiveHeader {
   idx: number;
   dietNo: string;
   dietSeq: string;
-  dietDetailData: IDietDetailData | undefined;
+  dietDetailData: IDietDetailData;
   setActiveSections: React.Dispatch<SetStateAction<number[]>>;
   setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
 }
@@ -64,6 +65,7 @@ const AccordionInactiveHeader = ({
   // TBD | 끼니 수량 api 필요
   const [menuNoTemp, setMenuNoTemp] = useState(1);
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
+  const [autoDietModalShow, setAutoDietModalShow] = useState(false);
 
   // etc
   const {cal} = sumUpNutrients(dietDetailData);
@@ -147,9 +149,9 @@ const AccordionInactiveHeader = ({
           </Row3>
         </Col>
       ) : (
+        // 끼니 자동구성 btn - modal
         <Col style={{flex: 1, paddingRight: 16, paddingLeft: 16}}>
-          {/* <GuideText>식품을 추가해보세요</GuideText> */}
-          <AutoMenuBtn onPress={() => setActiveSections([0])}>
+          <AutoMenuBtn onPress={() => setAutoDietModalShow(true)}>
             <Row>
               <PlusBtnImage source={icons.plusSquareActivated_24} />
               <AutoMenuText>귀찮을 땐 자동구성</AutoMenuText>
@@ -157,7 +159,13 @@ const AccordionInactiveHeader = ({
           </AutoMenuBtn>
         </Col>
       )}
-
+      <AutoDietModal
+        modalVisible={autoDietModalShow}
+        setModalVisible={setAutoDietModalShow}
+        dietNo={dietNo}
+        dietDetailData={dietDetailData}
+        openCurrentSection={() => setActiveSections([idx])}
+      />
       <DAlert
         alertShow={deleteAlertShow}
         renderContent={() => <DeleteAlertContent deleteText={dietSeq} />}

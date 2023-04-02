@@ -56,6 +56,7 @@ const RootStackNav = () => {
         component={FoodDetail}
         options={{
           headerShown: true,
+          headerTitle: '',
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontSize: 18,

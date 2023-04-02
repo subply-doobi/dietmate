@@ -92,11 +92,13 @@ const NutritionContent = props => {
     [calorieValue, carbValue, proteinValue, fatValue],
   );
 
-  useLayoutEffect(() => {
-    nutritionParam && setCalorieValue(nutritionParam?.calorieParam);
-    nutritionParam && setCarbrValue(nutritionParam?.carbParam);
-    nutritionParam && setProteinValue(nutritionParam?.proteinParam);
-    nutritionParam && setFatValue(nutritionParam?.fatParam);
+  useEffect(() => {
+    if (nutritionParam) {
+      setCalorieValue(nutritionParam?.calorieParam);
+      setCarbrValue(nutritionParam?.carbParam);
+      setProteinValue(nutritionParam?.proteinParam);
+      setFatValue(nutritionParam?.fatParam);
+    }
   }, [nutritionParam]);
 
   return (

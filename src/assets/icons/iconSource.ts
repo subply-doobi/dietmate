@@ -10,6 +10,7 @@ export const icons = {
   roundActivated_20: require(`./20_round_activated.png`),
   back_24: require(`./24_back.png`),
   cancelRound_24: require(`./24_cancel_round.png`),
+  deleteRound_18: require(`./18_cancel_circle_home.png`),
   checkbox_24: require(`./24_checkbox.png`),
   checkboxCheckedGreen_24: require(`./24_checkbox_checked_green.png`),
   checkboxCheckedPurple_24: require(`./24_checkbox_checked_purple.png`),
@@ -49,4 +50,5 @@ export const icons = {
   kakaoPay: require(`./kakao_pay.png`),
   upDown_24: require(`./24_up_down.png`),
   cartWhite_40: require(`./40_cart_white.png`),
+  search_18: require(`./18_search.png`),
 };

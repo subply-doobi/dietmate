@@ -13,7 +13,7 @@ import {
   FILTER,
   GET_PRODUCT,
 } from './urls';
-import {IListProductData, IProductData} from '../types/product';
+import {IProductData, IProductsData} from '../types/product';
 
 export const useCreateProductMark = () => {
   const mutation = useMutation({
@@ -83,8 +83,8 @@ export const useListProduct = (
   },
   options?: IQueryOptions,
 ) => {
-  const dietNo = params?.dietNo ? params.dietNo : '';
   const enabled = options?.enabled ?? true;
+  const dietNo = params?.dietNo ? params.dietNo : '';
   const searchText = params?.searchText ? params?.searchText : '';
   const categoryCd = params?.categoryCd ? params?.categoryCd : '';
   const sort = params?.sort ? params?.sort : '';
@@ -113,7 +113,7 @@ export const useListProduct = (
 
   // console.log('product:', priceParam);
 
-  return useQuery<IListProductData>({
+  return useQuery<IProductsData>({
     queryKey: [PRODUCTS],
     queryFn: () =>
       queryFn(
@@ -121,7 +121,7 @@ export const useListProduct = (
       ),
     enabled,
     onSuccess: data => {
-      options?.onSuccess && options?.onSuccess();
+      options?.onSuccess && options?.onSuccess(data);
     },
   });
 };

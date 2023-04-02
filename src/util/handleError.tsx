@@ -20,12 +20,18 @@ export const convertCodeToMsg: IConvertCodeToMsg = {
 interface IErrorActionByCode {
   [key: number]: Function;
 }
+
+// TBD | 일단 다 로그인 창으로 이동시키고 나중에 분리
 export const errorActionByCode: IErrorActionByCode = {
-  500: (navigate: Function) => {},
+  500: (navigate: Function) => {
+    navigate('Login');
+  },
   401: (navigate: Function) => {
     navigate('Login');
   },
-  400: (navigate: Function) => {},
+  400: (navigate: Function) => {
+    navigate('Login');
+  },
 };
 
 export const useHandleError = () => {

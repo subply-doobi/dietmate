@@ -7,7 +7,6 @@ import {Text} from 'react-native-svg';
 import WebView from 'react-native-webview';
 
 import {setOrderSummary} from '../../stores/slices/orderSlice';
-import colors from '../../styles/colors';
 
 import {useKakaopayApprove} from '../../query/queries/order';
 

@@ -1,5 +1,5 @@
 import {IBaseLine} from '../query/types/baseLine';
-import {IProductData} from '../query/types/product';
+import {IProductData, IProductsData} from '../query/types/product';
 
 const makeProductNoList = (arr: IProductData[]) => {
   let productNoArr: string[] = [];
@@ -286,22 +286,28 @@ const recommendUnit = ({
   return {isUnitComplete, resultFoods, resultCategoryNo};
 };
 
-export const makeDietAutoTest = (
+export const makeAutoMenu = (
   foods: Array<IProductData>,
   dietDetailData: Array<IProductData>,
-  baseLine: IBaseLine,
+  baseLine: IBaseLine | undefined,
   selectedCategory: number[] = [0, 1, 2, 3, 4, 5],
   priceTarget: number = 10000,
-) => {
+): Promise<{
+  isRecommendComplete: boolean;
+  recommendedFoods: IProductsData;
+  recommendedCategoryNo: number[];
+}> => {
   return new Promise((resolve, reject) => {
     try {
       // nutr Target
-      const nutrTarget = [
-        parseInt(baseLine.calorie), // 1000
-        parseInt(baseLine.carb), // 138
-        parseInt(baseLine.protein), // 50
-        parseInt(baseLine.fat), // 28
-      ];
+      const nutrTarget = baseLine
+        ? [
+            parseInt(baseLine.calorie), // 1000
+            parseInt(baseLine.carb), // 138
+            parseInt(baseLine.protein), // 50
+            parseInt(baseLine.fat), // 28
+          ]
+        : [600, 83, 30, 17];
 
       const initialCategoryNo = [0, 0, 0, 0, 0, 0];
       let recommendedCategoryNo = [0, 0, 0, 0, 0, 0];

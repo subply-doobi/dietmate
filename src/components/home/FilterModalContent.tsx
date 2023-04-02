@@ -10,7 +10,7 @@ import colors from '../../styles/colors';
 import CategoryContent from './filterContents/CategoryContent';
 import NutritionContent from './filterContents/NutritionContent';
 import PriceContent from './filterContents/PriceContent';
-import AutoDietContent from './filterContents/AutoDietContent';
+import SearchContent from './filterContents/SearchContent';
 import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
 
@@ -123,13 +123,7 @@ const FilterModalContent = props => {
           <Button
             onPress={() => {
               setClicked(3);
-            }}>
-            <Row>
-              <Text id="3" clicked={clicked}>
-                식단구성
-              </Text>
-            </Row>
-          </Button>
+            }}></Button>
           <Button
             onPress={() => {
               setIsTotalInitailize(true);
@@ -160,7 +154,7 @@ const FilterModalContent = props => {
         filterParams={filterParams}
       />
     ) : index === 3 ? (
-      <AutoDietContent />
+      <SearchContent />
     ) : (
       <></>
     );
