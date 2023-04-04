@@ -3,7 +3,6 @@ import {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 
 // doobi util, redux, etc
-import {makeDietAutoTest} from '../../util/autoDietTest';
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {
@@ -29,14 +28,13 @@ import CartFoodList from './CartFoodList';
 import AutoDietModal from './AutoDietModal';
 
 // react-query
-import {useListProduct} from '../../query/queries/product';
 import {useGetBaseLine} from '../../query/queries/baseLine';
-import {useDeleteDietDetail, useListDietDetail} from '../../query/queries/diet';
+import {useDeleteDietDetail} from '../../query/queries/diet';
 import {IDietDetailData} from '../../query/types/diet';
 
 interface IAccordionContent {
   dietNo: string;
-  dietDetailData: IDietDetailData | undefined;
+  dietDetailData: IDietDetailData;
   setNumberPickerShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -160,24 +158,6 @@ const AccordionContent = ({
       <AutoMenuBtn
         status={menuStatus}
         onPress={() => setAutoDietModalShow(true)}
-        // onPress={async () => {
-        //   try {
-        //     tData &&
-        //       dietDetailData &&
-        //       baseLineData &&
-        //       (await makeDietAutoTest(
-        //         tData,
-        //         dietDetailData,
-        //         baseLineData,
-        //         [0, 1, 2, 3, 4, 5],
-        //         10000,
-        //       ));
-        //     setAutoDietComplete(true);
-        //   } catch (e) {
-        //     console.log('자동구성 실패', e);
-        //     setAutoDietComplete(false);
-        //   }
-        // }}
       />
       <Row style={{marginTop: 24, justifyContent: 'flex-end'}}>
         <MenuNoText>끼니 수량</MenuNoText>
@@ -190,6 +170,8 @@ const AccordionContent = ({
       <AutoDietModal
         modalVisible={autoDietModalShow}
         setModalVisible={setAutoDietModalShow}
+        dietNo={dietNo}
+        dietDetailData={dietDetailData}
       />
     </ContentBody>
   );

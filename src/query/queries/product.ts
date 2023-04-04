@@ -114,7 +114,7 @@ export const useListProduct = (
   // console.log('product:', priceParam);
 
   return useQuery<IProductsData>({
-    queryKey: [PRODUCTS],
+    queryKey: [PRODUCTS, dietNo],
     queryFn: () =>
       queryFn(
         `${LIST_PRODUCT}/${dietNo}?searchText=${searchText}&categoryCd=${categoryParam}&sort=${sort}&filter=${calorieParam}${carbParam}${proteinParam}${fatParam}${priceParam}`,

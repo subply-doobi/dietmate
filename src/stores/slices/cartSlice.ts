@@ -23,7 +23,7 @@ export const cartSlice = createSlice({
   reducers: {
     setCurrentDiet: (state, action: PayloadAction<string>) => {
       state.currentDietNo = action.payload;
-      queryClient.invalidateQueries([PRODUCTS]);
+      // queryClient.invalidateQueries([PRODUCTS]);
     },
     setTotalFoodList: (state, action: PayloadAction<IProductsData>) => {
       state.totalFoodList = action.payload;

@@ -191,13 +191,18 @@ const SellerText = styled(TextMain)`
 `;
 
 const DeleteBtn = styled.TouchableOpacity`
-  width: 24px;
-  height: 24px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  align-items: flex-end;
+  width: 36px;
+  height: 36px;
+  /* background-color: ${colors.highlight}; */
 `;
 
 const DeleteImage = styled.Image`
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
 `;
 
 const ProductNmText = styled(TextMain)`

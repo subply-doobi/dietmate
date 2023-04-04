@@ -37,7 +37,6 @@ const MenuSelectCard = () => {
       dispatch(setCurrentDiet(data.dietNo));
     },
   });
-  // const createDietDetailMutation = useCreateDietDetail();
 
   // state
   const [createAlertShow, setCreateAlertShow] = useState(false);

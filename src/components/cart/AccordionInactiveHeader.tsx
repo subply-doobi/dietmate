@@ -93,6 +93,7 @@ const AccordionInactiveHeader = ({
     setDeleteAlertShow(false);
   };
   useEffect(() => {}, []);
+
   return (
     <Container>
       <LeftBar backgroundColor={barColor} />

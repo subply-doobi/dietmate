@@ -54,7 +54,6 @@ const Cart = () => {
   const [numberPickerShow, setNumberPickerShow] = useState(false);
   const [detailDataToNoControl, setdetailDataToNoControl] =
     useState<IDietDetailData>([]);
-  const [autoDietModalShow, setAutoDietModalShow] = useState(false);
 
   const totalStatus =
     dietTotalData &&
@@ -76,7 +75,7 @@ const Cart = () => {
                 idx={idx}
                 dietNo={dietData[idx].dietNo}
                 dietSeq={dietData[idx].dietSeq}
-                dietDetailData={menu.data}
+                dietDetailData={menu.data ?? []}
                 setActiveSections={setActiveSections}
                 setNumberPickerShow={setNumberPickerShow}
               />
@@ -84,7 +83,7 @@ const Cart = () => {
             content: (
               <AccordionContent
                 dietNo={dietData[idx].dietNo}
-                dietDetailData={menu.data}
+                dietDetailData={menu.data ?? []}
                 setNumberPickerShow={setNumberPickerShow}
               />
             ),
@@ -93,7 +92,7 @@ const Cart = () => {
                 idx={idx}
                 dietNo={dietData[idx].dietNo}
                 dietSeq={dietData[idx].dietSeq}
-                dietDetailData={menu.data}
+                dietDetailData={menu.data ?? []}
               />
             ),
           };
@@ -120,21 +119,21 @@ const Cart = () => {
     if (isEmpty) return 0;
     const reGroupedProducts =
       dietDetailAllData && reGroupBySeller(dietDetailAllData);
-
+    if (!reGroupedProducts) return 0;
     let totalProductPrice = 0;
     let totalShippingPrice = 0;
 
-    reGroupedProducts?.forEach(seller => {
-      const sellerProductPrice = sumUpPrice(seller);
+    for (let i = 0; i < reGroupedProducts.length; i++) {
+      const sellerProductPrice = sumUpPrice(reGroupedProducts[i]);
       const sellershippingPrice =
-        sellerProductPrice < parseInt(seller[0].freeShippingPrice)
-          ? parseInt(seller[0].shippingPrice)
+        sellerProductPrice < parseInt(reGroupedProducts[i][0].freeShippingPrice)
+          ? parseInt(reGroupedProducts[i][0].shippingPrice)
           : 0;
       totalProductPrice += sellerProductPrice;
       // totalShippingPrice += sellershippingPrice; // 일단 배송비는 장바구니에서만 보이게 할 것
-    });
-
+    }
     // const totalPrice = totalProductPrice + totalShippingPrice;
+
     const totalPrice = totalProductPrice;
     return totalPrice;
   }, [dietDetailAllData]);

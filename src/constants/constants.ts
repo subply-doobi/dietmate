@@ -182,8 +182,8 @@ export const validationRules: IValidationRules = {
     maxlength: 4,
     validate: {
       range: (v: string) =>
-        (parseFloat(v) >= 300 && parseFloat(v) <= 1500) ||
-        '300~1500 kcal 사이로 입력해주세요',
+        (parseFloat(v) >= 300 && parseFloat(v) <= 1400) ||
+        '300~1400 kcal 사이로 입력해주세요',
     },
   },
   carbManual: {

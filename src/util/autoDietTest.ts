@@ -1,11 +1,27 @@
 import {IBaseLine} from '../query/types/baseLine';
 import {IProductData, IProductsData} from '../query/types/product';
 
+const getRandomIndexArr = (length: number) => {
+  let resultArr = Array.from({length}, (_, i) => i);
+  let temp;
+  let randomNum;
+
+  //값을 서로 섞기
+  for (let i = 0; i < resultArr.length; i++) {
+    randomNum = Math.floor(Math.random() * length); //난수발생
+    temp = resultArr[i];
+    resultArr[i] = resultArr[randomNum];
+    resultArr[randomNum] = temp;
+  }
+
+  return resultArr;
+};
+
 const makeProductNoList = (arr: IProductData[]) => {
   let productNoArr: string[] = [];
-  arr.forEach(food => {
-    productNoArr.push(food.productNo);
-  });
+  for (let i = 0; i < arr.length; i++) {
+    productNoArr.push(arr[i].productNo);
+  }
   return productNoArr;
 };
 
@@ -36,16 +52,33 @@ const getUnitNutrMedian = (
  * @param arr 전체 식품 배열
  * @returns 카테고리별로 나눠진 식품 배열
  */
-const sortFoodsByCategory = (arr: IProductData[]) => {
+const sortFoodsByCategory = (
+  arr: IProductData[],
+  selectedCategory: number[],
+  initialRemainNutr: number[],
+  initialRemainPrice: number,
+) => {
+  console.log('initialRemainNutr: ', initialRemainNutr);
+  console.log('initialRemainPrice: ', initialRemainPrice);
   let sortedCategory: IProductData[][] = [];
+
+  // 0, 1, 2, 3, 4, 5
   const categoryCd = ['CG001', 'CG002', 'CG003', 'CG004', 'CG005', 'CG006'];
-  categoryCd.forEach(cd => {
+  for (let i = 0; i < selectedCategory.length; i++) {
     let sortedFoods = [];
     for (let j = 0; j < arr.length; j++) {
-      arr[j].categoryCd === cd && sortedFoods.push(arr[j]);
+      if (
+        arr[j].categoryCd === categoryCd[selectedCategory[i]] &&
+        parseInt(arr[j].calorie) <= initialRemainNutr[0] &&
+        parseInt(arr[j].carb) <= initialRemainNutr[1] &&
+        parseInt(arr[j].protein) <= initialRemainNutr[2] &&
+        parseInt(arr[j].fat) <= initialRemainNutr[3] &&
+        parseInt(arr[j].price) <= initialRemainPrice
+      )
+        sortedFoods.push(arr[j]);
     }
     sortedCategory.push(sortedFoods);
-  });
+  }
   return sortedCategory;
 };
 
@@ -59,18 +92,18 @@ const getRandomFood = (
   arr: IProductData[],
   recommendedFoods: IProductData[],
 ) => {
-  while (true) {
-    const randomIdx = Math.floor(Math.random() * arr.length);
-
+  const randomIdxArr = getRandomIndexArr(arr.length);
+  for (let i = 0; i < randomIdxArr.length; i++) {
     if (
       !checkIsContain(
         makeProductNoList(recommendedFoods),
-        arr[randomIdx].productNo,
+        arr[randomIdxArr[i]].productNo,
       )
     ) {
-      return arr[randomIdx];
+      return arr[randomIdxArr[i]];
     }
   }
+  return undefined;
 };
 
 /**
@@ -95,25 +128,25 @@ const getFoodByRemain = (
   const recommendedFoodsPN = recommendedFoods.map(food => food.productNo);
   let recommendedCategoryIdx = 0;
   let availableFoods: IProductData[] = [];
-  selectedCategory.forEach(category => {
-    let foods = sortedFoods[category];
-    foods.forEach(food => {
+  for (let i = 0; i < sortedFoods.length; i++) {
+    let foods = sortedFoods[i];
+    for (let j = 0; j < foods.length; j++) {
       if (
-        parseInt(food.calorie) >= remainNutr.calorie[0] &&
-        parseInt(food.calorie) <= remainNutr.calorie[1] &&
+        parseInt(foods[j].calorie) >= remainNutr.calorie[0] &&
+        parseInt(foods[j].calorie) <= remainNutr.calorie[1] &&
         // parseInt(food.carb) >= remainNutr.carb[0] &&
-        parseInt(food.carb) <= remainNutr.carb[1] &&
+        parseInt(foods[j].carb) <= remainNutr.carb[1] &&
         // parseInt(food.protein) >= remainNutr.protein[0] &&
-        parseInt(food.protein) <= remainNutr.protein[1] &&
+        parseInt(foods[j].protein) <= remainNutr.protein[1] &&
         // parseInt(food.fat) >= remainNutr.fat[0] &&
-        parseInt(food.fat) <= remainNutr.fat[1] &&
-        parseInt(food.price) <= remainPrice &&
-        recommendedFoodsPN.includes(food.productNo) === false
+        parseInt(foods[j].fat) <= remainNutr.fat[1] &&
+        parseInt(foods[j].price) <= remainPrice &&
+        recommendedFoodsPN.includes(foods[j].productNo) === false
       ) {
-        availableFoods.push(food);
+        availableFoods.push(foods[j]);
       }
-    });
-  });
+    }
+  }
   console.log('availableFoods: ', availableFoods.length);
   if (availableFoods.length === 0) {
     return {isRecommended: false};
@@ -134,26 +167,26 @@ const getFoodByRemain = (
       ? 4
       : 5;
 
-  console.log('recommendedFood: ', recommendedFood.productNm);
+  // console.log('recommendedFood: ', recommendedFood.productNm);
   return {isRecommended: true, recommendedCategoryIdx, recommendedFood};
 };
 
 const sumNutr = (arr: IProductData[]) => {
   let sum = [0, 0, 0, 0];
-  arr.forEach(food => {
-    sum[0] += parseInt(food.calorie);
-    sum[1] += parseInt(food.carb);
-    sum[2] += parseInt(food.protein);
-    sum[3] += parseInt(food.fat);
-  });
+  for (let i = 0; i < arr.length; i++) {
+    sum[0] += parseInt(arr[i].calorie);
+    sum[1] += parseInt(arr[i].carb);
+    sum[2] += parseInt(arr[i].protein);
+    sum[3] += parseInt(arr[i].fat);
+  }
   return sum;
 };
 
 const sumPrice = (arr: IProductData[]) => {
   let sum = 0;
-  arr.forEach(food => {
-    sum += parseInt(food.price);
-  });
+  for (let i = 0; i < arr.length; i++) {
+    sum += parseInt(arr[i].price);
+  }
   return sum;
 };
 
@@ -169,7 +202,6 @@ interface IRecommendUnit {
   unitNo: number;
   i: number;
   recommendedFoods: IProductData[];
-  recommendedCategoryNo: number[];
   lastUnitFoodNo: number;
 }
 const recommendUnit = ({
@@ -184,24 +216,32 @@ const recommendUnit = ({
   unitNo,
   i,
   recommendedFoods,
-  recommendedCategoryNo,
   lastUnitFoodNo,
 }: IRecommendUnit) => {
   let resultFoods = [...recommendedFoods];
-  let resultCategoryNo = [...recommendedCategoryNo];
   let isUnitComplete = false;
+  let isFirstFoodInvalid = false;
   let try1 = 0;
   while (!isUnitComplete) {
     console.log('recommendUnit try: ', try1);
     try1 += 1;
     if (try1 > 100) {
       console.log('recommend unit try 초과: ', try1);
-      return {isUnitComplete, resultFoods, resultCategoryNo};
+      return {isUnitComplete, resultFoods};
     }
-    let randomCategory =
-      selectedCategory[Math.floor(Math.random() * selectedCategory.length)];
 
-    let firstFood = getRandomFood(sortedFoods[randomCategory], resultFoods);
+    // randomIdx 배열 만들기
+    const randomIdxArr = getRandomIndexArr(sortedFoods.length);
+    let firstFood: IProductData | undefined;
+    for (let i = 0; i < randomIdxArr.length; i++) {
+      firstFood = getRandomFood(sortedFoods[i], resultFoods);
+      if (firstFood !== undefined) {
+        break;
+      }
+    }
+    if (firstFood === undefined)
+      return {isUnitComplete, resultFoods, isFirstFoodInvalid: true};
+
     const nextUnitFoodNo =
       unitNo === 1 || i === unitNo - 1
         ? 0
@@ -225,6 +265,7 @@ const recommendUnit = ({
         nutrTarget[3] - nextUnitFoodNo * fatRange[0] + 3,
       ],
     };
+    // 다음 유닛들에서 추가될 상품 갯수 * 상품최저가
     let remainPrice =
       priceTarget - parseInt(firstFood.price) - nextUnitFoodNo * 880;
     if (i === unitNo - 1) {
@@ -247,10 +288,11 @@ const recommendUnit = ({
           nutrTarget[3] - nutrTotal[3] - parseInt(firstFood.fat) + 3,
         ],
       };
-      remainPrice = priceTarget;
+      remainPrice =
+        priceTarget - sumPrice(recommendedFoods) - parseInt(firstFood.price);
     }
 
-    console.log(`${i}번째 unit firstFood: ${firstFood.productNm}`);
+    // console.log(`${i}번째 unit firstFood: ${firstFood.productNm}`);
     let {isRecommended, recommendedCategoryIdx, recommendedFood} =
       getFoodByRemain(
         sortedFoods,
@@ -267,35 +309,33 @@ const recommendUnit = ({
     ) {
       resultFoods.push(firstFood);
       resultFoods.push(recommendedFood);
-      resultCategoryNo[randomCategory] += 1;
-      resultCategoryNo[recommendedCategoryIdx] += 1;
       isUnitComplete = true;
     }
   }
-  if (!isUnitComplete) {
-    console.log(`유닛추천 실패: ${i}번째 unit`);
-    console.log(`nutrTotal: `, sumNutr(resultFoods));
-  }
-  if (isUnitComplete)
-    console.log(
-      `유닛추천 성공: try: ${try1}, ${i}번째 unit, resultLength: ${
-        resultFoods.length
-      }, ${sumNutr(resultFoods)}`,
-    );
+  // if (!isUnitComplete) {
+  //   console.log(`유닛추천 실패: ${i}번째 unit`);
+  //   console.log(`nutrTotal: `, sumNutr(resultFoods));
+  // }
+  // if (isUnitComplete)
+  //   console.log(
+  //     `유닛추천 성공: try: ${try1}, ${i}번째 unit, resultLength: ${
+  //       resultFoods.length
+  //     }, ${sumNutr(resultFoods)}`,
+  //   );
 
-  return {isUnitComplete, resultFoods, resultCategoryNo};
+  return {isUnitComplete, resultFoods};
 };
 
 export const makeAutoMenu = (
   foods: Array<IProductData>,
   dietDetailData: Array<IProductData>,
   baseLine: IBaseLine | undefined,
-  selectedCategory: number[] = [0, 1, 2, 3, 4, 5],
-  priceTarget: number = 10000,
+  selectedCategory: number[],
+  priceTarget: number,
 ): Promise<{
-  isRecommendComplete: boolean;
+  sumNutr: number[];
+  sumPrice: number;
   recommendedFoods: IProductsData;
-  recommendedCategoryNo: number[];
 }> => {
   return new Promise((resolve, reject) => {
     try {
@@ -312,9 +352,14 @@ export const makeAutoMenu = (
       const initialCategoryNo = [0, 0, 0, 0, 0, 0];
       let recommendedCategoryNo = [0, 0, 0, 0, 0, 0];
       const initialDiet = [...dietDetailData];
-      let recommendedFoods = [...dietDetailData];
-      console.log('initial recommendedFoods:', recommendedFoods);
+      const initialSumNutr = sumNutr(initialDiet);
+      const initialRemainNutr = nutrTarget.map((nutr, idx) => {
+        return nutr - initialSumNutr[idx];
+      });
+      const initialRemainPrice = priceTarget - sumPrice(initialDiet);
 
+      let recommendedFoods = [...dietDetailData];
+      // console.log('initial recommendedFoods:', recommendedFoods);
       const calRange = [20, 457];
       const carbRange = [0, 77];
       const proteinRange = [1, 41];
@@ -324,20 +369,32 @@ export const makeAutoMenu = (
       const unitNo = Math.ceil(nutrTarget[0] / (calRange[0] + calRange[1]));
 
       const remainder = nutrTarget[0] % (calRange[0] + calRange[1]);
-      console.log('remainder: ', remainder);
+      // console.log('remainder: ', remainder);
       const lastUnitFoodNo =
         remainder <= 20 ? 0 : remainder <= unitNutrMedian ? 1 : 2;
 
       // ['CG001', 'CG002', 'CG003', 'CG004', 'CG005', 'CG006']
-      const sortedFoods = sortFoodsByCategory(foods);
+      const sortedFoods = sortFoodsByCategory(
+        foods,
+        selectedCategory,
+        initialRemainNutr,
+        initialRemainPrice,
+      );
+
+      const isSortedFoodAvailable = sortedFoods.some(category => {
+        return category.length > 0;
+      });
+
+      if (!isSortedFoodAvailable) reject(new Error('식품 데이터가 부족해요'));
+
       let isRecommendComplete = false;
 
       let try1 = 0;
       while (!isRecommendComplete) {
         try1 += 1;
-        if (try1 > 500) {
+        if (try1 > 100) {
           console.log('전체 try 초과: ', try1);
-          throw new Error('try 초과');
+          throw new Error(`끼니 자동구성에 실패했어요\n다시 시도해주세요`);
         }
 
         for (let i = 0; i < unitNo; i++) {
@@ -347,8 +404,10 @@ export const makeAutoMenu = (
           // (마지막은 remainder)
           // 유닛 당 다른 nutr목표는 전체 목표에서 (유닛 x)
           // 남은 식품추가 수 * 각 nutr 최소값 만큼 남기도록 -> 식품들 최소값들 비교해보기
+
+          // 마지막 유닛 아닌경우
           if (i !== unitNo - 1) {
-            const {isUnitComplete, resultFoods, resultCategoryNo} =
+            const {isUnitComplete, resultFoods, isFirstFoodInvalid} =
               recommendUnit({
                 sortedFoods,
                 selectedCategory,
@@ -361,9 +420,10 @@ export const makeAutoMenu = (
                 unitNo,
                 i,
                 recommendedFoods,
-                recommendedCategoryNo,
                 lastUnitFoodNo,
               });
+
+            if (isFirstFoodInvalid) reject(new Error('식품 데이터가 부족해요'));
 
             if (!isUnitComplete) {
               recommendedCategoryNo = [...initialCategoryNo];
@@ -371,11 +431,10 @@ export const makeAutoMenu = (
               break;
             }
             recommendedFoods = [...resultFoods];
-            recommendedCategoryNo = [...resultCategoryNo];
           } else {
             // 마지막 유닛 식품을 1개만 추천해줄 것인지 아닌지
             if (lastUnitFoodNo === 2) {
-              const {isUnitComplete, resultFoods, resultCategoryNo} =
+              const {isUnitComplete, resultFoods, isFirstFoodInvalid} =
                 recommendUnit({
                   sortedFoods,
                   selectedCategory,
@@ -388,16 +447,16 @@ export const makeAutoMenu = (
                   unitNo,
                   i,
                   recommendedFoods,
-                  recommendedCategoryNo,
                   lastUnitFoodNo,
                 });
+              if (isFirstFoodInvalid)
+                reject(new Error('식품 데이터가 부족해요'));
               if (!isUnitComplete) {
                 recommendedCategoryNo = [...initialCategoryNo];
                 recommendedFoods = [...initialDiet];
                 break;
               }
               recommendedFoods = [...resultFoods];
-              recommendedCategoryNo = [...resultCategoryNo];
               isRecommendComplete = true;
               console.log(
                 `recommendedFoods: complete: try: ${try1}`,
@@ -405,10 +464,16 @@ export const makeAutoMenu = (
                 recommendedCategoryNo,
                 recommendedFoods,
               );
+              // make an array with recommendedFoods except initialDiet
               resolve({
-                isRecommendComplete,
-                recommendedFoods,
-                recommendedCategoryNo,
+                sumNutr: sumNutr(recommendedFoods),
+                sumPrice: sumPrice(recommendedFoods),
+                recommendedFoods:
+                  initialDiet.length !== 0
+                    ? recommendedFoods.filter(
+                        food => !initialDiet.includes(food),
+                      )
+                    : recommendedFoods,
               });
             } else if (lastUnitFoodNo === 1) {
               let nutrTotal = sumNutr(recommendedFoods);
@@ -438,8 +503,8 @@ export const makeAutoMenu = (
                 );
 
               if (!isRecommended) {
-                console.log('유닛 추천 실패 (1마지막 1개 식품인 경우)');
-                console.log(`nutrTotal`, nutrTotal);
+                // console.log('유닛 추천 실패 (1마지막 1개 식품인 경우)');
+                // console.log(`nutrTotal`, nutrTotal);
                 recommendedCategoryNo = [...initialCategoryNo];
                 recommendedFoods = [...initialDiet];
                 break;
@@ -452,30 +517,40 @@ export const makeAutoMenu = (
                 recommendedFoods.push(recommendedFood);
                 recommendedCategoryNo[recommendedCategoryIdx] += 1;
                 isRecommendComplete = true;
-                console.log(
-                  `recommendedFoods: complete: try: ${try1}`,
-                  sumNutr(recommendedFoods),
-                  recommendedCategoryNo,
-                  recommendedFoods,
-                );
+                // console.log(
+                //   `recommendedFoods: complete: try: ${try1}`,
+                //   sumNutr(recommendedFoods),
+                //   recommendedCategoryNo,
+                //   recommendedFoods,
+                // );
                 resolve({
-                  isRecommendComplete,
-                  recommendedFoods,
-                  recommendedCategoryNo,
+                  sumNutr: sumNutr(recommendedFoods),
+                  sumPrice: sumPrice(recommendedFoods),
+                  recommendedFoods:
+                    initialDiet.length !== 0
+                      ? recommendedFoods.filter(
+                          food => !initialDiet.includes(food),
+                        )
+                      : recommendedFoods,
                 });
               }
             } else {
               isRecommendComplete = true;
-              console.log(
-                `recommendedFoods: complete: try: ${try1}`,
-                sumNutr(recommendedFoods),
-                recommendedCategoryNo,
-                recommendedFoods,
-              );
+              // console.log(
+              //   `recommendedFoods: complete: try: ${try1}`,
+              //   sumNutr(recommendedFoods),
+              //   recommendedCategoryNo,
+              //   recommendedFoods,
+              // );
               resolve({
-                isRecommendComplete,
-                recommendedFoods,
-                recommendedCategoryNo,
+                sumNutr: sumNutr(recommendedFoods),
+                sumPrice: sumPrice(recommendedFoods),
+                recommendedFoods:
+                  initialDiet.length !== 0
+                    ? recommendedFoods.filter(
+                        food => !initialDiet.includes(food),
+                      )
+                    : recommendedFoods,
               });
             }
           }

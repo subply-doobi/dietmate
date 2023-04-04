@@ -79,7 +79,7 @@ const FoodList = ({item}: IFoodList) => {
   };
 
   const onAdd = () => {
-    addMutation.mutate({dietNo: currentDietNo, productNo: item.productNo});
+    addMutation.mutate({dietNo: currentDietNo, food: item});
     aniPValue.setValue(addedP); // TBD | onSuccess 이후에 실행되어야함
   };
 

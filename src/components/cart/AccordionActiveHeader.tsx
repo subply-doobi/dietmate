@@ -42,7 +42,6 @@ const AccordionActiveHeader = ({
 
   // state
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
-  const [autoDietModalShow, setAutoDietModalShow] = useState(false);
 
   // etc
   const priceSum = sumUpPrice(dietDetailData);
@@ -80,12 +79,6 @@ const AccordionActiveHeader = ({
           )}
         </DeleteBtn>
       </Row>
-      <AutoDietModal
-        modalVisible={autoDietModalShow}
-        setModalVisible={setAutoDietModalShow}
-        dietNo={dietNo}
-        dietDetailData={dietDetailData}
-      />
       <DAlert
         alertShow={deleteAlertShow}
         renderContent={() => <DeleteAlertContent deleteText={dietSeq} />}
