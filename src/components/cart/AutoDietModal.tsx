@@ -31,8 +31,8 @@ import {useAsync} from '../../util/cart/cartCustomHooks';
 import {IProductData} from '../../query/types/product';
 import {setCurrentDiet} from '../../stores/slices/cartSlice';
 import {useCreateDietDetail} from '../../query/queries/diet';
-import {makeAutoMenu} from '../../util/autoDietTest';
-// import {makeAutoMenu} from '../../util/cart/autoMenu';
+// import {makeAutoMenu} from '../../util/autoDietTest';
+import {makeAutoMenu} from '../../util/cart/autoMenu';
 
 interface IAutoDietModal {
   modalVisible: boolean;
@@ -110,13 +110,13 @@ const AutoDietModal = ({
     sumPrice: number;
   }>({
     asyncFunction: async () => {
-      const data = await makeAutoMenu(
+      const data = await makeAutoMenu({
         totalFoodList,
-        dietDetailData,
-        baseLineData,
-        selectedCategoryIdx,
-        sliderValue[1],
-      ).then(res => res);
+        dietDetail: dietDetailData,
+        baseLine: baseLineData,
+        selectedCategory: selectedCategoryIdx,
+        priceTarget: sliderValue,
+      }).then(res => res);
       return data;
     },
     deps: [dietDetailData, baseLineData],
@@ -236,15 +236,6 @@ const AutoDietModal = ({
         <BtnCTA
           btnStyle={btnDisabled ? 'inactivated' : 'activated'}
           disabled={btnDisabled}
-          // onPress={async () =>
-          //   await makeAutoMenu({
-          //     totalFoodList,
-          //     dietDetail: dietDetailData,
-          //     baseLine: baseLineData,
-          //     selectedCategory: selectedCategoryIdx,
-          //     priceTarget: sliderValue,
-          //   })
-          // }>
           onPress={reload}>
           <BtnText>
             {btnDisabled ? '3가지 이상 선택해주세요' : '한 끼니 자동구성'}
@@ -259,7 +250,6 @@ const AutoDietModal = ({
       visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}
       transparent={true}>
-      {/* <ModalBackGround>{renderBaseContent()}</ModalBackGround> */}
       <ModalBackGround>
         {isLoading
           ? renderIsLoadingContent()
