@@ -22,7 +22,7 @@ import {
 } from '../../styles/styledConsts';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
-import NutrientsProgress from '../common/NutrientsProgress';
+import NutrientsProgress from '../common/nutrient/NutrientsProgress';
 import AutoMenuBtn from './AutoMenuBtn';
 import CartFoodList from './CartFoodList';
 import AutoDietModal from './AutoDietModal';

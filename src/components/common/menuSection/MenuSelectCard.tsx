@@ -1,28 +1,21 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components/native';
 
-import {RootState} from '../../stores/store';
-import {setCurrentDiet} from '../../stores/slices/cartSlice';
-import {
-  BtnSmall,
-  BtnSmallText,
-  Col,
-  Row,
-  VerticalSpace,
-  StyledProps,
-} from '../../styles/styledConsts';
-import colors from '../../styles/colors';
-import {getDietAddStatus} from '../../util/getDietAddStatus';
-import DAlert from '../common/alert/DAlert';
-import CreateLimitAlertContent from '../common/alert/CreateLimitAlertContent';
-import CommonAlertContent from '../common/alert/CommonAlertContent';
+import {RootState} from '../../../stores/store';
+import {setCurrentDiet} from '../../../stores/slices/cartSlice';
+import {Col, Row, StyledProps} from '../../../styles/styledConsts';
+import colors from '../../../styles/colors';
+import {getDietAddStatus} from '../../../util/getDietAddStatus';
+import DAlert from '../alert/DAlert';
+import CreateLimitAlertContent from '../alert/CreateLimitAlertContent';
+import CommonAlertContent from '../alert/CommonAlertContent';
 
 import {
   useCreateDiet,
   useGetDietDetailEmptyYn,
   useListDiet,
-} from '../../query/queries/diet';
+} from '../../../query/queries/diet';
 
 const MenuSelectCard = () => {
   // redux

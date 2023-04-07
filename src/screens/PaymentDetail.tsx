@@ -9,7 +9,7 @@ import {NavigationProps} from '../constants/constants';
 import {Col, Row, TextMain, VerticalLine} from '../styles/styledConsts';
 
 import OrderedList from '../components/payment/OrderedList';
-import NutrientsProgress from '../components/common/NutrientsProgress';
+import NutrientsProgress from '../components/common/nutrient/NutrientsProgress';
 
 const PaymentDetail = ({
   navigation: {navigate, setOptions},

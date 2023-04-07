@@ -27,7 +27,7 @@ import {
 import colors from '../../styles/colors';
 import {IProductData} from '../../query/types/product';
 
-import NutrientsProgress from '../../components/common/NutrientsProgress';
+import NutrientsProgress from '../../components/common/nutrient/NutrientsProgress';
 import NutrientPart from './foodDetailSubScreen/NutrientPart';
 import ShippingPart from './foodDetailSubScreen/ShippingPart';
 import FoodPart from './foodDetailSubScreen/FoodPart';

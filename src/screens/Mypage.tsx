@@ -20,7 +20,7 @@ import {
 } from '../styles/styledConsts';
 
 import DAlert from '../components/common/alert/DAlert';
-import NutrTarget from '../components/common/NutrientTarget';
+import NutrTarget from '../components/common/nutrient/NutrientTarget';
 import CalChangeAlert from '../components/myPage/CalorieChangeAlert';
 import NutrChangeAlert from '../components/myPage/NutrientChangeAlert';
 import WeightChangeAlert from '../components/myPage/WeightChangeAlert';

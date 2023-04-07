@@ -1,4 +1,5 @@
-import React, {useCallback, useEffect, useState, useRef} from 'react';
+// react, RN, 3rd
+import {useCallback, useEffect, useState, useRef} from 'react';
 import {
   TouchableWithoutFeedback,
   FlatList,
@@ -6,9 +7,10 @@ import {
   TextInput,
 } from 'react-native';
 import styled from 'styled-components/native';
+
+// doobi util, redux, etc
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-
 import {RootState} from '../../stores/store';
 import {setCurrentDiet, setTotalFoodList} from '../../stores/slices/cartSlice';
 import {setListTitle} from '../../stores/slices/filterSlice';
@@ -25,20 +27,16 @@ import colors from '../../styles/colors';
 import {queryFn} from '../../query/queries/requestFn';
 import {IProductData, IProductsData} from '../../query/types/product';
 import {SCREENWIDTH} from '../../constants/constants';
-import {findDietSeq} from '../../util/findDietSeq';
 
-import NutrientsProgress from '../../components/common/NutrientsProgress';
-import MenuSelect from '../../components/common/MenuSelect';
+// doobi Component
 import FoodList from '../../components/home/FoodList';
 import DBottomSheet from '../../components/common/DBottomSheet';
 import SortModalContent from '../../components/home/SortModalContent';
 import FilterModalContent from '../../components/home/FilterModalContent';
 import FilterHeader from '../../components/home/FilterHeader';
 import DTooltip from '../../components/common/DTooltip';
-import MenuSelectCard from '../../components/cart/MenuSelectCard';
-import DAlert from '../../components/common/alert/DAlert';
-import DeleteAlertContent from '../../components/common/alert/DeleteAlertContent';
 
+// react-query
 import {LIST_DIET} from '../../query/queries/urls';
 import {
   useListDietDetail,
@@ -46,8 +44,8 @@ import {
   useDeleteDiet,
 } from '../../query/queries/diet';
 import {useListProduct} from '../../query/queries/product';
-import {ScrollView} from 'react-native-gesture-handler';
 import {IDietData} from '../../query/types/diet';
+import MenuSection from '../../components/common/menuSection/MenuSection';
 
 const Home = () => {
   // redux
@@ -158,7 +156,7 @@ const Home = () => {
   // flatList render fn
   const renderFoodList = useCallback(
     ({item}: {item: IProductData}) =>
-      dietDetailData ? <FoodList item={item} /> : <></>,
+      dietDetailData ? <FoodList item={item} screen="HomeScreen" /> : <></>,
     [tData],
   );
   const extractListKey = useCallback(
@@ -167,8 +165,8 @@ const Home = () => {
   );
   const getItemLayout = useCallback(
     (_: any, index: number) => ({
-      length: FOOD_LIST_ITEM_HEIGHT + 20,
-      offset: (FOOD_LIST_ITEM_HEIGHT + 20) * index,
+      length: FOOD_LIST_ITEM_HEIGHT,
+      offset: FOOD_LIST_ITEM_HEIGHT * index,
       index,
     }),
     [tData],
@@ -177,35 +175,7 @@ const Home = () => {
 
   return (
     <Container>
-      <MenuSection>
-        <HeaderRow>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <MenuSelectCard />
-          </ScrollView>
-          <DeleteBtn
-            onPress={() => {
-              setDietNoToDelete(currentDietNo);
-              setDeleteAlertShow(true);
-            }}>
-            <DeleteImg source={icons.deleteRound_18} />
-          </DeleteBtn>
-        </HeaderRow>
-        <DAlert
-          alertShow={deleteAlertShow}
-          renderContent={() => (
-            <DeleteAlertContent
-              deleteText={
-                dietData ? findDietSeq(dietData, dietNoToDelete).dietSeq : ''
-              }
-            />
-          )}
-          onConfirm={() => onDeleteDiet()}
-          onCancel={() => setDeleteAlertShow(false)}
-        />
-        <ProgressContainer>
-          {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
-        </ProgressContainer>
-      </MenuSection>
+      <MenuSection />
       <HomeContainer>
         <TouchableWithoutFeedback
           onPress={() => {
@@ -347,11 +317,7 @@ const HomeContainer = styled.View`
   flex: 1;
   background-color: ${colors.white};
 `;
-const MenuSection = styled.View`
-  background-color: ${colors.backgroundLight2};
-  padding: 0 0 8px;
-  width: 100%;
-`;
+
 const SearchBox = styled.View`
   flex-direction: row;
   margin-left: 8px;
@@ -359,16 +325,6 @@ const SearchBox = styled.View`
   align-items: center;
   background-color: ${colors.bgBox};
   justify-content: space-between;
-`;
-
-const HeaderText = styled(TextMain)`
-  font-size: 18px;
-  font-weight: bold;
-`;
-
-const DeleteImg = styled.Image`
-  width: 18px;
-  height: 18px;
 `;
 
 const SearchInput = styled.TextInput`
@@ -413,31 +369,6 @@ const SortImage = styled.Image`
   width: 24px;
   height: 24px;
 `;
-const FilterBtn = styled.TouchableOpacity`
-  height: 20px;
-  margin-right: 36px;
-`;
-const FilterBtnText = styled(TextMain)`
-  font-size: 14px;
-`;
-const DeleteBtn = styled.TouchableOpacity`
-  width: 40px;
-  height: 40px;
-  justify-content: center;
-  align-items: center;
-`;
-const HeaderRow = styled(Row)`
-  justify-content: space-between;
-  align-items: flex-end;
-`;
-
-const ProgressContainer = styled.View`
-  padding-top: 0px;
-  padding-bottom: 0px;
-  padding-left: 16px;
-  padding-right: 16px;
-  background-color: ${colors.white};
-`;
 
 const SearchImage = styled.Image`
   width: 24px;
@@ -447,7 +378,7 @@ const SearchImage = styled.Image`
 const SearchBtn = styled.TouchableOpacity`
   width: 32px;
   height: 32px;
-  margin-left: 12px
+  margin-left: 12px;
   background-color: ${colors.backgroundLight2};
   justify-content: center;
   align-items: center;

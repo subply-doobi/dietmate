@@ -1,5 +1,4 @@
 import {IBaseLine} from '../../query/types/baseLine';
-import {IDietDetailData} from '../../query/types/diet';
 import {IProductData, IProductsData} from '../../query/types/product';
 
 const RECOMMEND_TRY = 50;

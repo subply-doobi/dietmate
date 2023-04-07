@@ -13,7 +13,13 @@ import {commaToNum, sumUpNutrients} from '../../util/sumUp';
 import {BASE_URL} from '../../query/queries/urls';
 
 // doobi Component
-import {Col, StyledProps, TextMain, TextSub} from '../../styles/styledConsts';
+import {
+  Col,
+  Row,
+  StyledProps,
+  TextMain,
+  TextSub,
+} from '../../styles/styledConsts';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import DAlert from '../common/alert/DAlert';
 
@@ -28,9 +34,10 @@ import {useGetBaseLine} from '../../query/queries/baseLine';
 
 interface IFoodList {
   item: IProductData;
+  screen?: string;
 }
 
-const FoodList = ({item}: IFoodList) => {
+const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
   const {navigate} = useNavigation();
   // redux
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
@@ -148,6 +155,7 @@ const FoodList = ({item}: IFoodList) => {
   }, [item, isAdded]);
 
   return (
+    // 터치 애니메이션 필요하면 가장 상단이 애니메이션 컴포넌트여야함!
     <AniContainer {...panResponder.panHandlers}>
       {/* 전체 범위 클릭하면 식품 상세정보로 이동 */}
       <Button
@@ -198,7 +206,14 @@ const FoodList = ({item}: IFoodList) => {
               </Nutr>
             </NutrSummaryBtn>
           </Col>
-          <Price>{commaToNum(item?.price)}원</Price>
+          <Row style={{justifyContent: 'space-between'}}>
+            <Price>{commaToNum(item?.price)}원</Price>
+            {screen === 'LikeScreen' && (
+              <DeleteLikeFoodBtn onPress={() => console.log('좋아요취소')}>
+                <DeleteLikeFoodBtnText>♡ 취소</DeleteLikeFoodBtnText>
+              </DeleteLikeFoodBtn>
+            )}
+          </Row>
         </ProductInfoContainer>
 
         {/* 식품 추가하거나 삭제했을 때 나올 장바구니담김 표시 */}
@@ -264,16 +279,12 @@ const ProductName = styled(TextMain)`
   font-weight: bold;
 `;
 
-const Price = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-`;
 const NutrSummaryBtn = styled.TouchableOpacity`
   width: 100%;
   height: 42px;
   border-radius: 5px;
-  margin-top: 8px;
-  padding: 4px
+  margin-top: 6px;
+  padding: 4px;
   background-color: ${colors.backgroundLight};
 `;
 
@@ -289,6 +300,30 @@ const NutrValue = styled(TextMain)`
   font-size: 11px;
   color: ${({willExceed}: StyledProps) =>
     willExceed ? colors.warning : colors.textMain};
+`;
+const Price = styled(TextMain)`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const DeleteLikeFoodBtn = styled.TouchableOpacity`
+  width: 56px;
+  height: 24px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-width: 1px;
+  border-radius: 5px;
+  border-color: ${colors.inactivated};
+`;
+
+const LikeImg = styled.Image`
+  width: 20px;
+  height: 20px;
+`;
+
+const DeleteLikeFoodBtnText = styled(TextSub)`
+  font-size: 14px;
 `;
 
 const AniAddedMark = styled(Animated.createAnimatedComponent(Pressable))`

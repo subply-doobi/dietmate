@@ -3,12 +3,12 @@ import {ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import * as Progress from 'react-native-progress';
 
-import colors from '../../styles/colors';
-import {VerticalSpace} from '../../styles/styledConsts';
-import {sumUpNutrients} from '../../util/sumUp';
+import colors from '../../../styles/colors';
+import {VerticalSpace} from '../../../styles/styledConsts';
+import {sumUpNutrients} from '../../../util/sumUp';
 
-import {useGetBaseLine} from '../../query/queries/baseLine';
-import {useListDietDetail} from '../../query/queries/diet';
+import {useGetBaseLine} from '../../../query/queries/baseLine';
+import {useListDietDetail} from '../../../query/queries/diet';
 
 /** props:
  * 1. title '칼로리(g)' | '탄수화물(g)' | '단백질(g)' | '지방(g)'

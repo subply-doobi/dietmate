@@ -6,7 +6,7 @@ export const SCREENWIDTH = Math.min(width, height);
 export const SCREENHEIGHT = Math.max(width, height);
 export const IS_ANDROID = Platform.OS === 'android';
 export const IS_IOS = Platform.OS === 'ios';
-export const FOOD_LIST_ITEM_HEIGHT = 132;
+export const FOOD_LIST_ITEM_HEIGHT = 152;
 
 // Doobi server category etc.
 export const DIET_PURPOSE_CD = {
@@ -45,9 +45,8 @@ export const nutrRatioCategory = [
 // consts for screens
 export const myPageBtns = [
   {title: '몸무게 변경', btnId: 'ChangeWeight'},
-  {title: '내 기록', btnId: 'History'},
+  // {title: '내 기록', btnId: 'History'},
   {title: '찜한 식품', btnId: 'Likes'},
-  {title: '주문 테스트페이지 -> 삭제예정', btnId: 'Order'},
   {title: '주문내역', btnId: 'PaymentHistory'},
 ];
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-import {TextMain} from '../../styles/styledConsts';
-import {SCREENWIDTH} from '../../constants/constants';
+import {TextMain} from '../../../styles/styledConsts';
+import {SCREENWIDTH} from '../../../constants/constants';
 
 interface INutrTarget {
   nutrient: string;

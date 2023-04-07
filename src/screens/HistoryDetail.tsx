@@ -24,7 +24,7 @@ import {
   VerticalSpace,
 } from '../styles/styledConsts';
 
-import NutrTarget from '../components/common/NutrientTarget';
+import NutrTarget from '../components/common/nutrient/NutrientTarget';
 import DAlert from '../components/common/alert/DAlert';
 import DBottomSheet from '../components/common/DBottomSheet';
 
