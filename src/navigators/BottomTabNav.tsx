@@ -80,7 +80,7 @@ const BottomTabNav = props => {
           tabBarIcon: ({focused}) => (
             <CartIcon>
               {focused ? (
-                <BottomTabIcon source={icons.cartActivated_36} />
+                <BottomTabIcon source={icons.cartFilled_36} />
               ) : (
                 <BottomTabIcon source={icons.cart_36} />
               )}

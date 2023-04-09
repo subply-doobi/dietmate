@@ -3,6 +3,12 @@ import {IProductData, IProductsData} from '../../query/types/product';
 
 const RECOMMEND_TRY = 50;
 const UNIT_TRY = 30;
+const ERROR_RANGE = {
+  calorie: [-50, 50],
+  carb: [-15, 15],
+  protein: [-5, 5],
+  fat: [-3, 3],
+};
 
 const getSum = (menu: IProductsData) => {
   // 1: cal | 2: carb | 3: protein | 4: fat | 5: price

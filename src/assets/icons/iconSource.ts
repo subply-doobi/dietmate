@@ -1,11 +1,11 @@
 export const icons = {
-  numberMinus_12: require(`./12_number_minus.png`),
-  numberPlus_12: require(`./12_number_plus.png`),
   arrowDown_20: require(`./20_arrow_down.png`),
   arrowLeft_20: require(`./20_arrow_left.png`),
   arrowRight_20: require(`./20_arrow_right.png`),
   arrowUp_20: require(`./20_arrow_up.png`),
   arrowUpPurple_20: require(`./20_arrow_up_purple.png`),
+  numberMinus_12: require(`./12_number_minus.png`),
+  numberPlus_12: require(`./12_number_plus.png`),
   round_20: require(`./20_round.png`),
   roundActivated_20: require(`./20_round_activated.png`),
   back_24: require(`./24_back.png`),
@@ -51,4 +51,5 @@ export const icons = {
   upDown_24: require(`./24_up_down.png`),
   cartWhite_40: require(`./40_cart_white.png`),
   search_18: require(`./18_search.png`),
+  cartFilled_36: require(`./36_cart_filled.png`),
 };
