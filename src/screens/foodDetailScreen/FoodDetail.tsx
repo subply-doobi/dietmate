@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {
   Text,
   ScrollView,
@@ -7,8 +7,12 @@ import {
   View,
   Pressable,
 } from 'react-native';
+import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
-import {BASE_URL} from '../../query/queries/urls';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+
+import {RootState} from '../../stores/store';
+import {icons} from '../../assets/icons/iconSource';
 import {
   BtnCTA,
   BtnText,
@@ -21,47 +25,92 @@ import {
   Dot,
 } from '../../styles/styledConsts';
 import colors from '../../styles/colors';
-import NutrientsProgress from '../../components/common/NutrientsProgress';
-import {RootState} from '../../stores/store';
-import {
-  useCreateProductMark,
-  useDeleteProductMark,
-} from '../../query/queries/product';
+import {IProductData} from '../../query/types/product';
+
+import NutrientsProgress from '../../components/common/nutrient/NutrientsProgress';
+import NutrientPart from './foodDetailSubScreen/NutrientPart';
+import ShippingPart from './foodDetailSubScreen/ShippingPart';
+import FoodPart from './foodDetailSubScreen/FoodPart';
+import ReviewPart from './foodDetailSubScreen/ReviewPart';
+
+import {BASE_URL} from '../../query/queries/urls';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
   useListDietDetail,
 } from '../../query/queries/diet';
-import NutrientPart from './foodDetailSubScreen/NutrientPart';
-import ShippingPart from './foodDetailSubScreen/ShippingPart';
-import FoodPart from './foodDetailSubScreen/FoodPart';
-import ReviewPart from './foodDetailSubScreen/ReviewPart';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {IProductData} from '../../query/types/product';
-import {useSelector} from 'react-redux';
+import {SCREENWIDTH} from '../../constants/constants';
+import {useGetBaseLine} from '../../query/queries/baseLine';
+import {commaToNum} from '../../util/sumUp';
+import {
+  useCreateProductMark,
+  useDeleteProductMark,
+  useGetProduct,
+} from '../../query/queries/product';
+import {makeTableData} from '../../util/foodDetail/makeNutrTable';
+import {ActivityIndicator} from 'react-native';
 
 export interface TableItem {
   name: string;
   column1: string;
   column2: string;
+  rate?: string;
   color?: string;
 }
 
+interface IShowPart {
+  index: number;
+  table: TableItem[];
+}
+const ShowPart = ({index, table}) => {
+  return index === 0 ? (
+    <NutrientPart table={table} />
+  ) : index === 1 ? (
+    <FoodPart />
+  ) : index === 2 ? (
+    <ReviewPart />
+  ) : index === 3 ? (
+    <ShippingPart />
+  ) : (
+    <NutrientPart table={table} />
+  );
+};
+
 const FoodDetail = () => {
+  // redux
+  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+
+  // navigation
   const navigation = useNavigation();
   const route = useRoute();
-  const item: IProductData = route.params.item;
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
-  const detailMenu = ['영양성분', '식품상세', '후기', '배송정책'];
-  const [clicked, setClicked] = useState(0);
+
+  // react-query
+  // TBD | 식품 상세정보 없음
+  const {
+    data: productData,
+    refetch: refetchProduct,
+    isFetching,
+  } = useGetProduct(
+    {
+      dietNo: currentDietNo,
+      productNo: route?.params?.productNo,
+    },
+    {enabled: false},
+  );
+  const {data: baseLineData} = useGetBaseLine();
+  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
+    enabled: currentDietNo ? true : false,
+  });
   const createProductMarkMutation = useCreateProductMark();
   const deleteProductMarkMutation = useDeleteProductMark();
   const createDietDetailMutation = useCreateDietDetail();
   const deleteDietDetailMutation = useDeleteDietDetail();
 
-  const {data: dietDetailData, isFetching: dietDetailIsFetching} =
-    useListDietDetail(currentDietNo, {enabled: currentDietNo ? true : false});
+  //state
+  const [clicked, setClicked] = useState(0);
+  const detailMenu = ['영양성분', '식품상세', '후기', '배송정책'];
 
+  // etc
   const checkProductIncluded = (productNo: string, menu: IProductData[]) => {
     let isIncluded = false;
     for (let i = 0; i < menu.length; i++) {
@@ -73,35 +122,42 @@ const FoodDetail = () => {
     return isIncluded;
   };
 
-  //TODO : route.params.item 타입 관련 해결 및 만약 null값일 시 에러처리
+  // 식품마다 headerTitle바꾸기
+  // TBD : route.params.item 타입 관련 해결 및 만약 null값일 시 에러처리
   useEffect(() => {
-    navigation.setOptions({
-      headerTitleContainerStyle: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        headerBackVisible: false,
-      },
-      headerTitle: () => {
-        return (
-          <>
-            <View style={{marginRight: 8}}>
+    const initializePage = async () => {
+      const initialData = (await refetchProduct()).data;
+      navigation.setOptions({
+        headerTitleContainerStyle: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          headerBackVisible: false,
+        },
+        headerTitle: () => {
+          return (
+            // -양쪽 패딩 16px -뒤로가기 36px -장바구니아이콘 36px
+            <View style={{width: SCREENWIDTH - 32 - 72}}>
               <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
                 style={{
                   fontSize: 18,
                   color: colors.textMain,
                   fontWeight: 'bold',
+                  textAlign: 'center',
                 }}>
-                {item.productNm}
+                {initialData ? initialData.productNm : ''}
               </Text>
             </View>
-          </>
-        );
-      },
-    });
-  }, [navigation, item.productNm]);
+          );
+        },
+      });
+    };
+    initializePage();
+  }, [navigation]);
 
   const handlePressLikeBtn = () => {
-    //TODO : 찜된 목록인지 알 수 있는 API나오면 좋아요기능 완성하기
+    // TBD : 찜된 목록인지 알 수 있는 API나오면 좋아요기능 완성하기
     // createProductMarkMutation.mutate(item.productNo);
     // deleteProductMarkMutation.mutate(item.productNo);
   };
@@ -110,74 +166,43 @@ const FoodDetail = () => {
   }
 
   const isIncluded =
-    dietDetailData && checkProductIncluded(item.productNo, dietDetailData);
+    productData &&
+    dietDetailData &&
+    checkProductIncluded(productData.productNo, dietDetailData);
 
   const handlePressAddCartBtn = () => {
+    if (!productData) return;
     if (isIncluded) {
       deleteDietDetailMutation.mutate({
         dietNo: currentDietNo,
-        productNo: item.productNo,
+        productNo: productData.productNo,
       });
     } else {
       createDietDetailMutation.mutate({
         dietNo: currentDietNo,
-        productNo: item.productNo,
-        item,
+        productNo: productData.productNo,
       });
     }
   };
+  const table = useMemo(() => {
+    return makeTableData(productData, baseLineData);
+  }, [baseLineData, productData]);
 
-  const table: TableItem[] = [
-    {
-      name: 'calorie',
-      column1: '칼로리',
-      column2: `${Math.ceil(Number(item.calorie))}`,
-      color: colors.main,
-    },
-    {
-      name: 'carb',
-      column1: '탄수화물',
-      column2: `${Math.ceil(Number(item.carb))}`,
-      color: colors.blue,
-    },
-    {
-      name: 'protein',
-      column1: '단백질',
-      column2: `${Math.ceil(Number(item.protein))}`,
-      color: colors.green,
-    },
-    {
-      name: 'fat',
-      column1: '지방',
-      column2: `${Math.ceil(Number(item.fat))}`,
-      color: colors.orange,
-    },
-  ];
-
-  const ShowPart = i => {
-    return i.index === 0 ? (
-      <NutrientPart table={table} />
-    ) : i.index === 1 ? (
-      <FoodPart />
-    ) : i.index === 2 ? (
-      <ReviewPart />
-    ) : i.index === 3 ? (
-      <ShippingPart />
-    ) : (
-      <NutrientPart table={table} />
-    );
-  };
-
-  return (
+  return isFetching || !productData || !baseLineData ? (
+    <ActivityIndicator />
+  ) : (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <Container>
-        <ScrollView style={{marginBottom: 20, flex: 1}}>
-          {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
+        {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
+        <ScrollView
+          style={{marginBottom: 20, flex: 1}}
+          showsVerticalScrollIndicator={false}>
           <View>
             <FoodImageContainer
               source={{
-                uri: `${BASE_URL}${item.mainAttUrl}`,
+                uri: `${BASE_URL}${productData.mainAttUrl}`,
               }}
+              // style={{resizeMode: 'stretch'}}
             />
             <FoodImageBottom />
             <NutritionInImage>
@@ -205,14 +230,19 @@ const FoodDetail = () => {
             </NutritionInImage>
           </View>
 
-          <SellerText style={{marginTop: 20}}>[{item.platformNm}]</SellerText>
-          <ProductName>{item.productNm}</ProductName>
+          <SellerText style={{marginTop: 20}}>
+            [{productData.platformNm}]
+          </SellerText>
+          <ProductName>{productData.productNm}</ProductName>
           <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
             <Col>
               <ShippingText>20000원 이상 무료배송 </ShippingText>
-              <ShippingText>최소주문수량: 2개</ShippingText>
+              <Row>
+                <ShippingText>최소주문수량: </ShippingText>
+                <ShippingText style={{color: '#ff6060'}}>2개</ShippingText>
+              </Row>
             </Col>
-            <Price>{item.price}원</Price>
+            <Price>{commaToNum(productData.price)}원</Price>
           </Row>
           <Row
             style={{
@@ -231,7 +261,7 @@ const FoodDetail = () => {
             })}
           </Row>
           <PartContainer>
-            <ShowPart index={clicked} />
+            <ShowPart index={clicked} table={table} />
           </PartContainer>
         </ScrollView>
       </Container>
@@ -244,7 +274,7 @@ const FoodDetail = () => {
               // 조건에 따라서 서로 다른 좋아요 버튼 갖게 할 것
               // source={require('../../assets/icons/36_likePage_selected.png')}
               style={{width: 52, height: 52}}
-              source={require('../../assets/icons/48_like_activated.png')}
+              source={icons.likeActivated_48}
             />
           </Pressable>
           <BtnCTA

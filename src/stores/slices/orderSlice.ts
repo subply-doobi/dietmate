@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
+
 import {IProduct} from '../../constants/constants';
 
 interface IFoodToOrder {
@@ -55,9 +56,6 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    // TBD | 로그인 할 때 foodToOrder, foodPrice, shippigngFee빼고는
-    // 서버에서 받아와야 함
-
     // orderer
     setOrderer: (
       state,

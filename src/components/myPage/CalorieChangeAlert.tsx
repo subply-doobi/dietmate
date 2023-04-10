@@ -1,15 +1,14 @@
-import {View, Text} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
+import {Controller} from 'react-hook-form';
+
+import {icons} from '../../assets/icons/iconSource';
 import {
   IFormField,
   purposeCdToValue,
   validationRules,
 } from '../../constants/constants';
 import {
-  AlertContentContainer,
   Col,
   ErrorBox,
   ErrorText,
@@ -18,22 +17,24 @@ import {
   TextSub,
   UserInfoTextInput,
 } from '../../styles/styledConsts';
-import {Controller, useForm, useWatch} from 'react-hook-form';
+
+import DTooltip from '../common/DTooltip';
+
 import {useGetBaseLine} from '../../query/queries/baseLine';
 
-const renderCalorieInput = ({field: {onChange, onBlur, value}}: IFormField) => {
+const renderCalorieInput = ({field: {onChange, value}}: IFormField) => {
   return (
     <>
       <InputHeader isActivated={value ? true : false}>
         칼로리 (kcal)
       </InputHeader>
       <Input
-        placeholder="칼로리 (kcal)"
+        placeholder="칼로리(kcal)"
         value={value}
         onChangeText={onChange}
         isActivated={value ? true : false}
         keyboardType="numeric"
-        maxLength={3}
+        maxLength={4}
       />
     </>
   );
@@ -52,15 +53,15 @@ const CalChangeAlert = ({
   errors: any;
 }) => {
   // redux
-  const {userInfo, userTarget} = useSelector(
-    (state: RootState) => state.userInfo,
-  );
   const {data, isLoading} = useGetBaseLine();
   useEffect(() => {
     handleSubmit(() => {})();
   }, []);
 
-  return (
+  // state
+  const [tooltipShow, setTooltipShow] = useState(false);
+
+  return data ? (
     <Container>
       <Col style={{marginTop: 24}}>
         <PurposeText>{data.userId} 님의 목표는</PurposeText>
@@ -76,9 +77,23 @@ const CalChangeAlert = ({
         <WeightDifferenceValue>101</WeightDifferenceValue> kg | 현재:
         <WeightDifferenceValue>99</WeightDifferenceValue> kg
       </WeightDifference>
-      <Col style={{marginTop: 8}}>
-        <GuideText>계획과 다르다면 기존보다 </GuideText>
-        <GuideText>50 kcal 정도씩 조정해보세요</GuideText>
+      <Col style={{marginTop: 8, justifyContent: 'center'}}>
+        <Col>
+          <GuideText>계획과 다르다면 기존보다 </GuideText>
+          <GuideText>50 kcal 정도씩 조정해보세요</GuideText>
+        </Col>
+        <TooltipBtn
+          onPressIn={() => setTooltipShow(true)}
+          onPressOut={() => setTooltipShow(false)}>
+          <TooltipImage source={icons.question_24} />
+        </TooltipBtn>
+        <DTooltip
+          tooltipShow={tooltipShow}
+          text={`칼로리를 변경하시면\n영양소는 권장비율에 맞춰 자동설정됩니다\n영양소 비율도 직접 정하고 싶다면\n고객정보변경을 이용해주세요`}
+          boxRight={0}
+          boxBottom={32}
+          triangleRight={12}
+        />
       </Col>
       <Controller
         control={control}
@@ -92,13 +107,15 @@ const CalChangeAlert = ({
         </ErrorBox>
       )}
     </Container>
+  ) : (
+    <></>
   );
 };
 
 export default CalChangeAlert;
 
 const Container = styled.View`
-  padding: 0px 16px 24px 16px;
+  padding: 0px 16px 32px 16px;
 `;
 
 const PurposeText = styled(TextMain)`
@@ -107,6 +124,21 @@ const PurposeText = styled(TextMain)`
 const PurposeTextBold = styled(PurposeText)`
   font-weight: bold;
 `;
+
+const TooltipBtn = styled.Pressable`
+  position: absolute;
+  right: 0px;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const TooltipImage = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
 const WeightDifference = styled(TextMain)`
   font-size: 18px;
   margin-top: 16px;

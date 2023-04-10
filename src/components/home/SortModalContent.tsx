@@ -1,23 +1,28 @@
-import React, {useState, View} from 'react';
+import {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
+
+import {icons} from '../../assets/icons/iconSource';
 import {
   Row,
   HorizontalLine,
   BtnCTA,
-  BtnBottomCTA,
   HorizontalSpace,
 } from '../../styles/styledConsts';
 import colors from '../../styles/colors';
-import {useListProduct} from '../../query/queries/product';
-import {useSelector} from 'react-redux';
+
+import DTooltip from '../common/DTooltip';
 
 const SortModalContent = props => {
-  const {closeModal, setSortParam} = props;
+  // state
+  const {closeModal, sortParam, setSortParam} = props;
   const [priceToggle, setPriceToggle] = useState(0);
   const [calorieToggle, setCalorieToggle] = useState(0);
   const [proteinToggle, setProteinToggle] = useState(0);
   const [param, setParam] = useState('');
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+
+  // tooltip
+  const [priceCalCompareShow, setPriceCalCompareShow] = useState(false);
+  const [priceProtCompareShow, setPriceProtCompareShow] = useState(false);
 
   const toggleButton = arg => {
     const {price, calorie, protein} = arg;
@@ -44,39 +49,34 @@ const SortModalContent = props => {
       : arg.protein === 2
       ? setParam('')
       : null;
-    // if (price) {
-    //   setCalorieToggle(0);
-    //   setProteinToggle(0);
-    //   price === 0
-    //     ? setParam('Price,DESC')
-    //     : price === 1
-    //     ? setParam('Price,ASC')
-    //     : price === 2
-    //     ? setParam('ㄴㄴ')
-    //     : null;
-    // } else if (calorie) {
-    //   setPriceToggle(0);
-    //   setProteinToggle(0);
-    //   calorie === 0
-    //     ? setParam('Calorie,DESC')
-    //     : arg.calorie === 1
-    //     ? setParam('Calorie,ASC')
-    //     : arg.calorie === 2
-    //     ? setParam('')
-    //     : null;
-    // } else if (protein) {
-    //   setPriceToggle(0);
-    //   setCalorieToggle(0);
-    //   protein === 0
-    //     ? setParam('Protein,DESC')
-    //     : arg.protein === 1
-    //     ? setParam('Protein,ASC')
-    //     : arg.protein === 2
-    //     ? setParam('')
-    //     : null;
-    // }
   };
-
+  const imageFunction = () => {
+    switch (sortParam) {
+      case 'Price,DESC':
+        setPriceToggle(1);
+        break;
+      case 'Price,ASC':
+        setPriceToggle(2);
+        break;
+      case 'PriceCalorieCompare,DESC':
+        setCalorieToggle(1);
+        break;
+      case 'PriceCalorieCompare,ASC':
+        setCalorieToggle(2);
+        break;
+      case 'PriceProteinCompare,DESC':
+        setProteinToggle(1);
+        break;
+      case 'PriceProteinCompare,ASC':
+        setProteinToggle(2);
+        break;
+      default:
+        break;
+    }
+  };
+  useEffect(() => {
+    imageFunction();
+  }, []);
   return (
     <>
       <HorizontalSpace height={16} />
@@ -92,15 +92,11 @@ const SortModalContent = props => {
         <SortRow>
           <Text>가격</Text>
           {priceToggle === 0 ? (
-            <Image source={require('../../assets/icons/24_sort.png')} />
+            <Image source={icons.sort_24} />
           ) : priceToggle === 1 ? (
-            <Image
-              source={require('../../assets/icons/24_sort_descending.png')}
-            />
+            <Image source={icons.sortDescending_24} />
           ) : (
-            <Image
-              source={require('../../assets/icons/24_sort_ascending.png')}
-            />
+            <Image source={icons.sortAscending_24} />
           )}
         </SortRow>
       </Button>
@@ -119,17 +115,25 @@ const SortModalContent = props => {
         <SortRow>
           <Text>가칼비</Text>
           {calorieToggle === 0 ? (
-            <Image source={require('../../assets/icons/24_sort.png')} />
+            <Image source={icons.sort_24} />
           ) : calorieToggle === 1 ? (
-            <Image
-              source={require('../../assets/icons/24_sort_descending.png')}
-            />
+            <Image source={icons.sortDescending_24} />
           ) : (
-            <Image
-              source={require('../../assets/icons/24_sort_ascending.png')}
-            />
+            <Image source={icons.sortAscending_24} />
           )}
         </SortRow>
+        <TooltipBtn
+          onPressIn={() => setPriceCalCompareShow(true)}
+          onPressOut={() => setPriceCalCompareShow(false)}>
+          <TooltipImage source={icons.question_24} />
+        </TooltipBtn>
+        <DTooltip
+          tooltipShow={priceCalCompareShow}
+          text={`가격대비 칼로리로 정렬합니다\n한국인은 효율!`}
+          boxLeft={0}
+          boxBottom={42}
+          triangleLeft={12}
+        />
       </Button>
       <HorizontalLine />
 
@@ -147,30 +151,46 @@ const SortModalContent = props => {
         <SortRow>
           <Text>가단비</Text>
           {proteinToggle === 0 ? (
-            <Image source={require('../../assets/icons/24_sort.png')} />
+            <Image source={icons.sort_24} />
           ) : proteinToggle === 1 ? (
-            <Image
-              source={require('../../assets/icons/24_sort_descending.png')}
-            />
+            <Image source={icons.sortDescending_24} />
           ) : (
-            <Image
-              source={require('../../assets/icons/24_sort_ascending.png')}
-            />
+            <Image source={icons.sortAscending_24} />
           )}
         </SortRow>
+        <TooltipBtn
+          onPressIn={() => setPriceProtCompareShow(true)}
+          onPressOut={() => setPriceProtCompareShow(false)}>
+          <TooltipImage source={icons.question_24} />
+        </TooltipBtn>
+        <DTooltip
+          tooltipShow={priceProtCompareShow}
+          text={`가격대비 단백질양으로 정렬합니다\n헬창판별버튼이라는 소문이...`}
+          boxLeft={0}
+          boxBottom={42}
+          triangleLeft={12}
+        />
       </Button>
       <BottomRow>
         <BtnCTA
-          style={{marginRight: 8, marginTop: 5}}
+          style={{
+            flex: 1,
+          }}
           btnStyle={'border'}
-          width="180"
-          onPress={() => setParam('')}>
+          onPress={() => {
+            setParam('');
+            setPriceToggle(0);
+            setProteinToggle(0);
+            setCalorieToggle(0);
+          }}>
           <BottomText style={{color: colors.textSub}}>초기화</BottomText>
         </BtnCTA>
         <BtnCTA
-          style={{marginTop: 5}}
+          style={{
+            flex: 1,
+            marginLeft: 8,
+          }}
           btnStyle={'activated'}
-          width="180"
           onPress={() => {
             closeModal(false);
             setSortParam(param);
@@ -210,4 +230,18 @@ const BottomRow = styled.View`
   margin-top: 16px;
   flex-direction: row;
   justify-content: center;
+`;
+
+const TooltipBtn = styled.Pressable`
+  position: absolute;
+  left: 0px;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const TooltipImage = styled.Image`
+  width: 24px;
+  height: 24px;
 `;

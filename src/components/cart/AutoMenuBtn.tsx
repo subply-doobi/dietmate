@@ -1,22 +1,8 @@
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import styled from 'styled-components/native';
 
+import {icons} from '../../assets/icons/iconSource';
 import {BtnCTA, Row, TextSub} from '../../styles/styledConsts';
-
-const GuideText = styled(TextSub)`
-  margin-top: 24px;
-  font-size: 14px;
-`;
-
-const PlusBtnImage = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const AutoMenuText = styled(TextSub)`
-  margin-left: 8px;
-  font-size: 14px;
-`;
 
 const AutoMenuBtn = ({
   status,
@@ -31,9 +17,7 @@ const AutoMenuBtn = ({
   const btnText =
     status === 'empty' ? '귀찮을 땐 자동구성' : '남은 영양만큼 자동구성';
   const btnImageRequire =
-    status === 'empty'
-      ? require('../../assets/icons/24_autoMenu_activated.png')
-      : require('../../assets/icons/24_autoMenu.png');
+    status === 'empty' ? icons.plusSquareActivated_24 : icons.plusSquare_24;
   return (
     <View>
       {status === 'empty' && <GuideText>식품을 추가해보세요</GuideText>}
@@ -54,3 +38,18 @@ const AutoMenuBtn = ({
 };
 
 export default AutoMenuBtn;
+
+const GuideText = styled(TextSub)`
+  margin-top: 16px;
+  font-size: 14px;
+`;
+
+const PlusBtnImage = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const AutoMenuText = styled(TextSub)`
+  margin-left: 8px;
+  font-size: 14px;
+`;

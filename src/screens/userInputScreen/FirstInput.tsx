@@ -1,6 +1,11 @@
+import React, {useRef} from 'react';
 import {View, Text, ScrollView} from 'react-native';
-import React, {useEffect, useRef, useState, useCallback} from 'react';
 import styled from 'styled-components/native';
+import {Controller, useForm, useWatch} from 'react-hook-form';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {RootState} from '../../stores/store';
+import {saveUserInfo} from '../../stores/slices/userInfoSlice';
 import {
   BtnBottomCTA,
   BtnText,
@@ -14,22 +19,15 @@ import {
   UserInfoTextInput,
   VerticalSpace,
 } from '../../styles/styledConsts';
-import {
-  NavigationProps,
-  purposeCategory,
-  validationRules,
-} from '../../constants/constants';
+import {NavigationProps, validationRules} from '../../constants/constants';
 import colors from '../../styles/colors';
-import Dropdown from '../../components/userInput/Dropdown';
-import {Controller, useForm, useWatch} from 'react-hook-form';
 import {calculateBMR} from '../../util/targetCalculation';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
-import {saveUserInfo} from '../../stores/slices/userInfoSlice';
+
+import Dropdown from '../../components/userInput/Dropdown';
+
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {useDietPurposeCode} from '../../query/queries/code';
-import {COMMON_CODE} from '../../query/queries/urls';
-import axios from 'axios';
+
 interface IFormData {
   gender: string;
   age: string;
@@ -65,7 +63,7 @@ const renderAgeInput = (
 const renderHeightInput = (
   {field: {onChange, onBlur, value}}: any,
   userInfo1Refs?: React.MutableRefObject<any[]>,
-  scrollRef?: any, // TBD | scrollView ref type?!
+  scrollRef?: any,
 ) => {
   return (
     <>

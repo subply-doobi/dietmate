@@ -1,8 +1,12 @@
-import {Linking, FlatList, SafeAreaView, Alert} from 'react-native';
 import React from 'react';
+import {FlatList, SafeAreaView} from 'react-native';
+import styled from 'styled-components/native';
+import {useSelector} from 'react-redux';
+
+import {RootState} from '../../stores/store';
+import {icons} from '../../assets/icons/iconSource';
 import {
   Col,
-  Container,
   HorizontalLine,
   HorizontalSpace,
   Row,
@@ -11,15 +15,8 @@ import {
   VerticalLine,
   VerticalSpace,
 } from '../../styles/styledConsts';
-import styled from 'styled-components/native';
 import colors from '../../styles/colors';
 import {NavigationProps} from '../../constants/constants';
-import {useEffect} from 'react';
-import axios, {all} from 'axios';
-import {kakaoAppAdminKey} from '../../constants/constants';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
-import {useKakaopayApprove} from '../../query/queries/order';
 
 interface IOrder {
   id: string;
@@ -146,7 +143,7 @@ const PaymentHistory = ({navigation, route}: NavigationProps) => {
       </Row>
       <HorizontalLine style={{marginTop: 8}} />
       <Row>
-        <Arrow source={require('../../assets/icons/20_leftArrow.png')} />
+        <Arrow source={icons.arrowLeft_20} />
         <FlatList
           horizontal={true}
           data={item.menu}
@@ -159,7 +156,7 @@ const PaymentHistory = ({navigation, route}: NavigationProps) => {
             />
           )}
         />
-        <Arrow source={require('../../assets/icons/20_rightArrow.png')} />
+        <Arrow source={icons.arrowRight_20} />
       </Row>
       <TotalPrice>{item.totalPrice} 원</TotalPrice>
     </>
@@ -208,7 +205,6 @@ const Arrow = styled.Image`
   height: 20px;
 `;
 
-const ThumbnailBtn = styled.TouchableOpacity``;
 const ThumbnailImage = styled.View`
   background-color: ${colors.backgroundLight};
   width: 56px;

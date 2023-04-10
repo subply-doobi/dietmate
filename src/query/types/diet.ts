@@ -14,8 +14,10 @@ export interface IListDietDetailParams {
   dietNo: string;
 }
 
-interface IDietDetailProductData extends IProductData {
+export interface IDietDetailProductData extends IProductData {
   qty: string;
+  dietNo: string;
+  dietSeq: string;
 }
 
 export type IDietDetailData = Array<IDietDetailProductData>;
@@ -23,3 +25,5 @@ export type IDietDetailData = Array<IDietDetailProductData>;
 export interface IDietDetailEmptyYnData {
   emptyYn: 'N' | 'Y';
 }
+
+export type IDietTotalData = Array<IDietDetailData>;

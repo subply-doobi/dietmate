@@ -1,134 +1,224 @@
 import React, {useState} from 'react';
+import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
-import {
-  Row,
-  HorizontalLine,
-  BtnCTA,
-  BtnBottomCTA,
-  TextMain,
-} from '../../styles/styledConsts';
+import {SafeAreaView} from 'react-native-safe-area-context';
+
+import {icons} from '../../assets/icons/iconSource';
+import {Row, BtnCTA, Col} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
-import {useWeightPurposeCode, useFilterCode} from '../../query/queries/code';
-import {useListProduct} from '../../query/queries/product';
-import {useListCategory, useCountCategory} from '../../query/queries/category';
-import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
-import DSlider from '../common/slider/DSlider';
+
 import CategoryContent from './filterContents/CategoryContent';
 import NutritionContent from './filterContents/NutritionContent';
 import PriceContent from './filterContents/PriceContent';
+import SearchContent from './filterContents/SearchContent';
+import DAlert from '../common/alert/DAlert';
+import CommonAlertContent from '../common/alert/CommonAlertContent';
 
 const FilterModalContent = props => {
-  const [clicked, setClicked] = useState(0);
-  const {filterIndex} = props;
+  const {filterIndex, closeModal, setFilterParams, filterParams} = props;
+  const [clicked, setClicked] = useState(filterIndex);
+  const [categoryParam, setCategoryParam] = useState(
+    filterParams.categoryParam,
+  );
+  const [nutritionParam, setNutritionParam] = useState('');
+  const [priceParam, setPriceParam] = useState('');
+  const params = {
+    categoryParam,
+    nutritionParam,
+    priceParam,
+  };
+  const [initializeModalShow, setInitializeModalShow] = useState(false);
+  const [isTotalInitailize, setIsTotalInitailize] = useState<boolean>();
   const resetType = [
     {
       text: '카테고리 초기화',
       reset: () => {
-        console.log('카테고리 reset');
-      },
-      onPress: () => {
-        console.log('카테고리 확인');
+        setCategoryParam('');
+        setFilterParams({...filterParams, categoryParam: ''});
       },
     },
     {
       text: '영양성분 초기화',
-      onPress: () => {
-        console.log('영양성분 확인');
+      reset: () => {
+        setNutritionParam('');
+        setFilterParams({...filterParams, nutritionParam: ''});
       },
     },
     {
       text: '가격 초기화',
-      onPress: () => {
-        console.log('가격 확인');
+      reset: () => {
+        setPriceParam('');
+        setFilterParams({...filterParams, priceParam: ''});
       },
     },
     {
       text: '식단구성 초기화',
-      onPress: () => {
+      reset: () => {
         console.log('식단구성 확인');
       },
     },
+    {
+      text: '전부 초기화',
+      reset: () => {
+        console.log('전부 확인');
+      },
+    },
   ];
-  const AutoDietContent = () => {
-    return <Text>auto</Text>;
-  };
+
   const FilterHeaderText = () => {
     return (
-      <>
+      <SafeAreaView>
         <FilterRow>
           <Button
             onPress={() => {
               setClicked(0);
             }}>
-            <Text>카테고리</Text>
+            {params.categoryParam || filterParams.categoryParam ? (
+              <Row>
+                <Text id="0" clicked={clicked}>
+                  카테고리
+                </Text>
+                <Badge />
+              </Row>
+            ) : (
+              <Text id="0" clicked={clicked}>
+                카테고리
+              </Text>
+            )}
           </Button>
           <Button
             onPress={() => {
               setClicked(1);
             }}>
-            <Text>영양성분</Text>
+            {params.nutritionParam || filterParams.nutritionParam ? (
+              <Row>
+                <Text id="1" clicked={clicked}>
+                  영양성분
+                </Text>
+                <Badge />
+              </Row>
+            ) : (
+              <Text id="1" clicked={clicked}>
+                영양성분
+              </Text>
+            )}
           </Button>
           <Button
             onPress={() => {
               setClicked(2);
             }}>
-            <Text>가격</Text>
+            {params.priceParam || filterParams.priceParam ? (
+              <Row>
+                <Text id="2" clicked={clicked}>
+                  가격
+                </Text>
+                <Badge />
+              </Row>
+            ) : (
+              <Text id="2" clicked={clicked}>
+                가격
+              </Text>
+            )}
           </Button>
           <Button
             onPress={() => {
               setClicked(3);
+            }}></Button>
+          <Button
+            onPress={() => {
+              setIsTotalInitailize(true);
+              setInitializeModalShow(true);
             }}>
-            <Text>식단구성</Text>
-          </Button>
-          <Button>
-            <Image
-              style={{marginTop: 5}}
-              source={require('../../assets/icons/24_filterInitialize.png')}
-            />
+            <Image source={icons.initialize_24} />
           </Button>
         </FilterRow>
-      </>
+      </SafeAreaView>
     );
   };
-  const ShowContent = (i: any) => {
-    console.log('showcontent:', i.index);
-    return i.index === 0 ? (
-      <CategoryContent />
-    ) : i.index === 1 ? (
-      <NutritionContent />
-    ) : i.index === 2 ? (
-      <PriceContent />
-    ) : i.index === 3 ? (
-      <AutoDietContent />
-    ) : null;
+  const showContent = index => {
+    return index === 0 ? (
+      <CategoryContent
+        setCategoryParam={setCategoryParam}
+        categoryParam={categoryParam}
+      />
+    ) : index === 1 ? (
+      <NutritionContent
+        setNutritionParam={setNutritionParam}
+        nutritionParam={nutritionParam}
+        filterParams={filterParams}
+      />
+    ) : index === 2 ? (
+      <PriceContent
+        setPriceParam={setPriceParam}
+        priceParam={priceParam}
+        filterParams={filterParams}
+      />
+    ) : index === 3 ? (
+      <SearchContent />
+    ) : (
+      <></>
+    );
   };
+  //useEffect에 맞춰서 초기값 설정하게 하고싶음
+  //
   return (
-    <>
-      <ScrollView>
+    <Col style={{height: '100%'}}>
+      <ScrollView contentContainerStyle={{paddingBottom: 64}}>
         <FilterHeaderText />
-        <ShowContent index={clicked ? clicked : filterIndex} />
-        <BottomRow>
-          <BtnCTA
-            style={{marginRight: 8, marginTop: 5}}
-            btnStyle={'border'}
-            width="180"
-            onPress={() => console.log('초기화')}>
-            <BottomText style={{color: colors.textSub}}>
-              {resetType[clicked].text}
-            </BottomText>
-          </BtnCTA>
-          <BtnCTA
-            style={{marginTop: 5}}
-            btnStyle={'activated'}
-            width="180"
-            onPress={() => {
-              resetType[clicked].onPress();
-            }}>
-            <BottomText>확인</BottomText>
-          </BtnCTA>
-        </BottomRow>
+        {/* <ShowContent index={clicked} /> */}
+        {/* 이유를 알려줘 */}
+        {showContent(clicked)}
       </ScrollView>
-    </>
+
+      {/* 초기화 | 확인 버튼 */}
+      <BottomRow>
+        <BtnCTA
+          style={{
+            flex: 1,
+          }}
+          btnStyle={'border'}
+          onPress={() => {
+            setIsTotalInitailize(false);
+            setInitializeModalShow(true);
+          }}>
+          <BottomText style={{color: colors.textSub}}>
+            {resetType[clicked].text}
+          </BottomText>
+        </BtnCTA>
+        <DAlert
+          alertShow={initializeModalShow}
+          onConfirm={() => {
+            if (isTotalInitailize) {
+              setCategoryParam('');
+              setFilterParams('');
+              setNutritionParam('');
+              setPriceParam('');
+              setInitializeModalShow(false);
+            } else {
+              resetType[clicked].reset();
+              setInitializeModalShow(false);
+            }
+          }}
+          onCancel={() => setInitializeModalShow(false)}
+          renderContent={() => (
+            <CommonAlertContent text={`적용된 필터가\n초기화 됩니다`} />
+          )}
+          confirmLabel="초기화"
+        />
+        <BtnCTA
+          style={{
+            flex: 1,
+            marginLeft: 8,
+          }}
+          btnStyle={'activated'}
+          onPress={() => {
+            setFilterParams(params);
+            closeModal(false);
+          }}>
+          <BottomText>확인</BottomText>
+        </BtnCTA>
+      </BottomRow>
+    </Col>
   );
 };
 
@@ -136,7 +226,11 @@ export default FilterModalContent;
 
 const Text = styled.Text`
   font-size: 18px;
-  margin-right: 16px;
+  margin-right: 26px;
+  color: ${({id, clicked}) =>
+    id === String(clicked) ? colors.textMain : colors.textSub};
+  font-weight: ${({id, clicked}) =>
+    id === String(clicked) ? 'bold' : 'normal'};
 `;
 
 const BottomText = styled.Text`
@@ -153,14 +247,19 @@ const FilterRow = styled(Row)`
   margin-top: 24px;
 `;
 const BottomRow = styled.View`
+  position: absolute;
+  bottom: 0px;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
 `;
-const SliderTitle = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 40px;
+
+const Badge = styled.View`
+  width: 6px;
+  height: 6px;
+  border-radius: 8px;
+  background-color: ${colors.main};
+  position: absolute;
+  top: 0px;
+  right: 20px;
 `;
 const MODAL_WIDTH = 328;
-const MODAL_INNER_WIDTH = MODAL_WIDTH - 32;
-const SLIDER_WIDTH = MODAL_INNER_WIDTH - 32;

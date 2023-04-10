@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import DropDownPicker from 'react-native-dropdown-picker';
-import colors from '../../styles/colors';
 import styled from 'styled-components/native';
+import DropDownPicker from 'react-native-dropdown-picker';
+
+import colors from '../../styles/colors';
 import {InputHeaderText} from '../../styles/styledConsts';
 
 interface CategoryObject {
@@ -18,10 +19,6 @@ interface IDropdown {
   scrollRef?: any;
   reactHookFormName?: string;
 }
-
-const DropdownHeader = styled(InputHeaderText)`
-  margin-top: 24px;
-`;
 
 const Dropdown = (props: IDropdown) => {
   const [open, setOpen] = useState(false);
@@ -77,3 +74,7 @@ const Dropdown = (props: IDropdown) => {
 };
 
 export default Dropdown;
+
+const DropdownHeader = styled(InputHeaderText)`
+  margin-top: 24px;
+`;

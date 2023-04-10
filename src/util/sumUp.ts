@@ -9,12 +9,12 @@ export const sumUpNutrients = (dietDetail: IDietDetailData | undefined) => {
   if (!dietDetail) {
     return {cal, carb, protein, fat};
   }
-  dietDetail.forEach((food, index) => {
-    cal += parseInt(food.calorie);
-    carb += parseInt(food.carb);
-    protein += parseInt(food.protein);
-    fat += parseInt(food.fat);
-  });
+  for (let i = 0; i < dietDetail.length; i++) {
+    cal += parseInt(dietDetail[i].calorie);
+    carb += parseInt(dietDetail[i].carb);
+    protein += parseInt(dietDetail[i].protein);
+    fat += parseInt(dietDetail[i].fat);
+  }
   return {cal, carb, protein, fat};
 };
 
@@ -23,18 +23,22 @@ export const sumUpPrice = (dietDetail: IDietDetailData | undefined) => {
     return 0;
   }
   let price = 0;
-  dietDetail?.forEach((food, index) => {
-    price += parseInt(food.price) * parseInt(food.qty);
-  });
+  for (let i = 0; i < dietDetail.length; i++) {
+    // TBD | 최소주문수량 지금은 다 1로 갈 것.
+    // price += parseInt(dietDetail[i].price) * parseInt(dietDetail[i].qty);
+    price += parseInt(dietDetail[i].price);
+  }
   return price;
 };
 export const makePriceObjBySeller = (
   productsBySeller: Array<Array<IProductData> | IDietDetailData>,
 ) => {
   let priceBySeller: {[key: string]: number} = {};
-  productsBySeller.forEach((seller, idx) => {
-    priceBySeller[seller[0]?.platformNm] = sumUpPrice(seller);
-  });
+  for (let i = 0; i < productsBySeller.length; i++) {
+    priceBySeller[productsBySeller[i][0]?.platformNm] = sumUpPrice(
+      productsBySeller[i],
+    );
+  }
   return priceBySeller;
 };
 
@@ -60,29 +64,33 @@ export const compareNutrToTarget = (
   }
 
   let exceedNumber = 0;
-  current.forEach((v, idx) => {
-    if (v >= target[idx]) exceedNumber += 1;
-  });
+  for (let i = 0; i < current.length; i++) {
+    if (current[i] >= target[i]) exceedNumber += 1;
+  }
+
   return exceedNumber === 0 ? 'notEnough' : 'exceed';
 };
 
-export const reGroupBySeller = (dietDetailData: IProductData[]) => {
-  let reGroupedProducts: Array<Array<IProductData>> = [[]];
+export const reGroupBySeller = (dietDetailData: IDietDetailData) => {
+  let reGroupedProducts: Array<IDietDetailData> = [[]];
+  if (dietDetailData.length === 0) return undefined;
   for (let i = 0; i < dietDetailData.length; i++) {
     if (i === 0) {
       reGroupedProducts[0].push(dietDetailData[i]);
       continue;
     }
+    let isNewSeller = true;
     for (let j = 0; j < reGroupedProducts.length; j++) {
       if (
         reGroupedProducts[j][0]?.platformNm === dietDetailData[i]?.platformNm
       ) {
         reGroupedProducts[j].push(dietDetailData[i]);
-        break;
-      } else {
-        reGroupedProducts.push([dietDetailData[i]]);
+        isNewSeller = false;
         break;
       }
+    }
+    if (isNewSeller) {
+      reGroupedProducts.push([dietDetailData[i]]);
     }
   }
   return reGroupedProducts;

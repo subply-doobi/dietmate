@@ -1,29 +1,30 @@
+import {SetStateAction} from 'react';
 import styled from 'styled-components/native';
+import {Slider} from '@miblanchard/react-native-slider';
+
 import colors from '../../../styles/colors';
 import {StyledProps, TextMain} from '../../../styles/styledConsts';
-import {Slider} from '@miblanchard/react-native-slider';
-import {SetStateAction} from 'react';
 
 interface IDSlider {
   sliderValue: number[];
   setSliderValue: React.Dispatch<SetStateAction<number[]>>;
+  onSlidingComplete?: (value: number | Array<number>) => void;
   minimumValue: number;
   maximumValue: number;
   step: number;
   sliderWidth?: number;
-  kcal: string;
-  g: string;
+  text?: string;
 }
 /** sliderWidth만 선택사항. props 안넘기면 width: 100% 적용 */
 const DSlider = ({
   sliderValue,
   setSliderValue,
+  onSlidingComplete,
   minimumValue,
   maximumValue,
   step,
   sliderWidth,
-  kcal,
-  g,
+  text,
 }: IDSlider) => {
   const width = sliderWidth ? sliderWidth : '100%';
   return (
@@ -32,6 +33,7 @@ const DSlider = ({
         <Slider
           value={sliderValue}
           onValueChange={value => Array.isArray(value) && setSliderValue(value)}
+          onSlidingComplete={onSlidingComplete}
           minimumValue={minimumValue}
           maximumValue={maximumValue}
           step={step}
@@ -43,7 +45,7 @@ const DSlider = ({
             <AboveThumbComponent thumbIdx={index}>
               <ThumbText>
                 {sliderValue[index]}
-                {kcal ? kcal : g ? g : '원'}
+                {text}
               </ThumbText>
             </AboveThumbComponent>
           )}
