@@ -20,6 +20,7 @@ const FilterModalContent = props => {
   const [categoryParam, setCategoryParam] = useState(
     filterParams.categoryParam,
   );
+  console.log(categoryParam);
   const [nutritionParam, setNutritionParam] = useState('');
   const [priceParam, setPriceParam] = useState('');
   const params = {
@@ -34,33 +35,21 @@ const FilterModalContent = props => {
       text: '카테고리 초기화',
       reset: () => {
         setCategoryParam('');
-        setFilterParams({...filterParams, categoryParam: ''});
+        // setFilterParams({...filterParams, categoryParam: ''});
       },
     },
     {
       text: '영양성분 초기화',
       reset: () => {
         setNutritionParam('');
-        setFilterParams({...filterParams, nutritionParam: ''});
+        // setFilterParams({...filterParams, nutritionParam: ''});
       },
     },
     {
       text: '가격 초기화',
       reset: () => {
         setPriceParam('');
-        setFilterParams({...filterParams, priceParam: ''});
-      },
-    },
-    {
-      text: '식단구성 초기화',
-      reset: () => {
-        console.log('식단구성 확인');
-      },
-    },
-    {
-      text: '전부 초기화',
-      reset: () => {
-        console.log('전부 확인');
+        // setFilterParams({...filterParams, priceParam: ''});
       },
     },
   ];
@@ -73,7 +62,7 @@ const FilterModalContent = props => {
             onPress={() => {
               setClicked(0);
             }}>
-            {params.categoryParam || filterParams.categoryParam ? (
+            {params.categoryParam && filterParams.categoryParam ? (
               <Row>
                 <Text id="0" clicked={clicked}>
                   카테고리
@@ -190,7 +179,7 @@ const FilterModalContent = props => {
           onConfirm={() => {
             if (isTotalInitailize) {
               setCategoryParam('');
-              setFilterParams('');
+              // setFilterParams('');
               setNutritionParam('');
               setPriceParam('');
               setInitializeModalShow(false);

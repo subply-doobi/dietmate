@@ -145,7 +145,7 @@ const Home = () => {
   const key = keyOfcategoryCode.find(
     key => categoryCode[key] === filterParams.categoryParam,
   );
-
+  console.log(filterParams);
   // 앱 시작할 때 내가 어떤 끼니를 보고 있는지 redux에 저장해놓기 위해 필요함
   useEffect(() => {
     const initializeDietNo = async () => {

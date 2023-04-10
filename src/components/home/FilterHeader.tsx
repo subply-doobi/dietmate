@@ -5,7 +5,7 @@ import {Row, TextMain} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 
 const FilterHeader = props => {
-  const {onPress, setFilterIndex, filterParams} = props;
+  const {onPress, setFilterIndex, filterParams, filterHeaderText} = props;
   return (
     <>
       <Row>
@@ -16,7 +16,7 @@ const FilterHeader = props => {
           }}>
           {filterParams.categoryParam ? (
             <>
-              <FilterBtnText>카테고리</FilterBtnText>
+              <FilterBtnText>{filterHeaderText}</FilterBtnText>
               <Badge />
             </>
           ) : (
