@@ -1,10 +1,11 @@
 // react, RN, 3rd
-import {useCallback, useEffect, useState, useRef} from 'react';
+import {React, useCallback, useEffect, useState, useRef} from 'react';
 import {
   TouchableWithoutFeedback,
   FlatList,
   View,
   TextInput,
+  Animated,
 } from 'react-native';
 import styled from 'styled-components/native';
 
@@ -67,6 +68,13 @@ const Home = () => {
   const [searchBarFocus, setSearchBarFocus] = useState(false);
 
   let filterHeight = true;
+  //scrollHeader Event
+  const scrollY = new Animated.Value(0);
+  const diffClamp = Animated.diffClamp(scrollY, 0, 100);
+  const translateY = diffClamp.interpolate({
+    inputRange: [0, 100],
+    outputRange: [0, -100],
+  });
   const [filterIndex, setFilterIndex] = useState(0);
   const [sortParam, setSortParam] = useState('');
   const [sortImageToggle, setSortImageToggle] = useState(0);
@@ -172,108 +180,130 @@ const Home = () => {
     [tData],
   );
   // const getSeperator = useCallback(() => <HorizontalSpace height={20} />, []);
+  const FlatlistHeaderComponent = () => {
+    return (
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 100,
+          backgroundColor: colors.white,
+          zIndex: 100,
+          paddingLeft: 16,
+          paddingRight: 16,
+        }}>
+        <Row
+          style={{
+            justifyContent: 'space-between',
+            marginTop: 16,
+            width: '100%',
+          }}>
+          <Row style={{alignItems: 'flex-end', flex: 1}}>
+            <ListTitle>검색된 결과</ListTitle>
+            <NoOfFoods> {tData?.length}개</NoOfFoods>
 
+            {searchBarFocus ? (
+              <SearchBox style={{flex: 1, marginRight: 8}}>
+                <SearchInput
+                  onChangeText={setSearchText}
+                  value={searchText}
+                  ref={searchInputRef}
+                  placeholder="검색어 입력"
+                  onSubmitEditing={() => refetchProduct()}
+                />
+                <SearchCancelBtn
+                  onPress={() => {
+                    setSearchText('');
+                    setSearchBarFocus(false);
+                  }}>
+                  <SearchCancelImage source={icons.cancelRound_24} />
+                </SearchCancelBtn>
+              </SearchBox>
+            ) : (
+              <SearchBtn
+                onPress={() => {
+                  setSearchBarFocus(true);
+                  searchInputRef.current?.focus();
+                }}>
+                <SearchImage source={icons.search_18} />
+              </SearchBtn>
+            )}
+          </Row>
+
+          <SortBtn onPress={() => setSortModalShow(true)}>
+            <SortBtnText>정렬</SortBtnText>
+            {sortImageToggle === 0 ? (
+              <SortImage source={icons.sort_24} />
+            ) : sortImageToggle === 1 ? (
+              <SortImage source={icons.sortDescending_24} />
+            ) : (
+              <SortImage source={icons.sortAscending_24} />
+            )}
+          </SortBtn>
+        </Row>
+        <DBottomSheet
+          alertShow={sortModalShow}
+          setAlertShow={setSortModalShow}
+          renderContent={() => (
+            <SortModalContent
+              closeModal={setSortModalShow}
+              setSortParam={setSortParam}
+              sortParam={sortParam}
+            />
+          )}
+          onCancel={() => {
+            console.log('oncancel');
+          }}
+        />
+        <HorizontalLine style={{marginTop: 8}} />
+        <HorizontalSpace height={16} />
+        <FilterHeader
+          setFilterIndex={setFilterIndex}
+          filterIndex={filterIndex}
+          onPress={() => {
+            setFilterModalShow(true);
+          }}
+          filterParams={filterParams}
+          filterHeaderText={key}
+        />
+        <DBottomSheet
+          alertShow={filterModalShow}
+          setAlertShow={setFilterModalShow}
+          renderContent={() => (
+            <FilterModalContent
+              closeModal={setFilterModalShow}
+              filterParams={filterParams}
+              setFilterParams={setFilterParams}
+              filterIndex={filterIndex}
+            />
+          )}
+          onCancel={() => {
+            console.log('oncancel');
+          }}
+          filterHeight={filterHeight}
+        />
+        <HorizontalSpace height={16} />
+      </View>
+    );
+  };
   return (
     <Container>
       <MenuSection />
-      <HomeContainer>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            setTooltipShow(false);
+      {scrollY ? (
+        <Animated.View
+          style={{
+            transform: [{translateY: translateY}],
+            elevation: 4,
+            zIndex: 4,
           }}>
-          <View>
-            <Row
-              style={{
-                justifyContent: 'space-between',
-                marginTop: 16,
-                width: '100%',
-              }}>
-              <Row style={{alignItems: 'flex-end', flex: 1}}>
-                <ListTitle>{key ? key : '검색된 결과'}</ListTitle>
-                <NoOfFoods> {tData?.length}개</NoOfFoods>
-
-                {searchBarFocus ? (
-                  <SearchBox style={{flex: 1, marginRight: 8}}>
-                    <SearchInput
-                      onChangeText={setSearchText}
-                      value={searchText}
-                      ref={searchInputRef}
-                      placeholder="검색어 입력"
-                      onSubmitEditing={() => refetchProduct()}
-                    />
-                    <SearchCancelBtn
-                      onPress={() => {
-                        setSearchText('');
-                        setSearchBarFocus(false);
-                      }}>
-                      <SearchCancelImage source={icons.cancelRound_24} />
-                    </SearchCancelBtn>
-                  </SearchBox>
-                ) : (
-                  <SearchBtn
-                    onPress={() => {
-                      setSearchBarFocus(true);
-                      searchInputRef.current?.focus();
-                    }}>
-                    <SearchImage source={icons.search_18} />
-                  </SearchBtn>
-                )}
-              </Row>
-
-              <SortBtn onPress={() => setSortModalShow(true)}>
-                <SortBtnText>정렬</SortBtnText>
-                {sortImageToggle === 0 ? (
-                  <SortImage source={icons.sort_24} />
-                ) : sortImageToggle === 1 ? (
-                  <SortImage source={icons.sortDescending_24} />
-                ) : (
-                  <SortImage source={icons.sortAscending_24} />
-                )}
-              </SortBtn>
-            </Row>
-            <DBottomSheet
-              alertShow={sortModalShow}
-              setAlertShow={setSortModalShow}
-              renderContent={() => (
-                <SortModalContent
-                  closeModal={setSortModalShow}
-                  setSortParam={setSortParam}
-                  sortParam={sortParam}
-                />
-              )}
-              onCancel={() => {
-                console.log('oncancel');
-              }}
-            />
-            <HorizontalLine style={{marginTop: 8}} />
-            <HorizontalSpace height={16} />
-            <FilterHeader
-              setFilterIndex={setFilterIndex}
-              onPress={() => {
-                setFilterModalShow(true);
-              }}
-              filterParams={filterParams}
-            />
-            <DBottomSheet
-              alertShow={filterModalShow}
-              setAlertShow={setFilterModalShow}
-              renderContent={() => (
-                <FilterModalContent
-                  closeModal={setFilterModalShow}
-                  filterParams={filterParams}
-                  setFilterParams={setFilterParams}
-                  filterIndex={filterIndex}
-                />
-              )}
-              onCancel={() => {
-                console.log('oncancel');
-              }}
-              filterHeight={filterHeight}
-            />
-            <HorizontalSpace height={16} />
-          </View>
-        </TouchableWithoutFeedback>
-
+          <FlatlistHeaderComponent />
+        </Animated.View>
+      ) : (
+        <FlatlistHeaderComponent />
+      )}
+      <HomeContainer>
         {tData && dietDetailData && (
           <FlatList
             data={tData}
@@ -289,6 +319,9 @@ const Home = () => {
             showsVerticalScrollIndicator={false}
             refreshing={productIsFetching}
             onRefresh={refetchProduct}
+            onScroll={e => {
+              scrollY.setValue(e.nativeEvent.contentOffset.y);
+            }}
           />
         )}
         <DTooltip

@@ -78,6 +78,7 @@ const Container = styled.View`
   background-color: ${colors.backgroundLight2};
   padding: 0 0 8px;
   width: 100%;
+  z-index: 1000;
 `;
 
 const HeaderRow = styled(Row)`
