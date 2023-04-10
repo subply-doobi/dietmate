@@ -1,11 +1,12 @@
 import styled from 'styled-components/native';
+
 import {Col, TextMain} from '../../../styles/styledConsts';
 
-const DeleteAlertContent = ({dietSeq}: {dietSeq: string}) => {
+const DeleteAlertContent = ({deleteText}: {deleteText: string}) => {
   return (
     <Container>
       <Col style={{marginTop: 28, alignItems: 'center'}}>
-        <AlertText>{dietSeq ?? ''}</AlertText>
+        <AlertText>{deleteText ?? ''}</AlertText>
         <AlertText>삭제하시겠어요?</AlertText>
       </Col>
     </Container>

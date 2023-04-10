@@ -1,66 +1,15 @@
-import {View, Text, FlatList} from 'react-native';
 import React, {useEffect} from 'react';
-import {NavigationProps} from '../constants/constants';
-import {useSelector} from 'react-redux';
-import {RootState} from '../stores/store';
+import {FlatList} from 'react-native';
 import styled from 'styled-components/native';
+import {useSelector} from 'react-redux';
+
+import {RootState} from '../stores/store';
 import colors from '../styles/colors';
-import NutrientsProgress from '../components/common/NutrientsProgress';
-import {
-  Col,
-  HorizontalSpace,
-  Row,
-  TextMain,
-  VerticalLine,
-} from '../styles/styledConsts';
+import {NavigationProps} from '../constants/constants';
+import {Col, Row, TextMain, VerticalLine} from '../styles/styledConsts';
+
 import OrderedList from '../components/payment/OrderedList';
-
-const Container = styled.View`
-  flex: 1;
-  background-color: ${colors.backgroundLight};
-`;
-
-const ProgressBox = styled.View`
-  background-color: ${colors.white};
-  padding: 0px 16px 0px 16px;
-`;
-
-const ContentContainer = styled.View`
-  flex: 1;
-  padding: 0px 8px 24px 8px;
-`;
-
-const Card = styled.View`
-  width: 100%;
-  padding: 0px 8px 16px 8px;
-  margin-top: 16px;
-  background-color: ${colors.white};
-  border-radius: 10px;
-`;
-
-const CardTitle = styled(TextMain)`
-  margin-top: 16px;
-  font-size: 18px;
-  font-weight: bold;
-  align-self: center;
-`;
-
-const MenuNutrContainer = styled(Row)`
-  margin-top: 24px;
-  width: 100%;
-  align-items: center;
-`;
-
-const MenuNutrBox = styled(Row)``;
-
-const MenuNutr = styled(TextMain)`
-  font-size: 12px;
-  font-weight: lighter;
-`;
-
-const MenuNutrValue = styled(TextMain)`
-  font-size: 14px;
-`;
+import NutrientsProgress from '../components/common/nutrient/NutrientsProgress';
 
 const PaymentDetail = ({
   navigation: {navigate, setOptions},
@@ -120,3 +69,50 @@ const PaymentDetail = ({
 };
 
 export default PaymentDetail;
+
+const Container = styled.View`
+  flex: 1;
+  background-color: ${colors.backgroundLight};
+`;
+
+const ProgressBox = styled.View`
+  background-color: ${colors.white};
+  padding: 0px 16px 0px 16px;
+`;
+
+const ContentContainer = styled.View`
+  flex: 1;
+  padding: 0px 8px 24px 8px;
+`;
+
+const Card = styled.View`
+  width: 100%;
+  padding: 0px 8px 16px 8px;
+  margin-top: 16px;
+  background-color: ${colors.white};
+  border-radius: 10px;
+`;
+
+const CardTitle = styled(TextMain)`
+  margin-top: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  align-self: center;
+`;
+
+const MenuNutrContainer = styled(Row)`
+  margin-top: 24px;
+  width: 100%;
+  align-items: center;
+`;
+
+const MenuNutrBox = styled(Row)``;
+
+const MenuNutr = styled(TextMain)`
+  font-size: 12px;
+  font-weight: lighter;
+`;
+
+const MenuNutrValue = styled(TextMain)`
+  font-size: 14px;
+`;

@@ -1,4 +1,3 @@
-// export const BASE_URL = 'http://52.79.208.191:8080';
 export const BASE_URL = 'http://52.78.164.105:8080';
 
 export const GET_TOKEN = `${BASE_URL}/api/every/token/get-token`; //토큰 조회
@@ -23,11 +22,13 @@ export const DELETE_DIET_DETAIL = `${BASE_URL}/api/member/diet/delete-diet-detai
 export const GET_DIET_DETAIL_EMPTY_YN = `${BASE_URL}/api/member/diet/get-diet-detail-empty-yn`;
 
 // product-controller
+export const GET_PRODUCT = `${BASE_URL}/api/member/product/get-product`;
 export const LIST_PRODUCT = `${BASE_URL}/api/member/product/list-product`;
 export const CREATE_PRODUCT_AUTO = `${BASE_URL}/api/member/product/create-product-auto`;
 export const CREATE_PRODUCT_MARK = `${BASE_URL}/api/member/product/create-product-mark`;
 export const DELETE_PRODUCT_MARK = `${BASE_URL}/api/member/product/delete-product-mark`;
 export const FILTER = `${BASE_URL}/api/member/product/get-product-filter-range`;
+
 // api-member-code-controller
 export const COMMON_CODE = `${BASE_URL}/api/member/code/list-code`;
 

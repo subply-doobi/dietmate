@@ -1,16 +1,16 @@
-import {View, Text} from 'react-native';
-import React from 'react';
 import styled from 'styled-components/native';
-
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {useNavigation} from '@react-navigation/native';
+
+import {icons} from '../assets/icons/iconSource';
+import colors from '../styles/colors';
+
+import Home from '../screens/homeScreen/Home';
 import Mypage from '../screens/Mypage';
 import Likes from '../screens/Likes';
 import Cart from '../screens/Cart';
-import colors from '../styles/colors';
 import BackArrow from '../components/common/BackArrow';
-import Home from '../screens/homeScreen/Home';
-import {NavigationProps} from '../constants/constants';
-import {useNavigation} from '@react-navigation/native';
+
 import {useListDietDetailAll} from '../query/queries/diet';
 
 const Tab = createBottomTabNavigator();
@@ -29,13 +29,9 @@ const BottomTabNav = props => {
           headerShown: false,
           tabBarIcon: ({focused}) =>
             focused ? (
-              <BottomTabIcon
-                source={require('../assets/icons/36_mainPage_selected.png')}
-              />
+              <BottomTabIcon source={icons.mainActivated_36} />
             ) : (
-              <BottomTabIcon
-                source={require('../assets/icons/36_mainPage.png')}
-              />
+              <BottomTabIcon source={icons.main_36} />
             ),
           tabBarShowLabel: false,
         }}
@@ -47,13 +43,9 @@ const BottomTabNav = props => {
           headerShown: false,
           tabBarIcon: ({focused}) =>
             focused ? (
-              <BottomTabIcon
-                source={require('../assets/icons/36_profilePage_selected.png')}
-              />
+              <BottomTabIcon source={icons.mypageActivated_36} />
             ) : (
-              <BottomTabIcon
-                source={require('../assets/icons/36_profilePage.png')}
-              />
+              <BottomTabIcon source={icons.mypage_36} />
             ),
           tabBarShowLabel: false,
         }}
@@ -64,13 +56,9 @@ const BottomTabNav = props => {
         options={{
           tabBarIcon: ({focused}) =>
             focused ? (
-              <BottomTabIcon
-                source={require('../assets/icons/36_likePage_selected.png')}
-              />
+              <BottomTabIcon source={icons.likeActivated_36} />
             ) : (
-              <BottomTabIcon
-                source={require('../assets/icons/36_likePage.png')}
-              />
+              <BottomTabIcon source={icons.like_36} />
             ),
           tabBarShowLabel: false,
 
@@ -92,13 +80,9 @@ const BottomTabNav = props => {
           tabBarIcon: ({focused}) => (
             <CartIcon>
               {focused ? (
-                <BottomTabIcon
-                  source={require('../assets/icons/36_cartPage_selected.png')}
-                />
+                <BottomTabIcon source={icons.cartFilled_36} />
               ) : (
-                <BottomTabIcon
-                  source={require('../assets/icons/36_cartPage.png')}
-                />
+                <BottomTabIcon source={icons.cart_36} />
               )}
               {dietDetailAllData && dietDetailAllData.length !== 0 && (
                 <Badge>
@@ -116,7 +100,9 @@ const BottomTabNav = props => {
             fontWeight: 'bold',
             color: colors.textMain,
           },
-          headerLeft: () => <BackArrow goBackFn={goBack} />,
+          headerLeft: () => (
+            <BackArrow goBackFn={goBack} style={{marginLeft: 16}} />
+          ),
         }}
       />
     </Tab.Navigator>

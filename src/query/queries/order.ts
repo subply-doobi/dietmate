@@ -1,9 +1,10 @@
 import axios from 'axios';
 import {useMutation} from '@tanstack/react-query';
-import {kakaoAppAdminKey} from '../../constants/constants';
-import {setOrderSummary} from '../../stores/slices/orderSlice';
 import {useDispatch, useSelector} from 'react-redux';
+
 import {RootState} from '../../stores/store';
+import {setOrderSummary} from '../../stores/slices/orderSlice';
+import {kakaoAppAdminKey} from '../../constants/constants';
 //기존 testKakaoPay
 
 export const useKakaoPayReady = () => {
@@ -26,8 +27,8 @@ export const useKakaoPayReady = () => {
     },
   };
 
-  const mutation = useMutation(
-    async (price: number) => {
+  const mutation = useMutation({
+    mutationFn: async (price: number) => {
       const res = await axios.post(
         'https://kapi.kakao.com/v1/payment/ready',
         null,
@@ -46,8 +47,7 @@ export const useKakaoPayReady = () => {
       );
       return res.data;
     },
-    {enabled: false},
-  );
+  });
 
   return {
     isLoading: mutation.isLoading,
@@ -80,6 +80,7 @@ export const useKakaopayApprove = () => {
   };
 
   const mutation = useMutation(async () => {
+    console.log('useMutation: kakaoConfig: ', kakaoPayConfig);
     const res = await axios.post(
       'https://kapi.kakao.com/v1/payment/approve',
       null,

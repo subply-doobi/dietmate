@@ -1,6 +1,7 @@
-import {View, Text} from 'react-native';
-import React, {useState} from 'react';
 import styled from 'styled-components/native';
+import {Controller, useWatch} from 'react-hook-form';
+
+import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {
   AccordionContentContainer,
@@ -8,31 +9,7 @@ import {
   Row,
   TextMain,
 } from '../../styles/styledConsts';
-import {Controller, useWatch} from 'react-hook-form';
 import {IFormField, validationRules} from '../../constants/constants';
-
-const KakaoPayBtn = styled(BtnCTA)`
-  height: 48px;
-  border-color: ${({isActivated}) =>
-    isActivated ? `${colors.kakaoColor}` : `${colors.inactivated}`};
-`;
-const KakaoPayBtnText = styled(TextMain)`
-  font-size: 16px;
-  margin-left: 8px;
-`;
-const KakaoLogo = styled.Image`
-  width: 48px;
-  height: 20px;
-`;
-const GuideText = styled(TextMain)`
-  margin-top: 16px;
-  font-size: 14px;
-  font-weight: 300;
-`;
-const BoldText = styled(TextMain)`
-  font-size: 14px;
-  font-weight: 800;
-`;
 
 interface IPaymentMethod {
   control: any;
@@ -49,7 +26,7 @@ const PaymentMethod = ({control, setValue}: IPaymentMethod) => {
           setValue('paymentMethod', paymentMethodValue ? '' : 'kakao');
         }}>
         <Row>
-          <KakaoLogo source={require('../../assets/icons/kakaoPay.png')} />
+          <KakaoLogo source={icons.kakaoPay} />
           <KakaoPayBtnText>카카오페이</KakaoPayBtnText>
         </Row>
       </KakaoPayBtn>
@@ -73,3 +50,26 @@ const PaymentMethod = ({control, setValue}: IPaymentMethod) => {
 };
 
 export default PaymentMethod;
+
+const KakaoPayBtn = styled(BtnCTA)`
+  height: 48px;
+  border-color: ${({isActivated}) =>
+    isActivated ? `${colors.kakaoColor}` : `${colors.inactivated}`};
+`;
+const KakaoPayBtnText = styled(TextMain)`
+  font-size: 16px;
+  margin-left: 8px;
+`;
+const KakaoLogo = styled.Image`
+  width: 48px;
+  height: 20px;
+`;
+const GuideText = styled(TextMain)`
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 300;
+`;
+const BoldText = styled(TextMain)`
+  font-size: 14px;
+  font-weight: 800;
+`;

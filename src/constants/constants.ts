@@ -4,9 +4,9 @@ import {Dimensions, Platform} from 'react-native';
 export const {width, height} = Dimensions.get('screen');
 export const SCREENWIDTH = Math.min(width, height);
 export const SCREENHEIGHT = Math.max(width, height);
-
 export const IS_ANDROID = Platform.OS === 'android';
 export const IS_IOS = Platform.OS === 'ios';
+export const FOOD_LIST_ITEM_HEIGHT = 152;
 
 // Doobi server category etc.
 export const DIET_PURPOSE_CD = {
@@ -45,11 +45,19 @@ export const nutrRatioCategory = [
 // consts for screens
 export const myPageBtns = [
   {title: '몸무게 변경', btnId: 'ChangeWeight'},
-  {title: '내 기록', btnId: 'History'},
+  // {title: '내 기록', btnId: 'History'},
   {title: '찜한 식품', btnId: 'Likes'},
-  {title: '주문 테스트페이지 -> 삭제예정', btnId: 'Order'},
   {title: '주문내역', btnId: 'PaymentHistory'},
 ];
+
+export const categoryCode = {
+  도시락: 'CG001',
+  닭가슴살: 'CG002',
+  샐러드: 'CG003',
+  영양간식: 'CG004',
+  과자: 'CG005',
+  음료: 'CG006',
+};
 
 interface ITimeToMinutes {
   [key: string]: number;
@@ -173,37 +181,36 @@ export const validationRules: IValidationRules = {
     maxlength: 4,
     validate: {
       range: (v: string) =>
-        (parseFloat(v) >= 300 && parseFloat(v) <= 1500) ||
-        '300~1500 kcal 사이로 입력해주세요',
+        (parseFloat(v) >= 300 && parseFloat(v) <= 1400) ||
+        '300~1400 kcal 사이로 입력해주세요',
     },
   },
-  // TBD | carbManual -> carb로 고쳐서 mypage에서 validationRulesByNutr 단계 없애기
   carbManual: {
-    maxlength: 4,
+    maxlength: 3,
     validate: {
       range: (v: string) =>
         !v
-          ? '모든 영양성분을 입력해주세요'
+          ? '탄수화물 양을 입력해주세요'
           : (parseFloat(v) >= 10 && parseFloat(v) <= 375) ||
             `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
     },
   },
   proteinManual: {
-    maxlength: 4,
+    maxlength: 3,
     validate: {
       range: (v: string) =>
         !v
-          ? '모든 영양성분을 입력해주세요'
+          ? '단백질 양을 입력해주세요'
           : (parseFloat(v) >= 10 && parseFloat(v) <= 375) ||
             `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
     },
   },
   fatManual: {
-    maxlength: 4,
+    maxlength: 3,
     validate: {
       range: (v: string) =>
         !v
-          ? '모든 영양성분을 입력해주세요'
+          ? '지방 양을 입력해주세요'
           : (parseFloat(v) >= 5 && parseFloat(v) <= 100) ||
             `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
     },
@@ -214,7 +221,6 @@ export const validationRules: IValidationRules = {
 export const kakaoAppAdminKey = 'f1fddabbeb50a2054c9b82ced4017b11';
 
 // type
-// TBD | react navigation ts 적용 아직 모름
 export interface NavigationProps {
   navigation?: {
     navigate: Function;
@@ -231,27 +237,4 @@ export interface IFormField {
     onBlur: () => void;
     value: string;
   };
-}
-
-export interface IProduct {
-  calorie: number;
-  carb: number;
-  categoryCd: string;
-  categoryNm: string;
-  distributerBizNo: string;
-  distributerNm: string;
-  fat: number;
-  mainAttId: string;
-  mainAttUrl: string;
-  platformNm: string;
-  price: number;
-  priceCalorieCompare: number;
-  priceProteinCompare: number;
-  productNm: string;
-  productNo: string;
-  protein: number;
-  qty: number;
-  subCategoryCd: string;
-  subCategoryNm: string;
-  [key: string]: string | number;
 }

@@ -1,15 +1,15 @@
-import {View, Text, TouchableOpacity} from 'react-native';
-import React from 'react';
+import {TouchableOpacity} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Order from '../screens/orderScreen/Order';
-import colors from '../styles/colors';
-import styled from 'styled-components/native';
+import {useNavigation} from '@react-navigation/native';
+
 import {NavigationProps} from '../constants/constants';
+import colors from '../styles/colors';
+
+import Order from '../screens/orderScreen/Order';
 import AddressEdit from '../screens/orderScreen/AddressEdit';
 import BackArrow from '../components/common/BackArrow';
 import PaymentComplete from '../screens/orderScreen/PaymentComplete';
 import PaymentHistory from '../screens/orderScreen/PaymentHistory';
-import {useNavigation} from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 

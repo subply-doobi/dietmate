@@ -1,26 +1,77 @@
-import {View, Text, FlatList, ScrollView} from 'react-native';
-import React, {useEffect, useState} from 'react';
+// react, RN, 3rd
+import React, {useCallback, useState} from 'react';
+import {FlatList} from 'react-native';
 import styled from 'styled-components/native';
-import MenuSelect from '../components/common/MenuSelect';
+import {useSelector} from 'react-redux';
+
+// doobi util, redux, etc
+import {RootState} from '../stores/store';
+import {FOOD_LIST_ITEM_HEIGHT} from '../constants/constants';
+
+// doobi Component
 import {
-  BtnCTA,
-  BtnText,
-  Col,
   Container,
   HorizontalLine,
-  HorizontalSpace,
   Row,
   TextMain,
   TextSub,
 } from '../styles/styledConsts';
-import MenuHeader from '../components/common/MenuHeader';
-import NutrientsProgress from '../components/common/NutrientsProgress';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../stores/store';
-import {IProduct} from '../constants/constants';
-import LikeFoodList from '../components/likes/LikeFoodList';
-import {setLikeFoods} from '../stores/slices/likeSlice';
-import colors from '../styles/colors';
+import FoodList from '../components/home/FoodList';
+import NutrientsProgress from '../components/common/nutrient/NutrientsProgress';
+
+// react-query
+import {IProductData} from '../query/types/product';
+
+const Likes = () => {
+  // redux
+  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+
+  // flatList render fn
+  //  const renderFoodList = useCallback(
+  //   ({item}: {item: IProductData}) =>
+  //     dietDetailData ? <FoodList item={item} screen="LikeScreen" /> : <></>,
+  //   [],
+  // );
+  // const extractListKey = useCallback(
+  //   (item: IProductData) => item.productNo,
+  //   [],
+  // );
+  // const getItemLayout = useCallback(
+  //   (_: any, index: number) => ({
+  //     length: FOOD_LIST_ITEM_HEIGHT,
+  //     offset: FOOD_LIST_ITEM_HEIGHT * index,
+  //     index,
+  //   }),
+  //   [],
+  // );
+  return (
+    <Container>
+      <NutrientsProgress currentDietNo={currentDietNo} />
+      <Row style={{marginTop: 32}}>
+        <ListTitle>찜한 상품</ListTitle>
+        <NoOfFoods>{'XX 개'}</NoOfFoods>
+      </Row>
+      <HorizontalLine style={{marginTop: 8}} />
+      {/* <FlatList
+            data={tData}
+            keyExtractor={extractListKey}
+            renderItem={renderFoodList}
+            getItemLayout={getItemLayout}
+            // ItemSeparatorComponent={getSeperator}
+            initialNumToRender={5}
+            windowSize={2}
+            maxToRenderPerBatch={7}
+            removeClippedSubviews={true}
+            onEndReachedThreshold={0.4}
+            showsVerticalScrollIndicator={false}
+            refreshing={productIsFetching}
+            onRefresh={refetchProduct}
+          /> */}
+    </Container>
+  );
+};
+
+export default Likes;
 
 const MenuSelectContainer = styled.View`
   width: 100%;
@@ -36,41 +87,3 @@ const ListTitle = styled(TextMain)`
 const NoOfFoods = styled(TextSub)`
   font-size: 16px;
 `;
-
-const Likes = () => {
-  // redux
-  const {menuIndex} = useSelector((state: RootState) => state.cart);
-  const {likeFoods} = useSelector((state: RootState) => state.like);
-  const dispatch = useDispatch();
-  // test data
-  const [menuSelectOpen, setMenuSelectOpen] = useState(false);
-
-  return (
-    <Container>
-      <MenuSelectContainer>
-        <MenuHeader
-          menuSelectOpen={menuSelectOpen}
-          setMenuSelectOpen={setMenuSelectOpen}
-        />
-      </MenuSelectContainer>
-      <NutrientsProgress menuIndex={menuIndex} />
-      <Row style={{marginTop: 32}}>
-        <ListTitle>찜한 상품</ListTitle>
-        <NoOfFoods>{likeFoods?.length}</NoOfFoods>
-      </Row>
-      <HorizontalLine style={{marginTop: 8}} />
-      <FlatList
-        style={{marginTop: 24}}
-        data={likeFoods}
-        renderItem={item => <LikeFoodList item={item} menuIndex={menuIndex} />}
-        ItemSeparatorComponent={() => <HorizontalSpace height={16} />}
-        keyExtractor={item => item.productNo}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 80}}
-      />
-      {menuSelectOpen && <MenuSelect setOpen={setMenuSelectOpen} />}
-    </Container>
-  );
-};
-
-export default Likes;

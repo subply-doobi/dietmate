@@ -1,6 +1,10 @@
+import {useState, SetStateAction} from 'react';
+import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
+
+import {RootState} from '../../stores/store';
+import {icons} from '../../assets/icons/iconSource';
 import {
-  BtnBottomCTA,
   BtnCTA,
   BtnText,
   Col,
@@ -9,22 +13,19 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/styledConsts';
-import {Text} from 'react-native';
 import {
   commaToNum,
   makePriceObjBySeller,
   reGroupBySeller,
 } from '../../util/sumUp';
 import colors from '../../styles/colors';
-import {useState, SetStateAction} from 'react';
+import {IDietDetailData} from '../../query/types/diet';
+
 import {
   useListDietDetail,
   useListDietDetailAll,
   useUpdateDietDetail,
 } from '../../query/queries/diet';
-import {RootState} from '../../stores/store';
-import {useSelector} from 'react-redux';
-import {IDietDetailData} from '../../query/types/diet';
 
 const getCurrentQty = (productNm: string, dietDetail: IDietDetailData) => {
   let currentQty = '';
@@ -38,57 +39,38 @@ const getCurrentQty = (productNm: string, dietDetail: IDietDetailData) => {
 
 const NumberPickerContent = ({
   setNumberPickerShow,
-  platformNm,
-  productNo,
-  productNm,
-  price,
-  minQty,
-  freeShippingPrice,
-  shippingPrice,
+  dietDetailData,
 }: {
   setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
-  platformNm: string;
-  productNo: string;
-  productNm: string;
-  price: string;
-  minQty: string;
-  freeShippingPrice: string;
-  shippingPrice: string;
+  dietDetailData: IDietDetailData;
 }) => {
-  // redux
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
-
   // react-query
-  const {data: dietDetailData} = useListDietDetail(currentDietNo);
   const {data: dietAllData} = useListDietDetailAll();
   const updateDietDetailMutation = useUpdateDietDetail();
 
-  const currentQty = dietDetailData
-    ? getCurrentQty(productNm, dietDetailData)
-    : '1';
+  const currentQty = '1';
+  // const currentQty = dietDetailData
+  //   ? getCurrentQty(productNm, dietDetailData)
+  //   : '1';
 
   // state
-  const [number, setNumber] = useState(parseInt(currentQty));
+  const [number, setNumber] = useState(parseInt(currentQty, 10));
 
   // etc
   // 판매자별 총액계산
   const reGroupedProducts = dietAllData && reGroupBySeller(dietAllData);
   const priceBySeller =
     reGroupedProducts && makePriceObjBySeller(reGroupedProducts);
-  const currentSellerPrice = priceBySeller ? priceBySeller[platformNm] : 0;
+  const currentSellerPrice = 0;
+  // const currentSellerPrice = priceBySeller ? priceBySeller[platformNm] : 0;
 
   // 현재 설정하는 수량 포함한 총 가격
   const totalPrice =
-    currentSellerPrice + (number - parseInt(currentQty)) * parseInt(price);
-  const isFreeShipping = totalPrice >= parseInt(freeShippingPrice);
-  const minCheck = parseInt(minQty) <= number ? true : false;
+    currentSellerPrice + (number - parseInt(currentQty)) * 5000;
+  const isFreeShipping = totalPrice >= 30000;
+  const minCheck = 1 <= number ? true : false;
 
   const saveQty = () => {
-    updateDietDetailMutation.mutate({
-      dietNo: currentDietNo,
-      productNo: productNo,
-      qty: String(number),
-    });
     setNumberPickerShow(false);
   };
   return (
@@ -100,36 +82,34 @@ const NumberPickerContent = ({
           width: '100%',
         }}>
         <Col style={{flex: 1}}>
-          <SellerText>[{platformNm}]</SellerText>
+          <SellerText>[테스트셀러]</SellerText>
           <ProductNm numberOfLines={1} ellipsizeMode="tail">
-            {productNm}
+            개맛있는 닭가슴살 보끔빱
           </ProductNm>
           <Col style={{marginTop: 16}}>
             {isFreeShipping ? (
               <FreeShippingNotice>배송비 무료!</FreeShippingNotice>
             ) : (
               <FreeShippingPriceText>
-                {commaToNum(freeShippingPrice)}원 이상 무료배송 (배송비:{' '}
-                {commaToNum(shippingPrice)}원)
+                얼마원 이상 무료배송 (배송비: 오백만원)
               </FreeShippingPriceText>
             )}
             <MinQtyText>
-              최소주문수량: <MinQtyValue>{minQty}개</MinQtyValue>
+              최소주문수량: <MinQtyValue>1개</MinQtyValue>
             </MinQtyText>
             <HorizontalSpace height={12} />
             <FreeShippingPriceText>
-              (현재 [{platformNm}] 상품 전체: {commaToNum(totalPrice)}원)
+              (현재 [테스트셀러] 상품 전체: 오천만원)
             </FreeShippingPriceText>
           </Col>
         </Col>
         <Col>
           <BtnPlusMinus onPress={() => setNumber(v => v + 1)}>
-            <BtnImage source={require(`../../assets/icons/48_btnPlus.png`)} />
+            <BtnImage source={icons.plus_48} />
           </BtnPlusMinus>
           <HorizontalSpace height={12} />
-          <BtnPlusMinus
-            onPress={() => number > parseInt(minQty) && setNumber(v => v - 1)}>
-            <BtnImage source={require(`../../assets/icons/48_btnMinus.png`)} />
+          <BtnPlusMinus onPress={() => number > 1 && setNumber(v => v - 1)}>
+            <BtnImage source={icons.minus_48} />
           </BtnPlusMinus>
         </Col>
       </Row>
@@ -160,9 +140,6 @@ const ProductNm = styled(TextMain)`
 const FreeShippingPriceText = styled(TextMain)`
   font-size: 14px;
 `;
-const CurrentPriceText = styled(TextMain)`
-  font-size: 14px;
-`;
 
 const MinQtyText = styled(TextMain)`
   font-size: 14px;
@@ -187,6 +164,6 @@ const BtnPlusMinus = styled.TouchableOpacity`
 `;
 
 const BtnImage = styled.Image`
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
 `;

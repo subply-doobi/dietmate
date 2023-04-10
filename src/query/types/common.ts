@@ -1,6 +1,7 @@
-export interface IQueryOptions<Params = void> {
+export interface IQueryOptions<T = void> {
   enabled?: boolean;
   onSuccess?: Function;
+  initialData?: T;
   additionalQuerykey?: Array<string | number>;
 }
 

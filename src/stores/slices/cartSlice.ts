@@ -1,68 +1,36 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
+
 import {queryClient} from '../../query/store';
-import {DIET_DETAIL_EMPTY_YN, PRODUCT} from '../../query/keys';
+import {PRODUCTS} from '../../query/keys';
+import {IProductsData} from '../../query/types/product';
 
-// cart -> menu -> product
-
-interface ICurrentNutr {
-  cal: number;
-  carb: number;
-  protein: number;
-  fat: number;
-}
 export interface ICartState {
   currentDietNo: string;
-  currentNutr: ICurrentNutr;
+  totalFoodList: IProductsData;
+  totalFoodListIsLoaded: boolean;
 }
 
 const initialState: ICartState = {
   currentDietNo: '',
-  currentNutr: {
-    cal: 0,
-    carb: 0,
-    protein: 0,
-    fat: 0,
-  },
+  totalFoodList: [],
+  totalFoodListIsLoaded: false,
 };
 
 export const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    setCurrentDietNo: (state, action: PayloadAction<string>) => {
+    setCurrentDiet: (state, action: PayloadAction<string>) => {
       state.currentDietNo = action.payload;
-      queryClient.invalidateQueries([PRODUCT]);
+      // queryClient.invalidateQueries([PRODUCTS]);
     },
-    // setCurrentNutr: (state, action: PayloadAction<ICurrentNutr>) => {
-    //   const {cal, carb, protein, fat} = state.currentNutr;
-    //   state.currentNutr = {
-    //     cal: action.payload.cal,
-    //     carb: action.payload.carb,
-    //     protein: action.payload.protein,
-    //     fat: action.payload.fat,
-    //   };
-    // },
-    // addNutr: (state, action: PayloadAction<ICurrentNutr>) => {
-    //   const {cal, carb, protein, fat} = state.currentNutr;
-    //   state.currentNutr = {
-    //     cal: cal + action.payload.cal,
-    //     carb: carb + action.payload.carb,
-    //     protein: protein + action.payload.protein,
-    //     fat: fat + action.payload.fat,
-    //   };
-    // },
-    // minusNutr: (state, action: PayloadAction<ICurrentNutr>) => {
-    //   const {cal, carb, protein, fat} = state.currentNutr;
-    //   state.currentNutr = {
-    //     cal: cal - action.payload.cal,
-    //     carb: carb - action.payload.carb,
-    //     protein: protein - action.payload.protein,
-    //     fat: fat - action.payload.fat,
-    //   };
-    // },
+    setTotalFoodList: (state, action: PayloadAction<IProductsData>) => {
+      state.totalFoodList = action.payload;
+      state.totalFoodListIsLoaded = true;
+    },
   },
 });
 
-export const {setCurrentDietNo} = cartSlice.actions;
+export const {setCurrentDiet, setTotalFoodList} = cartSlice.actions;
 export default cartSlice.reducer;

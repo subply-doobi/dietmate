@@ -1,15 +1,15 @@
 import React, {useRef, useState} from 'react';
-import {useForm, useWatch} from 'react-hook-form';
 import {ScrollView, Text, TouchableOpacity} from 'react-native';
-import Accordion from 'react-native-collapsible/Accordion';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
-import Auto from '../../components/userInput/Auto';
-import CalculateByRatio from '../../components/userInput/CalculateByRatio';
-import Manual from '../../components/userInput/Manual';
-import {NavigationProps, nutrRatioCategory} from '../../constants/constants';
+import {useForm, useWatch} from 'react-hook-form';
+import Accordion from 'react-native-collapsible/Accordion';
+import {useNavigation} from '@react-navigation/native';
+
 import {RootState} from '../../stores/store';
+import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
+import {nutrRatioCategory} from '../../constants/constants';
 import {
   BtnBottomCTA,
   BtnText,
@@ -19,6 +19,11 @@ import {
   TextMain,
 } from '../../styles/styledConsts';
 import {convertDataByMethod} from '../../util/userInfoSubmit';
+
+import Auto from '../../components/userInput/Auto';
+import CalculateByRatio from '../../components/userInput/CalculateByRatio';
+import Manual from '../../components/userInput/Manual';
+
 import {
   useCreateBaseLine,
   useGetBaseLine,
@@ -34,7 +39,11 @@ interface IFormData {
   fatManual: string;
 }
 
-const ThirdInput = ({navigation}: NavigationProps) => {
+const ThirdInput = () => {
+  // navigation
+  const navigation = useNavigation();
+  const {navigate} = navigation;
+
   // react-query
   const {data} = useGetBaseLine();
   const updateMutation = useUpdateBaseLine();
@@ -120,9 +129,9 @@ const ThirdInput = ({navigation}: NavigationProps) => {
           {section.title}
         </AccordionHeaderTitle>
         {isActive ? (
-          <ArrowIcon source={require('../../assets/icons/20_up.png')} />
+          <ArrowIcon source={icons.arrowUpPurple_20} />
         ) : (
-          <ArrowIcon source={require('../../assets/icons/20_down.png')} />
+          <ArrowIcon source={icons.arrowDown_20} />
         )}
       </AccordionHeader>
     );
@@ -167,7 +176,7 @@ const ThirdInput = ({navigation}: NavigationProps) => {
     } else {
       updateMutation.mutate(requestBody);
     }
-    navigation.navigate('BottomTabNav', {screen: 'Home'});
+    navigate('BottomTabNav', {screen: 'Home'});
   };
   // TBD | 스크롤뷰 ref를 Manual에 넘겨서 단백질입력 활성화시 스크롤 내려주기
   return (
