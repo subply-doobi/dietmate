@@ -17,7 +17,6 @@ import {
   BtnCTA,
   BtnText,
   Col,
-  Container,
   Row,
   TextMain,
   TextSub,
@@ -193,9 +192,11 @@ const FoodDetail = () => {
   ) : (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <Container>
-        {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
+        <InnerContainer>
+          {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
+        </InnerContainer>
         <ScrollView
-          style={{marginBottom: 20, flex: 1}}
+          style={{marginBottom: 20, flex: 1, zIndex: -1}}
           showsVerticalScrollIndicator={false}>
           <View>
             <FoodImageContainer
@@ -204,7 +205,6 @@ const FoodDetail = () => {
               }}
               // style={{resizeMode: 'stretch'}}
             />
-            <FoodImageBottom />
             <NutritionInImage>
               {table.slice(0, 4).map(el => {
                 return (
@@ -229,40 +229,41 @@ const FoodDetail = () => {
               })}
             </NutritionInImage>
           </View>
-
-          <SellerText style={{marginTop: 20}}>
-            [{productData.platformNm}]
-          </SellerText>
-          <ProductName>{productData.productNm}</ProductName>
-          <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
-            <Col>
-              <ShippingText>20000원 이상 무료배송 </ShippingText>
-              <Row>
-                <ShippingText>최소주문수량: </ShippingText>
-                <ShippingText style={{color: '#ff6060'}}>2개</ShippingText>
-              </Row>
-            </Col>
-            <Price>{commaToNum(productData.price)}원</Price>
-          </Row>
-          <Row
-            style={{
-              justifyContent: 'flex-start',
-            }}>
-            {detailMenu.map((el, index) => {
-              return (
-                <React.Fragment key={`${el}-${index}`}>
-                  <DetailMenu
-                    onPress={() => setClicked(index)}
-                    selected={index === clicked}>
-                    <DetailMenuText>{el}</DetailMenuText>
-                  </DetailMenu>
-                </React.Fragment>
-              );
-            })}
-          </Row>
-          <PartContainer>
-            <ShowPart index={clicked} table={table} />
-          </PartContainer>
+          <InnerContainer>
+            <SellerText style={{marginTop: 20}}>
+              [{productData.platformNm}]
+            </SellerText>
+            <ProductName>{productData.productNm}</ProductName>
+            <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
+              <Col>
+                <ShippingText>20000원 이상 무료배송 </ShippingText>
+                <Row>
+                  <ShippingText>최소주문수량: </ShippingText>
+                  <ShippingText style={{color: '#ff6060'}}>2개</ShippingText>
+                </Row>
+              </Col>
+              <Price>{commaToNum(productData.price)}원</Price>
+            </Row>
+            <Row
+              style={{
+                justifyContent: 'flex-start',
+              }}>
+              {detailMenu.map((el, index) => {
+                return (
+                  <React.Fragment key={`${el}-${index}`}>
+                    <DetailMenu
+                      onPress={() => setClicked(index)}
+                      selected={index === clicked}>
+                      <DetailMenuText>{el}</DetailMenuText>
+                    </DetailMenu>
+                  </React.Fragment>
+                );
+              })}
+            </Row>
+            <PartContainer>
+              <ShowPart index={clicked} table={table} />
+            </PartContainer>
+          </InnerContainer>
         </ScrollView>
       </Container>
       <View>
@@ -295,10 +296,18 @@ const FoodDetail = () => {
 
 export default FoodDetail;
 
+const Container = styled.View`
+  flex: 1;
+  background-color: ${colors.white};
+`;
+
+const InnerContainer = styled.View`
+  padding: 0px 16px 0px 16px;
+`;
+
 const FoodImageContainer = styled.Image`
-  margin-left: 50px;
-  width: 240px;
-  height: 180px;
+  width: 100%;
+  height: 240px;
 `;
 const SellerText = styled(TextSub)`
   margin-top: 10px;
@@ -350,15 +359,7 @@ const NutritionInImage = styled.View`
   align-items: center;
   position: absolute;
   bottom: 0;
-  opacity: 1;
-  width: 360px;
+  width: 100%;
   height: 24px;
-`;
-const FoodImageBottom = styled.View`
-  position: absolute;
-  bottom: 0;
-  background-color: black;
-  opacity: 0.4;
-  width: 360px;
-  height: 24px;
+  background-color: ${colors.blackOpacity50};
 `;

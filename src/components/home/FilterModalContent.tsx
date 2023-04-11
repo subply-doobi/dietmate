@@ -15,7 +15,13 @@ import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
 
 const FilterModalContent = props => {
-  const {filterIndex, closeModal, setFilterParams, filterParams} = props;
+  const {
+    filterIndex,
+    closeModal,
+    setFilterParams,
+    filterParams,
+    setRemainNutrProductData,
+  } = props;
   const [clicked, setClicked] = useState(filterIndex);
   const [categoryParam, setCategoryParam] = useState(
     filterParams.categoryParam,
@@ -213,6 +219,7 @@ const FilterModalContent = props => {
           btnStyle={'activated'}
           onPress={() => {
             setFilterParams(params);
+            setRemainNutrProductData(undefined);
             closeModal(false);
           }}>
           <BottomText>확인</BottomText>

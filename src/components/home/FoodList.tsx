@@ -31,6 +31,7 @@ import {
   useListDietDetail,
 } from '../../query/queries/diet';
 import {useGetBaseLine} from '../../query/queries/baseLine';
+import {NUTR_ERROR_RANGE} from '../../constants/constants';
 
 interface IFoodList {
   item: IProductData;
@@ -43,7 +44,9 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
 
   // react-query
-  const {data: dietDetailData} = useListDietDetail(currentDietNo);
+  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
+    enabled: currentDietNo ? true : false,
+  });
   const {data: baseLineData} = useGetBaseLine();
   const addMutation = useCreateDietDetail();
   const deleteMutation = useDeleteDietDetail();
@@ -67,11 +70,18 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
     }
     const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
     return {
-      calExceed: parseInt(baseLineData.calorie) - cal < parseInt(item.calorie),
-      carbExceed: parseInt(baseLineData.carb) - carb < parseInt(item.carb),
+      calExceed:
+        parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[1] - cal <
+        parseInt(item.calorie),
+      carbExceed:
+        parseInt(baseLineData.carb) + NUTR_ERROR_RANGE.carb[1] - carb <
+        parseInt(item.carb),
       proteinExceed:
-        parseInt(baseLineData.protein) - protein < parseInt(item.protein),
-      fatExceed: parseInt(baseLineData.fat) - fat < parseInt(item.fat),
+        parseInt(baseLineData.protein) + NUTR_ERROR_RANGE.protein[1] - protein <
+        parseInt(item.protein),
+      fatExceed:
+        parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[1] - fat <
+        parseInt(item.fat),
     };
   }, [dietDetailData, baseLineData]);
 

@@ -138,7 +138,6 @@ const AccordionContent = ({
           </BtnSmall>
         </SelectedDeleteRow>
       )}
-      <HorizontalLine />
       <DAlert
         alertShow={deleteModalShow}
         confirmLabel="삭제"
@@ -189,6 +188,7 @@ const ContentBody = styled.View`
 const SelectedDeleteRow = styled(Row)`
   height: 52px;
   justify-content: space-between;
+  z-index: -1;
 `;
 
 const SelectAllBox = styled(Row)``;

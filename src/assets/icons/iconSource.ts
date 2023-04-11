@@ -14,6 +14,7 @@ export const icons = {
   checkbox_24: require(`./24_checkbox.png`),
   checkboxCheckedGreen_24: require(`./24_checkbox_checked_green.png`),
   checkboxCheckedPurple_24: require(`./24_checkbox_checked_purple.png`),
+  checkboxCheckedWhite_24: require(`./24_checkbox_checked_white.png`),
   edit_24: require(`./24_edit.png`),
   initialize_24: require(`./24_initialize.png`),
   minus_24: require(`./24_minus.png`),

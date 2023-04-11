@@ -3,13 +3,10 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {Modal, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
-
 // doobi util, redux, etc
 import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
-// import {makeAutoMenu} from '../../util/autoDietTest';
-
 // doobi Component
 import DSlider from '../common/slider/DSlider';
 import {
@@ -21,9 +18,7 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/styledConsts';
-
 // react-query
-import {useCreateProductAuto} from '../../query/queries/product';
 import {useListCategory} from '../../query/queries/category';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {IDietDetailData} from '../../query/types/diet';
@@ -61,7 +56,7 @@ const AutoDietModal = ({
   // index 0: 도시락 | 1: 닭가슴살 | 2: 샐러드 | 3: 영양간식 | 4: 과자 | 5: 음료
   const [selectedCategory, setSelectedCategory] = useState<boolean[]>([]);
   const [sliderValue, setSliderValue] = useState<number[]>([4000, 12000]);
-  // const [isAutoMenuLoading, setIsAutoMenuLoading] = useState(false);
+  const [autoFailedNum, setAutoFailedNum] = useState<number>(0);
 
   useEffect(() => {
     categoryData &&
@@ -175,16 +170,23 @@ const AutoDietModal = ({
     return (
       <AutoMenuStatusContainer>
         <AutoMenuStatusText>{`식품조합을 찾지 못했습니다\n다시 시도해주세요`}</AutoMenuStatusText>
-        <NutrInfoText>{`계속 찾지 못한다면 목표칼로리를 변경하거나\n추천받을 카테고리 혹은 가격을 바꾸고 시도해주세요`}</NutrInfoText>
+        <NutrInfoText>{`계속 찾지 못한다면 식품을 일부 제거하거나\n추천받을 카테고리 혹은 가격을 바꾸고 시도해주세요`}</NutrInfoText>
         <Row style={{width: '100%', marginTop: 24, flexDirection: 'row'}}>
-          <ConfirmBtn onPress={() => setModalVisible(false)}>
+          <ConfirmBtn
+            onPress={() => {
+              setAutoFailedNum(v => v + 1);
+              setModalVisible(false);
+            }}>
             <ConfirmBtnText style={{color: colors.textSub}}>
               취소
             </ConfirmBtnText>
           </ConfirmBtn>
           <ConfirmBtn
             style={{borderLeftWidth: 1, borderLeftColor: colors.inactivated}}
-            onPress={reload}>
+            onPress={() => {
+              setAutoFailedNum(v => v + 1);
+              reload();
+            }}>
             <ConfirmBtnText>재시도</ConfirmBtnText>
           </ConfirmBtn>
         </Row>
@@ -236,7 +238,10 @@ const AutoDietModal = ({
         <BtnCTA
           btnStyle={btnDisabled ? 'inactivated' : 'activated'}
           disabled={btnDisabled}
-          onPress={reload}>
+          onPress={() => {
+            setAutoFailedNum(0);
+            reload();
+          }}>
           <BtnText>
             {btnDisabled ? '3가지 이상 선택해주세요' : '한 끼니 자동구성'}
           </BtnText>
@@ -255,9 +260,9 @@ const AutoDietModal = ({
           ? renderIsLoadingContent()
           : isSuccess
           ? renderIsSuccessContent()
-          : isError
-          ? renderIsErrorContent()
-          : renderBaseContent()}
+          : autoFailedNum > 1 || !isError
+          ? renderBaseContent()
+          : renderIsErrorContent()}
       </ModalBackGround>
     </Modal>
   );

@@ -87,7 +87,6 @@ export const useCreateDiet = (options?: IMutationOptions) => {
 
 export const useCreateDietDetail = (options?: IMutationOptions) => {
   const onSuccess = options?.onSuccess;
-  const {totalFoodList} = useSelector((state: RootState) => state.cart);
   const handleError = useHandleError();
   const mutation = useMutation({
     mutationFn: ({dietNo, food}: {dietNo: string; food: IProductData}) =>

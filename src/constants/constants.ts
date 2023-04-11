@@ -59,6 +59,13 @@ export const categoryCode = {
   음료: 'CG006',
 };
 
+export const NUTR_ERROR_RANGE = {
+  calorie: [-50, 50],
+  carb: [-15, 15],
+  protein: [-5, 5],
+  fat: [-3, 3],
+};
+
 interface ITimeToMinutes {
   [key: string]: number;
 }
