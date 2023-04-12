@@ -28,7 +28,10 @@ const FilterHeader = props => {
             onPress();
             setFilterIndex(1);
           }}>
-          {filterParams.nutritionParam ? (
+          {filterParams.nutritionParam?.calorieParam ||
+          filterParams.nutritionParam?.carbParam ||
+          filterParams.nutritionParam?.proteinParam ||
+          filterParams.nutritionParam?.fatParam ? (
             <>
               <FilterBtnText>영양성분</FilterBtnText>
               <Badge />
@@ -61,7 +64,6 @@ const FilterHeader = props => {
 export default FilterHeader;
 
 const FilterBtn = styled.TouchableOpacity`
-  height: 20px;
   margin-right: 36px;
 `;
 const FilterBtnText = styled(TextMain)`

@@ -1,12 +1,6 @@
 // react, RN, 3rd
 import {React, useCallback, useEffect, useState, useRef} from 'react';
-import {
-  TouchableWithoutFeedback,
-  FlatList,
-  View,
-  TextInput,
-  Animated,
-} from 'react-native';
+import {FlatList, View, TextInput, Animated} from 'react-native';
 import styled from 'styled-components/native';
 
 // doobi util, redux, etc
@@ -27,7 +21,7 @@ import {FOOD_LIST_ITEM_HEIGHT, categoryCode} from '../../constants/constants';
 import colors from '../../styles/colors';
 import {queryFn} from '../../query/queries/requestFn';
 import {IProductData, IProductsData} from '../../query/types/product';
-import {SCREENWIDTH} from '../../constants/constants';
+import {SCREENWIDTH, height} from '../../constants/constants';
 
 // doobi Component
 import FoodList from '../../components/home/FoodList';
@@ -145,7 +139,6 @@ const Home = () => {
   const key = keyOfcategoryCode.find(
     key => categoryCode[key] === filterParams.categoryParam,
   );
-  console.log(filterParams);
   // 앱 시작할 때 내가 어떤 끼니를 보고 있는지 redux에 저장해놓기 위해 필요함
   useEffect(() => {
     const initializeDietNo = async () => {
@@ -180,6 +173,13 @@ const Home = () => {
     [tData],
   );
   // const getSeperator = useCallback(() => <HorizontalSpace height={20} />, []);
+  const flatListRef = useRef<FlatList<IProductData> | null>(null);
+  const scrollTop = () => {
+    flatListRef.current?.scrollToOffset({animated: true, offset: 0});
+  };
+  useEffect(() => {
+    scrollTop();
+  }, [filterParams, sortParam]);
   const FlatlistHeaderComponent = () => {
     return (
       <View
@@ -197,8 +197,8 @@ const Home = () => {
         <Row
           style={{
             justifyContent: 'space-between',
-            marginTop: 16,
             width: '100%',
+            marginTop: 16,
           }}>
           <Row style={{alignItems: 'flex-end', flex: 1}}>
             <ListTitle>검색된 결과</ListTitle>
@@ -258,7 +258,7 @@ const Home = () => {
           }}
         />
         <HorizontalLine style={{marginTop: 8}} />
-        <HorizontalSpace height={16} />
+        <HorizontalSpace height={8} />
         <FilterHeader
           setFilterIndex={setFilterIndex}
           filterIndex={filterIndex}
@@ -291,18 +291,15 @@ const Home = () => {
   return (
     <Container>
       <MenuSection />
-      {scrollY ? (
-        <Animated.View
-          style={{
-            transform: [{translateY: translateY}],
-            elevation: 4,
-            zIndex: 4,
-          }}>
-          <FlatlistHeaderComponent />
-        </Animated.View>
-      ) : (
+      <Animated.View
+        style={{
+          transform: [{translateY}],
+          elevation: 4,
+          zIndex: 4,
+        }}>
         <FlatlistHeaderComponent />
-      )}
+      </Animated.View>
+
       <HomeContainer>
         {tData && dietDetailData && (
           <FlatList
@@ -322,6 +319,10 @@ const Home = () => {
             onScroll={e => {
               scrollY.setValue(e.nativeEvent.contentOffset.y);
             }}
+            ref={flatListRef}
+            ListHeaderComponent={
+              <View style={{marginTop: FOOD_LIST_ITEM_HEIGHT - 50}} />
+            }
           />
         )}
         <DTooltip
@@ -346,8 +347,8 @@ const Container = styled.View`
 `;
 
 const HomeContainer = styled.View`
+flex:1
   padding: 0px 16px 0px 16px;
-  flex: 1;
   background-color: ${colors.white};
 `;
 

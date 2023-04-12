@@ -13,7 +13,6 @@ const NutritionContent = props => {
   const fatRange = useFilterRange('fat');
   const proteinRange = useFilterRange('protein');
   const {setNutritionParam, nutritionParam, filterParams} = props;
-
   //calorie
   const minCalorie = !calorieRange?.data
     ? 20
@@ -29,6 +28,7 @@ const NutritionContent = props => {
       ? filterParams.nutritionParam?.calorieParam[1]
       : maxCalorie,
   ];
+
   //carb
   const minCarb = !carbRange?.data
     ? 0
@@ -91,13 +91,12 @@ const NutritionContent = props => {
     }),
     [calorieValue, carbValue, proteinValue, fatValue],
   );
-
   useEffect(() => {
-    if (nutritionParam) {
-      setCalorieValue(nutritionParam?.calorieParam);
-      setCarbrValue(nutritionParam?.carbParam);
-      setProteinValue(nutritionParam?.proteinParam);
-      setFatValue(nutritionParam?.fatParam);
+    if (!nutritionParam) {
+      setCalorieValue([minCalorie, maxCalorie]);
+      setCarbrValue([minCarb, maxCarb]);
+      setProteinValue([minProtein, maxProtein]);
+      setFatValue([minFat, maxFat]);
     }
   }, [nutritionParam]);
 

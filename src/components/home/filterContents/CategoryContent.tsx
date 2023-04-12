@@ -13,7 +13,7 @@ interface IProps {
 const CategoryContent = (props: IProps) => {
   const {setCategoryParam, categoryParam} = props;
   const count = useCountCategory();
-
+  console.log(categoryParam);
   const Contents = () => {
     return (
       <View style={{marginTop: 16}}>
