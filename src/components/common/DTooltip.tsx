@@ -1,10 +1,13 @@
 import styled from 'styled-components/native';
 
 import colors from '../../styles/colors';
+import {icons} from '../../assets/icons/iconSource';
 
 interface IDtooltip {
   tooltipShow: boolean;
   text: string;
+  showCheck?: boolean;
+  reversed?: boolean;
   boxBottom?: number;
   boxTop?: number;
   boxLeft?: number;
@@ -20,6 +23,8 @@ interface IDtooltip {
 const DTooltip = ({
   tooltipShow,
   text,
+  showCheck,
+  reversed,
   boxBottom,
   boxTop,
   boxLeft,
@@ -51,10 +56,12 @@ const DTooltip = ({
     <Container
       style={{...boxVerticalStyle, ...boxHorizontalStyle}}
       onPress={() => (onPressFn ? onPressFn() : {})}>
+      {reversed && <TooltipTriangleRvs style={{...triangleHorizontalStyle}} />}
       <TooltipBox>
         <TooltipText>{text}</TooltipText>
+        {showCheck && <CheckBox source={icons.checkboxCheckedWhite_24} />}
       </TooltipBox>
-      <TooltipTriangle style={{...triangleHorizontalStyle}} />
+      {!reversed && <TooltipTriangle style={{...triangleHorizontalStyle}} />}
     </Container>
   ) : (
     <></>
@@ -70,16 +77,23 @@ const Container = styled.TouchableOpacity`
 `;
 
 const TooltipBox = styled.View`
+  flex-direction: row;
   background-color: ${colors.warning};
   padding: 5px;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   border-radius: 3px;
 `;
 
 const TooltipText = styled.Text`
   font-size: 14px;
   color: ${colors.white};
+`;
+
+const CheckBox = styled.Image`
+  margin-left: 8px;
+  width: 20px;
+  height: 20px;
 `;
 
 const TooltipTriangle = styled.View`
@@ -90,8 +104,21 @@ const TooltipTriangle = styled.View`
   border-left-width: 6px;
   border-right-width: 6px;
   border-top-width: 9px;
-  background-color: transparent;
+  /* background-color: transparent; */
   border-left-color: transparent;
   border-right-color: transparent;
   border-top-color: ${colors.warning};
+`;
+const TooltipTriangleRvs = styled.View`
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: -6px;
+  border-left-width: 6px;
+  border-right-width: 6px;
+  border-bottom-width: 9px;
+  background-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: ${colors.warning};
 `;

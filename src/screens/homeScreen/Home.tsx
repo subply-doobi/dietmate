@@ -7,7 +7,11 @@ import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {RootState} from '../../stores/store';
-import {setCurrentDiet, setTotalFoodList} from '../../stores/slices/cartSlice';
+import {
+  setCurrentDiet,
+  setNutrTooltipText,
+  setTotalFoodList,
+} from '../../stores/slices/cartSlice';
 import {setListTitle} from '../../stores/slices/filterSlice';
 import {icons} from '../../assets/icons/iconSource';
 import {
@@ -33,20 +37,19 @@ import DTooltip from '../../components/common/DTooltip';
 
 // react-query
 import {LIST_DIET} from '../../query/queries/urls';
-import {
-  useListDietDetail,
-  useListDiet,
-  useDeleteDiet,
-} from '../../query/queries/diet';
+import {useListDietDetail} from '../../query/queries/diet';
 import {useListProduct} from '../../query/queries/product';
 import {IDietData} from '../../query/types/diet';
 import MenuSection from '../../components/common/menuSection/MenuSection';
+import {getAvailableFoods} from '../../util/cart/autoMenu';
+import {filterAvailableFoods} from '../../util/home/filterAvailableFoods';
+import {useGetBaseLine} from '../../query/queries/baseLine';
 
 const Home = () => {
   // redux
   const dispatch = useDispatch();
   const {listTitle} = useSelector((state: RootState) => state.filter);
-  const {currentDietNo, totalFoodListIsLoaded} = useSelector(
+  const {totalFoodList, currentDietNo, totalFoodListIsLoaded} = useSelector(
     (state: RootState) => state.cart,
   );
 
@@ -57,9 +60,11 @@ const Home = () => {
   const [sortModalShow, setSortModalShow] = useState(false);
   const [filterModalShow, setFilterModalShow] = useState(false);
   const [tooltipShow, setTooltipShow] = useState(true);
-
   const [searchText, setSearchText] = useState('');
   const [searchBarFocus, setSearchBarFocus] = useState(false);
+  const [remainNutrProductData, setRemainNutrProductData] = useState<
+    IProductData[] | undefined
+  >();
 
   let filterHeight = true;
   //scrollHeader Event
@@ -73,17 +78,7 @@ const Home = () => {
   const [sortParam, setSortParam] = useState('');
   const [sortImageToggle, setSortImageToggle] = useState(0);
   const [filterParams, setFilterParams] = useState({});
-  const [dietNoToDelete, setDietNoToDelete] = useState<string>();
-  const [deleteAlertShow, setDeleteAlertShow] = useState(false);
-  const deleteDietMutation = useDeleteDiet();
-  const onDeleteDiet = () => {
-    if (!dietData) {
-      return;
-    }
-    dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
-    setDeleteAlertShow(false);
-  };
-
+  console.log(filterParams);
   // ref
   const searchInputRef = useRef<TextInput | null>(null);
   useEffect(() => {
@@ -106,12 +101,12 @@ const Home = () => {
 
   // react-query
   // const filter.Calorie = params?.filter?.Calorie ? 'Calorie',params?.filter?.Calorie[0],params?.filter?.Calorie[1] : ''
+  const {data: baseLineData} = useGetBaseLine();
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {
     enabled: currentDietNo ? true : false,
   });
-  const {data: dietData} = useListDiet();
   const {
-    data: tData,
+    data: productData,
     refetch: refetchProduct,
     isFetching: productIsFetching,
   } = useListProduct(
@@ -158,11 +153,11 @@ const Home = () => {
   const renderFoodList = useCallback(
     ({item}: {item: IProductData}) =>
       dietDetailData ? <FoodList item={item} screen="HomeScreen" /> : <></>,
-    [tData],
+    [productData],
   );
   const extractListKey = useCallback(
     (item: IProductData) => item.productNo,
-    [tData],
+    [productData],
   );
   const getItemLayout = useCallback(
     (_: any, index: number) => ({
@@ -170,7 +165,7 @@ const Home = () => {
       offset: FOOD_LIST_ITEM_HEIGHT * index,
       index,
     }),
-    [tData],
+    [productData],
   );
   // const getSeperator = useCallback(() => <HorizontalSpace height={20} />, []);
   const flatListRef = useRef<FlatList<IProductData> | null>(null);
@@ -202,7 +197,13 @@ const Home = () => {
           }}>
           <Row style={{alignItems: 'flex-end', flex: 1}}>
             <ListTitle>검색된 결과</ListTitle>
-            <NoOfFoods> {tData?.length}개</NoOfFoods>
+            <NoOfFoods>
+              {' '}
+              {remainNutrProductData === undefined
+                ? productData?.length
+                : remainNutrProductData.length}
+              개
+            </NoOfFoods>
 
             {searchBarFocus ? (
               <SearchBox style={{flex: 1, marginRight: 8}}>
@@ -261,12 +262,12 @@ const Home = () => {
         <HorizontalSpace height={8} />
         <FilterHeader
           setFilterIndex={setFilterIndex}
-          filterIndex={filterIndex}
           onPress={() => {
             setFilterModalShow(true);
           }}
           filterParams={filterParams}
           filterHeaderText={key}
+          setRemainNutrProductData={setRemainNutrProductData}
         />
         <DBottomSheet
           alertShow={filterModalShow}
@@ -277,6 +278,7 @@ const Home = () => {
               filterParams={filterParams}
               setFilterParams={setFilterParams}
               filterIndex={filterIndex}
+              setRemainNutrProductData={setRemainNutrProductData}
             />
           )}
           onCancel={() => {
@@ -301,9 +303,12 @@ const Home = () => {
       </Animated.View>
 
       <HomeContainer>
-        {tData && dietDetailData && (
+        {productData &&
+        dietDetailData &&
+        remainNutrProductData === undefined ? (
+          // 일반 필터를 이용한 식품 리스트
           <FlatList
-            data={tData}
+            data={productData}
             keyExtractor={extractListKey}
             renderItem={renderFoodList}
             getItemLayout={getItemLayout}
@@ -324,10 +329,39 @@ const Home = () => {
               <View style={{marginTop: FOOD_LIST_ITEM_HEIGHT - 50}} />
             }
           />
+        ) : (
+          // 영양맞춤 필터를 이용한 식품 리스트
+          <FlatList
+            data={remainNutrProductData}
+            renderItem={renderFoodList}
+            keyExtractor={extractListKey}
+            getItemLayout={getItemLayout}
+            initialNumToRender={5}
+            windowSize={2}
+            maxToRenderPerBatch={7}
+            removeClippedSubviews={true}
+            onEndReachedThreshold={0.4}
+            showsVerticalScrollIndicator={false}
+            refreshing={productIsFetching}
+            onRefresh={() =>
+              baseLineData &&
+              dietDetailData &&
+              filterAvailableFoods(
+                totalFoodList,
+                baseLineData,
+                dietDetailData,
+                setRemainNutrProductData,
+              )
+            }
+            onScroll={e => {
+              scrollY.setValue(e.nativeEvent.contentOffset.y);
+            }}
+          />
         )}
         <DTooltip
           tooltipShow={tooltipShow}
           text={`식단 고민하기 싫다면\n자동구성을 이용해보세요`}
+          showCheck={true}
           boxRight={8}
           triangleRight={SCREENWIDTH / 8 - 8}
           onPressFn={() => {
@@ -342,6 +376,7 @@ const Home = () => {
 
 export default Home;
 
+const Twf = styled.TouchableWithoutFeedback``;
 const Container = styled.View`
   flex: 1;
 `;

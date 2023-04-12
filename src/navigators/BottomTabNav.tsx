@@ -15,7 +15,7 @@ import {useListDietDetailAll} from '../query/queries/diet';
 
 const Tab = createBottomTabNavigator();
 
-const BottomTabNav = props => {
+const BottomTabNav = () => {
   // react-query
   const {data: dietDetailAllData} = useListDietDetailAll();
   const navigation = useNavigation();

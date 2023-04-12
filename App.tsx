@@ -11,6 +11,8 @@ import {useFlipper} from '@react-navigation/devtools';
 import RootStackNav from './src/navigators/RootStackNav';
 import CommonAlert from './src/components/common/CommonAlert';
 
+import styled from 'styled-components/native';
+
 if (__DEV__) {
   import('react-query-native-devtools').then(({addPlugin}) => {
     addPlugin({queryClient});

@@ -17,10 +17,15 @@ import FoodDetail from '../screens/foodDetailScreen/FoodDetail';
 import BackArrow from '../components/common/BackArrow';
 import {Pressable, Image} from 'react-native';
 import {icons} from '../assets/icons/iconSource';
+import {useDispatch} from 'react-redux';
+import {setNutrTooltipText} from '../stores/slices/cartSlice';
 
 const Stack = createNativeStackNavigator();
 
 const RootStackNav = () => {
+  // redux
+  const dispatch = useDispatch();
+
   // react-query defaultOptions
   const handleError = useHandleError();
   queryClient.setDefaultOptions({
@@ -39,8 +44,7 @@ const RootStackNav = () => {
     },
   });
 
-  const navigation = useNavigation();
-  const {goBack} = navigation;
+  const {goBack, navigate} = useNavigation();
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen
@@ -68,7 +72,7 @@ const RootStackNav = () => {
           headerLeft: () => <BackArrow goBackFn={goBack} />,
           headerRight: () => {
             return (
-              <Pressable onPress={() => navigation.navigate('Cart')}>
+              <Pressable onPress={() => navigate('Cart')}>
                 <Image source={icons.cart_36} style={{width: 36, height: 36}} />
               </Pressable>
             );

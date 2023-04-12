@@ -1,3 +1,5 @@
+import {NUTR_ERROR_RANGE} from '../constants/constants';
+import {IBaseLine} from '../query/types/baseLine';
 import {IDietDetailData} from '../query/types/diet';
 import {IProductData} from '../query/types/product';
 
@@ -30,6 +32,47 @@ export const sumUpPrice = (dietDetail: IDietDetailData | undefined) => {
   }
   return price;
 };
+
+export const getExceedIdx = (
+  baseLineData: IBaseLine | undefined,
+  cal: number,
+  carb: number,
+  protein: number,
+  fat: number,
+) => {
+  const exceedArr = baseLineData
+    ? [
+        parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[1] <= cal,
+        parseInt(baseLineData.carb) + NUTR_ERROR_RANGE.carb[1] <= carb,
+        parseInt(baseLineData.protein) + NUTR_ERROR_RANGE.protein[1] <= protein,
+        parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[1] <= fat,
+      ]
+    : [false, false, false, false];
+
+  return exceedArr.indexOf(true);
+};
+
+export const checkNutrSatisfied = (
+  baseLineData: IBaseLine | undefined,
+  cal: number,
+  carb: number,
+  protein: number,
+  fat: number,
+) => {
+  return baseLineData
+    ? parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[0] <= cal &&
+        parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[1] > cal &&
+        parseInt(baseLineData.carb) + NUTR_ERROR_RANGE.carb[0] <= carb &&
+        parseInt(baseLineData.carb) + NUTR_ERROR_RANGE.carb[1] >= carb &&
+        parseInt(baseLineData.protein) + NUTR_ERROR_RANGE.protein[0] <=
+          protein &&
+        parseInt(baseLineData.protein) + NUTR_ERROR_RANGE.protein[1] >=
+          protein &&
+        parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[0] <= fat &&
+        parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[1] >= fat
+    : false;
+};
+
 export const makePriceObjBySeller = (
   productsBySeller: Array<Array<IProductData> | IDietDetailData>,
 ) => {
