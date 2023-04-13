@@ -1,3 +1,4 @@
+import {UseQueryResult} from 'react-query';
 import {NUTR_ERROR_RANGE} from '../constants/constants';
 import {IBaseLine} from '../query/types/baseLine';
 import {IDietDetailData} from '../query/types/diet';
@@ -31,6 +32,25 @@ export const sumUpPrice = (dietDetail: IDietDetailData | undefined) => {
     price += parseInt(dietDetail[i].price);
   }
   return price;
+};
+
+// TBD | MenuQty 도 같이 계산 필요
+export const sumUpDietTotal = (
+  dietDetailAllData: UseQueryResult<IDietDetailData, unknown>[],
+) => {
+  if (!dietDetailAllData || dietDetailAllData.length === 0) return 0;
+  let menuNum = 0;
+  let productNum = 0;
+  let priceTotal = 0;
+  for (let i = 0; i < dietDetailAllData.length; i++) {
+    if (!dietDetailAllData[i]?.data) continue;
+    menuNum += 1; // * menuQty
+    for (let j = 0; j < dietDetailAllData[i].data.length; j++) {
+      priceTotal += parseInt(dietDetailAllData[i]?.data[j].price); // * menuQty
+      productNum += 1; // * menuQty
+    }
+  }
+  return {menuNum, productNum, priceTotal};
 };
 
 export const getExceedIdx = (

@@ -8,7 +8,6 @@ export const filterAvailableFoods = (
   totalFoodList: IProductsData,
   baseLineData: IBaseLine,
   dietDetailData: IDietDetailData,
-  setFunction: React.Dispatch<SetStateAction<IProductsData | undefined>>,
 ) => {
   // for 영양맞춤 필터
   const target = baseLineData
@@ -27,15 +26,14 @@ export const filterAvailableFoods = (
     fat: [-3, 3],
   };
 
-  dietDetailData &&
-    setFunction(
-      getAvailableFoods({
+  const availableFoods = dietDetailData
+    ? getAvailableFoods({
         foods: totalFoodList,
         menu: dietDetailData,
         target,
         errorRange,
-      }),
-    );
-};
+      })
+    : [];
 
-export const filterFoodList = () => {};
+  return availableFoods;
+};

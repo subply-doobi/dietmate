@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components/native';
 
 import {Row, TextMain} from '../../styles/styledConsts';
@@ -9,6 +9,8 @@ import {useSelector} from 'react-redux';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {IProductsData} from '../../query/types/product';
 import {filterAvailableFoods} from '../../util/home/filterAvailableFoods';
+import DAlert from '../common/alert/DAlert';
+import CommonAlertContent from '../common/alert/CommonAlertContent';
 
 interface IFilterHeader {
   onPress: () => void;
@@ -17,6 +19,7 @@ interface IFilterHeader {
     categoryParam?: string;
     nutritionParam?: string;
     priceParam?: string;
+    filterHeaderText?: string;
   };
   setRemainNutrProductData: React.Dispatch<
     React.SetStateAction<IProductsData | undefined>
@@ -35,9 +38,31 @@ const FilterHeader = (props: IFilterHeader) => {
     enabled: currentDietNo ? true : false,
   });
 
+  // state
+  const [remainNutrProductAlertShow, setRemainNutrProductAlertShow] =
+    useState(false);
+
   // etc
-  const {onPress, setFilterIndex, filterParams, setRemainNutrProductData} =
-    props;
+  const {
+    onPress,
+    setFilterIndex,
+    filterParams,
+    setRemainNutrProductData,
+    filterHeaderText,
+  } = props;
+
+  const onPressRemainNutrProduct = () => {
+    const remainNutrProductData = filterAvailableFoods(
+      totalFoodList,
+      baseLineData,
+      dietDetailData,
+    );
+    if (remainNutrProductData.length === 0) {
+      setRemainNutrProductAlertShow(true);
+      return;
+    }
+    setRemainNutrProductData(remainNutrProductData);
+  };
 
   return (
     <>
@@ -49,7 +74,7 @@ const FilterHeader = (props: IFilterHeader) => {
           }}>
           {filterParams.categoryParam ? (
             <>
-              <FilterBtnText>카테고리</FilterBtnText>
+              <FilterBtnText>{filterHeaderText}</FilterBtnText>
               <Badge />
             </>
           ) : (
@@ -61,7 +86,10 @@ const FilterHeader = (props: IFilterHeader) => {
             onPress();
             setFilterIndex(1);
           }}>
-          {filterParams.nutritionParam ? (
+          {filterParams.nutritionParam?.calorieParam ||
+          filterParams.nutritionParam?.carbParam ||
+          filterParams.nutritionParam?.proteinParam ||
+          filterParams.nutritionParam?.fatParam ? (
             <>
               <FilterBtnText>영양성분</FilterBtnText>
               <Badge />
@@ -84,19 +112,18 @@ const FilterHeader = (props: IFilterHeader) => {
             <FilterBtnText>가격</FilterBtnText>
           )}
         </FilterBtn>
-        <FilterBtn
-          onPress={() => {
-            baseLineData &&
-              dietDetailData &&
-              filterAvailableFoods(
-                totalFoodList,
-                baseLineData,
-                dietDetailData,
-                setRemainNutrProductData,
-              );
-          }}>
+        <FilterBtn onPress={onPressRemainNutrProduct}>
           <FilterBtnText>영양맞춤</FilterBtnText>
         </FilterBtn>
+        <DAlert
+          alertShow={remainNutrProductAlertShow}
+          onConfirm={() => setRemainNutrProductAlertShow(false)}
+          onCancel={() => setRemainNutrProductAlertShow(false)}
+          renderContent={() => (
+            <CommonAlertContent text="남은 영양에 맞는 상품이 없어요" />
+          )}
+          NoOfBtn={1}
+        />
       </Row>
     </>
   );
@@ -104,7 +131,6 @@ const FilterHeader = (props: IFilterHeader) => {
 export default FilterHeader;
 
 const FilterBtn = styled.TouchableOpacity`
-  height: 20px;
   margin-right: 36px;
 `;
 const FilterBtnText = styled(TextMain)`

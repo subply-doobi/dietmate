@@ -24,7 +24,9 @@ const PriceContent = props => {
   const [priceValue, setPriceValue] = useState(() => getInitialState());
 
   useEffect(() => {
-    priceParam && setPriceValue(priceParam);
+    if (!priceParam) {
+      return setPriceValue([0, maxState]);
+    }
   }, [priceParam]);
 
   return (

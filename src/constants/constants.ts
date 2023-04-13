@@ -50,7 +50,7 @@ export const myPageBtns = [
   {title: '주문내역', btnId: 'PaymentHistory'},
 ];
 
-export const categoryCode = {
+export const categoryCode: {[key: string]: string} = {
   도시락: 'CG001',
   닭가슴살: 'CG002',
   샐러드: 'CG003',

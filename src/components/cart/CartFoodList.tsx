@@ -1,9 +1,7 @@
 import {SetStateAction, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
 
-import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {
@@ -17,9 +15,6 @@ import {commaToNum} from '../../util/sumUp';
 
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
-import DBottomSheet from '../common/DBottomSheet';
-import NumberPickerContent from './NumberPickerContent';
-import QuantityControl from './QuantityControl';
 
 import {BASE_URL} from '../../query/queries/urls';
 import {
