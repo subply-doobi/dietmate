@@ -1,26 +1,17 @@
 // react, RN, 3rd
 import {useCallback, useEffect, useState, useRef} from 'react';
-import {
-  TouchableWithoutFeedback,
-  FlatList,
-  View,
-  TextInput,
-  Animated,
-} from 'react-native';
+import {FlatList, View, TextInput, Animated} from 'react-native';
 import styled from 'styled-components/native';
 
 // doobi util, redux, etc
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {RootState} from '../../stores/store';
-import {
-  setCurrentDiet,
-  setNutrTooltipText,
-  setTotalFoodList,
-} from '../../stores/slices/cartSlice';
+import {setCurrentDiet, setTotalFoodList} from '../../stores/slices/cartSlice';
 import {setListTitle} from '../../stores/slices/filterSlice';
 import {icons} from '../../assets/icons/iconSource';
 import {
+  Col,
   HorizontalLine,
   HorizontalSpace,
   Row,
@@ -47,7 +38,6 @@ import {useListDietDetail} from '../../query/queries/diet';
 import {useListProduct} from '../../query/queries/product';
 import {IDietData} from '../../query/types/diet';
 import MenuSection from '../../components/common/menuSection/MenuSection';
-import {getAvailableFoods} from '../../util/cart/autoMenu';
 import {filterAvailableFoods} from '../../util/home/filterAvailableFoods';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 
@@ -74,11 +64,16 @@ const Home = () => {
 
   let filterHeight = true;
   //scrollHeader Event
-  const scrollY = new Animated.Value(0);
-  const diffClamp = Animated.diffClamp(scrollY, 0, 100);
+  // const scrollY = new Animated.Value(0);
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const diffClamp = Animated.diffClamp(scrollY, 0, 50);
   const translateY = diffClamp.interpolate({
-    inputRange: [0, 100],
+    inputRange: [0, 50],
     outputRange: [0, -100],
+  });
+  const translateHeight = diffClamp.interpolate({
+    inputRange: [0, 50],
+    outputRange: [120, 0],
   });
   const [filterIndex, setFilterIndex] = useState(0);
   const [sortParam, setSortParam] = useState('');
@@ -177,15 +172,12 @@ const Home = () => {
   // const getSeperator = useCallback(() => <HorizontalSpace height={20} />, []);
   const FlatlistHeaderComponent = () => {
     return (
-      <View
+      <Animated.View
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 100,
+          // transform: [{translateY: translateY}],
+          height: translateHeight,
+          zIndex: 0,
           backgroundColor: colors.white,
-          zIndex: 100,
           paddingLeft: 16,
           paddingRight: 16,
         }}>
@@ -287,24 +279,13 @@ const Home = () => {
           filterHeight={filterHeight}
         />
         <HorizontalSpace height={16} />
-      </View>
+      </Animated.View>
     );
   };
   return (
     <Container>
       <MenuSection />
-      {scrollY ? (
-        <Animated.View
-          style={{
-            transform: [{translateY: translateY}],
-            elevation: 4,
-            zIndex: 4,
-          }}>
-          <FlatlistHeaderComponent />
-        </Animated.View>
-      ) : (
-        <FlatlistHeaderComponent />
-      )}
+      <FlatlistHeaderComponent />
       <HomeContainer>
         {productData &&
         dietDetailData &&
@@ -353,19 +334,21 @@ const Home = () => {
               )
             }
             onScroll={e => {
+              const {} = e.nativeEvent;
+              console.log(e);
               scrollY.setValue(e.nativeEvent.contentOffset.y);
             }}
           />
         )}
         <DTooltip
           tooltipShow={tooltipShow}
-          text={`식단 고민하기 싫다면\n자동구성을 이용해보세요`}
+          text={`식단 고민하기 싫다면\n장바구니페이지의 자동구성을 이용하세요`}
           showCheck={true}
           boxRight={8}
           triangleRight={SCREENWIDTH / 8 - 8}
           onPressFn={() => {
             setTooltipShow(false);
-            navigate('BottomTabNav', {screen: 'Cart'});
+            // navigate('BottomTabNav', {screen: 'Cart'});
           }}
         />
       </HomeContainer>
@@ -376,6 +359,9 @@ const Home = () => {
 export default Home;
 
 const Twf = styled.TouchableWithoutFeedback``;
+
+const AniContainer = styled(Animated.createAnimatedComponent(View))``;
+
 const Container = styled.View`
   flex: 1;
 `;

@@ -25,7 +25,7 @@ const renderCaloriePerMealInput = (
         한 끼 칼로리 (kcal)
       </InputHeader>
       <Input
-        placeholder={`한 끼 칼로리 입력 (추천: ${calorieRecommended})`}
+        placeholder={`한 끼 칼로리 입력 (권장: ${calorieRecommended})`}
         value={value}
         onChangeText={onChange}
         onFocus={() => handleSubmit()}

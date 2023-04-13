@@ -179,7 +179,7 @@ const FoodDetail = () => {
     } else {
       createDietDetailMutation.mutate({
         dietNo: currentDietNo,
-        productNo: productData.productNo,
+        food: productData,
       });
     }
   };
@@ -280,7 +280,7 @@ const FoodDetail = () => {
           </Pressable>
           <BtnCTA
             btnStyle={'activated'}
-            style={{flex: 4}}
+            style={{flex: 1}}
             onPress={handlePressAddCartBtn}>
             {isIncluded ? (
               <BtnText>현재끼니에서 제거</BtnText>
