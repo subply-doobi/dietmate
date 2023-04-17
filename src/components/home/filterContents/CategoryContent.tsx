@@ -1,21 +1,25 @@
+// 필터 버튼을 누르면 나오는 컨텐츠
+// RN, 3rd
 import styled from 'styled-components/native';
-import {View} from 'react-native';
-
-import {HorizontalLine} from '../../../styles/styledConsts';
-import colors from '../../../styles/colors';
-
-import {useCountCategory} from '../../../query/queries/category';
 import {useSelector} from 'react-redux';
+import {View} from 'react-native';
+//doobi util, redux, etc
+import colors from '../../../styles/colors';
 import {RootState} from '../../../stores/store';
+//doobi Component
+import {HorizontalLine} from '../../../styles/styledConsts';
+//react-query
+import {useCountCategory} from '../../../query/queries/category';
 
 interface IProps {
   setCategoryParam: React.Dispatch<React.SetStateAction<string>>;
   categoryParam: string;
 }
 const CategoryContent = (props: IProps) => {
+  const {setCategoryParam, categoryParam} = props;
   // redux
   const {totalFoodList} = useSelector((state: RootState) => state.cart);
-  const {setCategoryParam, categoryParam} = props;
+  // react-query 제품 갯수 확인
   const count = useCountCategory();
   const Contents = () => {
     return (

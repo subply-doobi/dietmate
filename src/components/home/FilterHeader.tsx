@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+//RN, 3rd
+import {useState} from 'react';
 import styled from 'styled-components/native';
-
+// doobi util, redux, etc
 import {Row, TextMain} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 import {RootState} from '../../stores/store';
@@ -9,18 +10,27 @@ import {useSelector} from 'react-redux';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {IProductsData} from '../../query/types/product';
 import {filterAvailableFoods} from '../../util/home/filterAvailableFoods';
+// doobi Component
 import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
+// types
+import {FILTER_TYPE} from '../home/types/filterType';
 
 interface IFilterHeader {
   onPress: () => void;
   setFilterIndex: React.Dispatch<React.SetStateAction<number>>;
   filterParams: {
     categoryParam?: string;
-    nutritionParam?: string;
-    priceParam?: string;
+    nutritionParam?: {
+      calorieParam: [number, number];
+      carbParam: [number, number];
+      proteinParam: [number, number];
+      fatParam: [number, number];
+    };
+    priceParam?: [number, number];
     filterHeaderText?: string;
   };
+  filterHeaderText?: string;
   setRemainNutrProductData: React.Dispatch<
     React.SetStateAction<IProductsData | undefined>
   >;

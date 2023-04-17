@@ -1,19 +1,23 @@
+// Description: 로그인 화면
+//RN, 3rd
 import React, {useEffect, useCallback} from 'react';
 import styled from 'styled-components/native';
-import {useNavigation} from '@react-navigation/native';
-import {BtnCTA, BtnText} from '../styles/styledConsts';
+import {NavigationAction, useNavigation} from '@react-navigation/native';
+//doobi util, redux, etc
 import colors from '../styles/colors';
-
-import {useGetBaseLine} from '../query/queries/baseLine';
 import {kakaoLogin, validateToken} from '../query/queries/token';
 import {IBaseLine} from '../query/types/baseLine';
+//react-query
+import {useGetBaseLine} from '../query/queries/baseLine';
+//doobi Component
+import {BtnCTA, BtnText} from '../styles/styledConsts';
 
 const navigateByBaseLine = (data: IBaseLine | any, navigation) => {
+  // check user 회원가입 여부
   const hasBaseLine =
     data?.constructor === Object && Object.keys(data).length === 0
       ? false
       : true;
-
   if (hasBaseLine) {
     navigation.reset({
       index: 0,

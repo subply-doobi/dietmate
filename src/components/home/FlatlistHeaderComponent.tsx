@@ -1,7 +1,12 @@
+//RN, 3rd
 import {Animated, TextInput} from 'react-native';
-import {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styled from 'styled-components/native';
+//doobi util, redux, etc
 import colors from '../../styles/colors';
+import {icons} from '../../assets/icons/iconSource';
+//doobi Component
+import DBottomSheet from '../common/DBottomSheet';
 import {
   HorizontalLine,
   HorizontalSpace,
@@ -9,27 +14,11 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/styledConsts';
-import {icons} from '../../assets/icons/iconSource';
-import DBottomSheet from '../common/DBottomSheet';
 import SortModalContent from './SortModalContent';
 import FilterHeader from './FilterHeader';
+//types
+import {FLATLIST_TYPE} from './types/filterType';
 
-interface IFlatlistHeaderComponent {
-  translateY: any;
-  remainNutrProductData: any;
-  setRemainNutrProductData: any;
-  productData: any;
-  searchText: any;
-  setSearchText: any;
-  refetchProduct: any;
-  sortImageToggle: any;
-  setSortParam: any;
-  sortParam: any;
-  setFilterModalShow: any;
-  filterParams: any;
-  setFilterIndex: any;
-  categoryName: any;
-}
 const FlatlistHeaderComponent = ({
   translateY,
   remainNutrProductData,
@@ -45,7 +34,7 @@ const FlatlistHeaderComponent = ({
   filterParams,
   setFilterIndex,
   categoryName,
-}: IFlatlistHeaderComponent) => {
+}: FLATLIST_TYPE) => {
   //state
   const [sortModalShow, setSortModalShow] = useState(false);
   const [searchBarFocus, setSearchBarFocus] = useState(false);

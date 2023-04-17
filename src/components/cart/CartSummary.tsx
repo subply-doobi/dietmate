@@ -1,22 +1,22 @@
-import {View} from 'react-native';
+// Description: 장바구니 페이지에서 총 끼니 수, 상품 수, 금액을 보여주는 컴포넌트
+//RN, 3rd
 import styled from 'styled-components/native';
-
+//doobi util, redux, etc
+import {commaToNum, sumUpDietTotal} from '../../util/sumUp';
+import colors from '../../styles/colors';
+//doobi Component
 import {
   HorizontalLine,
   Row,
   TextMain,
   TextSub,
 } from '../../styles/styledConsts';
-import {commaToNum, sumUpDietTotal} from '../../util/sumUp';
-
+//react-query
 import {
   useListDiet,
   useListDietDetailAll,
   useListDietTotal,
 } from '../../query/queries/diet';
-import colors from '../../styles/colors';
-import {findMenuIncludingSeller} from '../../util/findMenuIncludingProduct';
-import {SetStateAction, useEffect} from 'react';
 
 const CartSummary = () => {
   // react-query

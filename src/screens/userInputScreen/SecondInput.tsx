@@ -1,9 +1,10 @@
+// RN, 3rd
 import React, {useEffect} from 'react';
 import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Controller, useForm, useWatch} from 'react-hook-form';
-
+//doobi util, redux, etc
 import {RootState} from '../../stores/store';
 import {
   IUserInfo,
@@ -11,6 +12,8 @@ import {
   saveUserTarget,
 } from '../../stores/slices/userInfoSlice';
 import {NavigationProps, validationRules} from '../../constants/constants';
+import {calculateNutrTarget} from '../../util/targetCalculation';
+//doobi Component
 import {
   BtnBottomCTA,
   BtnText,
@@ -21,10 +24,8 @@ import {
   TextMain,
   UserInfoTextInput,
 } from '../../styles/styledConsts';
-import {calculateNutrTarget} from '../../util/targetCalculation';
-
 import Dropdown from '../../components/userInput/Dropdown';
-
+//react-query
 import {
   useWeightPurposeCode,
   useAerobicPurposeCode,
@@ -44,16 +45,6 @@ interface IFormField {
     value: string;
   };
 }
-
-const Title = styled(TextMain)`
-  font-size: 24px;
-  font-weight: bold;
-`;
-
-const InputHeader = styled(InputHeaderText)`
-  margin-top: 24px;
-`;
-const Input = styled(UserInfoTextInput)``;
 
 const renderBmrKnownInput = (
   {field: {onChange, value}}: IFormField,
@@ -115,8 +106,9 @@ const onHandlePress = (
 };
 
 const SecondInput = ({navigation: {navigate}, route}: NavigationProps) => {
+  //state
   const {userInfo} = useSelector((state: RootState) => state.userInfo);
-  // console.log('userInfo2: userInfo:', userInfo);
+  //react-query
   const {data, isLoading} = useGetBaseLine();
   const weightTimeCd = useWeightPurposeCode('SP003');
   const weightTimeCdCategory = weightTimeCd.data;
@@ -139,7 +131,6 @@ const SecondInput = ({navigation: {navigate}, route}: NavigationProps) => {
     setValue,
     formState: {errors, isValid},
   } = useForm<IFormData>({
-    // 나중에 사용자 정보 있으면 초기값으로 넣어줘야함.
     defaultValues: {
       bmrKnown: '',
       weightTimeCd: data?.weightTimeCd ? data?.weightTimeCd : 'SP003001',
@@ -149,6 +140,7 @@ const SecondInput = ({navigation: {navigate}, route}: NavigationProps) => {
   const bmrKnownValue = useWatch({control, name: 'bmrKnown'});
   const weightTimeCdValue = useWatch({control, name: 'weightTimeCd'});
   const aerobicTimeCdValue = useWatch({control, name: 'aerobicTimeCd'});
+  //useEffect
   useEffect(() => {
     handleSubmit(() => {})();
   }, []);
@@ -206,3 +198,13 @@ const SecondInput = ({navigation: {navigate}, route}: NavigationProps) => {
 };
 
 export default SecondInput;
+
+const Title = styled(TextMain)`
+  font-size: 24px;
+  font-weight: bold;
+`;
+
+const InputHeader = styled(InputHeaderText)`
+  margin-top: 24px;
+`;
+const Input = styled(UserInfoTextInput)``;

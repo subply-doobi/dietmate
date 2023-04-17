@@ -1,18 +1,29 @@
+//RN, 3rd
 import {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
-
+//doobi util, redux, etc
 import {icons} from '../../assets/icons/iconSource';
+import colors from '../../styles/colors';
+//doobi Component
 import {
   Row,
   HorizontalLine,
   BtnCTA,
   HorizontalSpace,
 } from '../../styles/styledConsts';
-import colors from '../../styles/colors';
-
 import DTooltip from '../common/DTooltip';
 
-const SortModalContent = props => {
+interface IProps {
+  closeModal: React.Dispatch<React.SetStateAction<boolean>>;
+  sortParam: string;
+  setSortParam: (arg: string) => void;
+}
+interface IArg {
+  price?: number;
+  calorie?: number;
+  protein?: number;
+}
+const SortModalContent = (props: IProps) => {
   // state
   const {closeModal, sortParam, setSortParam} = props;
   const [priceToggle, setPriceToggle] = useState(0);
@@ -23,11 +34,9 @@ const SortModalContent = props => {
   // tooltip
   const [priceCalCompareShow, setPriceCalCompareShow] = useState(false);
   const [priceProtCompareShow, setPriceProtCompareShow] = useState(false);
-
-  const toggleButton = arg => {
+  // sortButton 상태 설정
+  const toggleButton = (arg: IArg) => {
     const {price, calorie, protein} = arg;
-    // setCalorieToggle(0);
-    // setProteinToggle(0);
     price === 0
       ? setParam('Price,DESC')
       : price === 1
@@ -50,6 +59,7 @@ const SortModalContent = props => {
       ? setParam('')
       : null;
   };
+  // sortButton 상태에 따른 이미지 변경
   const imageFunction = () => {
     switch (sortParam) {
       case 'Price,DESC':
@@ -74,6 +84,7 @@ const SortModalContent = props => {
         break;
     }
   };
+  //useEffect
   useEffect(() => {
     imageFunction();
   }, []);

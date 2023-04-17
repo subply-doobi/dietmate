@@ -1,19 +1,29 @@
+// RN, 3rd
 import React, {useState, useEffect} from 'react';
 import {ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
-
+// doobi Component
 import {Col, TextMain} from '../../../styles/styledConsts';
 import DSlider from '../../common/slider/DSlider';
-
+// react-query
 import {useFilterRange} from '../../../query/queries/product';
+//types
+import {FILTER_PARAMS_TYPE} from '../types/filterType';
 
-const PriceContent = props => {
+interface IProps {
+  setPriceParam: React.Dispatch<React.SetStateAction<any>>;
+  priceParam: [number, number];
+  filterParams: FILTER_PARAMS_TYPE;
+}
+const PriceContent = (props: IProps) => {
   const {setPriceParam, priceParam, filterParams} = props;
+  //price range
   const priceRange = useFilterRange('price');
   const {data, isLoading} = priceRange;
+  //price min, max
   const minState = !data?.minData ? 0 : Number(data.minData);
   const maxState = !data?.maxData ? 25000 : Number(data.maxData);
-
+  //price 초기값
   const initialState = [
     filterParams?.priceParam ? filterParams?.priceParam[0] : 0,
     filterParams?.priceParam ? filterParams?.priceParam[1] : maxState,

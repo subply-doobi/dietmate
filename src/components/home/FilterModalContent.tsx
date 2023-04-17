@@ -1,20 +1,23 @@
-import React, {useState} from 'react';
+// RN, 3rd
+import {useState} from 'react';
 import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-
+//doobi util, redux, etc
 import {icons} from '../../assets/icons/iconSource';
 import {Row, BtnCTA, Col} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
-
+//doobi Component
 import CategoryContent from './filterContents/CategoryContent';
 import NutritionContent from './filterContents/NutritionContent';
 import PriceContent from './filterContents/PriceContent';
 import SearchContent from './filterContents/SearchContent';
 import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
+//types
+import {FILTER_MODAL_TYPE} from '../home/types/filterType';
 
-const FilterModalContent = props => {
+const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
   const {
     filterIndex,
     closeModal,
@@ -22,27 +25,11 @@ const FilterModalContent = props => {
     filterParams,
     setRemainNutrProductData,
   } = props;
+  // state
   const [clicked, setClicked] = useState(filterIndex);
   const [categoryParam, setCategoryParam] = useState(
     filterParams.categoryParam,
   );
-
-  const filterModalInitialState = {
-    calorieParam: filterParams.nutritionParam?.calorieParam,
-    carbParam: filterParams.nutritionParam?.carbParam,
-    proteinParam: filterParams.nutritionParam?.proteinParam,
-    fatParam: filterParams.nutritionParam?.fatParam,
-  };
-
-  if (filterParams.nutritionParam) {
-    filterModalInitialState.calorieParam =
-      filterParams.nutritionParam.calorieParam;
-    filterModalInitialState.carbParam = filterParams.nutritionParam.carbParam;
-    filterModalInitialState.proteinParam =
-      filterParams.nutritionParam.proteinParam;
-    filterModalInitialState.fatParam = filterParams.nutritionParam.fatParam;
-  }
-
   const [nutritionParam, setNutritionParam] = useState(filterModalInitialState);
   const [priceParam, setPriceParam] = useState(filterParams.priceParam);
   const params = {
@@ -52,6 +39,23 @@ const FilterModalContent = props => {
   };
   const [initializeModalShow, setInitializeModalShow] = useState(false);
   const [isTotalInitailize, setIsTotalInitailize] = useState<boolean>();
+  // filter 기본값
+  const filterModalInitialState = {
+    calorieParam: filterParams.nutritionParam?.calorieParam,
+    carbParam: filterParams.nutritionParam?.carbParam,
+    proteinParam: filterParams.nutritionParam?.proteinParam,
+    fatParam: filterParams.nutritionParam?.fatParam,
+  };
+  // filter 설정되어있을 경우 기본값 설정
+  if (filterParams.nutritionParam) {
+    filterModalInitialState.calorieParam =
+      filterParams.nutritionParam.calorieParam;
+    filterModalInitialState.carbParam = filterParams.nutritionParam.carbParam;
+    filterModalInitialState.proteinParam =
+      filterParams.nutritionParam.proteinParam;
+    filterModalInitialState.fatParam = filterParams.nutritionParam.fatParam;
+  }
+  // filter 초기화 type
   const resetType = [
     {
       text: '카테고리 초기화',
@@ -173,8 +177,7 @@ const FilterModalContent = props => {
       <></>
     );
   };
-  //useEffect에 맞춰서 초기값 설정하게 하고싶음
-  //
+
   return (
     <Col style={{height: '100%'}}>
       <ScrollView contentContainerStyle={{paddingBottom: 64}}>

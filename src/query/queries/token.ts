@@ -38,6 +38,7 @@ export const validateToken = async () => {
   } catch (e) {
     if (!(e instanceof AxiosError)) return {isValidated};
     console.log('validateToken: auth 오류', e.response?.status);
+    console.log('validateToken: auth 오류', e);
 
     // 토큰 재발급 (401에러인 경우만 재발급 시도)
     if (e.response?.status !== 401) return {isValidated};
