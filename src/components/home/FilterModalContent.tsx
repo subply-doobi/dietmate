@@ -79,7 +79,7 @@ const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
       },
     },
   ];
-
+  //filter button 눌렀을때 모달 header text
   const FilterHeaderText = () => {
     return (
       <SafeAreaView>
@@ -153,6 +153,7 @@ const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
       </SafeAreaView>
     );
   };
+  //filter button 눌렸을때 보여지는 content
   const showContent = index => {
     return index === 0 ? (
       <CategoryContent

@@ -77,6 +77,7 @@ const FilterHeader = (props: IFilterHeader) => {
   return (
     <>
       <Row>
+        {/* 카테고리 버튼*/}
         <FilterBtn
           onPress={() => {
             onPress();
@@ -91,6 +92,7 @@ const FilterHeader = (props: IFilterHeader) => {
             <FilterBtnText>카테고리</FilterBtnText>
           )}
         </FilterBtn>
+        {/* 영양성분 버튼 */}
         <FilterBtn
           onPress={() => {
             onPress();
@@ -108,6 +110,7 @@ const FilterHeader = (props: IFilterHeader) => {
             <FilterBtnText>영양성분</FilterBtnText>
           )}
         </FilterBtn>
+        {/* 가격 버튼 */}
         <FilterBtn
           onPress={() => {
             onPress();
@@ -122,6 +125,7 @@ const FilterHeader = (props: IFilterHeader) => {
             <FilterBtnText>가격</FilterBtnText>
           )}
         </FilterBtn>
+        {/* 영양맞춤 버튼 */}
         <FilterBtn onPress={onPressRemainNutrProduct}>
           <FilterBtnText>영양맞춤</FilterBtnText>
         </FilterBtn>

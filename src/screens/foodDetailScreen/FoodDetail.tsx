@@ -61,7 +61,7 @@ interface IShowPart {
   index: number;
   table: TableItem[];
 }
-const ShowPart = ({index, table}) => {
+const ShowPart = ({index, table}: IShowPart) => {
   return index === 0 ? (
     <NutrientPart table={table} />
   ) : index === 1 ? (
