@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import {View} from 'react-native';
 
-import {HorizontalLine} from '../../../styles/styledConsts';
+import {HorizontalLine} from '../../../styles/StyledConsts';
 import colors from '../../../styles/colors';
 
 import {useCountCategory} from '../../../query/queries/category';
@@ -62,5 +62,3 @@ const CategoryButton = styled.TouchableOpacity`
   height: 58px;
   justify-content: center;
 `;
-
-const MODAL_WIDTH = 328;

@@ -24,7 +24,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {IFormField, validationRules} from '../../constants/constants';
 
 interface IAddress {

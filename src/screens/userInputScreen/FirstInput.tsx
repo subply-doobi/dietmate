@@ -18,7 +18,7 @@ import {
   TextMain,
   UserInfoTextInput,
   VerticalSpace,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {NavigationProps, validationRules} from '../../constants/constants';
 import colors from '../../styles/colors';
 import {calculateBMR} from '../../util/targetCalculation';
@@ -228,14 +228,14 @@ const FirstInput = ({navigation: {navigate}}: NavigationProps) => {
         )}
 
         {/* --- purpose --- */}
-        <Dropdown
+        {/* <Dropdown
           placeholder="식단의 목적"
           items={dietPurposeCd.isLoading ? [] : newDietPurposeCdCategory}
           value={dietPurposeValue}
           setValue={setValue}
           scrollRef={scrollRef}
           reactHookFormName={'dietPurposeCd'}
-        />
+        /> */}
       </ScrollView>
       <BtnBottomCTA
         btnStyle={

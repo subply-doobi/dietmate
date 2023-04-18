@@ -1,4 +1,4 @@
-import {StrictMode} from 'react';
+import React from 'react';
 import {store} from './src/stores/store';
 import {Provider} from 'react-redux';
 import {QueryClientProvider} from '@tanstack/react-query';

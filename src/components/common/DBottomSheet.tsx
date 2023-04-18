@@ -2,7 +2,7 @@ import React from 'react';
 import {Modal} from 'react-native';
 import styled from 'styled-components/native';
 
-import {StyledProps} from '../../styles/styledConsts';
+import {StyledProps} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 
 interface IDBottomSheet {

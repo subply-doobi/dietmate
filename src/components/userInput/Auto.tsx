@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 
 import {RootState} from '../../stores/store';
 import colors from '../../styles/colors';
-import {Col} from '../../styles/styledConsts';
+import {Col} from '../../styles/StyledConsts';
 import {purposeCdToValue} from '../../constants/constants';
 
 const Auto = () => {

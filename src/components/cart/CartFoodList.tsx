@@ -1,7 +1,9 @@
+// react, RN, 3rd
 import {SetStateAction, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import styled from 'styled-components/native';
 
+// doobi util, redux, etc
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {
@@ -10,7 +12,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {commaToNum} from '../../util/sumUp';
 
 import DAlert from '../common/alert/DAlert';

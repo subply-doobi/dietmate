@@ -6,7 +6,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {commaToNum, sumUpDietTotal} from '../../util/sumUp';
 
 import {
@@ -15,8 +15,6 @@ import {
   useListDietTotal,
 } from '../../query/queries/diet';
 import colors from '../../styles/colors';
-import {findMenuIncludingSeller} from '../../util/findMenuIncludingProduct';
-import {SetStateAction, useEffect} from 'react';
 
 const CartSummary = () => {
   // react-query

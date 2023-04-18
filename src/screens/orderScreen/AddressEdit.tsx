@@ -38,7 +38,7 @@ import {
   TextMain,
   TextSub,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 
 import DAlert from '../../components/common/alert/DAlert';

@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 
 import colors from '../../../styles/colors';
 import {DALERT_WIDTH, SCREENWIDTH} from '../../../constants/constants';
-import {Row, StyledProps, TextMain} from '../../../styles/styledConsts';
+import {Row, StyledProps, TextMain} from '../../../styles/StyledConsts';
 
 interface IDAlert {
   alertShow: boolean;

@@ -10,7 +10,11 @@ import {setCurrentDiet, setTotalFoodList} from '../../stores/slices/cartSlice';
 import {setListTitle} from '../../stores/slices/filterSlice';
 import {FOOD_LIST_ITEM_HEIGHT, categoryCode} from '../../constants/constants';
 import {queryFn} from '../../query/queries/requestFn';
-import {IProductData, IProductsData} from '../../query/types/product';
+import {
+  IFliterParams,
+  IProductData,
+  IProductsData,
+} from '../../query/types/product';
 import {SCREENWIDTH} from '../../constants/constants';
 import {filterAvailableFoods} from '../../util/home/filterUtils';
 import colors from '../../styles/colors';
@@ -44,7 +48,16 @@ const Home = () => {
   const [filterIndex, setFilterIndex] = useState(0);
   const [sortParam, setSortParam] = useState('');
   const [sortImageToggle, setSortImageToggle] = useState(0);
-  const [filterParams, setFilterParams] = useState({});
+  const [filterParams, setFilterParams] = useState<IFliterParams>({
+    categoryParam: '',
+    nutritionParam: {
+      calorieParam: [],
+      carbParam: [],
+      proteinParam: [],
+      fatParam: [],
+    },
+    priceParam: [],
+  });
   const [remainNutrProductData, setRemainNutrProductData] = useState<
     IProductData[] | undefined
   >();
@@ -64,7 +77,7 @@ const Home = () => {
       searchText,
       categoryCd: filterParams.categoryParam,
       sort: sortParam,
-      filter: {filterParams},
+      filter: filterParams,
     },
     {
       enabled: currentDietNo ? true : false,

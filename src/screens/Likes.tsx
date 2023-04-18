@@ -15,7 +15,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../styles/styledConsts';
+} from '../styles/StyledConsts';
 import FoodList from '../components/home/FoodList';
 import NutrientsProgress from '../components/common/nutrient/NutrientsProgress';
 

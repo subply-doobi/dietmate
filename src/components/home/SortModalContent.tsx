@@ -7,7 +7,7 @@ import {
   HorizontalLine,
   BtnCTA,
   HorizontalSpace,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 
 import DTooltip from '../common/DTooltip';

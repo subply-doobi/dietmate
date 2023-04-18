@@ -1,26 +1,28 @@
 // react, RN, 3rd
 import {SetStateAction, useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 import * as Progress from 'react-native-progress';
 import styled from 'styled-components/native';
 
 // doobi util, redux, etc
-import {useSelector} from 'react-redux';
 import {icons} from '../../assets/icons/iconSource';
 import {RootState} from '../../stores/store';
 import colors from '../../styles/colors';
 import {commaToNum, sumUpNutrients, sumUpPrice} from '../../util/sumUp';
 
 // doobi Component
-import {StyledProps} from '../../styles/styledConsts';
+import DAlert from '../common/alert/DAlert';
+import DeleteAlertContent from '../common/alert/DeleteAlertContent';
+import DTooltip from '../common/DTooltip';
+import AutoDietModal from './AutoDietModal';
 import {
   Col,
   Row,
   TextMain,
   TextSub,
   VerticalLine,
-} from '../../styles/styledConsts';
-import DAlert from '../common/alert/DAlert';
-import DeleteAlertContent from '../common/alert/DeleteAlertContent';
+  StyledProps,
+} from '../../styles/StyledConsts';
 
 // react-query
 import {useGetBaseLine} from '../../query/queries/baseLine';
@@ -31,8 +33,6 @@ import {
   useListDiet,
 } from '../../query/queries/diet';
 import {IDietDetailData} from '../../query/types/diet';
-import DTooltip from '../common/DTooltip';
-import AutoDietModal from './AutoDietModal';
 
 interface IAccordionInactiveHeader {
   idx: number;

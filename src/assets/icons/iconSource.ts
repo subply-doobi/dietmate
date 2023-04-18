@@ -1,4 +1,11 @@
 export const icons = {
+  guideCheckbox_32: require(`./32_checkbox_purple.png`),
+  guide1_32: require(`./32_number_box1.png`),
+  guide2_32: require(`./32_number_box2.png`),
+  guide3_32: require(`./32_number_box3.png`),
+  guide4_32: require(`./32_number_box4.png`),
+  guide5_32: require(`./32_number_box5.png`),
+  guide6_32: require(`./32_number_box6.png`),
   arrowDown_20: require(`./20_arrow_down.png`),
   arrowLeft_20: require(`./20_arrow_left.png`),
   arrowRight_20: require(`./20_arrow_right.png`),

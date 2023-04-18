@@ -1,7 +1,7 @@
 import React, {useEffect, useCallback} from 'react';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
-import {BtnCTA, BtnText} from '../styles/styledConsts';
+import {BtnCTA, BtnText} from '../styles/StyledConsts';
 import colors from '../styles/colors';
 
 import {useGetBaseLine} from '../query/queries/baseLine';
@@ -32,9 +32,9 @@ const Login = () => {
   const {data, refetch} = useGetBaseLine({enabled: false});
 
   const signInWithKakao = async (): Promise<void> => {
-    // await kakaoLogin();
-    // const refetchedData = await refetch();
-    // refetchedData && navigateByBaseLine(refetchedData, navigation);
+    await kakaoLogin();
+    const refetchedData = await refetch();
+    refetchedData && navigateByBaseLine(refetchedData, navigation);
     navigation.navigate('BottomTabNav', {screen: 'Home'});
   };
 

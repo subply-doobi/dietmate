@@ -3,7 +3,7 @@ import {View, Text} from 'react-native';
 import styled from 'styled-components/native';
 
 import {icons} from '../../assets/icons/iconSource';
-import {Col, Row, TextMain, TextSub} from '../../styles/styledConsts';
+import {Col, Row, TextMain, TextSub} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 
 const OrderedList = ({food}: {food: Array<number>}) => {

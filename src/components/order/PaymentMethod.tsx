@@ -8,7 +8,7 @@ import {
   BtnCTA,
   Row,
   TextMain,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {IFormField, validationRules} from '../../constants/constants';
 
 interface IPaymentMethod {

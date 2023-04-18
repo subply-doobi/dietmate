@@ -3,13 +3,26 @@ import {TouchableWithoutFeedback} from 'react-native';
 import styled from 'styled-components/native';
 import {filterBtnRange} from '../../../constants/constants';
 import colors from '../../../styles/colors';
-import {Col, StyledProps, TextMain} from '../../../styles/styledConsts';
+import {Col, StyledProps, TextMain} from '../../../styles/StyledConsts';
 import {setInitialIdx} from '../../../util/home/filterUtils';
+import {IFliterParams} from '../../../query/types/product';
 
 interface INutritionContent2 {
-  setNutritionParam: React.Dispatch<React.SetStateAction<any>>;
-  nutritionParam: any;
-  filterParams: any;
+  setNutritionParam: React.Dispatch<
+    React.SetStateAction<{
+      calorieParam: number[];
+      carbParam: number[];
+      fatParam: number[];
+      proteinParam: number[];
+    }>
+  >;
+  nutritionParam: {
+    calorieParam: number[];
+    carbParam: number[];
+    fatParam: number[];
+    proteinParam: number[];
+  };
+  filterParams: IFliterParams;
 }
 const NutritionContent2 = ({
   setNutritionParam,
@@ -31,7 +44,23 @@ const NutritionContent2 = ({
 
   // useEffect
   useEffect(() => {
+    console.log('NutritionContent2: useEffect: filterParams', filterParams);
     setInitialIdx(filterParams, setNutrIdxRange);
+  }, [filterParams]);
+  useEffect(() => {
+    if (
+      nutritionParam.calorieParam.length !== 0 ||
+      nutritionParam.carbParam.length !== 0 ||
+      nutritionParam.fatParam.length !== 0 ||
+      nutritionParam.proteinParam.length !== 0
+    )
+      return;
+    setNutrIdxRange({
+      calorie: [],
+      carb: [],
+      protein: [],
+      fat: [],
+    });
   }, [nutritionParam]);
 
   // etc
@@ -52,8 +81,11 @@ const NutritionContent2 = ({
   const btnOnPress = (nutrIdx: number, btnIdx: number) => {
     const nutrIdxToName = ['calorie', 'carb', 'protein', 'fat'];
 
+    // 버튼 하나 "눌려있을" 때
     if (nutrIdxRange[nutrIdxToName[nutrIdx]].length === 1) {
       console.log('btnOnPress: nutritionParam', nutritionParam);
+
+      // 버튼 누른 것이 기존 것과 같을 때
       if (btnIdx === nutrIdxRange[nutrIdxToName[nutrIdx]][0]) {
         setNutrIdxRange(prev => {
           return {
@@ -65,14 +97,16 @@ const NutritionContent2 = ({
             [nutrIdxToName[nutrIdx]]: [],
           };
         });
-        // setNutritionParam(prev => ({
-        //   ...prev,
-        //   calorieParam: [...prev.calorieParam],
-        //   carbParam: [...prev.carbParam],
-        //   proteinParam: [...prev.proteinParam],
-        //   fatParam: [...prev.fatParam],
-        //   [`${nutrIdxToName[nutrIdx]}Param`]: [],
-        // }));
+        setNutritionParam(prev => ({
+          ...prev,
+          calorieParam: [...prev.calorieParam],
+          carbParam: [...prev.carbParam],
+          proteinParam: [...prev.proteinParam],
+          fatParam: [...prev.fatParam],
+          [`${nutrIdxToName[nutrIdx]}Param`]: [],
+        }));
+
+        // 버튼 누른 것이 기존 것과 다를 때
       } else {
         console.log('btnOnPress: nutritionParam', nutritionParam);
         const newNutrIdxRange =
@@ -90,18 +124,20 @@ const NutritionContent2 = ({
             [nutrIdxToName[nutrIdx]]: newNutrIdxRange,
           };
         });
-        // setNutritionParam(prev => ({
-        //   ...prev,
-        //   calorieParam: [...prev.calorieParam],
-        //   carbParam: [...prev.carbParam],
-        //   proteinParam: [...prev.proteinParam],
-        //   fatParam: [...prev.fatParam],
-        //   [`${nutrIdxToName[nutrIdx]}Param`]: [
-        //     filterBtnRange[nutrIdx].value[newNutrIdxRange[0]][0],
-        //     filterBtnRange[nutrIdx].value[newNutrIdxRange[1]][1],
-        //   ],
-        // }));
+        setNutritionParam(prev => ({
+          ...prev,
+          calorieParam: [...prev.calorieParam],
+          carbParam: [...prev.carbParam],
+          proteinParam: [...prev.proteinParam],
+          fatParam: [...prev.fatParam],
+          [`${nutrIdxToName[nutrIdx]}Param`]: [
+            filterBtnRange[nutrIdx].value[newNutrIdxRange[0]][0],
+            filterBtnRange[nutrIdx].value[newNutrIdxRange[1]][1],
+          ],
+        }));
       }
+
+      // 버튼 둘 이상 or 하나도 안 "눌려있을" 때
     } else {
       console.log('btnOnPress: nutritionParam', nutritionParam);
       setNutrIdxRange(prev => {
@@ -114,16 +150,20 @@ const NutritionContent2 = ({
           [nutrIdxToName[nutrIdx]]: [btnIdx],
         };
       });
-      // setNutritionParam(prev => ({
-      //   ...prev,
-      //   calorieParam: [...prev.calorieParam],
-      //   carbParam: [...prev.carbParam],
-      //   proteinParam: [...prev.proteinParam],
-      //   fatParam: [...prev.fatParam],
-      //   [`${nutrIdxToName[nutrIdx]}Param`]: [
-      //     ...filterBtnRange[nutrIdx].value[btnIdx],
-      //   ],
-      // }));
+      setNutritionParam(prev => {
+        console.log(prev);
+        console.log(nutrIdx, btnIdx, filterBtnRange[nutrIdx].value[btnIdx]);
+        return {
+          ...prev,
+          calorieParam: [...prev.calorieParam],
+          carbParam: [...prev.carbParam],
+          proteinParam: [...prev.proteinParam],
+          fatParam: [...prev.fatParam],
+          [`${nutrIdxToName[nutrIdx]}Param`]: [
+            ...filterBtnRange[nutrIdx].value[btnIdx],
+          ],
+        };
+      });
     }
   };
   console.log('NutritionContent2: nutrIdx', nutrIdxRange);

@@ -8,7 +8,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {icons} from '../../assets/icons/iconSource';
 import DBottomSheet from '../common/DBottomSheet';
 import SortModalContent from './SortModalContent';

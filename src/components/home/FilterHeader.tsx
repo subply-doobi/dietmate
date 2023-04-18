@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
 
-import {Row, StyledProps, TextMain} from '../../styles/styledConsts';
+import {Row, StyledProps, TextMain} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 import {RootState} from '../../stores/store';
 import {useListDietDetail} from '../../query/queries/diet';
@@ -17,11 +17,16 @@ interface IFilterHeader {
   onPress: () => void;
   setFilterIndex: React.Dispatch<React.SetStateAction<number>>;
   filterParams: {
-    categoryParam?: string;
-    nutritionParam?: string;
-    priceParam?: string;
-    filterHeaderText?: string;
+    categoryParam: string;
+    nutritionParam: {
+      calorieParam: number[];
+      carbParam: number[];
+      fatParam: number[];
+      proteinParam: number[];
+    };
+    priceParam: [number, number];
   };
+  filterHeaderText: string;
   setRemainNutrProductData: React.Dispatch<
     React.SetStateAction<IProductsData | undefined>
   >;
@@ -88,10 +93,10 @@ const FilterHeader = (props: IFilterHeader) => {
               setFilterIndex(1);
             }}
             isActivated={
-              filterParams.nutritionParam?.calorieParam ||
-              filterParams.nutritionParam?.carbParam ||
-              filterParams.nutritionParam?.proteinParam ||
-              filterParams.nutritionParam?.fatParam
+              filterParams.nutritionParam.calorieParam.length === 2 ||
+              filterParams.nutritionParam.carbParam.length === 2 ||
+              filterParams.nutritionParam.proteinParam.length === 2 ||
+              filterParams.nutritionParam.fatParam.length === 2
                 ? true
                 : false
             }>
@@ -102,15 +107,8 @@ const FilterHeader = (props: IFilterHeader) => {
               onPress();
               setFilterIndex(2);
             }}
-            isActivated={filterParams.priceParam ? true : false}>
-            {filterParams.priceParam ? (
-              <>
-                <FilterBtnText>가격</FilterBtnText>
-                <Badge />
-              </>
-            ) : (
-              <FilterBtnText>가격</FilterBtnText>
-            )}
+            isActivated={filterParams.priceParam.length === 2 ? true : false}>
+            <FilterBtnText>가격</FilterBtnText>
           </FilterBtn>
         </Row>
         <InitializeBtn onPress={() => {}}>

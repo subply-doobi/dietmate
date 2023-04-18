@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 
 import {RootState} from '../../../stores/store';
 import {setCurrentDiet} from '../../../stores/slices/cartSlice';
-import {Col, Row, StyledProps} from '../../../styles/styledConsts';
+import {Col, Row, StyledProps} from '../../../styles/StyledConsts';
 import colors from '../../../styles/colors';
 import {getDietAddStatus} from '../../../util/getDietAddStatus';
 import DAlert from '../alert/DAlert';

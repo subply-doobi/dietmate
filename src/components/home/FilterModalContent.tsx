@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {SetStateAction, useState} from 'react';
 import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {icons} from '../../assets/icons/iconSource';
-import {Row, BtnCTA, Col} from '../../styles/styledConsts';
+import {Row, BtnCTA, Col} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 
 import CategoryContent from './filterContents/CategoryContent';
@@ -14,8 +14,17 @@ import SearchContent from './filterContents/SearchContent';
 import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
 import NutritionContent2 from './filterContents/NutritionContent2';
+import {IFliterParams} from '../../query/types/product';
 
-const FilterModalContent = props => {
+interface Props {
+  filterIndex: number;
+  closeModal: () => void;
+  setFilterParams: React.Dispatch<SetStateAction<IFliterParams>>;
+  filterParams: any;
+  setRemainNutrProductData: (data: any) => void;
+}
+
+const FilterModalContent = (props: Props) => {
   const {
     filterIndex,
     closeModal,
@@ -44,7 +53,12 @@ const FilterModalContent = props => {
     filterModalInitialState.fatParam = filterParams.nutritionParam.fatParam;
   }
 
-  const [nutritionParam, setNutritionParam] = useState(filterModalInitialState);
+  const [nutritionParam, setNutritionParam] = useState<{
+    calorieParam: number[];
+    carbParam: number[];
+    proteinParam: number[];
+    fatParam: number[];
+  }>(filterModalInitialState);
   const [priceParam, setPriceParam] = useState(filterParams.priceParam);
   const params = {
     categoryParam,
@@ -64,7 +78,12 @@ const FilterModalContent = props => {
     {
       text: '영양성분 초기화',
       reset: () => {
-        setNutritionParam('');
+        setNutritionParam({
+          calorieParam: [],
+          carbParam: [],
+          proteinParam: [],
+          fatParam: [],
+        });
         // setFilterParams({...filterParams, nutritionParam: ''});
       },
     },
@@ -103,10 +122,10 @@ const FilterModalContent = props => {
             onPress={() => {
               setClicked(1);
             }}>
-            {params.nutritionParam.calorieParam ||
-            params.nutritionParam.carbParam ||
-            params.nutritionParam.proteinParam ||
-            params.nutritionParam.fatParam ? (
+            {params.nutritionParam.calorieParam.length === 2 ||
+            params.nutritionParam.carbParam.length === 2 ||
+            params.nutritionParam.proteinParam.length === 2 ||
+            params.nutritionParam.fatParam.length === 2 ? (
               <Row>
                 <Text id="1" clicked={clicked}>
                   영양성분
@@ -123,7 +142,7 @@ const FilterModalContent = props => {
             onPress={() => {
               setClicked(2);
             }}>
-            {params.priceParam ? (
+            {params.priceParam.length === 2 ? (
               <Row>
                 <Text id="2" clicked={clicked}>
                   가격
@@ -151,7 +170,7 @@ const FilterModalContent = props => {
       </SafeAreaView>
     );
   };
-  const showContent = index => {
+  const showContent = (index: number) => {
     return index === 0 ? (
       <CategoryContent
         setCategoryParam={setCategoryParam}
@@ -214,7 +233,12 @@ const FilterModalContent = props => {
             if (isTotalInitailize) {
               setCategoryParam('');
               // setFilterParams('');
-              setNutritionParam('');
+              setNutritionParam({
+                calorieParam: [],
+                carbParam: [],
+                proteinParam: [],
+                fatParam: [],
+              });
               setPriceParam('');
               setInitializeModalShow(false);
             } else {

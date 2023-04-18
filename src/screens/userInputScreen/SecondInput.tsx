@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -11,16 +11,17 @@ import {
   saveUserTarget,
 } from '../../stores/slices/userInfoSlice';
 import {NavigationProps, validationRules} from '../../constants/constants';
+import colors from '../../styles/colors';
 import {
   BtnBottomCTA,
-  BtnText,
   Container,
   ErrorBox,
   ErrorText,
   InputHeaderText,
   TextMain,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+  Col,
+} from '../../styles/StyledConsts';
 import {calculateNutrTarget} from '../../util/targetCalculation';
 
 import Dropdown from '../../components/userInput/Dropdown';
@@ -44,16 +45,6 @@ interface IFormField {
     value: string;
   };
 }
-
-const Title = styled(TextMain)`
-  font-size: 24px;
-  font-weight: bold;
-`;
-
-const InputHeader = styled(InputHeaderText)`
-  margin-top: 24px;
-`;
-const Input = styled(UserInfoTextInput)``;
 
 const renderBmrKnownInput = (
   {field: {onChange, value}}: IFormField,
@@ -115,6 +106,9 @@ const onHandlePress = (
 };
 
 const SecondInput = ({navigation: {navigate}, route}: NavigationProps) => {
+  const [countExercise, setCountExercise] = useState(0);
+  const [timeExercise, setTimeExercise] = useState(0);
+  const [intensityExercise, setIntensityExercise] = useState(0);
   const {userInfo} = useSelector((state: RootState) => state.userInfo);
   // console.log('userInfo2: userInfo:', userInfo);
   const {data, isLoading} = useGetBaseLine();
@@ -152,42 +146,107 @@ const SecondInput = ({navigation: {navigate}, route}: NavigationProps) => {
   useEffect(() => {
     handleSubmit(() => {})();
   }, []);
+  const exerciseBtnRange = [
+    {
+      label: '주간 운동 횟수',
+      value: [
+        ['안함'],
+        ['1회'],
+        ['2회'],
+        ['3회'],
+        ['4회'],
+        ['5회'],
+        ['6회'],
+        ['헬창'],
+      ],
+    },
+  ];
+  const exerciseTimeBtnRange = [
+    {
+      label: '회당 운동 시간(분)',
+      value: [['~30'], ['~60'], ['~90'], ['~120'], ['120~']],
+    },
+  ];
+  const intensityBtn = [
+    '이정도면 잠들기도 가능',
+    '적당한 산책 느낌',
+    '숨이 가쁘지만 버틸 만한 정도',
+    '중간중간 쉬지 않으면 못버틴다',
+    '유언장이 준비되어 있다 ',
+  ];
   return (
     <Container>
-      <ScrollView
-        contentContainerStyle={{paddingBottom: 80}}
-        showsVerticalScrollIndicator={false}>
-        <Title>{'선택정보를\n입력해주세요'}</Title>
-        <Controller
-          control={control}
-          rules={validationRules.bmrKnown}
-          render={field => renderBmrKnownInput(field, handleSubmit)}
-          name="bmrKnown"
-        />
+      <ScrollView>
+        <Title>{'선택 정보를\n입력해주세요'}</Title>
+        <SubText>입력된 정보로 목표 칼로리를 계산해드려요</SubText>
+        <ButtonContainer>
+          {exerciseBtnRange.map((nutr, nutrIdx) => (
+            <Col key={nutrIdx}>
+              <Nutr>{nutr.label}</Nutr>
+              <BtnContainer>
+                {nutr.value.map((btn, btnIdx) => (
+                  <Btn
+                    key={btnIdx}
+                    id={btnIdx}
+                    clicked={countExercise}
+                    onPress={() => setCountExercise(btnIdx)}>
+                    <BtnText>{btn}</BtnText>
+                  </Btn>
+                ))}
+              </BtnContainer>
+            </Col>
+          ))}
+        </ButtonContainer>
+        {countExercise === 0 ? (
+          <></>
+        ) : (
+          <AcivateContainer>
+            <ButtonContainer>
+              {exerciseTimeBtnRange.map((nutr, nutrIdx) => (
+                <Col key={nutrIdx}>
+                  <Nutr>{nutr.label}</Nutr>
+                  <BtnContainer>
+                    {nutr.value.map((btn, btnIdx) => (
+                      <Btn
+                        key={btnIdx}
+                        id={btnIdx}
+                        clicked={timeExercise}
+                        onPress={() => setTimeExercise(btnIdx)}>
+                        <BtnText>{btn}</BtnText>
+                      </Btn>
+                    ))}
+                  </BtnContainer>
+                </Col>
+              ))}
+            </ButtonContainer>
+            <ExerciseIntensityText>
+              운동 강도(누가 뭐래도 내 느낌)
+            </ExerciseIntensityText>
+            {intensityBtn.map((e, index) => (
+              <ExerciseIntenSityButton
+                key={index}
+                id={index}
+                clicked={intensityExercise}
+                onPress={() => setIntensityExercise(index)}>
+                <IntensityButtonText>{e}</IntensityButtonText>
+              </ExerciseIntenSityButton>
+            ))}
+            <Controller
+              control={control}
+              rules={validationRules.bmrKnown}
+              render={field => renderBmrKnownInput(field, handleSubmit)}
+              name="bmrKnown"
+            />
+          </AcivateContainer>
+        )}
         {errors.bmrKnown && (
           <ErrorBox>
             <ErrorText>{errors.bmrKnown.message}</ErrorText>
           </ErrorBox>
         )}
-        <Dropdown
-          placeholder="웨이트 운동시간"
-          items={weightTimeCd.isLoading ? [] : newWeightTimeCdCategory}
-          value={weightTimeCdValue}
-          setValue={setValue}
-          reactHookFormName="weightTimeCd"
-        />
-        <Dropdown
-          placeholder="유산소 운동시간"
-          items={aerobicTimeCd.isLoading ? [] : newAerobicTimeCdCategory}
-          value={aerobicTimeCdValue}
-          setValue={setValue}
-          reactHookFormName="aerobicTimeCd"
-        />
       </ScrollView>
       <BtnBottomCTA
-        btnStyle={
-          Object.keys(errors).length === 0 ? 'activated' : 'inactivated'
-        }
+        btnStyle={'inactivated'}
         disabled={Object.keys(errors).length === 0 ? false : true}
         onPress={() =>
           onHandlePress(
@@ -206,3 +265,72 @@ const SecondInput = ({navigation: {navigate}, route}: NavigationProps) => {
 };
 
 export default SecondInput;
+
+const Title = styled(TextMain)`
+  font-size: 24px;
+  font-weight: bold;
+`;
+const SubText = styled(TextMain)`
+  font-size: 16px;
+  margin-top: 16px;
+  margin-bottom: 48px;
+  color: ${colors.textSub};
+`;
+const InputHeader = styled(InputHeaderText)`
+  margin-top: 24px;
+`;
+const Input = styled(UserInfoTextInput)``;
+
+const ButtonContainer = styled.View`
+  row-gap: 64px;
+  margin-bottom: 64px;
+`;
+
+const Nutr = styled(TextMain)`
+  font-size: 18px;
+`;
+
+const BtnContainer = styled.View`
+  margin-top: 16px;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+const Btn = styled.TouchableOpacity`
+  width: 72px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: ${colors.inactivated};
+  background-color: ${({id, clicked}) =>
+    id === clicked ? colors.inactivated : colors.white};
+`;
+
+const BtnText = styled(TextMain)`
+  font-size: 14px;
+`;
+const ExerciseIntensityText = styled(TextMain)`
+  font-size: 18px;
+  margin-bottom: 16px;
+`;
+const IntensityButtonText = styled(TextMain)`
+  font-size: 14px;
+`;
+const ExerciseIntenSityButton = styled.TouchableOpacity`
+  width: 100%;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: ${colors.inactivated};
+  margin-bottom: 8px;
+  background-color: ${({id, clicked}) =>
+    id === clicked ? colors.inactivated : colors.white};
+`;
+
+const AcivateContainer = styled.View``;

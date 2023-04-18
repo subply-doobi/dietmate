@@ -1,13 +1,19 @@
-import React, {useState, useEffect, useMemo, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {ScrollView, TouchableWithoutFeedback} from 'react-native';
 import styled from 'styled-components/native';
 
-import {TextMain, Col} from '../../../styles/styledConsts';
+import {TextMain, Col} from '../../../styles/StyledConsts';
 import DSlider from '../../common/slider/DSlider';
 
 import {useFilterRange} from '../../../query/queries/product';
 
-const NutritionContent = props => {
+interface Props {
+  setNutritionParam: (param: any) => void;
+  nutritionParam: any;
+  filterParams: any;
+}
+
+const NutritionContent = (props: Props) => {
   const calorieRange = useFilterRange('calorie');
   const carbRange = useFilterRange('carb');
   const fatRange = useFilterRange('fat');
@@ -98,7 +104,17 @@ const NutritionContent = props => {
       setProteinValue([minProtein, maxProtein]);
       setFatValue([minFat, maxFat]);
     }
-  }, [nutritionParam]);
+  }, [
+    nutritionParam,
+    minCalorie,
+    maxCalorie,
+    minCarb,
+    maxCarb,
+    minProtein,
+    maxProtein,
+    minFat,
+    maxFat,
+  ]);
 
   return (
     <ScrollView>

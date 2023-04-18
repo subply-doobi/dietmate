@@ -17,7 +17,7 @@ import {
   TextMain,
   TextSub,
   VerticalLine,
-} from '../styles/styledConsts';
+} from '../styles/StyledConsts';
 
 import DAlert from '../components/common/alert/DAlert';
 import NutrTarget from '../components/common/nutrient/NutrientTarget';

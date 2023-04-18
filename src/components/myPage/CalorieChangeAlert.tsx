@@ -17,7 +17,7 @@ import {
   TextMain,
   TextSub,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 
 import DTooltip from '../common/DTooltip';
 
