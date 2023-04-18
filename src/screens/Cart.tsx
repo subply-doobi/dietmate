@@ -261,7 +261,7 @@ const CreateDietBtn = styled.TouchableOpacity`
 const LeftBar = styled.View`
   position: absolute;
   left: 0px;
-  width: 6px;
+  width: 4px;
   height: 48px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;

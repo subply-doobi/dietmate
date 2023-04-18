@@ -4,6 +4,7 @@ import {Dimensions, Platform} from 'react-native';
 export const {width, height} = Dimensions.get('screen');
 export const SCREENWIDTH = Math.min(width, height);
 export const SCREENHEIGHT = Math.max(width, height);
+export const DALERT_WIDTH = SCREENWIDTH - 80;
 export const IS_ANDROID = Platform.OS === 'android';
 export const IS_IOS = Platform.OS === 'ios';
 export const FOOD_LIST_ITEM_HEIGHT = 152;
@@ -66,6 +67,45 @@ export const NUTR_ERROR_RANGE = {
   fat: [-3, 3],
 };
 
+export const filterBtnRange = [
+  {
+    label: '칼로리 (kcal)',
+    value: [
+      [0, 100],
+      [100, 200],
+      [200, 300],
+      [300, 460],
+    ],
+  },
+  {
+    label: '탄수화물 (g)',
+    value: [
+      [0, 20],
+      [20, 40],
+      [40, 60],
+      [60, 80],
+    ],
+  },
+  {
+    label: '단백질 (g)',
+    value: [
+      [0, 10],
+      [10, 20],
+      [20, 30],
+      [30, 42],
+    ],
+  },
+  {
+    label: '지방 (g)',
+    value: [
+      [0, 5],
+      [5, 10],
+      [10, 15],
+      [15, 20],
+    ],
+  },
+];
+
 interface ITimeToMinutes {
   [key: string]: number;
 }
@@ -100,7 +140,7 @@ export const purposeCdToValue: IPurposeToCalorie = {
     additionalCalorie: '-700',
   },
   SP002003: {
-    targetText: '유지',
+    targetText: '체중 유지',
     additionalCalorieText: '0kcal',
     additionalCalorie: '0',
   },

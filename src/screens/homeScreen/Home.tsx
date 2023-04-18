@@ -12,7 +12,7 @@ import {FOOD_LIST_ITEM_HEIGHT, categoryCode} from '../../constants/constants';
 import {queryFn} from '../../query/queries/requestFn';
 import {IProductData, IProductsData} from '../../query/types/product';
 import {SCREENWIDTH} from '../../constants/constants';
-import {filterAvailableFoods} from '../../util/home/filterAvailableFoods';
+import {filterAvailableFoods} from '../../util/home/filterUtils';
 import colors from '../../styles/colors';
 
 // doobi Component

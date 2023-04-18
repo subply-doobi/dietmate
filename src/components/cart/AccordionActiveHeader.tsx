@@ -6,15 +6,10 @@ import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 
 // doobi Component
-import {Row, StyledProps, TextMain} from '../../styles/styledConsts';
+import {Row, StyledProps} from '../../styles/styledConsts';
 
 // react-query
-import {
-  useCreateDiet,
-  useDeleteDiet,
-  useGetDietDetailEmptyYn,
-  useListDiet,
-} from '../../query/queries/diet';
+import {useDeleteDiet, useListDiet} from '../../query/queries/diet';
 import {useState} from 'react';
 import {commaToNum, sumUpPrice} from '../../util/sumUp';
 import DAlert from '../common/alert/DAlert';
@@ -22,7 +17,6 @@ import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import {queryClient} from '../../query/store';
 import {DIET_DETAIL} from '../../query/keys';
 import {IDietDetailData} from '../../query/types/diet';
-import AutoDietModal from './AutoDietModal';
 
 interface IAccordionActiveHeader {
   idx: number;
@@ -46,19 +40,20 @@ const AccordionActiveHeader = ({
   // etc
   const priceSum = sumUpPrice(dietDetailData);
 
-  const HeaderColor = !dietDetailData
-    ? colors.dark
-    : dietDetailData.length === 0
-    ? colors.dark
-    : idx % 5 === 0
-    ? colors.main
-    : idx % 5 === 1
-    ? colors.blue
-    : idx % 5 === 2
-    ? colors.green
-    : idx % 5 === 3
-    ? colors.orange
-    : colors.warning;
+  const HeaderColor = colors.darker;
+  // const HeaderColor = !dietDetailData
+  //   ? colors.dark
+  //   : dietDetailData.length === 0
+  //   ? colors.dark
+  //   : idx % 5 === 0
+  //   ? colors.main
+  //   : idx % 5 === 1
+  //   ? colors.blue
+  //   : idx % 5 === 2
+  //   ? colors.green
+  //   : idx % 5 === 3
+  //   ? colors.orange
+  //   : colors.warning;
 
   const onDeleteDiet = () => {
     deleteDietMutation.mutate({dietNo});

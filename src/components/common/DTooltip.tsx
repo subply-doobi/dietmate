@@ -5,7 +5,7 @@ import {icons} from '../../assets/icons/iconSource';
 
 interface IDtooltip {
   tooltipShow: boolean;
-  text: string;
+  text?: string;
   showCheck?: boolean;
   reversed?: boolean;
   boxBottom?: number;
@@ -15,6 +15,12 @@ interface IDtooltip {
   triangleLeft?: number;
   triangleRight?: number;
   onPressFn?: Function;
+  style?: {
+    flex?: number;
+    width?: number | string;
+    height?: number | string;
+  };
+  customContent?: () => React.ReactElement;
 }
 
 /** tooltip 박스는 bottom | top | left | right 값 없을 때 bottom, left 기준.
@@ -32,6 +38,8 @@ const DTooltip = ({
   triangleLeft,
   triangleRight,
   onPressFn,
+  style,
+  customContent,
 }: IDtooltip) => {
   const boxVerticalStyle =
     boxBottom !== undefined
@@ -54,11 +62,11 @@ const DTooltip = ({
 
   return tooltipShow ? (
     <Container
-      style={{...boxVerticalStyle, ...boxHorizontalStyle}}
+      style={{...boxVerticalStyle, ...boxHorizontalStyle, ...style}}
       onPress={() => (onPressFn ? onPressFn() : {})}>
       {reversed && <TooltipTriangleRvs style={{...triangleHorizontalStyle}} />}
       <TooltipBox>
-        <TooltipText>{text}</TooltipText>
+        {customContent ? customContent() : <TooltipText>{text}</TooltipText>}
         {showCheck && <CheckBox source={icons.checkboxCheckedWhite_24} />}
       </TooltipBox>
       {!reversed && <TooltipTriangle style={{...triangleHorizontalStyle}} />}

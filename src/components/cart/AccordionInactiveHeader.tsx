@@ -74,6 +74,7 @@ const AccordionInactiveHeader = ({
   const priceSum = sumUpPrice(dietDetailData);
   const totalPrice = priceSum * menuNoTemp;
 
+  // const barColor = colors.dark;
   const barColor = !dietDetailData
     ? colors.dark
     : dietDetailData.length === 0
@@ -190,7 +191,7 @@ const Container = styled.View`
 `;
 
 const LeftBar = styled.View`
-  width: 6px;
+  width: 4px;
   height: 84px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;

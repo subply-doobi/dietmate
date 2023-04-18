@@ -13,6 +13,7 @@ import PriceContent from './filterContents/PriceContent';
 import SearchContent from './filterContents/SearchContent';
 import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
+import NutritionContent2 from './filterContents/NutritionContent2';
 
 const FilterModalContent = props => {
   const {
@@ -28,10 +29,10 @@ const FilterModalContent = props => {
   );
 
   const filterModalInitialState = {
-    calorieParam: filterParams.nutritionParam?.calorieParam,
-    carbParam: filterParams.nutritionParam?.carbParam,
-    proteinParam: filterParams.nutritionParam?.proteinParam,
-    fatParam: filterParams.nutritionParam?.fatParam,
+    calorieParam: filterParams.nutritionParam?.calorieParam || [],
+    carbParam: filterParams.nutritionParam?.carbParam || [],
+    proteinParam: filterParams.nutritionParam?.proteinParam || [],
+    fatParam: filterParams.nutritionParam?.fatParam || [],
   };
 
   if (filterParams.nutritionParam) {
@@ -77,6 +78,7 @@ const FilterModalContent = props => {
   ];
 
   const FilterHeaderText = () => {
+    console.log('FilterHeaderText: ', params.nutritionParam.calorieParam);
     return (
       <SafeAreaView>
         <FilterRow>
@@ -138,13 +140,13 @@ const FilterModalContent = props => {
             onPress={() => {
               setClicked(3);
             }}></Button>
-          <Button
+          <InitialzieBtn
             onPress={() => {
               setIsTotalInitailize(true);
               setInitializeModalShow(true);
             }}>
             <Image source={icons.initialize_24} />
-          </Button>
+          </InitialzieBtn>
         </FilterRow>
       </SafeAreaView>
     );
@@ -156,7 +158,12 @@ const FilterModalContent = props => {
         categoryParam={categoryParam}
       />
     ) : index === 1 ? (
-      <NutritionContent
+      // <NutritionContent
+      //   setNutritionParam={setNutritionParam}
+      //   nutritionParam={nutritionParam}
+      //   filterParams={filterParams}
+      // />
+      <NutritionContent2
         setNutritionParam={setNutritionParam}
         nutritionParam={nutritionParam}
         filterParams={filterParams}
@@ -177,8 +184,11 @@ const FilterModalContent = props => {
   //
   return (
     <Col style={{height: '100%'}}>
-      <ScrollView contentContainerStyle={{paddingBottom: 64}}>
-        <FilterHeaderText />
+      <FilterHeaderText />
+      <ScrollView
+        style={{marginTop: 48}}
+        contentContainerStyle={{paddingBottom: 80}}
+        showsVerticalScrollIndicator={false}>
         {/* <ShowContent index={clicked} /> */}
         {/* 이유를 알려줘 */}
         {showContent(clicked)}
@@ -240,7 +250,6 @@ export default FilterModalContent;
 
 const Text = styled.Text`
   font-size: 18px;
-  margin-right: 26px;
   color: ${({id, clicked}) =>
     id === String(clicked) ? colors.textMain : colors.textSub};
   font-weight: ${({id, clicked}) =>
@@ -252,6 +261,12 @@ const BottomText = styled.Text`
   color: ${colors.white};
 `;
 const Button = styled.TouchableOpacity``;
+
+const InitialzieBtn = styled.TouchableOpacity`
+  position: absolute;
+  right: 0px;
+`;
+
 const Image = styled.Image`
   width: 24px;
   height: 24px;
@@ -259,6 +274,7 @@ const Image = styled.Image`
 const FilterRow = styled(Row)`
   justify-content: center;
   margin-top: 24px;
+  column-gap: 20px;
 `;
 const BottomRow = styled.View`
   position: absolute;
@@ -274,5 +290,5 @@ const Badge = styled.View`
   background-color: ${colors.main};
   position: absolute;
   top: 0px;
-  right: 20px;
+  right: -6px;
 `;

@@ -32,9 +32,10 @@ const Login = () => {
   const {data, refetch} = useGetBaseLine({enabled: false});
 
   const signInWithKakao = async (): Promise<void> => {
-    await kakaoLogin();
-    const refetchedData = await refetch();
-    refetchedData && navigateByBaseLine(refetchedData, navigation);
+    // await kakaoLogin();
+    // const refetchedData = await refetch();
+    // refetchedData && navigateByBaseLine(refetchedData, navigation);
+    navigation.navigate('BottomTabNav', {screen: 'Home'});
   };
 
   // etc

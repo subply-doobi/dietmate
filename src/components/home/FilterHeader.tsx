@@ -1,16 +1,17 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
 
-import {Row, TextMain} from '../../styles/styledConsts';
+import {Row, StyledProps, TextMain} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 import {RootState} from '../../stores/store';
 import {useListDietDetail} from '../../query/queries/diet';
 import {useSelector} from 'react-redux';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {IProductsData} from '../../query/types/product';
-import {filterAvailableFoods} from '../../util/home/filterAvailableFoods';
+import {filterAvailableFoods} from '../../util/home/filterUtils';
 import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
+import {icons} from '../../assets/icons/iconSource';
 
 interface IFilterHeader {
   onPress: () => void;
@@ -66,55 +67,55 @@ const FilterHeader = (props: IFilterHeader) => {
 
   return (
     <>
-      <Row>
-        <FilterBtn
-          onPress={() => {
-            onPress();
-            setFilterIndex(0);
-          }}>
-          {filterParams.categoryParam ? (
-            <>
-              <FilterBtnText>{filterHeaderText}</FilterBtnText>
-              <Badge />
-            </>
-          ) : (
-            <FilterBtnText>카테고리</FilterBtnText>
-          )}
-        </FilterBtn>
-        <FilterBtn
-          onPress={() => {
-            onPress();
-            setFilterIndex(1);
-          }}>
-          {filterParams.nutritionParam?.calorieParam ||
-          filterParams.nutritionParam?.carbParam ||
-          filterParams.nutritionParam?.proteinParam ||
-          filterParams.nutritionParam?.fatParam ? (
-            <>
-              <FilterBtnText>영양성분</FilterBtnText>
-              <Badge />
-            </>
-          ) : (
+      <Row style={{justifyContent: 'space-between'}}>
+        <Row style={{columnGap: 8}}>
+          <RemainNutrFilterBtn onPress={onPressRemainNutrProduct}>
+            <FilterBtnText>남은영양 이하</FilterBtnText>
+          </RemainNutrFilterBtn>
+          <FilterBtn
+            onPress={() => {
+              onPress();
+              setFilterIndex(0);
+            }}
+            isActivated={filterParams.categoryParam ? true : false}>
+            <FilterBtnText>
+              {filterParams.categoryParam ? filterHeaderText : '카테고리'}
+            </FilterBtnText>
+          </FilterBtn>
+          <FilterBtn
+            onPress={() => {
+              onPress();
+              setFilterIndex(1);
+            }}
+            isActivated={
+              filterParams.nutritionParam?.calorieParam ||
+              filterParams.nutritionParam?.carbParam ||
+              filterParams.nutritionParam?.proteinParam ||
+              filterParams.nutritionParam?.fatParam
+                ? true
+                : false
+            }>
             <FilterBtnText>영양성분</FilterBtnText>
-          )}
-        </FilterBtn>
-        <FilterBtn
-          onPress={() => {
-            onPress();
-            setFilterIndex(2);
-          }}>
-          {filterParams.priceParam ? (
-            <>
+          </FilterBtn>
+          <FilterBtn
+            onPress={() => {
+              onPress();
+              setFilterIndex(2);
+            }}
+            isActivated={filterParams.priceParam ? true : false}>
+            {filterParams.priceParam ? (
+              <>
+                <FilterBtnText>가격</FilterBtnText>
+                <Badge />
+              </>
+            ) : (
               <FilterBtnText>가격</FilterBtnText>
-              <Badge />
-            </>
-          ) : (
-            <FilterBtnText>가격</FilterBtnText>
-          )}
-        </FilterBtn>
-        <FilterBtn onPress={onPressRemainNutrProduct}>
-          <FilterBtnText>영양맞춤</FilterBtnText>
-        </FilterBtn>
+            )}
+          </FilterBtn>
+        </Row>
+        <InitializeBtn onPress={() => {}}>
+          <InitializeImg source={icons.initialize_24} />
+        </InitializeBtn>
         <DAlert
           alertShow={remainNutrProductAlertShow}
           onConfirm={() => setRemainNutrProductAlertShow(false)}
@@ -131,11 +132,29 @@ const FilterHeader = (props: IFilterHeader) => {
 export default FilterHeader;
 
 const FilterBtn = styled.TouchableOpacity`
-  margin-right: 36px;
+  height: 32px;
+  /* margin-left: 8px; */
+  padding: 6px 8px 6px 8px;
+  border-radius: 16px;
+  border-width: 1px;
+  border-color: ${colors.inactivated};
+  background-color: ${({isActivated}: StyledProps) =>
+    isActivated ? colors.backgroundLight : colors.white};
 `;
+
+const RemainNutrFilterBtn = styled.TouchableOpacity`
+  height: 32px;
+  padding: 6px 8px 6px 8px;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: ${colors.highlight};
+  background-color: ${colors.white};
+`;
+
 const FilterBtnText = styled(TextMain)`
   font-size: 14px;
 `;
+
 const Badge = styled.View`
   width: 6px;
   height: 6px;
@@ -144,4 +163,15 @@ const Badge = styled.View`
   position: absolute;
   top: 0px;
   right: -8px;
+`;
+
+const InitializeBtn = styled.TouchableOpacity`
+  height: 32px;
+  width: 24px;
+  justify-content: center;
+  align-items: center;
+`;
+const InitializeImg = styled.Image`
+  width: 24px;
+  height: 24px;
 `;

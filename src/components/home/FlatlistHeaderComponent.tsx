@@ -64,14 +64,17 @@ const FlatlistHeaderComponent = ({
         transform: [{translateY: translateY}],
         zIndex: 10000,
         backgroundColor: colors.white,
-        paddingLeft: 16,
-        paddingRight: 16,
+        width: '100%',
+        marginLeft: 16,
+        // paddingLeft: 16,
+        // paddingRight: 16,
       }}>
       <Row
         style={{
+          flex: 1,
           justifyContent: 'space-between',
-          width: '100%',
           marginTop: 16,
+          alignItems: 'flex-end',
         }}>
         <Row style={{alignItems: 'flex-end', flex: 1}}>
           <ListTitle>검색된 결과</ListTitle>
@@ -193,9 +196,9 @@ const NoOfFoods = styled(TextSub)`
 
 const SortBtn = styled.TouchableOpacity`
   flex-direction: row;
-  align-items: flex-end;
-  justify-content: center;
-  height: 32px;
+  /* align-items: flex-end; */
+  align-items: center;
+  /* justify-content: center; */
 `;
 
 const SortBtnText = styled(TextSub)`
