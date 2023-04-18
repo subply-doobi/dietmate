@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components/native';
 
 import {Row, TextMain} from '../../styles/StyledConsts';
@@ -9,6 +9,8 @@ import {useSelector} from 'react-redux';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {IProductsData} from '../../query/types/product';
 import {filterAvailableFoods} from '../../util/home/filterAvailableFoods';
+import DAlert from '../common/alert/DAlert';
+import CommonAlertContent from '../common/alert/CommonAlertContent';
 
 interface IFilterHeader {
   onPress: () => void;
@@ -41,6 +43,10 @@ const FilterHeader = (props: IFilterHeader) => {
     enabled: currentDietNo ? true : false,
   });
 
+  // state
+  const [remainNutrProductAlertShow, setRemainNutrProductAlertShow] =
+    useState(false);
+
   // etc
   const {
     onPress,
@@ -49,6 +55,19 @@ const FilterHeader = (props: IFilterHeader) => {
     setRemainNutrProductData,
     filterHeaderText,
   } = props;
+
+  const onPressRemainNutrProduct = () => {
+    const remainNutrProductData = filterAvailableFoods(
+      totalFoodList,
+      baseLineData,
+      dietDetailData,
+    );
+    if (remainNutrProductData.length === 0) {
+      setRemainNutrProductAlertShow(true);
+      return;
+    }
+    setRemainNutrProductData(remainNutrProductData);
+  };
 
   return (
     <>
@@ -98,19 +117,18 @@ const FilterHeader = (props: IFilterHeader) => {
             <FilterBtnText>가격</FilterBtnText>
           )}
         </FilterBtn>
-        <FilterBtn
-          onPress={() => {
-            baseLineData &&
-              dietDetailData &&
-              filterAvailableFoods(
-                totalFoodList,
-                baseLineData,
-                dietDetailData,
-                setRemainNutrProductData,
-              );
-          }}>
+        <FilterBtn onPress={onPressRemainNutrProduct}>
           <FilterBtnText>영양맞춤</FilterBtnText>
         </FilterBtn>
+        <DAlert
+          alertShow={remainNutrProductAlertShow}
+          onConfirm={() => setRemainNutrProductAlertShow(false)}
+          onCancel={() => setRemainNutrProductAlertShow(false)}
+          renderContent={() => (
+            <CommonAlertContent text="남은 영양에 맞는 상품이 없어요" />
+          )}
+          NoOfBtn={1}
+        />
       </Row>
     </>
   );

@@ -231,7 +231,6 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
           style={{width: aniWidthByPosition}}
           onPress={() => setDeleteAlertShow(true)}>
           <AniCartImage
-            {...panResponder.panHandlers}
             style={{transform: [{scale: aniScaleByPosition}]}}
             source={icons.cartWhite_40}
           />

@@ -151,6 +151,7 @@ const Cart = () => {
     <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
         <ContentContainer>
+          {/* 장바구니 각 끼니들 accordion */}
           <Accordion
             activeSections={activeSections}
             sections={ACCORDION_CONTENT}
@@ -161,6 +162,8 @@ const Cart = () => {
             renderContent={section => section.content}
             onChange={updateSections}
           />
+
+          {/* 끼니 추가 버튼 */}
           <CreateDietBtn
             onPress={onCreateDiet}
             disabled={!dietEmptyData || dietEmptyData.emptyYn === 'Y'}>
@@ -175,12 +178,14 @@ const Cart = () => {
             )}
           </CreateDietBtn>
         </ContentContainer>
+
+        {/* 끼니 정보 요약 */}
         <SummaryContainer>
-          {/* 끼니 정보 요약 */}
-          <CartSummary setActiveSections={setActiveSections} />
+          <CartSummary />
         </SummaryContainer>
       </ScrollView>
 
+      {/* 주문 버튼 */}
       <BtnBottomCTA
         btnStyle={isEmpty ? 'inactivated' : 'activated'}
         width={SCREENWIDTH - 16}

@@ -38,7 +38,7 @@ export const aerobicTrainingCategrory = [
   {label: '하루 2시간 이상', value: 'SP004005'},
 ];
 export const nutrRatioCategory = [
-  {label: '55 : 20 : 25(보건복지부 추천)', value: 'SP005001'},
+  {label: '55 : 20 : 25(보건복지부 권장)', value: 'SP005001'},
   {label: '20 : 20: 60(저탄고지 식단)', value: 'SP005002'},
   {label: '40 : 40 : 20(벌크업용)', value: 'SP005003'},
 ];
@@ -50,7 +50,7 @@ export const myPageBtns = [
   {title: '주문내역', btnId: 'PaymentHistory'},
 ];
 
-export const categoryCode = {
+export const categoryCode: {[key: string]: string} = {
   도시락: 'CG001',
   닭가슴살: 'CG002',
   샐러드: 'CG003',
