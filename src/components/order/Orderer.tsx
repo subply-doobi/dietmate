@@ -7,7 +7,7 @@ import {
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {IFormField, validationRules} from '../../constants/constants';
 
 interface IAddress {

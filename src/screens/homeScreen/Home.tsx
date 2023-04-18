@@ -1,5 +1,5 @@
 // react, RN, 3rd
-import {React, useCallback, useEffect, useState, useRef} from 'react';
+import {useCallback, useEffect, useState, useRef} from 'react';
 import {FlatList, View, TextInput, Animated} from 'react-native';
 import styled from 'styled-components/native';
 
@@ -7,11 +7,7 @@ import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {RootState} from '../../stores/store';
-import {
-  setCurrentDiet,
-  setNutrTooltipText,
-  setTotalFoodList,
-} from '../../stores/slices/cartSlice';
+import {setCurrentDiet, setTotalFoodList} from '../../stores/slices/cartSlice';
 import {setListTitle} from '../../stores/slices/filterSlice';
 import {icons} from '../../assets/icons/iconSource';
 import {
@@ -20,12 +16,12 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {FOOD_LIST_ITEM_HEIGHT, categoryCode} from '../../constants/constants';
 import colors from '../../styles/colors';
 import {queryFn} from '../../query/queries/requestFn';
 import {IProductData, IProductsData} from '../../query/types/product';
-import {SCREENWIDTH, height} from '../../constants/constants';
+import {SCREENWIDTH} from '../../constants/constants';
 
 // doobi Component
 import FoodList from '../../components/home/FoodList';
@@ -41,14 +37,12 @@ import {useListDietDetail} from '../../query/queries/diet';
 import {useListProduct} from '../../query/queries/product';
 import {IDietData} from '../../query/types/diet';
 import MenuSection from '../../components/common/menuSection/MenuSection';
-import {getAvailableFoods} from '../../util/cart/autoMenu';
 import {filterAvailableFoods} from '../../util/home/filterAvailableFoods';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 
 const Home = () => {
   // redux
   const dispatch = useDispatch();
-  const {listTitle} = useSelector((state: RootState) => state.filter);
   const {totalFoodList, currentDietNo, totalFoodListIsLoaded} = useSelector(
     (state: RootState) => state.cart,
   );

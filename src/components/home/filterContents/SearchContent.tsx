@@ -4,7 +4,7 @@ import {useState} from 'react';
 
 import {icons} from '../../../assets/icons/iconSource';
 import colors from '../../../styles/colors';
-import {Col} from '../../../styles/styledConsts';
+import {Col} from '../../../styles/StyledConsts';
 
 import DTooltip from '../../common/DTooltip';
 
@@ -32,29 +32,6 @@ const SearchContent = () => {
 };
 
 export default SearchContent;
-
-const Container = styled.View`
-  margin-top: 64px;
-`;
-
-const Text = styled.Text`
-  font-size: 16px;
-  color: ${colors.textMain};
-`;
-const Button = styled.TouchableOpacity`
-  margin-top: 118px;
-  flex-direction: row;
-`;
-const ButtonText = styled.Text`
-  font-size: 18px;
-  color: ${colors.textMain};
-  font-weight: bold;
-  margin-left: 8px;
-`;
-const CheckboxImage = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
 
 const MenuAndSearchBox = styled.View`
   flex-direction: row;

@@ -6,20 +6,13 @@ import styled from 'styled-components/native';
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {
-  commaToNum,
   compareNutrToTarget,
   sumUpNutrients,
   sumUpPrice,
 } from '../../util/sumUp';
 
 // doobi Component
-import {
-  BtnSmall,
-  BtnSmallText,
-  HorizontalLine,
-  Row,
-  TextMain,
-} from '../../styles/styledConsts';
+import {BtnSmall, BtnSmallText, Row, TextMain} from '../../styles/StyledConsts';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import NutrientsProgress from '../common/nutrient/NutrientsProgress';
@@ -51,7 +44,6 @@ const AccordionContent = ({
   const [autoDietModalShow, setAutoDietModalShow] = useState(false);
   const [checkAllClicked, setCheckAllClicked] = useState(false);
   const [deleteModalShow, setDeleteModalShow] = useState(false);
-  const [autoDietComplete, setAutoDietComplete] = useState(false);
   const [selectedFoods, setSelectedFoods] = useState<{[key: string]: string[]}>(
     {},
   );
@@ -61,7 +53,7 @@ const AccordionContent = ({
   useEffect(() => {
     selectedFoods[dietNo]?.length !== dietDetailData?.length &&
       setCheckAllClicked(false);
-  }, [selectedFoods]);
+  }, [selectedFoods, dietDetailData, dietNo]);
 
   // 현재 끼니의 식품들이 목표섭취량에 부합하는지 확인
   // empty/notEnough/exceed 에 따라 autoMenuBtn 디자인이 다름

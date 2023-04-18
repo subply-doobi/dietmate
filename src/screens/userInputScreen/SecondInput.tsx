@@ -20,7 +20,7 @@ import {
   InputHeaderText,
   TextMain,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {calculateNutrTarget} from '../../util/targetCalculation';
 
 import Dropdown from '../../components/userInput/Dropdown';

@@ -2,12 +2,29 @@ import React, {useState, useEffect} from 'react';
 import {ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 
-import {Col, TextMain} from '../../../styles/styledConsts';
+import {Col, TextMain} from '../../../styles/StyledConsts';
 import DSlider from '../../common/slider/DSlider';
 
 import {useFilterRange} from '../../../query/queries/product';
 
-const PriceContent = props => {
+interface Props {
+  setPriceParam: (param: any) => void;
+  priceParam: [number, number];
+  filterParams: {
+    priceParam: [number, number];
+    nutritionParam: {
+      calorieParam: [number, number];
+      carbParam: [number, number];
+      fatParam: [number, number];
+      proteinParam: [number, number];
+    };
+    categoryParam: {
+      category: string;
+    };
+  };
+}
+
+const PriceContent = (props: Props) => {
   const {setPriceParam, priceParam, filterParams} = props;
   const priceRange = useFilterRange('price');
   const {data, isLoading} = priceRange;
@@ -27,7 +44,7 @@ const PriceContent = props => {
     if (!priceParam) {
       return setPriceValue([0, maxState]);
     }
-  }, [priceParam]);
+  }, [priceParam, maxState]);
 
   return (
     <Col style={{marginTop: 120}}>

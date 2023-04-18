@@ -1,28 +1,22 @@
 // react, RN, 3rd
+import {useState} from 'react';
 import styled from 'styled-components/native';
 
 // doobi util, redux, etc
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
+import {commaToNum, sumUpPrice} from '../../util/sumUp';
 
 // doobi Component
-import {Row, StyledProps, TextMain} from '../../styles/styledConsts';
-
-// react-query
-import {
-  useCreateDiet,
-  useDeleteDiet,
-  useGetDietDetailEmptyYn,
-  useListDiet,
-} from '../../query/queries/diet';
-import {useState} from 'react';
-import {commaToNum, sumUpPrice} from '../../util/sumUp';
+import {Row, StyledProps} from '../../styles/StyledConsts';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
+
+// react-query
+import {useDeleteDiet, useListDiet} from '../../query/queries/diet';
 import {queryClient} from '../../query/store';
 import {DIET_DETAIL} from '../../query/keys';
 import {IDietDetailData} from '../../query/types/diet';
-import AutoDietModal from './AutoDietModal';
 
 interface IAccordionActiveHeader {
   idx: number;

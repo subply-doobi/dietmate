@@ -9,7 +9,7 @@ import {
   InputHeaderText,
   TextMain,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {validationRules} from '../../constants/constants';
 import {IFormField} from '../../constants/constants';
 

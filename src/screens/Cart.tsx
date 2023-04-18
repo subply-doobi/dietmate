@@ -1,5 +1,5 @@
 // react, RN, 3rd
-import {useMemo, useState} from 'react';
+import {React, useMemo, useState} from 'react';
 import {ScrollView, TouchableOpacity, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch} from 'react-redux';
@@ -15,7 +15,7 @@ import {icons} from '../assets/icons/iconSource';
 import {getDietAddStatus} from '../util/getDietAddStatus';
 
 // doobi Component
-import {BtnBottomCTA, BtnText, Row, TextSub} from '../styles/styledConsts';
+import {BtnBottomCTA, BtnText, Row, TextSub} from '../styles/StyledConsts';
 import CartSummary from '../components/cart/CartSummary';
 import DAlert from '../components/common/alert/DAlert';
 import CreateLimitAlertContent from '../components/common/alert/CreateLimitAlertContent';

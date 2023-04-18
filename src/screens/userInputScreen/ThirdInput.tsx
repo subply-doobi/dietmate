@@ -17,7 +17,7 @@ import {
   HorizontalSpace,
   StyledProps,
   TextMain,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {convertDataByMethod} from '../../util/userInfoSubmit';
 
 import Auto from '../../components/userInput/Auto';

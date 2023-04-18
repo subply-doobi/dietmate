@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 import * as Progress from 'react-native-progress';
 
 import colors from '../../../styles/colors';
-import {VerticalSpace} from '../../../styles/styledConsts';
+import {VerticalSpace} from '../../../styles/StyledConsts';
 import {
   checkNutrSatisfied,
   getExceedIdx,

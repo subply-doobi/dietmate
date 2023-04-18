@@ -1,7 +1,7 @@
 import {View} from 'react-native';
 import styled from 'styled-components/native';
 
-import {TextMain, TextSub} from '../../styles/styledConsts';
+import {TextMain, TextSub} from '../../styles/StyledConsts';
 import {commaToNum, reGroupBySeller, sumUpPrice} from '../../util/sumUp';
 
 import {

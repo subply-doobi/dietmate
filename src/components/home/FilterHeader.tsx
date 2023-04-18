@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-import {Row, TextMain} from '../../styles/styledConsts';
+import {Row, TextMain} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 import {RootState} from '../../stores/store';
 import {useListDietDetail} from '../../query/queries/diet';
@@ -15,10 +15,15 @@ interface IFilterHeader {
   setFilterIndex: React.Dispatch<React.SetStateAction<number>>;
   filterParams: {
     categoryParam?: string;
-    nutritionParam?: string;
-    priceParam?: string;
-    filterHeaderText?: string;
+    nutritionParam?: {
+      calorieParam?: [number, number];
+      carbParam?: [number, number];
+      fatParam?: [number, number];
+      proteinParam?: [number, number];
+    };
+    priceParam?: [number, number];
   };
+  filterHeaderText: string;
   setRemainNutrProductData: React.Dispatch<
     React.SetStateAction<IProductsData | undefined>
   >;

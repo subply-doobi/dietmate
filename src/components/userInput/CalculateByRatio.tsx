@@ -8,7 +8,7 @@ import {
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {nutrRatioCategory, validationRules} from '../../constants/constants';
 import {calculateCaloriesToNutr} from '../../util/targetCalculation';
 

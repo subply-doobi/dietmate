@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {icons} from '../../assets/icons/iconSource';
-import {Row, BtnCTA, Col} from '../../styles/styledConsts';
+import {Row, BtnCTA, Col} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 
 import CategoryContent from './filterContents/CategoryContent';
@@ -14,7 +14,15 @@ import SearchContent from './filterContents/SearchContent';
 import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
 
-const FilterModalContent = props => {
+interface Props {
+  filterIndex: number;
+  closeModal: () => void;
+  setFilterParams: (params: any) => void;
+  filterParams: any;
+  setRemainNutrProductData: (data: any) => void;
+}
+
+const FilterModalContent = (props: Props) => {
   const {
     filterIndex,
     closeModal,
@@ -149,7 +157,7 @@ const FilterModalContent = props => {
       </SafeAreaView>
     );
   };
-  const showContent = index => {
+  const showContent = (index: number) => {
     return index === 0 ? (
       <CategoryContent
         setCategoryParam={setCategoryParam}
@@ -276,4 +284,3 @@ const Badge = styled.View`
   top: 0px;
   right: 20px;
 `;
-const MODAL_WIDTH = 328;

@@ -18,7 +18,7 @@ import {
   TextMain,
   UserInfoTextInput,
   VerticalSpace,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {NavigationProps, validationRules} from '../../constants/constants';
 import colors from '../../styles/colors';
 import {calculateBMR} from '../../util/targetCalculation';
