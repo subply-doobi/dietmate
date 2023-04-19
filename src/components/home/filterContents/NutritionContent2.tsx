@@ -5,7 +5,7 @@ import {filterBtnRange} from '../../../constants/constants';
 import colors from '../../../styles/colors';
 import {Col, StyledProps, TextMain} from '../../../styles/StyledConsts';
 import {setInitialIdx} from '../../../util/home/filterUtils';
-import {IFliterParams} from '../../../query/types/product';
+import {IFilterParams} from '../../../query/types/product';
 
 interface INutritionContent2 {
   setNutritionParam: React.Dispatch<
@@ -22,7 +22,7 @@ interface INutritionContent2 {
     fatParam: number[];
     proteinParam: number[];
   };
-  filterParams: IFliterParams;
+  filterParams: IFilterParams;
 }
 const NutritionContent2 = ({
   setNutritionParam,
@@ -166,7 +166,6 @@ const NutritionContent2 = ({
       });
     }
   };
-  console.log('NutritionContent2: nutrIdx', nutrIdxRange);
   return (
     <TouchableWithoutFeedback>
       <Container>
@@ -194,6 +193,7 @@ export default NutritionContent2;
 
 const Container = styled.View`
   row-gap: 64px;
+  margin-top: 48px;
 `;
 
 const Nutr = styled(TextMain)`

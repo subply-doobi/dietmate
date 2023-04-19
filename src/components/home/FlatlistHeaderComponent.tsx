@@ -1,5 +1,5 @@
 import {Animated, TextInput} from 'react-native';
-import {useEffect, useRef, useState} from 'react';
+import {SetStateAction, useEffect, useRef, useState} from 'react';
 import styled from 'styled-components/native';
 import colors from '../../styles/colors';
 import {
@@ -13,11 +13,10 @@ import {icons} from '../../assets/icons/iconSource';
 import DBottomSheet from '../common/DBottomSheet';
 import SortModalContent from './SortModalContent';
 import FilterHeader from './FilterHeader';
+import {IFilterParams} from '../../query/types/product';
 
 interface IFlatlistHeaderComponent {
   translateY: any;
-  remainNutrProductData: any;
-  setRemainNutrProductData: any;
   productData: any;
   searchText: any;
   setSearchText: any;
@@ -26,14 +25,13 @@ interface IFlatlistHeaderComponent {
   setSortParam: any;
   sortParam: any;
   setFilterModalShow: any;
-  filterParams: any;
+  filterParams: IFilterParams;
+  setFilterParams: React.Dispatch<SetStateAction<IFilterParams>>;
   setFilterIndex: any;
   categoryName: any;
 }
 const FlatlistHeaderComponent = ({
   translateY,
-  remainNutrProductData,
-  setRemainNutrProductData,
   productData,
   searchText,
   setSearchText,
@@ -43,6 +41,7 @@ const FlatlistHeaderComponent = ({
   sortParam,
   setFilterModalShow,
   filterParams,
+  setFilterParams,
   setFilterIndex,
   categoryName,
 }: IFlatlistHeaderComponent) => {
@@ -78,13 +77,7 @@ const FlatlistHeaderComponent = ({
         }}>
         <Row style={{alignItems: 'flex-end', flex: 1}}>
           <ListTitle>검색된 결과</ListTitle>
-          <NoOfFoods>
-            {' '}
-            {remainNutrProductData === undefined
-              ? productData?.length
-              : remainNutrProductData.length}
-            개
-          </NoOfFoods>
+          <NoOfFoods> {productData?.length}개</NoOfFoods>
 
           {searchBarFocus ? (
             <SearchBox style={{flex: 1, marginRight: 8}}>
@@ -147,8 +140,8 @@ const FlatlistHeaderComponent = ({
           setFilterModalShow(true);
         }}
         filterParams={filterParams}
+        setFilterParams={setFilterParams}
         filterHeaderText={categoryName}
-        setRemainNutrProductData={setRemainNutrProductData}
       />
 
       <HorizontalSpace height={16} />

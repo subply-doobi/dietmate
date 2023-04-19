@@ -193,7 +193,9 @@ const FoodDetail = () => {
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <Container>
         <InnerContainer>
-          {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
+          {currentDietNo && (
+            <NutrientsProgress dietDetailData={dietDetailData} />
+          )}
         </InnerContainer>
         <ScrollView
           style={{marginBottom: 20, flex: 1, zIndex: -1}}

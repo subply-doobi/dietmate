@@ -1,4 +1,4 @@
-export interface IFliterParams {
+export interface IFilterParams {
   categoryParam: string;
   nutritionParam: {
     calorieParam: number[];
@@ -14,7 +14,7 @@ export interface IListProductParams {
   searchText?: string;
   categoryCd?: string;
   sort?: string;
-  filter?: IFliterParams;
+  filter?: IFilterParams;
 }
 
 export interface ICreateProductAutoParams {

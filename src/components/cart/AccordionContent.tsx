@@ -102,7 +102,7 @@ const AccordionContent = ({
 
   return (
     <ContentBody>
-      <NutrientsProgress currentDietNo={dietNo} />
+      <NutrientsProgress dietDetailData={dietDetailData} />
 
       {/* 전체선택 - 삭제 */}
       {dietDetailData && dietDetailData.length > 0 && (
@@ -190,7 +190,6 @@ const SelectAllCheckbox = styled.TouchableOpacity``;
 const CheckboxImage = styled.Image`
   width: 24px;
   height: 24px;
-  background-color: ${colors.highlight};
 `;
 
 const SelectAllText = styled(TextMain)`

@@ -8,6 +8,7 @@ export const DALERT_WIDTH = SCREENWIDTH - 80;
 export const IS_ANDROID = Platform.OS === 'android';
 export const IS_IOS = Platform.OS === 'ios';
 export const FOOD_LIST_ITEM_HEIGHT = 152;
+export const HOME_FILTER_HEADER_HEIGHT = 120;
 
 // Doobi server category etc.
 export const DIET_PURPOSE_CD = {

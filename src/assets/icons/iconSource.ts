@@ -41,6 +41,7 @@ export const icons = {
   cartActivated_36: require(`./36_cart_activated.png`),
   cartActivatedAdded_36: require(`./36_cart_activated_added.png`),
   cartAdded_36: require(`./36_cart_added.png`),
+  cartWhiteFilled_36: require(`./36_cart_white_filled.png`),
   like_36: require(`./36_like.png`),
   likeActivated_36: require(`./36_like_activated.png`),
   likeInactivated_36: require(`./36_like.png`),

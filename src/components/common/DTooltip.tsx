@@ -2,11 +2,14 @@ import styled from 'styled-components/native';
 
 import colors from '../../styles/colors';
 import {icons} from '../../assets/icons/iconSource';
+import {Image} from 'react-native';
+import {Col} from '../../styles/StyledConsts';
 
 interface IDtooltip {
   tooltipShow: boolean;
   text?: string;
-  showCheck?: boolean;
+  showIcon?: boolean;
+  renderCustomIcon?: (() => React.ReactElement<Image>) | undefined;
   reversed?: boolean;
   boxBottom?: number;
   boxTop?: number;
@@ -29,7 +32,8 @@ interface IDtooltip {
 const DTooltip = ({
   tooltipShow,
   text,
-  showCheck,
+  showIcon,
+  renderCustomIcon,
   reversed,
   boxBottom,
   boxTop,
@@ -67,7 +71,15 @@ const DTooltip = ({
       {reversed && <TooltipTriangleRvs style={{...triangleHorizontalStyle}} />}
       <TooltipBox>
         {customContent ? customContent() : <TooltipText>{text}</TooltipText>}
-        {showCheck && <CheckBox source={icons.checkboxCheckedWhite_24} />}
+        {showIcon ? (
+          renderCustomIcon ? (
+            renderCustomIcon()
+          ) : (
+            <IconContainer>
+              <CheckBox source={icons.checkboxCheckedWhite_24} />
+            </IconContainer>
+          )
+        ) : null}
       </TooltipBox>
       {!reversed && <TooltipTriangle style={{...triangleHorizontalStyle}} />}
     </Container>
@@ -98,10 +110,17 @@ const TooltipText = styled.Text`
   color: ${colors.white};
 `;
 
-const CheckBox = styled.Image`
-  margin-left: 8px;
+const IconContainer = styled.View`
   width: 20px;
   height: 20px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+`;
+
+const CheckBox = styled.Image`
+  width: 14px;
+  height: 14px;
 `;
 
 const TooltipTriangle = styled.View`

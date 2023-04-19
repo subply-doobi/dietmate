@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {SetStateAction, useState} from 'react';
 import styled from 'styled-components/native';
 
 import {Row, StyledProps, TextMain} from '../../styles/StyledConsts';
@@ -7,11 +7,13 @@ import {RootState} from '../../stores/store';
 import {useListDietDetail} from '../../query/queries/diet';
 import {useSelector} from 'react-redux';
 import {useGetBaseLine} from '../../query/queries/baseLine';
-import {IProductsData} from '../../query/types/product';
+import {IFilterParams, IProductsData} from '../../query/types/product';
 import {filterAvailableFoods} from '../../util/home/filterUtils';
 import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
 import {icons} from '../../assets/icons/iconSource';
+import {sumUpNutrients} from '../../util/sumUp';
+import {NUTR_ERROR_RANGE} from '../../constants/constants';
 
 interface IFilterHeader {
   onPress: () => void;
@@ -24,12 +26,10 @@ interface IFilterHeader {
       fatParam: number[];
       proteinParam: number[];
     };
-    priceParam: [number, number];
+    priceParam: number[];
   };
   filterHeaderText: string;
-  setRemainNutrProductData: React.Dispatch<
-    React.SetStateAction<IProductsData | undefined>
-  >;
+  setFilterParams: React.Dispatch<SetStateAction<IFilterParams>>;
 }
 
 const FilterHeader = (props: IFilterHeader) => {
@@ -44,30 +44,34 @@ const FilterHeader = (props: IFilterHeader) => {
     enabled: currentDietNo ? true : false,
   });
 
-  // state
-  const [remainNutrProductAlertShow, setRemainNutrProductAlertShow] =
-    useState(false);
-
   // etc
   const {
     onPress,
     setFilterIndex,
     filterParams,
-    setRemainNutrProductData,
+    setFilterParams,
     filterHeaderText,
   } = props;
 
   const onPressRemainNutrProduct = () => {
-    const remainNutrProductData = filterAvailableFoods(
-      totalFoodList,
-      baseLineData,
-      dietDetailData,
-    );
-    if (remainNutrProductData.length === 0) {
-      setRemainNutrProductAlertShow(true);
-      return;
-    }
-    setRemainNutrProductData(remainNutrProductData);
+    const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
+    const calRemain = baseLineData ? parseInt(baseLineData?.calorie) - cal : 0;
+    const carbRemain = baseLineData ? parseInt(baseLineData?.carb) - carb : 0;
+    const proteinRemain = baseLineData
+      ? parseInt(baseLineData?.protein) - protein
+      : 0;
+    const fatRemain = baseLineData ? parseInt(baseLineData?.fat) - fat : 0;
+    setFilterParams(prev => ({
+      ...prev,
+      categoryParam: prev.categoryParam,
+      priceParam: [...prev.priceParam],
+      nutritionParam: {
+        calorieParam: [0, calRemain + NUTR_ERROR_RANGE.calorie[1]],
+        carbParam: [0, carbRemain + NUTR_ERROR_RANGE.carb[1]],
+        proteinParam: [0, proteinRemain + NUTR_ERROR_RANGE.protein[1]],
+        fatParam: [0, fatRemain + NUTR_ERROR_RANGE.fat[1]],
+      },
+    }));
   };
 
   return (
@@ -111,18 +115,21 @@ const FilterHeader = (props: IFilterHeader) => {
             <FilterBtnText>가격</FilterBtnText>
           </FilterBtn>
         </Row>
-        <InitializeBtn onPress={() => {}}>
+        <InitializeBtn
+          onPress={() =>
+            setFilterParams({
+              categoryParam: '',
+              nutritionParam: {
+                calorieParam: [],
+                carbParam: [],
+                fatParam: [],
+                proteinParam: [],
+              },
+              priceParam: [],
+            })
+          }>
           <InitializeImg source={icons.initialize_24} />
         </InitializeBtn>
-        <DAlert
-          alertShow={remainNutrProductAlertShow}
-          onConfirm={() => setRemainNutrProductAlertShow(false)}
-          onCancel={() => setRemainNutrProductAlertShow(false)}
-          renderContent={() => (
-            <CommonAlertContent text="남은 영양에 맞는 상품이 없어요" />
-          )}
-          NoOfBtn={1}
-        />
       </Row>
     </>
   );

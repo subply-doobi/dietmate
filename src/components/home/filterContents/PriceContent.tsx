@@ -6,22 +6,12 @@ import {Col, TextMain} from '../../../styles/StyledConsts';
 import DSlider from '../../common/slider/DSlider';
 
 import {useFilterRange} from '../../../query/queries/product';
+import {IFilterParams} from '../../../query/types/product';
 
 interface Props {
   setPriceParam: (param: any) => void;
   priceParam: [number, number];
-  filterParams: {
-    priceParam: [number, number];
-    nutritionParam: {
-      calorieParam: [number, number];
-      carbParam: [number, number];
-      fatParam: [number, number];
-      proteinParam: [number, number];
-    };
-    categoryParam: {
-      category: string;
-    };
-  };
+  filterParams: IFilterParams;
 }
 
 const PriceContent = (props: Props) => {
@@ -31,20 +21,15 @@ const PriceContent = (props: Props) => {
   const minState = !data?.minData ? 0 : Number(data.minData);
   const maxState = !data?.maxData ? 25000 : Number(data.maxData);
 
-  const initialState = [
-    filterParams?.priceParam ? filterParams?.priceParam[0] : 0,
-    filterParams?.priceParam ? filterParams?.priceParam[1] : maxState,
-  ];
-  const getInitialState = () => {
-    return initialState;
-  };
-  const [priceValue, setPriceValue] = useState(() => getInitialState());
+  const [priceValue, setPriceValue] = useState<number[]>([]);
 
   useEffect(() => {
-    if (!priceParam) {
-      return setPriceValue([0, maxState]);
-    }
-  }, [priceParam, maxState]);
+    const initialState =
+      filterParams.priceParam.length === 0
+        ? [0, maxState]
+        : filterParams.priceParam;
+    setPriceValue(initialState);
+  }, [data]);
 
   return (
     <Col style={{marginTop: 120}}>
@@ -52,7 +37,7 @@ const PriceContent = (props: Props) => {
       {isLoading ? (
         <ActivityIndicator />
       ) : (
-        data && (
+        priceValue.length === 2 && (
           <DSlider
             sliderValue={priceValue}
             setSliderValue={setPriceValue}

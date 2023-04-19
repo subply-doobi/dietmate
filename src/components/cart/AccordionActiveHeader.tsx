@@ -66,13 +66,13 @@ const AccordionActiveHeader = ({
       <MenuSeq>{dietSeq}</MenuSeq>
       <Row>
         <PriceSum>{commaToNum(priceSum)}원</PriceSum>
-        <DeleteBtn
-          onPress={() => setDeleteAlertShow(true)}
-          disabled={dietData && dietData?.length > 1 ? false : true}>
-          {dietData && dietData?.length > 1 && (
+        {dietData && dietData?.length > 1 && (
+          <DeleteBtn
+            onPress={() => setDeleteAlertShow(true)}
+            disabled={dietData && dietData?.length > 1 ? false : true}>
             <DeleteImage source={icons.cancelRound_24} />
-          )}
-        </DeleteBtn>
+          </DeleteBtn>
+        )}
       </Row>
       <DAlert
         alertShow={deleteAlertShow}
@@ -109,13 +109,13 @@ const MenuSeq = styled.Text`
 const PriceSum = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  margin-left: 24px;
+  margin-right: 16px;
   color: ${colors.white};
 `;
 
 const DeleteBtn = styled.TouchableOpacity`
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   justify-content: center;
   align-items: center;
 `;

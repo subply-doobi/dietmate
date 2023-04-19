@@ -1,6 +1,6 @@
 // react, RN, 3rd
 import {SetStateAction, useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import * as Progress from 'react-native-progress';
 import styled from 'styled-components/native';
 
@@ -9,6 +9,7 @@ import {icons} from '../../assets/icons/iconSource';
 import {RootState} from '../../stores/store';
 import colors from '../../styles/colors';
 import {commaToNum, sumUpNutrients, sumUpPrice} from '../../util/sumUp';
+import {setMenuActiveSection} from '../../stores/slices/cartSlice';
 
 // doobi Component
 import DAlert from '../common/alert/DAlert';
@@ -39,7 +40,7 @@ interface IAccordionInactiveHeader {
   dietNo: string;
   dietSeq: string;
   dietDetailData: IDietDetailData;
-  setActiveSections: React.Dispatch<SetStateAction<number[]>>;
+  // setActiveSections: React.Dispatch<SetStateAction<number[]>>;
   setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
 }
 
@@ -48,17 +49,17 @@ const AccordionInactiveHeader = ({
   dietNo,
   dietSeq,
   dietDetailData,
-  setActiveSections,
+  // setActiveSections,
   setNumberPickerShow,
 }: IAccordionInactiveHeader) => {
   // redux
+  const dispatch = useDispatch();
+  const {menuActiveSection} = useSelector((state: RootState) => state.cart);
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
   const {data: dietData} = useListDiet();
-  const {data: dietEmptyData} = useGetDietDetailEmptyYn();
-  const createDietMutation = useCreateDiet();
   const deleteDietMutation = useDeleteDiet();
 
   // state
@@ -166,7 +167,7 @@ const AccordionInactiveHeader = ({
         setModalVisible={setAutoDietModalShow}
         dietNo={dietNo}
         dietDetailData={dietDetailData}
-        openCurrentSection={() => setActiveSections([idx])}
+        openCurrentSection={() => dispatch(setMenuActiveSection([idx]))}
       />
       <DAlert
         alertShow={deleteAlertShow}
