@@ -141,7 +141,9 @@ const FlatlistHeaderComponent = ({
         }}
         filterParams={filterParams}
         setFilterParams={setFilterParams}
+        setSortParam={setSortParam}
         filterHeaderText={categoryName}
+        setSearchText={setSearchText}
       />
 
       <HorizontalSpace height={16} />

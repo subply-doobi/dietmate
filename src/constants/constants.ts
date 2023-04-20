@@ -61,7 +61,10 @@ export const categoryCode: {[key: string]: string} = {
   음료: 'CG006',
 };
 
-export const NUTR_ERROR_RANGE = {
+interface INutrErrorRange {
+  [key: string]: [number, number];
+}
+export const NUTR_ERROR_RANGE: INutrErrorRange = {
   calorie: [-50, 50],
   carb: [-15, 15],
   protein: [-5, 5],
