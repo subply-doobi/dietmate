@@ -45,7 +45,10 @@ interface IFormField {
     value: string;
   };
 }
-
+// interface IRange {
+//   labe: string;
+//   value: [<Array>[]];
+// }
 const renderBmrKnownInput = (
   {field: {onChange, value}}: IFormField,
   handleSubmit: Function,
@@ -106,11 +109,12 @@ const onHandlePress = (
 };
 
 const SecondInput = ({navigation: {navigate}, route}: NavigationProps) => {
+  // state
   const [countExercise, setCountExercise] = useState(0);
   const [timeExercise, setTimeExercise] = useState(0);
   const [intensityExercise, setIntensityExercise] = useState(0);
+  // intensityExercise: 2~15 mets
   const {userInfo} = useSelector((state: RootState) => state.userInfo);
-  // console.log('userInfo2: userInfo:', userInfo);
   const {data, isLoading} = useGetBaseLine();
   const weightTimeCd = useWeightPurposeCode('SP003');
   const weightTimeCdCategory = weightTimeCd.data;
@@ -146,7 +150,7 @@ const SecondInput = ({navigation: {navigate}, route}: NavigationProps) => {
   useEffect(() => {
     handleSubmit(() => {})();
   }, []);
-  const exerciseBtnRange = [
+  const exerciseBtnRange: IRange = [
     {
       label: '주간 운동 횟수',
       value: [
