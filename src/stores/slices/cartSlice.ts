@@ -7,6 +7,7 @@ export interface ICartState {
   totalFoodList: IProductsData;
   totalFoodListIsLoaded: boolean;
   nutrTooltipText: string;
+  menuActiveSection: number[];
 }
 
 const initialState: ICartState = {
@@ -14,6 +15,7 @@ const initialState: ICartState = {
   totalFoodList: [],
   totalFoodListIsLoaded: false,
   nutrTooltipText: '',
+  menuActiveSection: [],
 };
 
 export const cartSlice = createSlice({
@@ -31,9 +33,16 @@ export const cartSlice = createSlice({
     setNutrTooltipText: (state, action: PayloadAction<string>) => {
       state.nutrTooltipText = action.payload;
     },
+    setMenuActiveSection: (state, action: PayloadAction<number[]>) => {
+      state.menuActiveSection = action.payload;
+    },
   },
 });
 
-export const {setCurrentDiet, setTotalFoodList, setNutrTooltipText} =
-  cartSlice.actions;
+export const {
+  setCurrentDiet,
+  setTotalFoodList,
+  setNutrTooltipText,
+  setMenuActiveSection,
+} = cartSlice.actions;
 export default cartSlice.reducer;

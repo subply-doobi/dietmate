@@ -65,7 +65,7 @@ const PopupIndicator = styled.View`
   width: 64px;
   height: 4px;
   background-color: ${colors.black};
-  border-radius: 5px;
+  border-radius: 2px;
 `;
 
 const ContentContainer = styled.View`

@@ -9,7 +9,7 @@ import {
 } from '@react-navigation/native';
 import {useFlipper} from '@react-navigation/devtools';
 import RootStackNav from './src/navigators/RootStackNav';
-import CommonAlert from './src/components/common/CommonAlert';
+import ErrorAlert from './src/components/common/ErrorAlert';
 
 import styled from 'styled-components/native';
 
@@ -28,7 +28,7 @@ function App(): JSX.Element {
         <Provider store={store}>
           <NavigationContainer ref={navigationRef}>
             <RootStackNav />
-            <CommonAlert />
+            <ErrorAlert />
           </NavigationContainer>
         </Provider>
       </QueryClientProvider>

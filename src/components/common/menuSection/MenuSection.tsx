@@ -18,7 +18,11 @@ import DeleteAlertContent from '../alert/DeleteAlertContent';
 import NutrientsProgress from '../nutrient/NutrientsProgress';
 
 // react-query
-import {useDeleteDiet, useListDiet} from '../../../query/queries/diet';
+import {
+  useDeleteDiet,
+  useListDiet,
+  useListDietDetail,
+} from '../../../query/queries/diet';
 
 const MenuSection = () => {
   // redux
@@ -27,6 +31,9 @@ const MenuSection = () => {
   // react-query
   const {data: dietData} = useListDiet();
   const deleteDietMutation = useDeleteDiet();
+  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
+    enabled: currentDietNo ? true : false,
+  });
 
   // state
   const [dietNoToDelete, setDietNoToDelete] = useState<string>();
@@ -34,7 +41,7 @@ const MenuSection = () => {
 
   // etc
   const onDeleteDiet = () => {
-    if (!dietData) return;
+    if (!dietData || dietData.length === 1) return;
     dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
     setDeleteAlertShow(false);
   };
@@ -45,13 +52,15 @@ const MenuSection = () => {
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <MenuSelectCard />
         </ScrollView>
-        <DeleteBtn
-          onPress={() => {
-            setDietNoToDelete(currentDietNo);
-            setDeleteAlertShow(true);
-          }}>
-          <DeleteImg source={icons.deleteRound_18} />
-        </DeleteBtn>
+        {dietData && dietData.length > 1 && (
+          <DeleteBtn
+            onPress={() => {
+              setDietNoToDelete(currentDietNo);
+              setDeleteAlertShow(true);
+            }}>
+            <DeleteImg source={icons.deleteRound_18} />
+          </DeleteBtn>
+        )}
       </HeaderRow>
       <DAlert
         alertShow={deleteAlertShow}
@@ -66,7 +75,9 @@ const MenuSection = () => {
         onCancel={() => setDeleteAlertShow(false)}
       />
       <ProgressContainer>
-        {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
+        {dietDetailData && (
+          <NutrientsProgress dietDetailData={dietDetailData} />
+        )}
       </ProgressContainer>
     </Container>
   );

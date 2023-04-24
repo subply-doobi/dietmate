@@ -52,12 +52,12 @@ const RootStackNav = () => {
         name="Guide"
         component={Guide}
         options={{headerShown: false}}
-      />
+      /> */}
       <Stack.Screen
         name="Login"
         component={Login}
         options={{headerShown: false}}
-      /> */}
+      />
       <Stack.Screen name="InputNav" component={InputNav} />
       <Stack.Screen name="BottomTabNav" component={BottomTabNav} />
       <Stack.Screen

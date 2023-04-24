@@ -142,7 +142,6 @@ const ThirdInput = () => {
   const updateSections = (actives: Array<number>) => {
     setActiveSections(actives);
   };
-  console.log('userInfo3: errors: ', errors);
 
   const btnIsActive =
     activeSections[0] === 0 ||

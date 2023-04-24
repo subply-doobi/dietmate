@@ -2,6 +2,7 @@ export default {
   white: '#FFFFFF',
   black: '#000000',
   dark: `#444444`,
+  darker: `#333333`,
   inactivated: '#E5E5E5',
   backgroundLight: '#F8F8F8',
   backgroundLight2: `#F2F2F2`,

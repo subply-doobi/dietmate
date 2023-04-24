@@ -4,6 +4,7 @@ import {Controller} from 'react-hook-form';
 
 import {icons} from '../../assets/icons/iconSource';
 import {
+  DALERT_WIDTH,
   IFormField,
   purposeCdToValue,
   validationRules,
@@ -21,6 +22,7 @@ import {
 import DTooltip from '../common/DTooltip';
 
 import {useGetBaseLine} from '../../query/queries/baseLine';
+import colors from '../../styles/colors';
 
 const renderCalorieInput = ({field: {onChange, value}}: IFormField) => {
   return (
@@ -67,20 +69,18 @@ const CalChangeAlert = ({
         <PurposeText>{data.userId} 님의 목표는</PurposeText>
         <PurposeText>
           <PurposeTextBold>
-            {purposeCdToValue[data.dietPurposeCd]?.targetText}
+            "{purposeCdToValue[data.dietPurposeCd]?.targetText}"{' '}
           </PurposeTextBold>
           입니다
         </PurposeText>
       </Col>
-      <WeightDifference>
-        2주 전 평균:
-        <WeightDifferenceValue>101</WeightDifferenceValue> kg | 현재:
-        <WeightDifferenceValue>99</WeightDifferenceValue> kg
-      </WeightDifference>
-      <Col style={{marginTop: 8, justifyContent: 'center'}}>
+      <Col style={{marginTop: 16, justifyContent: 'center'}}>
         <Col>
           <GuideText>계획과 다르다면 기존보다 </GuideText>
-          <GuideText>50 kcal 정도씩 조정해보세요</GuideText>
+          <GuideText>
+            <GuideText style={{fontWeight: 'bold'}}>50 kcal 정도씩 </GuideText>
+            높이거나 낮춰보세요
+          </GuideText>
         </Col>
         <TooltipBtn
           onPressIn={() => setTooltipShow(true)}
@@ -89,10 +89,24 @@ const CalChangeAlert = ({
         </TooltipBtn>
         <DTooltip
           tooltipShow={tooltipShow}
-          text={`칼로리를 변경하시면\n영양소는 권장비율에 맞춰 자동설정됩니다\n영양소 비율도 직접 정하고 싶다면\n고객정보변경을 이용해주세요`}
           boxRight={0}
-          boxBottom={32}
+          boxBottom={40}
           triangleRight={12}
+          customContent={() => (
+            <Col style={{alignSelf: 'flex-start', margin: 4}}>
+              <TooltipText>칼로리를 변경하시면</TooltipText>
+              <TooltipText>
+                영양소는 <TooltipTextBold>권장비율로 자동설정</TooltipTextBold>
+                됩니다
+              </TooltipText>
+              <TooltipText style={{marginTop: 8}}>
+                영양소 비율도 직접 정하고 싶다면
+              </TooltipText>
+              <TooltipText>
+                <TooltipTextBold>고객정보변경</TooltipTextBold> 을 이용해주세요
+              </TooltipText>
+            </Col>
+          )}
         />
       </Col>
       <Controller
@@ -155,3 +169,14 @@ const InputHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;
 const Input = styled(UserInfoTextInput)``;
+
+const TooltipText = styled(TextMain)`
+  font-size: 14px;
+  font-weight: light;
+  color: ${colors.white};
+`;
+const TooltipTextBold = styled(TextMain)`
+  font-size: 14px;
+  font-weight: bold;
+  color: ${colors.white};
+`;

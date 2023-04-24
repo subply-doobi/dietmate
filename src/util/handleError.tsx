@@ -46,10 +46,11 @@ export const errorActionByCode: IErrorActionByCode = {
 };
 
 export const useHandleError = () => {
-  const dispatch = useDispatch();
-  const handleError = useCallback((e: any) => {
-    const errorCode = e.response?.status;
-    dispatch(openCommonAlert(errorCode));
+  // const dispatch = useDispatch();
+  const handleError = useCallback((error: any) => {
+    const errorCode = error?.response?.status;
+    console.log('handleError.tsx:', errorCode);
+    // dispatch(openCommonAlert(errorCode));
   }, []);
 
   return handleError;

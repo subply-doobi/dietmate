@@ -14,14 +14,14 @@ const InputNav = () => {
       screenOptions={{
         headerShadowVisible: false,
       }}>
-      {/* <Stack.Screen
+      <Stack.Screen
         name="FirstInput"
         component={FirstInput}
         options={{
           headerTitle: '',
           headerRight: () => <StepIcon source={icons.step1_36} />,
         }}
-      /> */}
+      />
       <Stack.Screen
         name="SecondInput"
         component={SecondInput}
