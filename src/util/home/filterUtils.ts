@@ -52,7 +52,7 @@ const findIdxRange = (
           filterBtnRange[0].value.findIndex(
             item =>
               item[0] <= calorieInitialState[0] &&
-              calorieInitialState[0] <= item[1],
+              calorieInitialState[0] < item[1],
           ),
           calorieInitialState[1] >
           filterBtnRange[0].value[filterBtnRange[0].value.length - 1][1]
@@ -60,7 +60,7 @@ const findIdxRange = (
             : filterBtnRange[0].value.findIndex(
                 item =>
                   item[0] <= calorieInitialState[1] &&
-                  calorieInitialState[1] <= item[1],
+                  calorieInitialState[1] < item[1],
               ),
         ];
   const carbIdxRange =
@@ -69,7 +69,7 @@ const findIdxRange = (
       : [
           filterBtnRange[1].value.findIndex(
             item =>
-              item[0] <= carbInitialState[0] && carbInitialState[0] <= item[1],
+              item[0] <= carbInitialState[0] && carbInitialState[0] < item[1],
           ),
           carbInitialState[1] >
           filterBtnRange[1].value[filterBtnRange[1].value.length - 1][1]
@@ -77,7 +77,7 @@ const findIdxRange = (
             : filterBtnRange[1].value.findIndex(
                 item =>
                   item[0] <= carbInitialState[1] &&
-                  carbInitialState[1] <= item[1],
+                  carbInitialState[1] < item[1],
               ),
         ];
   const proteinIdxRange =
@@ -87,7 +87,7 @@ const findIdxRange = (
           filterBtnRange[2].value.findIndex(
             item =>
               item[0] <= proteinInitialState[0] &&
-              proteinInitialState[0] <= item[1],
+              proteinInitialState[0] < item[1],
           ),
           proteinInitialState[1] >
           filterBtnRange[2].value[filterBtnRange[2].value.length - 1][1]
@@ -95,7 +95,7 @@ const findIdxRange = (
             : filterBtnRange[2].value.findIndex(
                 item =>
                   item[0] <= proteinInitialState[1] &&
-                  proteinInitialState[1] <= item[1],
+                  proteinInitialState[1] < item[1],
               ),
         ];
   const fatIdxRange =
@@ -104,15 +104,14 @@ const findIdxRange = (
       : [
           filterBtnRange[3].value.findIndex(
             item =>
-              item[0] <= fatInitialState[0] && fatInitialState[0] <= item[1],
+              item[0] <= fatInitialState[0] && fatInitialState[0] < item[1],
           ),
           fatInitialState[1] >
           filterBtnRange[3].value[filterBtnRange[3].value.length - 1][1]
             ? filterBtnRange[3].value.length - 1
             : filterBtnRange[3].value.findIndex(
                 item =>
-                  item[0] <= fatInitialState[1] &&
-                  fatInitialState[1] <= item[1],
+                  item[0] <= fatInitialState[1] && fatInitialState[1] < item[1],
               ),
         ];
 

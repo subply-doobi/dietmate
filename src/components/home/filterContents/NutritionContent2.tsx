@@ -132,7 +132,7 @@ const NutritionContent2 = ({
           fatParam: [...prev.fatParam],
           [`${nutrIdxToName[nutrIdx]}Param`]: [
             filterBtnRange[nutrIdx].value[newNutrIdxRange[0]][0],
-            filterBtnRange[nutrIdx].value[newNutrIdxRange[1]][1],
+            filterBtnRange[nutrIdx].value[newNutrIdxRange[1]][1] - 0.1,
           ],
         }));
       }
@@ -160,7 +160,8 @@ const NutritionContent2 = ({
           proteinParam: [...prev.proteinParam],
           fatParam: [...prev.fatParam],
           [`${nutrIdxToName[nutrIdx]}Param`]: [
-            ...filterBtnRange[nutrIdx].value[btnIdx],
+            filterBtnRange[nutrIdx].value[btnIdx][0],
+            filterBtnRange[nutrIdx].value[btnIdx][1] - 0.1,
           ],
         };
       });

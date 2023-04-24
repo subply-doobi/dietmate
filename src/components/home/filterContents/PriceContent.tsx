@@ -10,7 +10,7 @@ import {IFilterParams} from '../../../query/types/product';
 
 interface Props {
   setPriceParam: (param: any) => void;
-  priceParam: [number, number];
+  priceParam: number[];
   filterParams: IFilterParams;
 }
 
@@ -30,6 +30,10 @@ const PriceContent = (props: Props) => {
         : filterParams.priceParam;
     setPriceValue(initialState);
   }, [data]);
+
+  useEffect(() => {
+    priceParam.length === 0 && setPriceValue([0, maxState]);
+  }, [priceParam]);
 
   return (
     <Col style={{marginTop: 120}}>

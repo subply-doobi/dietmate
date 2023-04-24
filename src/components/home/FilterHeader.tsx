@@ -30,6 +30,8 @@ interface IFilterHeader {
   };
   filterHeaderText: string;
   setFilterParams: React.Dispatch<SetStateAction<IFilterParams>>;
+  setSortParam: React.Dispatch<SetStateAction<string>>;
+  setSearchText: React.Dispatch<SetStateAction<string>>;
 }
 
 const FilterHeader = (props: IFilterHeader) => {
@@ -51,6 +53,8 @@ const FilterHeader = (props: IFilterHeader) => {
     filterParams,
     setFilterParams,
     filterHeaderText,
+    setSortParam,
+    setSearchText,
   } = props;
 
   const onPressRemainNutrProduct = () => {
@@ -116,7 +120,7 @@ const FilterHeader = (props: IFilterHeader) => {
           </FilterBtn>
         </Row>
         <InitializeBtn
-          onPress={() =>
+          onPress={() => {
             setFilterParams({
               categoryParam: '',
               nutritionParam: {
@@ -126,8 +130,10 @@ const FilterHeader = (props: IFilterHeader) => {
                 proteinParam: [],
               },
               priceParam: [],
-            })
-          }>
+            });
+            setSortParam('');
+            setSearchText('');
+          }}>
           <InitializeImg source={icons.initialize_24} />
         </InitializeBtn>
       </Row>

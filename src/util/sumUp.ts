@@ -128,8 +128,10 @@ export const compareNutrToTarget = (
   }
 
   let exceedNumber = 0;
+  const indexToNutr = ['calorie', 'carb', 'protein', 'fat'];
   for (let i = 0; i < current.length; i++) {
-    if (current[i] >= target[i]) exceedNumber += 1;
+    if (current[i] >= target[i] + NUTR_ERROR_RANGE[indexToNutr[i]][1])
+      exceedNumber += 1;
   }
 
   return exceedNumber === 0 ? 'notEnough' : 'exceed';
