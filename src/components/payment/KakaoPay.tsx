@@ -2,11 +2,12 @@ import React from 'react';
 import IMP from 'iamport-react-native';
 import axios from 'axios';
 
-export default function Payment() {
+const KakaoPay = () => {
   //data에 구매 목록을 넣어준다.
   const data = {
     pg: 'kakaopay',
-    pay_method: 'tosspay',
+    escrow: false,
+    pay_method: 'card',
     name: 'the Name',
     merchant_uid: `mid_${new Date().getTime()}`,
     amount: '39000',
@@ -26,4 +27,5 @@ export default function Payment() {
       callback={response => console.log(response)}
     />
   );
-}
+};
+export default KakaoPay;

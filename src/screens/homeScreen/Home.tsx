@@ -74,6 +74,7 @@ const Home = () => {
 
   // react-query
   const {data: baseLineData} = useGetBaseLine(); // 미리 캐싱
+  console.log(baseLineData);
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {
     enabled: currentDietNo ? true : false,
   });
