@@ -6,6 +6,7 @@ import styled from 'styled-components/native';
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {
+  commaToNum,
   compareNutrToTarget,
   sumUpNutrients,
   sumUpPrice,
@@ -28,12 +29,14 @@ import {IDietDetailData} from '../../query/types/diet';
 interface IAccordionContent {
   dietNo: string;
   dietDetailData: IDietDetailData;
+  setDietNoToNumControl: React.Dispatch<SetStateAction<string>>;
   setNumberPickerShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AccordionContent = ({
   dietNo,
   dietDetailData,
+  setDietNoToNumControl,
   setNumberPickerShow,
 }: IAccordionContent) => {
   // react-query
@@ -47,8 +50,6 @@ const AccordionContent = ({
   const [selectedFoods, setSelectedFoods] = useState<{[key: string]: string[]}>(
     {},
   );
-  // TBD | 끼니 수량 api 필요
-  const [menuNoTemp, setMenuNoTemp] = useState(1);
 
   useEffect(() => {
     selectedFoods[dietNo]?.length !== dietDetailData?.length &&
@@ -98,7 +99,8 @@ const AccordionContent = ({
 
   // 끼니수량에 따른 가격
   const priceSum = sumUpPrice(dietDetailData);
-  const totalPrice = priceSum * menuNoTemp;
+  const currentQty = parseInt(dietDetailData[0].qty, 10);
+  const totalPrice = priceSum * currentQty;
 
   return (
     <ContentBody>
@@ -152,11 +154,15 @@ const AccordionContent = ({
       />
       <Row style={{marginTop: 24, justifyContent: 'flex-end'}}>
         <MenuNoText>끼니 수량</MenuNoText>
-        <MenuNoSelect onPress={() => setNumberPickerShow(true)}>
-          <MenuNo>{menuNoTemp}개</MenuNo>
+        <MenuNoSelect
+          onPress={() => {
+            setDietNoToNumControl(dietNo);
+            setNumberPickerShow(true);
+          }}>
+          <MenuNo>{currentQty}개</MenuNo>
           <UpDownImage source={icons.upDown_24} />
         </MenuNoSelect>
-        <MenuTotalPrice>합계 {totalPrice}원</MenuTotalPrice>
+        <MenuTotalPrice>합계 {commaToNum(totalPrice)}원</MenuTotalPrice>
       </Row>
       <AutoDietModal
         modalVisible={autoDietModalShow}

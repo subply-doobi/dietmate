@@ -1,6 +1,7 @@
 export interface IBaseLine {
   companyCd: string;
   userId: string;
+  nickNm: string;
   calorie: string;
   carb: string;
   protein: string;

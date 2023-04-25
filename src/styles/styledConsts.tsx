@@ -96,7 +96,6 @@ export const AlertContentContainer = styled.View`
 
 export const InputHeaderText = styled.Text`
   font-size: 14px;
-  font-weight: normal;
   color: ${({isActivated}: StyledProps) =>
     isActivated ? colors.main : colors.white};
 `;
@@ -104,11 +103,10 @@ export const UserInfoTextInput = styled.TextInput`
   justify-content: center;
   align-items: flex-start;
   height: 40px;
-  font-weight: normal;
   font-size: 16px;
   border-bottom-width: 1px;
   border-color: ${({isActivated}: StyledProps) =>
-    isActivated ? colors.main : colors.inactivated};
+    isActivated ? colors.inactivated : colors.inactivated};
 `;
 
 export const InputHeader = styled(InputHeaderText)`

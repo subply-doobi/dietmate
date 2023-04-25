@@ -45,6 +45,9 @@ export const validateToken = async () => {
       const reIssue = await queryFn<IReIssueTokenData>(RE_ISSUE_TOKEN);
       await storeToken(reIssue.accessToken, reIssue.refreshToken);
       isValidated = true;
+      console.log(
+        '----------------------  !! reIssue !! --------------------------',
+      );
 
       // 토큰 재발급 오류
     } catch (e) {

@@ -1,8 +1,12 @@
 import {UseQueryResult} from 'react-query';
 import {NUTR_ERROR_RANGE} from '../constants/constants';
 import {IBaseLine} from '../query/types/baseLine';
-import {IDietDetailData} from '../query/types/diet';
-import {IProductData} from '../query/types/product';
+import {
+  IDietDetailAllData,
+  IDietDetailData,
+  IDietTotalData,
+} from '../query/types/diet';
+import {IProductData, IProductsData} from '../query/types/product';
 
 export const sumUpNutrients = (dietDetail: IDietDetailData | undefined) => {
   let cal = 0;
@@ -27,27 +31,24 @@ export const sumUpPrice = (dietDetail: IDietDetailData | undefined) => {
   }
   let price = 0;
   for (let i = 0; i < dietDetail.length; i++) {
-    // TBD | 최소주문수량 지금은 다 1로 갈 것.
-    // price += parseInt(dietDetail[i].price) * parseInt(dietDetail[i].qty);
-    price += parseInt(dietDetail[i].price);
+    price += parseInt(dietDetail[i].price) * parseInt(dietDetail[i].qty);
   }
   return price;
 };
 
-// TBD | MenuQty 도 같이 계산 필요
-export const sumUpDietTotal = (
-  dietDetailAllData: UseQueryResult<IDietDetailData, unknown>[],
-) => {
-  if (!dietDetailAllData || dietDetailAllData.length === 0) return 0;
+export const sumUpDietTotal = (dietTotalData: IDietTotalData | undefined) => {
   let menuNum = 0;
   let productNum = 0;
   let priceTotal = 0;
-  for (let i = 0; i < dietDetailAllData.length; i++) {
-    if (!dietDetailAllData[i]?.data) continue;
-    menuNum += 1; // * menuQty
-    for (let j = 0; j < dietDetailAllData[i].data.length; j++) {
-      priceTotal += parseInt(dietDetailAllData[i]?.data[j].price); // * menuQty
-      productNum += 1; // * menuQty
+  if (!dietTotalData || dietTotalData.length === 0)
+    return {menuNum, productNum, priceTotal};
+  for (let i = 0; i < dietTotalData.length; i++) {
+    if (!dietTotalData[i]) continue;
+    menuNum += 1 * parseInt(dietTotalData[i][0].qty, 10);
+    for (let j = 0; j < dietTotalData[i].length; j++) {
+      priceTotal +=
+        parseInt(dietTotalData[i][j].price) * parseInt(dietTotalData[i][j].qty);
+      productNum += parseInt(dietTotalData[i][j].qty);
     }
   }
   return {menuNum, productNum, priceTotal};
@@ -157,6 +158,33 @@ export const reGroupBySeller = (dietDetailData: IDietDetailData) => {
     }
     if (isNewSeller) {
       reGroupedProducts.push([dietDetailData[i]]);
+    }
+  }
+  return reGroupedProducts;
+};
+
+export const reGroupByDietNo = (
+  dietDetailAllData: IDietDetailAllData | undefined,
+) => {
+  let reGroupedProducts: Array<IDietDetailData> = [[]];
+  if (!dietDetailAllData || dietDetailAllData.length === 0)
+    return reGroupedProducts;
+
+  for (let i = 0; i < dietDetailAllData.length; i++) {
+    if (i === 0) {
+      reGroupedProducts[0].push(dietDetailAllData[i]);
+      continue;
+    }
+    let isNewDietNo = true;
+    for (let j = 0; j < reGroupedProducts.length; j++) {
+      if (reGroupedProducts[j][0]?.dietNo === dietDetailAllData[i]?.dietNo) {
+        reGroupedProducts[j].push(dietDetailAllData[i]);
+        isNewDietNo = false;
+        break;
+      }
+    }
+    if (isNewDietNo) {
+      reGroupedProducts.push([dietDetailAllData[i]]);
     }
   }
   return reGroupedProducts;

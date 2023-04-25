@@ -20,6 +20,7 @@ import {Pressable, Image} from 'react-native';
 import {icons} from '../assets/icons/iconSource';
 import {useDispatch} from 'react-redux';
 import {setNutrTooltipText} from '../stores/slices/cartSlice';
+import Account from '../screens/Account';
 
 const Stack = createNativeStackNavigator();
 
@@ -87,6 +88,22 @@ const RootStackNav = () => {
       <Stack.Screen name="OrderNav" component={OrderNav} />
       <Stack.Screen name="HistoryNav" component={HistoryNav} />
       <Stack.Screen name="PaymentHistoryNav" component={PaymentHistoryNav} />
+      <Stack.Screen
+        name="Account"
+        component={Account}
+        options={{
+          headerShown: true,
+          headerTitle: '계정 설정',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: colors.textMain,
+          },
+          headerShadowVisible: false,
+          headerLeft: () => <BackArrow goBackFn={goBack} />,
+        }}
+      />
     </Stack.Navigator>
   );
 };

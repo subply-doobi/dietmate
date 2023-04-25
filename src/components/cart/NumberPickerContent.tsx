@@ -17,60 +17,48 @@ import {
   commaToNum,
   makePriceObjBySeller,
   reGroupBySeller,
+  sumUpPrice,
 } from '../../util/sumUp';
 import colors from '../../styles/colors';
 import {IDietDetailData} from '../../query/types/diet';
 
 import {
+  useListDiet,
   useListDietDetail,
   useListDietDetailAll,
   useUpdateDietDetail,
 } from '../../query/queries/diet';
-
-const getCurrentQty = (productNm: string, dietDetail: IDietDetailData) => {
-  let currentQty = '';
-  dietDetail.forEach(food => {
-    if (food.productNm === productNm) {
-      currentQty = food.qty;
-    }
-  });
-  return currentQty;
-};
+import {FREE_SHIPPING_PRICE, SHIPPING_PRICE} from '../../constants/constants';
+import {findDietSeq} from '../../util/findDietSeq';
 
 const NumberPickerContent = ({
   setNumberPickerShow,
-  dietDetailData,
+  dietNoToNumControl,
 }: {
   setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
-  dietDetailData: IDietDetailData;
+  dietNoToNumControl: string;
 }) => {
   // react-query
-  const {data: dietAllData} = useListDietDetailAll();
+  const {data: dietData} = useListDiet();
+  const {data: dietDetailAllData} = useListDietDetailAll();
+  const {data: dietDetailData} = useListDietDetail(dietNoToNumControl);
   const updateDietDetailMutation = useUpdateDietDetail();
 
-  const currentQty = '1';
-  // const currentQty = dietDetailData
-  //   ? getCurrentQty(productNm, dietDetailData)
-  //   : '1';
-
   // state
-  const [number, setNumber] = useState(parseInt(currentQty, 10));
+  const [number, setNumber] = useState(
+    dietDetailData ? parseInt(dietDetailData[0].qty, 10) : 1,
+  );
 
   // etc
-  // 판매자별 총액계산
-  const reGroupedProducts = dietAllData && reGroupBySeller(dietAllData);
-  const priceBySeller =
-    reGroupedProducts && makePriceObjBySeller(reGroupedProducts);
-  const currentSellerPrice = 0;
-  // const currentSellerPrice = priceBySeller ? priceBySeller[platformNm] : 0;
-
-  // 현재 설정하는 수량 포함한 총 가격
-  const totalPrice =
-    currentSellerPrice + (number - parseInt(currentQty)) * 5000;
-  const isFreeShipping = totalPrice >= 30000;
-  const minCheck = 1 <= number ? true : false;
+  const {dietSeq} = findDietSeq(dietData, dietNoToNumControl);
+  const menuPrice = sumUpPrice(dietDetailData);
+  const totalPrice = sumUpPrice(dietDetailAllData) + menuPrice * (number - 1);
 
   const saveQty = () => {
+    updateDietDetailMutation.mutate({
+      dietNo: dietNoToNumControl,
+      qty: String(number),
+    });
     setNumberPickerShow(false);
   };
   return (
@@ -82,24 +70,22 @@ const NumberPickerContent = ({
           width: '100%',
         }}>
         <Col style={{flex: 1}}>
-          <SellerText>[테스트셀러]</SellerText>
-          <ProductNm numberOfLines={1} ellipsizeMode="tail">
-            개맛있는 닭가슴살 보끔빱
-          </ProductNm>
+          <DietSeq numberOfLines={1} ellipsizeMode="tail">
+            {dietSeq} ({commaToNum(menuPrice)}원)
+          </DietSeq>
           <Col style={{marginTop: 16}}>
-            {isFreeShipping ? (
+            {FREE_SHIPPING_PRICE <= totalPrice ? (
               <FreeShippingNotice>배송비 무료!</FreeShippingNotice>
             ) : (
               <FreeShippingPriceText>
-                얼마원 이상 무료배송 (배송비: 오백만원)
+                {commaToNum(FREE_SHIPPING_PRICE)} 이상 무료배송 (배송비:{' '}
+                {commaToNum(SHIPPING_PRICE)}원)
               </FreeShippingPriceText>
             )}
-            <MinQtyText>
-              최소주문수량: <MinQtyValue>1개</MinQtyValue>
-            </MinQtyText>
-            <HorizontalSpace height={12} />
+            <HorizontalSpace height={4} />
             <FreeShippingPriceText>
-              (현재 [테스트셀러] 상품 전체: 오천만원)
+              (전체끼니 합계:{' '}
+              {commaToNum(totalPrice + menuPrice * (number - 1))}원)
             </FreeShippingPriceText>
           </Col>
         </Col>
@@ -115,9 +101,11 @@ const NumberPickerContent = ({
       </Row>
       <HorizontalSpace height={56} />
       <BtnCTA
-        btnStyle={minCheck ? 'activated' : 'inactivated'}
+        btnStyle={number >= 0 ? 'activated' : 'inactivated'}
         onPress={saveQty}>
-        <BtnText>{number}개</BtnText>
+        <BtnText>
+          {number}개 ({commaToNum(menuPrice * number)}원)
+        </BtnText>
       </BtnCTA>
     </Container>
   );
@@ -133,7 +121,7 @@ const SellerText = styled(TextSub)`
   font-size: 14px;
 `;
 
-const ProductNm = styled(TextMain)`
+const DietSeq = styled(TextMain)`
   font-size: 20px;
   font-weight: bold;
 `;
@@ -141,13 +129,6 @@ const FreeShippingPriceText = styled(TextMain)`
   font-size: 14px;
 `;
 
-const MinQtyText = styled(TextMain)`
-  font-size: 14px;
-`;
-const MinQtyValue = styled(TextMain)`
-  font-size: 14px;
-  color: ${colors.warning};
-`;
 const FreeShippingNotice = styled(TextMain)`
   font-size: 14px;
   color: ${colors.warning};

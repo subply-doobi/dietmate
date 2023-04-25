@@ -43,7 +43,7 @@ const Login = () => {
     const useCheckUser = async () => {
       const {isValidated} = await validateToken();
       if (!isValidated) return;
-      const refetchedData = await refetch();
+      const refetchedData = await refetch().then(res => res.data);
       refetchedData && navigateByBaseLine(refetchedData, navigation);
     };
 

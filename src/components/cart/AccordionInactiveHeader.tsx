@@ -27,12 +27,7 @@ import {
 
 // react-query
 import {useGetBaseLine} from '../../query/queries/baseLine';
-import {
-  useCreateDiet,
-  useDeleteDiet,
-  useGetDietDetailEmptyYn,
-  useListDiet,
-} from '../../query/queries/diet';
+import {useDeleteDiet, useListDiet} from '../../query/queries/diet';
 import {IDietDetailData} from '../../query/types/diet';
 
 interface IAccordionInactiveHeader {
@@ -41,6 +36,7 @@ interface IAccordionInactiveHeader {
   dietSeq: string;
   dietDetailData: IDietDetailData;
   // setActiveSections: React.Dispatch<SetStateAction<number[]>>;
+  setDietNoToNumControl: React.Dispatch<SetStateAction<string>>;
   setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
 }
 
@@ -50,6 +46,7 @@ const AccordionInactiveHeader = ({
   dietSeq,
   dietDetailData,
   // setActiveSections,
+  setDietNoToNumControl,
   setNumberPickerShow,
 }: IAccordionInactiveHeader) => {
   // redux
@@ -64,7 +61,6 @@ const AccordionInactiveHeader = ({
 
   // state
   // TBD | 끼니 수량 api 필요
-  const [menuNoTemp, setMenuNoTemp] = useState(1);
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
   const [autoDietModalShow, setAutoDietModalShow] = useState(false);
 
@@ -73,7 +69,8 @@ const AccordionInactiveHeader = ({
   const calTarget = baseLineData?.calorie;
   const numOfFoods = dietDetailData ? dietDetailData.length : 0;
   const priceSum = sumUpPrice(dietDetailData);
-  const totalPrice = priceSum * menuNoTemp;
+  const currentQty = parseInt(dietDetailData[0].qty, 10);
+  const totalPrice = priceSum * currentQty;
 
   // const barColor = colors.dark;
   const barColor = !dietDetailData
@@ -94,7 +91,6 @@ const AccordionInactiveHeader = ({
     deleteDietMutation.mutate({dietNo});
     setDeleteAlertShow(false);
   };
-  useEffect(() => {}, []);
 
   return (
     <Container>
@@ -143,8 +139,12 @@ const AccordionInactiveHeader = ({
               <MenuNoBox>
                 <MenuNoText>끼니 수량</MenuNoText>
               </MenuNoBox>
-              <MenuNoSelect onPress={() => setNumberPickerShow(true)}>
-                <MenuNo>{menuNoTemp}개</MenuNo>
+              <MenuNoSelect
+                onPress={() => {
+                  setDietNoToNumControl(dietNo);
+                  setNumberPickerShow(true);
+                }}>
+                <MenuNo>{currentQty}개</MenuNo>
                 <UpDownImage source={icons.upDown_24} />
               </MenuNoSelect>
             </Row>

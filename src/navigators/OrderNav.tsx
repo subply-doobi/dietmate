@@ -13,9 +13,9 @@ import PaymentHistory from '../screens/orderScreen/PaymentHistory';
 
 const Stack = createNativeStackNavigator();
 
-const OrderNav = ({navigation: {navigate}}: NavigationProps) => {
+const OrderNav = () => {
   const navigation = useNavigation();
-  const {goBack} = navigation;
+  const {goBack, navigate} = navigation;
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -39,16 +39,20 @@ const OrderNav = ({navigation: {navigate}}: NavigationProps) => {
         options={{
           headerTitle: '배송지 수정',
           headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: colors.textMain,
+          },
           headerLeft: () => (
-            <TouchableOpacity
-              onPress={() =>
+            <BackArrow
+              goBackFn={() =>
                 navigate('OrderNav', {
                   screen: 'Order',
                   params: {from: 'AddressEdit'},
                 })
-              }>
-              <BackArrow goBackFn={goBack} />
-            </TouchableOpacity>
+              }
+            />
           ),
         }}
       />

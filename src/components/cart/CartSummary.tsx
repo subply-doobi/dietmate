@@ -7,7 +7,12 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/StyledConsts';
-import {commaToNum, sumUpDietTotal} from '../../util/sumUp';
+import {
+  commaToNum,
+  reGroupByDietNo,
+  sumUpDietTotal,
+  sumUpPrice,
+} from '../../util/sumUp';
 
 import {
   useListDiet,
@@ -19,15 +24,13 @@ import colors from '../../styles/colors';
 const CartSummary = () => {
   // react-query
   const {data: dietData} = useListDiet();
-  const {data: dietAllData} = useListDietDetailAll();
-  const dietTotalData = useListDietTotal(dietData, {
-    enabled: !!dietData,
-  });
+  const {data: dietDetailAllData} = useListDietDetailAll();
 
   // 총 끼니 수, 상품 수, 금액 계산
-  const {menuNum, productNum, priceTotal} = dietTotalData
-    ? sumUpDietTotal(dietTotalData)
-    : {menuNum: 0, productNum: 0, priceTotal: 0};
+  const dietTotalData = reGroupByDietNo(dietDetailAllData);
+  const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
+
+  console.log('cartSummary: ', dietData);
 
   return (
     <TotalSummaryContainer>
@@ -39,7 +42,7 @@ const CartSummary = () => {
       </Row>
       <Row style={{marginTop: 8, justifyContent: 'space-between'}}>
         <SummaryText>배송비 (30,000원 이상 무료배송)</SummaryText>
-        <SummaryValue>{priceTotal >= 30000 ? '0' : '4,000'} 원</SummaryValue>
+        <SummaryValue>{priceTotal >= 30000 ? '무료' : '4,000원'}</SummaryValue>
       </Row>
     </TotalSummaryContainer>
   );

@@ -14,3 +14,12 @@ export const getStoredToken = async () => {
     refreshToken,
   };
 };
+
+export const removeToken = async () => {
+  try {
+    await AsyncStorage.removeItem('ACCESS_TOKEN');
+    await AsyncStorage.removeItem('REFRESH_TOKEN');
+  } catch (e) {
+    console.log('wipeDoobiToken: ', e);
+  }
+};

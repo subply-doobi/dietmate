@@ -229,20 +229,10 @@ export const useListDietTotal = (
 // POST //
 export const useUpdateDietDetail = () => {
   const mutation = useMutation({
-    mutationFn: ({
-      dietNo,
-      productNo,
-      qty,
-    }: {
-      dietNo: string;
-      productNo: string;
-      qty: string;
-    }) =>
-      mutationFn(
-        `${UPDATE_DIET_DETAIL}?dietNo=${dietNo}&productNo=${productNo}&qty=${qty}`,
-        'post',
-      ),
+    mutationFn: ({dietNo, qty}: {dietNo: string; qty: string}) =>
+      mutationFn(`${UPDATE_DIET_DETAIL}?dietNo=${dietNo}&qty=${qty}`, 'post'),
     onSuccess: (data, {dietNo}) => {
+      console.log('updateDietDetail success: ', data);
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL, dietNo]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
     },

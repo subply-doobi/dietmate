@@ -2,7 +2,7 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 
 import {queryClient} from '../store';
 import {mutationFn, queryFn} from './requestFn';
-import {DIET_DETAIL, PRODUCTS, PRODUCT} from '../keys';
+import {DIET_DETAIL, PRODUCTS, PRODUCT, MARK} from '../keys';
 import {IQueryOptions} from '../types/common';
 
 import {
@@ -12,6 +12,7 @@ import {
   LIST_PRODUCT,
   FILTER,
   GET_PRODUCT,
+  LIST_PRODUCT_MARK,
 } from './urls';
 import {
   IListProductParams,
@@ -19,24 +20,20 @@ import {
   IProductsData,
 } from '../types/product';
 
+// PUT //
 export const useCreateProductMark = () => {
   const mutation = useMutation({
     mutationFn: (productNo: string) =>
       mutationFn(`${CREATE_PRODUCT_MARK}/${productNo}`, 'put'),
+    onSuccess: data => {
+      console.log('like!');
+      queryClient.invalidateQueries({queryKey: [MARK]});
+      queryClient.invalidateQueries({queryKey: [PRODUCT]});
+    },
   });
   return mutation;
 };
 
-export const useDeleteProductMark = () => {
-  const mutation = useMutation({
-    mutationFn: (productNo: string) =>
-      mutationFn(`${DELETE_PRODUCT_MARK}/${productNo}`, 'delete'),
-    onSuccess: data => console.log(data),
-  });
-  return mutation;
-};
-
-// PUT
 export const useCreateProductAuto = () => {
   const mutation = useMutation({
     mutationFn: ({
@@ -136,4 +133,30 @@ export const useFilterRange = (filterType, options?: IQueryOptions) => {
     onSuccess: data => {},
     enabled,
   });
+};
+
+export const useListProductMark = (options?: IQueryOptions) => {
+  const enabled = options?.enabled ?? true;
+  return useQuery<IProductsData>({
+    queryKey: [MARK],
+    queryFn: () => queryFn(`${LIST_PRODUCT_MARK}`),
+    onSuccess: data => {
+      options?.onSuccess && options?.onSuccess(data);
+      console.log('listProductMark: ', data);
+    },
+    enabled,
+  });
+};
+
+// DELETE //
+export const useDeleteProductMark = () => {
+  const mutation = useMutation({
+    mutationFn: (productNo: string) =>
+      mutationFn(`${DELETE_PRODUCT_MARK}/${productNo}`, 'delete'),
+    onSuccess: data => {
+      queryClient.invalidateQueries({queryKey: [MARK]});
+      queryClient.invalidateQueries({queryKey: [PRODUCT]});
+    },
+  });
+  return mutation;
 };
