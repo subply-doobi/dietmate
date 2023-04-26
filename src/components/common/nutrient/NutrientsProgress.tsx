@@ -98,7 +98,7 @@ const NutrientsProgress = ({
       exceedIdx !== -1
         ? '영양이 초과되었어요'
         : isSatisfied
-        ? '영양 목표에 부합하는 끼니가 완성되었어요\n새로운 끼니를 추가하거나 장바구니로 이동해보세요!'
+        ? '한 끼니가 완성되었어요'
         : '';
     dispatch(setNutrTooltipText(tooltipText));
   }, [baseLineData, dietDetailData]);
@@ -110,7 +110,7 @@ const NutrientsProgress = ({
         tooltipShow={nutrTooltipText !== ''}
         showIcon={true}
         renderCustomIcon={
-          route.name === 'Home'
+          exceedIdx !== -1 && route.name === 'Home'
             ? () => <Icon source={icons.cartWhiteFilled_36} />
             : undefined
         }
@@ -122,9 +122,12 @@ const NutrientsProgress = ({
           exceedIdx === 3 ? (SCREENWIDTH - 16) / 4 - 16 : undefined
         }
         onPressFn={() => {
-          if (route.name === 'Home') {
+          if (route.name === 'Cart') {
+            dispatch(setNutrTooltipText(''));
+            return;
+          }
+          if (exceedIdx !== -1) {
             navigate('BottomTabNav', {screen: 'Cart'});
-            nutrTooltipText.length > 30 && dispatch(setNutrTooltipText(''));
             return;
           }
           dispatch(setNutrTooltipText(''));
