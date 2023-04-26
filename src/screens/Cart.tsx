@@ -189,7 +189,7 @@ const Cart = () => {
         width={SCREENWIDTH - 16}
         disabled={isEmpty}
         onPress={() => {
-          navigate('OrderNav', {screen: 'Order'});
+          navigate('OrderNav', {screen: 'Order', params: {dietTotalData}});
         }}>
         <BtnText>주문하기 ({totalPrice && commaToNum(totalPrice)}원)</BtnText>
       </BtnBottomCTA>

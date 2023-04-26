@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 import Accordion from 'react-native-collapsible/Accordion';
 import {useForm, useWatch} from 'react-hook-form';
 import {useSelector} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
@@ -37,6 +37,9 @@ const Order = () => {
     paymentUrl,
     pay,
   } = useKakaoPayReady();
+  // navigation
+  const {params} = useRoute();
+  console.log('Order route params: ', params);
 
   // state
   const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);

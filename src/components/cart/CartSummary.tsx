@@ -23,14 +23,11 @@ import colors from '../../styles/colors';
 
 const CartSummary = () => {
   // react-query
-  const {data: dietData} = useListDiet();
   const {data: dietDetailAllData} = useListDietDetailAll();
 
   // 총 끼니 수, 상품 수, 금액 계산
   const dietTotalData = reGroupByDietNo(dietDetailAllData);
   const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
-
-  console.log('cartSummary: ', dietData);
 
   return (
     <TotalSummaryContainer>
