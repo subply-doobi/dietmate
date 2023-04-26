@@ -25,10 +25,13 @@ import Orderer from '../../components/order/Orderer';
 import Address from '../../components/order/Address';
 import PaymentMethod from '../../components/order/PaymentMethod';
 import PaymentWebView from '../../components/order/PaymentWebView';
+import KakaoPay from '../../components/payment/KakaoPay';
 
 import {useKakaoPayReady} from '../../query/queries/order';
 
 const Order = () => {
+  //navigation
+  const {navigate} = useNavigation();
   // react-query
   const {
     isLoading: isKakaoPayLoading,
@@ -213,7 +216,7 @@ const Order = () => {
             ? 'activated'
             : 'inactivated'
         }
-        onPress={handlePressPaymentBtn}>
+        onPress={() => navigate('KakaoPay')}>
         <BtnText>
           {Object.keys(errors).length === 0 &&
           orderInfo.address[selectedAddressId]
@@ -221,11 +224,11 @@ const Order = () => {
             : '정보를 모두 입력해주세요'}
         </BtnText>
       </BtnBottomCTA>
-      <PaymentWebView
+      {/* <PaymentWebView
         paymentUrl={paymentUrl}
         isPaymentModalVisible={isPaymentModalVisible}
         setIsPaymentModalVisible={setIsPaymentModalVisible}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

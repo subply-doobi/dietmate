@@ -17,8 +17,8 @@ const Account = () => {
     try {
       await removeToken();
       reset({
-        index: 1,
-        routes: [{name: 'Home'}, {name: 'Login'}],
+        index: 0,
+        routes: [{name: 'Login'}],
       });
     } catch (e) {
       console.log(e);

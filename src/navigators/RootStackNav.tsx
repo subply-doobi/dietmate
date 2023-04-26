@@ -21,7 +21,7 @@ import {icons} from '../assets/icons/iconSource';
 import {useDispatch} from 'react-redux';
 import {setNutrTooltipText} from '../stores/slices/cartSlice';
 import Account from '../screens/Account';
-
+import KakaoPay from '../components/payment/KakaoPay';
 const Stack = createNativeStackNavigator();
 
 const RootStackNav = () => {
@@ -86,6 +86,7 @@ const RootStackNav = () => {
         }}
       />
       <Stack.Screen name="OrderNav" component={OrderNav} />
+      <Stack.Screen name="KakaoPay" component={KakaoPay} />
       <Stack.Screen name="HistoryNav" component={HistoryNav} />
       <Stack.Screen name="PaymentHistoryNav" component={PaymentHistoryNav} />
       <Stack.Screen

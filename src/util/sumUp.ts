@@ -31,7 +31,7 @@ export const sumUpPrice = (dietDetail: IDietDetailData | undefined) => {
   }
   let price = 0;
   for (let i = 0; i < dietDetail.length; i++) {
-    price += parseInt(dietDetail[i].price) * parseInt(dietDetail[i].qty);
+    price += parseInt(dietDetail[i].price);
   }
   return price;
 };

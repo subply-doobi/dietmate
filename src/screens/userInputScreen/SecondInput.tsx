@@ -43,7 +43,10 @@ interface IFormField {
     value: string;
   };
 }
-
+// interface IRange {
+//   labe: string;
+//   value: [<Array>[]];
+// }
 const renderBmrKnownInput = (
   {field: {onChange, value}}: IFormField,
   handleSubmit: Function,
@@ -154,7 +157,7 @@ const SecondInput = ({navigation: {navigate}, route}: NavigationProps) => {
   useEffect(() => {
     handleSubmit(() => {})();
   }, []);
-  const exerciseBtnRange = [
+  const exerciseBtnRange: IRange = [
     {
       label: '주간 운동 횟수',
       value: [

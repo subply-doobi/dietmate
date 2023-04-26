@@ -1,24 +1,21 @@
-// react, RN, 3rd
-import React, {useCallback, useState} from 'react';
-import {FlatList} from 'react-native';
-import styled from 'styled-components/native';
-import {useSelector} from 'react-redux';
-
 // doobi util, redux, etc
 import {RootState} from '../stores/store';
+import {useSelector} from 'react-redux';
 import {FOOD_LIST_ITEM_HEIGHT} from '../constants/constants';
+import colors from '../styles/colors';
+import {FlatList} from 'react-native';
+import styled from 'styled-components/native';
 
 // doobi Component
 import {HorizontalLine, Row, TextMain, TextSub} from '../styles/StyledConsts';
 import FoodList from '../components/home/FoodList';
-import NutrientsProgress from '../components/common/nutrient/NutrientsProgress';
+import MenuSection from '../components/common/menuSection/MenuSection';
 
 // react-query
 import {IProductData} from '../query/types/product';
 import {useListDietDetail} from '../query/queries/diet';
 import {useListProductMark} from '../query/queries/product';
-import MenuSection from '../components/common/menuSection/MenuSection';
-import colors from '../styles/colors';
+import {useCallback} from 'react';
 
 const Likes = () => {
   // redux

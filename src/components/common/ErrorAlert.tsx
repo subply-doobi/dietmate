@@ -6,12 +6,11 @@ import {errorActionByCode} from '../../util/handleError';
 import DAlert from './alert/DAlert';
 import RequestAlertContent from './alert/RequestAlertContent';
 
-const CommonAlert = () => {
+const ErrorAlert = () => {
   // navigation
   const {navigate} = useNavigation();
   const {errorCode} = useSelector((state: RootState) => state.commonAlert);
   const dispatch = useDispatch();
-
   return (
     <>
       <DAlert
@@ -32,4 +31,4 @@ const CommonAlert = () => {
   );
 };
 
-export default CommonAlert;
+export default ErrorAlert;

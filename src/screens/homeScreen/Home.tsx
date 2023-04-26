@@ -42,10 +42,11 @@ import {useGetBaseLine} from '../../query/queries/baseLine';
 import DAlert from '../../components/common/alert/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 
+import {useHandleError} from '../../util/handleError';
 const Home = () => {
   // navigation
   const {navigate} = useNavigation();
-
+  // console.log('HOME:', useHandleError()(new Error('test')));
   // redux
   const dispatch = useDispatch();
   const {currentDietNo, totalFoodListIsLoaded} = useSelector(
