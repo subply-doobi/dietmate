@@ -8,7 +8,7 @@ import Accordion from 'react-native-collapsible/Accordion';
 
 // doobi util, redux, etc
 import colors from '../styles/colors';
-import {commaToNum, reGroupByDietNo, sumUpPrice} from '../util/sumUp';
+import {commaToNum, reGroupByDietNo, sumUpDietTotal} from '../util/sumUp';
 import {setCurrentDiet, setMenuActiveSection} from '../stores/slices/cartSlice';
 import {SCREENWIDTH} from '../constants/constants';
 import {icons} from '../assets/icons/iconSource';
@@ -28,13 +28,11 @@ import AccordionInactiveHeader from '../components/cart/AccordionInactiveHeader'
 import AccordionActiveHeader from '../components/cart/AccordionActiveHeader';
 
 // react-query
-import {IDietDetailData} from '../query/types/diet';
 import {
   useCreateDiet,
   useGetDietDetailEmptyYn,
   useListDiet,
   useListDietDetailAll,
-  useListDietTotal,
 } from '../query/queries/diet';
 
 const Cart = () => {
@@ -63,18 +61,18 @@ const Cart = () => {
   // 추가된 식품 하나도 없으면 주문버튼 비활성
   const isEmpty = dietDetailAllData ? dietDetailAllData.length === 0 : false;
 
-  // 식품 총 가격
-  const totalPrice = useMemo(() => {
-    if (!dietDetailAllData) return 0;
-    const sum = sumUpPrice(dietDetailAllData);
-    return sum >= 30000 ? sum : sum + 4000;
-  }, [dietDetailAllData]);
-
   const addAlertStatus = getDietAddStatus(dietData, dietEmptyData);
 
+  // 전체 끼니정보
   const dietTotalData = useMemo(() => {
     return reGroupByDietNo(dietDetailAllData);
   }, [dietDetailAllData]);
+
+  // 식품 총 가격
+  const {menuNum, productNum, priceTotal} = useMemo(
+    () => sumUpDietTotal(dietTotalData),
+    [dietDetailAllData],
+  );
 
   // accordion
   const ACCORDION_CONTENT =
@@ -189,9 +187,12 @@ const Cart = () => {
         width={SCREENWIDTH - 16}
         disabled={isEmpty}
         onPress={() => {
-          navigate('OrderNav', {screen: 'Order', params: {dietTotalData}});
+          navigate('OrderNav', {
+            screen: 'Order',
+            params: {dietTotalData, priceTotal},
+          });
         }}>
-        <BtnText>주문하기 ({totalPrice && commaToNum(totalPrice)}원)</BtnText>
+        <BtnText>주문하기 ({commaToNum(priceTotal)}원)</BtnText>
       </BtnBottomCTA>
 
       {/* CreateDiet 알럿 */}

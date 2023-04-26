@@ -44,7 +44,7 @@ export const sumUpDietTotal = (dietTotalData: IDietTotalData | undefined) => {
     return {menuNum, productNum, priceTotal};
   for (let i = 0; i < dietTotalData.length; i++) {
     if (!dietTotalData[i]) continue;
-    menuNum += 1 * parseInt(dietTotalData[i][0].qty, 10);
+    menuNum += 1 * parseInt(dietTotalData[i][0]?.qty, 10);
     for (let j = 0; j < dietTotalData[i].length; j++) {
       priceTotal +=
         parseInt(dietTotalData[i][j].price) * parseInt(dietTotalData[i][j].qty);

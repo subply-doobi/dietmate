@@ -3,7 +3,7 @@ import {TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
 import styled from 'styled-components/native';
 import Accordion from 'react-native-collapsible/Accordion';
 import {useForm, useWatch} from 'react-hook-form';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {RootState} from '../../stores/store';
@@ -19,6 +19,7 @@ import {
 } from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 import {SCREENWIDTH} from '../../constants/constants';
+import {setOrderer, setReceiver} from '../../stores/slices/orderSlice';
 
 import FoodToOrder from '../../components/order/FoodToOrder';
 import Orderer from '../../components/order/Orderer';
@@ -29,6 +30,42 @@ import KakaoPay from '../../components/payment/KakaoPay';
 
 import {useKakaoPayReady} from '../../query/queries/order';
 
+//입력된 주문식품/주문자/배송지/받는분 정보/결제수단/결제금액으로 interface 생성
+//Doobi자체에서 서버에 저장하려는 productData
+interface IPaymentProduct {
+  categoryNm: string;
+  categoryCd: string;
+  dietNo: string;
+  dietSeq: string;
+  price: string;
+  productNm: string;
+  productNo: string;
+  qty: string;
+}
+interface ICustomer {
+  orderer: string;
+  receiver: string;
+  phone: string;
+  email: string;
+  address: string;
+  billingInfo: string;
+}
+//tid, paymentMethod의 경우 현재는 kakaoPay만 사용
+//ITransaction의 경우 결제 승인 후에 받아오는 response로 대체
+interface ITransaction {
+  tid: string;
+  date: string;
+  totalPrice: string;
+  paymentMethod: string;
+  status: string;
+}
+//IDoobiPaymentData가 kakaoPay.tsx의
+//kakaoPay custom_data안에 들어가는 값
+interface IDoobiPaymentData {
+  productData: IPaymentProduct[];
+  customerData: ICustomer;
+  transactionData: ITransaction;
+}
 const Order = () => {
   //navigation
   const {navigate} = useNavigation();
@@ -45,17 +82,14 @@ const Order = () => {
   console.log('Order route params: ', params);
 
   // state
-  const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
 
   // redux
   const {orderInfo, selectedAddressId, orderSummary} = useSelector(
     (state: RootState) => state.order,
   );
-
-  // cart information -> 장바구니에서 route에 담아 보내줄 것.
-  // 근데 그냥 장바구니식품 불러와서, 수량은 장바구니 qty쓰면 되는 거 아닌가...?!
-  // TBD | 장바구니 담긴 식품 판매자별로 정리 및 식품가격 배송비 각각 변수에
-  // useKakaoPayReady
+  // 주문자 정보가 orderInfo에 저장되어있음
+  console.log('Order/orderInfo:', orderInfo);
+  const dispatch = useDispatch();
 
   // etc
   let totalAmount = 2200;
@@ -98,7 +132,6 @@ const Order = () => {
   const receiverValue = useWatch({control, name: 'receiver'});
   const receiverContactValue = useWatch({control, name: 'receiverContact'});
   const paymentMethodValue = useWatch({control, name: 'paymentMethod'});
-
   // accordion
   // activeSections[0] == 1 : 두비가 알아서 / 탄단지 비율 / 영양성분 직접 입력
   const [activeSections, setActiveSections] = useState<number[]>([]);
@@ -179,6 +212,16 @@ const Order = () => {
   };
   const updateSections = (actives: Array<number>) => {
     setActiveSections(actives);
+    //dispatch로 orderInfo 업데이트
+    dispatch(
+      setOrderer({orderer: ordererValue, ordererContact: ordererContactValue}),
+    );
+    dispatch(
+      setReceiver({
+        receiver: receiverValue,
+        receiverContact: receiverContactValue,
+      }),
+    );
   };
 
   const handlePressPaymentBtn = () => {
