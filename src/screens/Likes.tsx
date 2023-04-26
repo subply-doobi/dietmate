@@ -29,7 +29,6 @@ const Likes = () => {
     isFetching: likeDataIsFetching,
   } = useListProductMark();
   const {data: dietDetailData} = useListDietDetail(currentDietNo);
-  console.log(likeData);
 
   // flatList render fn
   const renderFoodList = useCallback(

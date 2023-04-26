@@ -32,6 +32,11 @@ import {useKakaoPayReady} from '../../query/queries/order';
 const Order = () => {
   //navigation
   const {navigate} = useNavigation();
+  const {
+    params: {dietTotal},
+  } = useRoute();
+  console.log('Order route params: ', dietTotal);
+
   // react-query
   const {
     isLoading: isKakaoPayLoading,
@@ -40,9 +45,6 @@ const Order = () => {
     paymentUrl,
     pay,
   } = useKakaoPayReady();
-  // navigation
-  const {params} = useRoute();
-  console.log('Order route params: ', params);
 
   // state
   const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);

@@ -64,66 +64,80 @@ const Cart = () => {
 
   const addAlertStatus = getDietAddStatus(dietData, dietEmptyData);
 
-  const totalStatus =
-    dietTotalData &&
-    dietTotalData.map(menu => menu.isInitialLoading).includes(true)
-      ? 'isInitialLoading'
-      : 'isInitialLoaded';
+  // dietTotalData가 바뀔때마다 변경되어야 하는 정보들
+  const {
+    totalStatus,
+    dietTotal,
+    menuNum,
+    productNum,
+    priceTotal,
+    ACCORDION_CONTENT,
+  } = useMemo(() => {
+    const totalStatus =
+      dietTotalData &&
+      dietTotalData.map(menu => menu.isInitialLoading).includes(true)
+        ? 'isInitialLoading'
+        : 'isInitialLoaded';
 
-  const dietTotal = useMemo(() => {
-    return dietTotalData
+    // reactQueries data
+    const dietTotal = dietTotalData
       ? dietTotalData?.map((d, idx) => (d.data ? d.data : []))
       : undefined;
+
+    // 끼니수량, 상품수량, 총 가격
+    const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotal);
+
+    // accordion
+    const ACCORDION_CONTENT =
+      dietData && dietTotalData && totalStatus === 'isInitialLoaded'
+        ? dietData.map((menu, idx) => {
+            return {
+              inactiveHeader: (
+                <AccordionInactiveHeader
+                  idx={idx}
+                  dietNo={menu.dietNo}
+                  dietSeq={menu.dietSeq}
+                  dietDetailData={dietTotalData[idx].data ?? []}
+                  // setActiveSections={setActiveSections}
+                  setDietNoToNumControl={setDietNoToNumControl}
+                  setNumberPickerShow={setNumberPickerShow}
+                />
+              ),
+              content: (
+                <AccordionContent
+                  dietNo={menu.dietNo}
+                  dietDetailData={dietTotalData[idx].data ?? []}
+                  setDietNoToNumControl={setDietNoToNumControl}
+                  setNumberPickerShow={setNumberPickerShow}
+                />
+              ),
+              activeHeader: (
+                <AccordionActiveHeader
+                  idx={idx}
+                  dietNo={menu.dietNo}
+                  dietSeq={menu.dietSeq}
+                  dietDetailData={dietTotalData[idx].data ?? []}
+                />
+              ),
+            };
+          })
+        : [
+            {
+              inactiveHeader: <></>,
+              activeHeader: <></>,
+              content: <></>,
+            },
+          ];
+
+    return {
+      totalStatus,
+      dietTotal,
+      menuNum,
+      productNum,
+      priceTotal,
+      ACCORDION_CONTENT,
+    };
   }, [dietTotalData]);
-
-  // 식품 총 가격
-  const {menuNum, productNum, priceTotal} = useMemo(
-    () => sumUpDietTotal(dietTotal),
-    [dietTotalData],
-  );
-
-  // accordion
-  const ACCORDION_CONTENT = useMemo(() => {
-    return dietData && dietTotalData && totalStatus === 'isInitialLoaded'
-      ? dietData.map((menu, idx) => {
-          return {
-            inactiveHeader: (
-              <AccordionInactiveHeader
-                idx={idx}
-                dietNo={menu.dietNo}
-                dietSeq={menu.dietSeq}
-                dietDetailData={dietTotalData[idx].data ?? []}
-                // setActiveSections={setActiveSections}
-                setDietNoToNumControl={setDietNoToNumControl}
-                setNumberPickerShow={setNumberPickerShow}
-              />
-            ),
-            content: (
-              <AccordionContent
-                dietNo={menu.dietNo}
-                dietDetailData={dietTotalData[idx].data ?? []}
-                setDietNoToNumControl={setDietNoToNumControl}
-                setNumberPickerShow={setNumberPickerShow}
-              />
-            ),
-            activeHeader: (
-              <AccordionActiveHeader
-                idx={idx}
-                dietNo={menu.dietNo}
-                dietSeq={menu.dietSeq}
-                dietDetailData={dietTotalData[idx].data ?? []}
-              />
-            ),
-          };
-        })
-      : [
-          {
-            inactiveHeader: <></>,
-            activeHeader: <></>,
-            content: <></>,
-          },
-        ];
-  }, [dietData, dietTotalData]);
 
   const updateSections = (activeSections: number[]) => {
     dispatch(setMenuActiveSection(activeSections));
@@ -196,7 +210,7 @@ const Cart = () => {
         onPress={() => {
           navigate('OrderNav', {
             screen: 'Order',
-            params: {dietTotalData, priceTotal},
+            params: {dietTotal, priceTotal},
           });
         }}>
         <BtnText>주문하기 ({commaToNum(priceTotal)}원)</BtnText>
