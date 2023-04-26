@@ -99,7 +99,9 @@ const AccordionContent = ({
 
   // 끼니수량에 따른 가격
   const priceSum = sumUpPrice(dietDetailData);
-  const currentQty = parseInt(dietDetailData[0].qty, 10);
+  const currentQty = dietDetailData[0]?.qty
+    ? parseInt(dietDetailData[0].qty, 10)
+    : 1;
   const totalPrice = priceSum * currentQty;
 
   return (

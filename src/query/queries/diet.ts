@@ -111,7 +111,7 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
         dietNo,
       ]);
       const newDietDetailData: IDietDetailData = prevDietDetailData
-        ? [...prevDietDetailData, {...food, qty: food.minQty, dietNo}]
+        ? [...prevDietDetailData, {...food, qty: 1, dietNo}]
         : [food];
 
       const newProductData: IProductData[] | undefined =
@@ -209,13 +209,12 @@ export const useGetDietDetailEmptyYn = (options?: IQueryOptions) => {
 };
 
 export const useListDietTotal = (
-  dietData: IDietData | undefined,
+  dietData: IDietData,
   options?: IQueryOptions,
 ) => {
-  if (!dietData) return;
   const enabled = options?.enabled ?? true;
   return useQueries({
-    queries: dietData?.map(dietData => {
+    queries: dietData.map(dietData => {
       return {
         queryKey: [DIET_DETAIL, dietData.dietNo],
         queryFn: () =>

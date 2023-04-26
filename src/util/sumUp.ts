@@ -43,7 +43,7 @@ export const sumUpDietTotal = (dietTotalData: IDietTotalData | undefined) => {
   if (!dietTotalData || dietTotalData.length === 0)
     return {menuNum, productNum, priceTotal};
   for (let i = 0; i < dietTotalData.length; i++) {
-    if (!dietTotalData[i]) continue;
+    if (dietTotalData[i].length === 0) continue;
     menuNum += 1 * parseInt(dietTotalData[i][0].qty, 10);
     for (let j = 0; j < dietTotalData[i].length; j++) {
       priceTotal +=
