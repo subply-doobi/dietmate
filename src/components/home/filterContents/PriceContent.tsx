@@ -1,10 +1,11 @@
+// RN, 3rd
 import React, {useState, useEffect} from 'react';
 import {ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 
 import {Col, TextMain} from '../../../styles/StyledConsts';
 import DSlider from '../../common/slider/DSlider';
-
+// react-query
 import {useFilterRange} from '../../../query/queries/product';
 import {IFilterParams} from '../../../query/types/product';
 
@@ -16,8 +17,10 @@ interface Props {
 
 const PriceContent = (props: Props) => {
   const {setPriceParam, priceParam, filterParams} = props;
+  //price range
   const priceRange = useFilterRange('price');
   const {data, isLoading} = priceRange;
+  //price min, max
   const minState = !data?.minData ? 0 : Number(data.minData);
   const maxState = !data?.maxData ? 25000 : Number(data.maxData);
 

@@ -1,11 +1,17 @@
+// Description: 첫번째 유저 정보 입력 화면
+//RN, 3rd
 import React, {useRef} from 'react';
 import {View, Text, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {Controller, useForm, useWatch} from 'react-hook-form';
 import {useDispatch, useSelector} from 'react-redux';
-
+//doobi util, redux, etc
 import {RootState} from '../../stores/store';
 import {saveUserInfo} from '../../stores/slices/userInfoSlice';
+import {NavigationProps, validationRules} from '../../constants/constants';
+import colors from '../../styles/colors';
+import {calculateBMR} from '../../util/targetCalculation';
+//doobi Component
 import {
   BtnBottomCTA,
   BtnText,
@@ -19,14 +25,12 @@ import {
   UserInfoTextInput,
   VerticalSpace,
 } from '../../styles/StyledConsts';
-import {NavigationProps, validationRules} from '../../constants/constants';
-import colors from '../../styles/colors';
-import {calculateBMR} from '../../util/targetCalculation';
 
 import Dropdown from '../../components/userInput/Dropdown';
-
+//react-query
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {useDietPurposeCode} from '../../query/queries/code';
+import {useNavigation} from '@react-navigation/native';
 
 interface IFormData {
   gender: string;
@@ -36,6 +40,7 @@ interface IFormData {
   dietPurposeCd: string;
 }
 
+//나이 Input
 const renderAgeInput = (
   {field: {onChange, value}}: any,
   userInfo1Refs?: React.MutableRefObject<any[]>,
@@ -60,6 +65,7 @@ const renderAgeInput = (
     </>
   );
 };
+//신장 Input
 const renderHeightInput = (
   {field: {onChange, onBlur, value}}: any,
   userInfo1Refs?: React.MutableRefObject<any[]>,
@@ -88,6 +94,7 @@ const renderHeightInput = (
     </>
   );
 };
+//몸무게 Input
 const renderWeightInput = (
   {field: {onChange, onBlur, value}}: any,
   userInfo1Refs?: React.MutableRefObject<any[]>,

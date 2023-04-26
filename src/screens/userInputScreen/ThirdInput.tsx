@@ -1,3 +1,4 @@
+//RN, 3rd
 import React, {useRef, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -5,11 +6,13 @@ import styled from 'styled-components/native';
 import {useForm, useWatch} from 'react-hook-form';
 import Accordion from 'react-native-collapsible/Accordion';
 import {useNavigation} from '@react-navigation/native';
-
+//doobi util, redux, etc
 import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {nutrRatioCategory} from '../../constants/constants';
+import {convertDataByMethod} from '../../util/userInfoSubmit';
+//doobi Component
 import {
   BtnBottomCTA,
   BtnText,
@@ -18,7 +21,6 @@ import {
   StyledProps,
   TextMain,
 } from '../../styles/StyledConsts';
-import {convertDataByMethod} from '../../util/userInfoSubmit';
 
 import Auto from '../../components/userInput/Auto';
 import CalculateByRatio from '../../components/userInput/CalculateByRatio';
@@ -55,8 +57,7 @@ const ThirdInput = () => {
   const {userInfo, userTarget} = useSelector(
     (state: RootState) => state.userInfo,
   );
-  // console.log('userInfo3: userInfo:', userInfo);
-  // console.log('userInfo3: userTarget:', userTarget);
+
   // ref
   const scrollRef = useRef<ScrollView>(null);
 
@@ -68,7 +69,6 @@ const ThirdInput = () => {
     setValue,
     formState: {errors, isValid},
   } = useForm<IFormData>({
-    // 나중에 사용자 정보 있으면 초기값으로 넣어줘야함.
     defaultValues: {
       ratioType: nutrRatioCategory[0].value,
       caloriePerMeal: '',
@@ -77,6 +77,7 @@ const ThirdInput = () => {
       fatManual: '',
     },
   });
+  //check validation
   const ratioType = useWatch({control, name: 'ratioType'});
   const caloriePerMeal = useWatch({control, name: 'caloriePerMeal'});
   const carbManual = useWatch({control, name: 'carbManual'});

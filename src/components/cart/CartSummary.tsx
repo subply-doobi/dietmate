@@ -1,6 +1,9 @@
-import {View} from 'react-native';
+// Description: 장바구니 페이지에서 총 끼니 수, 상품 수, 금액을 보여주는 컴포넌트
+//RN, 3rd
 import styled from 'styled-components/native';
-
+//doobi util, redux, etc
+import colors from '../../styles/colors';
+//doobi Component
 import {
   HorizontalLine,
   Row,
@@ -19,7 +22,6 @@ import {
   useListDietDetailAll,
   useListDietTotal,
 } from '../../query/queries/diet';
-import colors from '../../styles/colors';
 
 const CartSummary = () => {
   // react-query

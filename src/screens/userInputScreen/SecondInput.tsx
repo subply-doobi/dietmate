@@ -3,7 +3,7 @@ import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Controller, useForm, useWatch} from 'react-hook-form';
-
+//doobi util, redux, etc
 import {RootState} from '../../stores/store';
 import {
   IUserInfo,
@@ -144,7 +144,6 @@ const SecondInput = ({navigation: {navigate}, route}: NavigationProps) => {
     setValue,
     formState: {errors, isValid},
   } = useForm<IFormData>({
-    // 나중에 사용자 정보 있으면 초기값으로 넣어줘야함.
     defaultValues: {
       bmrKnown: '',
       weightTimeCd: data?.weightTimeCd ? data?.weightTimeCd : 'SP003001',
@@ -154,6 +153,7 @@ const SecondInput = ({navigation: {navigate}, route}: NavigationProps) => {
   const bmrKnownValue = useWatch({control, name: 'bmrKnown'});
   const weightTimeCdValue = useWatch({control, name: 'weightTimeCd'});
   const aerobicTimeCdValue = useWatch({control, name: 'aerobicTimeCd'});
+  //useEffect
   useEffect(() => {
     handleSubmit(() => {})();
   }, []);

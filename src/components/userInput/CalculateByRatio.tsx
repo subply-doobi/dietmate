@@ -1,21 +1,29 @@
-import React from 'react';
+//RN, 3rd
 import styled from 'styled-components/native';
 import {Controller} from 'react-hook-form';
-
+//doobi util, redux, etc
 import colors from '../../styles/colors';
+import {nutrRatioCategory, validationRules} from '../../constants/constants';
+import {calculateCaloriesToNutr} from '../../util/targetCalculation';
+//Doobi components
 import {
   ErrorBox,
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
 } from '../../styles/StyledConsts';
-import {nutrRatioCategory, validationRules} from '../../constants/constants';
-import {calculateCaloriesToNutr} from '../../util/targetCalculation';
 
 import Dropdown from './Dropdown';
 
+interface IField {
+  field: {
+    onChange: Function;
+    onBlur: Function;
+    value: string;
+  };
+}
 const renderCaloriePerMealInput = (
-  {field: {onChange, onBlur, value}},
+  {field: {onChange, onBlur, value}}: IField,
   handleSubmit: Function,
   calorieRecommended?: string,
 ) => {

@@ -1,7 +1,12 @@
+//RN, 3rd
 import {Animated, TextInput} from 'react-native';
 import {SetStateAction, useEffect, useRef, useState} from 'react';
 import styled from 'styled-components/native';
+//doobi util, redux, etc
 import colors from '../../styles/colors';
+import {icons} from '../../assets/icons/iconSource';
+//doobi Component
+import DBottomSheet from '../common/DBottomSheet';
 import {
   HorizontalLine,
   HorizontalSpace,
@@ -9,8 +14,6 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/StyledConsts';
-import {icons} from '../../assets/icons/iconSource';
-import DBottomSheet from '../common/DBottomSheet';
 import SortModalContent from './SortModalContent';
 import FilterHeader from './FilterHeader';
 import {IFilterParams} from '../../query/types/product';
@@ -44,7 +47,7 @@ const FlatlistHeaderComponent = ({
   setFilterParams,
   setFilterIndex,
   categoryName,
-}: IFlatlistHeaderComponent) => {
+}: FLATLIST_TYPE) => {
   //state
   const [sortModalShow, setSortModalShow] = useState(false);
   const [searchBarFocus, setSearchBarFocus] = useState(false);
