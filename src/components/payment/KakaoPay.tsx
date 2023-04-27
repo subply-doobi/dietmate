@@ -1,6 +1,7 @@
 import React from 'react';
 import IMP from 'iamport-react-native';
 import axios from 'axios';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 interface IIamportPayment {
   pg: string; //kakaopay, html5_inicis 등등
@@ -20,6 +21,10 @@ interface IIamportPayment {
 }
 
 const KakaoPay = () => {
+  const route = useRoute();
+  // console.log('priceTotal:', priceTotal);
+  // console.log('customerData:', customerData);
+  console.log(route);
   const kakaopayData: IIamportPayment = {
     pg: 'kakaopay',
     escrow: false,

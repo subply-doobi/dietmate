@@ -20,6 +20,12 @@ import {
 import colors from '../../styles/colors';
 import {SCREENWIDTH} from '../../constants/constants';
 import {setOrderer, setReceiver} from '../../stores/slices/orderSlice';
+import {
+  ICustomer,
+  IFormData,
+  IDoobiPaymentData,
+  IPaymentProduct,
+} from './types/paymentInfo';
 
 import FoodToOrder from '../../components/order/FoodToOrder';
 import Orderer from '../../components/order/Orderer';
@@ -30,65 +36,55 @@ import KakaoPay from '../../components/payment/KakaoPay';
 
 import {useKakaoPayReady} from '../../query/queries/order';
 
-//입력된 주문식품/주문자/배송지/받는분 정보/결제수단/결제금액으로 interface 생성
-//Doobi자체에서 서버에 저장하려는 productData
-interface IPaymentProduct {
-  categoryNm: string;
-  categoryCd: string;
-  dietNo: string;
-  dietSeq: string;
-  price: string;
-  productNm: string;
-  productNo: string;
-  qty: string;
-}
-interface ICustomer {
-  orderer: string;
-  receiver: string;
-  phone: string;
-  email: string;
-  address: string;
-  billingInfo: string;
-}
-//tid, paymentMethod의 경우 현재는 kakaoPay만 사용
-//ITransaction의 경우 결제 승인 후에 받아오는 response로 대체
-interface ITransaction {
-  tid: string;
-  date: string;
-  totalPrice: string;
-  paymentMethod: string;
-  status: string;
-}
-//IDoobiPaymentData가 kakaoPay.tsx의
-//kakaoPay custom_data안에 들어가는 값
-interface IDoobiPaymentData {
-  productData: IPaymentProduct[];
-  customerData: ICustomer;
-  transactionData: ITransaction;
-}
 const Order = () => {
   //navigation
   const {navigate} = useNavigation();
-  // react-query
   const {
-    isLoading: isKakaoPayLoading,
-    isError: isKakaoPayError,
-    error: KakaoPayError,
-    paymentUrl,
-    pay,
-  } = useKakaoPayReady();
-  // navigation
-  const {params} = useRoute();
-  console.log('Order route params: ', params);
+    params: {dietTotal, priceTotal},
+  } = useRoute();
+  const route = useRoute();
+  console.log(route);
+  //cart에 있는 제품들을 주문하기 위해 paymentProduct로 변환
+  //modifiedDietTotal을 서버에 저장
+  const getPaymentProduct = (e: any) => {
+    const products = e.map((e: any) => {
+      return {
+        categoryNm: e.categoryNm,
+        categoryCd: e.categoryCd,
+        subCategoryNm: e.subCategoryNm,
+        subCategoryCd: e.subCategoryCd,
+        dietNo: e.dietNo,
+        dietSeq: e.dietSeq,
+        price: e.price,
+        productNm: e.productNm,
+        productNo: e.productNo,
+        qty: e.qty,
+      };
+    });
+    return products;
+  };
+  let modifiedDietTotal = [];
+  for (let i = 0; i < dietTotal.length; i++) {
+    modifiedDietTotal.push(getPaymentProduct(dietTotal[i]));
+  }
 
+  let initialCustomerData: ICustomer = {
+    address: {base: '', addressDetail: '', postalCode: ''},
+    orderer: '', //주문자
+    ordererContact: '', //주문자 연락처
+    receiver: '', //받는분
+    receiverContact: '', //받는분 연락처
+    billingInfo: '',
+    email: '',
+  };
   // state
-
+  const [customerData, setCustomerData] = useState(initialCustomerData);
   // redux
   const {orderInfo, selectedAddressId, orderSummary} = useSelector(
     (state: RootState) => state.order,
   );
   // 주문자 정보가 orderInfo에 저장되어있음
-  console.log('Order/orderInfo:', orderInfo);
+  // console.log('Order/orderInfo:', orderInfo);
   const dispatch = useDispatch();
 
   // etc
@@ -100,14 +96,7 @@ const Order = () => {
   // }, 0);
 
   // react-hook-form
-  interface IFormData {
-    orderer: string;
-    ordererContact: string;
-    addressDetail: string;
-    receiver: string;
-    receiverContact: string;
-    paymentMethod: string;
-  }
+
   const {
     control,
     handleSubmit,
@@ -190,6 +179,7 @@ const Order = () => {
       content: <></>,
     },
   ];
+
   const renderHeader = (section: any, index: number, isActive: boolean) => {
     return (
       <AccordionHeader>
@@ -212,7 +202,7 @@ const Order = () => {
   };
   const updateSections = (actives: Array<number>) => {
     setActiveSections(actives);
-    //dispatch로 orderInfo 업데이트
+    // 서버에 주문자 정보 저장 API
     dispatch(
       setOrderer({orderer: ordererValue, ordererContact: ordererContactValue}),
     );
@@ -222,6 +212,19 @@ const Order = () => {
         receiverContact: receiverContactValue,
       }),
     );
+    setCustomerData({
+      address: {
+        base: orderInfo.address[0]?.base,
+        addressDetail: orderInfo.address[0]?.detail,
+        postalCode: orderInfo.address[0]?.postalCode,
+      },
+      orderer: ordererValue,
+      ordererContact: ordererContactValue,
+      receiver: receiverValue,
+      receiverContact: receiverContactValue,
+      billingInfo: '',
+      email: '',
+    });
   };
 
   const handlePressPaymentBtn = () => {
@@ -233,7 +236,6 @@ const Order = () => {
   // useEffect(() => {
   //   handleSubmit(() => {})();
   // }, []);
-
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView
@@ -259,7 +261,13 @@ const Order = () => {
             ? 'activated'
             : 'inactivated'
         }
-        onPress={() => navigate('KakaoPay')}>
+        onPress={() => {
+          navigate('KakaoPayNav', {
+            priceTotal,
+            customerData,
+            modifiedDietTotal,
+          });
+        }}>
         <BtnText>
           {Object.keys(errors).length === 0 &&
           orderInfo.address[selectedAddressId]

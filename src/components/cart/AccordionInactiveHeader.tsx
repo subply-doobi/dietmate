@@ -69,7 +69,9 @@ const AccordionInactiveHeader = ({
   const calTarget = baseLineData?.calorie;
   const numOfFoods = dietDetailData ? dietDetailData.length : 0;
   const priceSum = sumUpPrice(dietDetailData);
-  const currentQty = parseInt(dietDetailData[0].qty, 10);
+  const currentQty = dietDetailData[0]?.qty
+    ? parseInt(dietDetailData[0].qty, 10)
+    : 1;
   const totalPrice = priceSum * currentQty;
 
   // const barColor = colors.dark;

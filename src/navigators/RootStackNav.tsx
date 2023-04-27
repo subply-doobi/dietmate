@@ -86,7 +86,7 @@ const RootStackNav = () => {
         }}
       />
       <Stack.Screen name="OrderNav" component={OrderNav} />
-      <Stack.Screen name="KakaoPay" component={KakaoPay} />
+      <Stack.Screen name="KakaoPayNav" component={KakaoPay} />
       <Stack.Screen name="HistoryNav" component={HistoryNav} />
       <Stack.Screen name="PaymentHistoryNav" component={PaymentHistoryNav} />
       <Stack.Screen
