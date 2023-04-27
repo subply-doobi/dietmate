@@ -3,7 +3,10 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '../../stores/store';
 import {queryClient} from '../store';
-import {setCurrentDiet} from '../../stores/slices/cartSlice';
+import {
+  setCurrentDiet,
+  setMenuActiveSection,
+} from '../../stores/slices/cartSlice';
 import {useHandleError} from '../../util/handleError';
 import {
   DIET,
@@ -65,6 +68,9 @@ export const useCreateDiet = (options?: IMutationOptions) => {
 
       // 현재 구성중인 끼니의 dietNo, dietIdx를 redux에 저장 => 장바구니와 동기화
       dispatch(setCurrentDiet(data.dietNo));
+
+      // 장바구니 accordion 기존 끼니는 닫아주기
+      dispatch(setMenuActiveSection([]));
 
       // invalidation
       queryClient.invalidateQueries({queryKey: [DIET]});

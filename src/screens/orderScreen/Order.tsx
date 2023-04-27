@@ -28,14 +28,11 @@ import PaymentWebView from '../../components/order/PaymentWebView';
 import KakaoPay from '../../components/payment/KakaoPay';
 
 import {useKakaoPayReady} from '../../query/queries/order';
+import {sumUpDietTotal} from '../../util/sumUp';
 
 const Order = () => {
   //navigation
   const {navigate} = useNavigation();
-  const {
-    params: {dietTotal},
-  } = useRoute();
-  console.log('Order route params: ', dietTotal);
 
   // react-query
   const {
@@ -53,6 +50,9 @@ const Order = () => {
   const {orderInfo, selectedAddressId, orderSummary} = useSelector(
     (state: RootState) => state.order,
   );
+  const {priceTotal} = sumUpDietTotal(orderInfo.foodToOrder);
+  console.log('orderInfo ', orderInfo);
+  console.log(priceTotal);
 
   // cart information -> 장바구니에서 route에 담아 보내줄 것.
   // 근데 그냥 장바구니식품 불러와서, 수량은 장바구니 qty쓰면 되는 거 아닌가...?!

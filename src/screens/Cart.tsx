@@ -36,6 +36,7 @@ import {
   useListDietTotal,
 } from '../query/queries/diet';
 import {findDietSeq} from '../util/findDietSeq';
+import {setFoodToOrder} from '../stores/slices/orderSlice';
 
 const Cart = () => {
   // redux
@@ -226,9 +227,9 @@ const Cart = () => {
         width={SCREENWIDTH - 16}
         disabled={isEmpty}
         onPress={() => {
+          dispatch(setFoodToOrder(dietTotal));
           navigate('OrderNav', {
             screen: 'Order',
-            params: {dietTotal, priceTotal},
           });
         }}>
         <BtnText>주문하기 ({commaToNum(priceTotal)}원)</BtnText>

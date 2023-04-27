@@ -31,7 +31,12 @@ const CartSummary = () => {
 
   return (
     <TotalSummaryContainer>
-      <SummaryText style={{marginTop: 24}}>총 끼니 ({menuNum} 개)</SummaryText>
+      <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
+        <SummaryText>총 끼니 ({menuNum} 개)</SummaryText>
+        <SummaryValue>
+          끼니 당 {commaToNum(Math.floor(priceTotal / menuNum), 0)} 원
+        </SummaryValue>
+      </Row>
       <HorizontalLine style={{marginTop: 8}} />
       <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
         <SummaryText>상품 가격 (총 {productNum} 개)</SummaryText>
