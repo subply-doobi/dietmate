@@ -35,15 +35,12 @@ import PaymentWebView from '../../components/order/PaymentWebView';
 import KakaoPay from '../../components/payment/KakaoPay';
 
 import {useKakaoPayReady} from '../../query/queries/order';
+import {sumUpDietTotal} from '../../util/sumUp';
 
 const Order = () => {
   //navigation
   const {navigate} = useNavigation();
-  const {
-    params: {dietTotal, priceTotal},
-  } = useRoute();
-  const route = useRoute();
-  console.log(route);
+
   //cart에 있는 제품들을 주문하기 위해 paymentProduct로 변환
   //modifiedDietTotal을 서버에 저장
   const getPaymentProduct = (e: any) => {
@@ -63,9 +60,21 @@ const Order = () => {
     });
     return products;
   };
+  // redux
+  const {orderInfo, selectedAddressId, orderSummary} = useSelector(
+    (state: RootState) => state.order,
+  );
+  const {foodToOrder} = orderInfo;
+  const {priceTotal} = sumUpDietTotal(orderInfo.foodToOrder);
+  console.log('orderInfo ', orderInfo);
+  console.log(priceTotal);
+  // 주문자 정보가 orderInfo에 저장되어있음
+  // console.log('Order/orderInfo:', orderInfo);
+  const dispatch = useDispatch();
+
   let modifiedDietTotal = [];
-  for (let i = 0; i < dietTotal.length; i++) {
-    modifiedDietTotal.push(getPaymentProduct(dietTotal[i]));
+  for (let i = 0; i < foodToOrder.length; i++) {
+    modifiedDietTotal.push(getPaymentProduct(foodToOrder[i]));
   }
 
   let initialCustomerData: ICustomer = {
@@ -79,13 +88,6 @@ const Order = () => {
   };
   // state
   const [customerData, setCustomerData] = useState(initialCustomerData);
-  // redux
-  const {orderInfo, selectedAddressId, orderSummary} = useSelector(
-    (state: RootState) => state.order,
-  );
-  // 주문자 정보가 orderInfo에 저장되어있음
-  // console.log('Order/orderInfo:', orderInfo);
-  const dispatch = useDispatch();
 
   // etc
   let totalAmount = 2200;

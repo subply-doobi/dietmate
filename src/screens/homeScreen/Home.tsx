@@ -198,7 +198,10 @@ const Home = () => {
         {/* 식품 리스트 */}
         {productData && dietDetailData && (
           <FlatList
-            contentContainerStyle={{marginTop: HOME_FILTER_HEADER_HEIGHT}} // 숨겨지는 header의 높이만큼 margin
+            contentContainerStyle={{
+              marginTop: HOME_FILTER_HEADER_HEIGHT,
+              paddingBottom: 120,
+            }} // 숨겨지는 header의 높이만큼 margin
             data={productData}
             keyExtractor={extractListKey}
             renderItem={renderFoodList}
