@@ -45,6 +45,7 @@ const NumberPickerContent = ({
   const updateDietDetailMutation = useUpdateDietDetail();
 
   // state
+  const initialQty = dietDetailData ? parseInt(dietDetailData[0].qty, 10) : 1;
   const [number, setNumber] = useState(
     dietDetailData ? parseInt(dietDetailData[0].qty, 10) : 1,
   );
@@ -52,8 +53,8 @@ const NumberPickerContent = ({
   // etc
   const {dietSeq} = findDietSeq(dietData, dietNoToNumControl);
   const menuPrice = sumUpPrice(dietDetailData);
-  const totalPrice = sumUpPrice(dietDetailAllData) + menuPrice * (number - 1);
-
+  const totalPrice = sumUpPrice(dietDetailAllData, true);
+  console.log('numberPickerContent.tsx: totalPrice: ', menuPrice, totalPrice);
   const saveQty = () => {
     updateDietDetailMutation.mutate({
       dietNo: dietNoToNumControl,
@@ -85,7 +86,7 @@ const NumberPickerContent = ({
             <HorizontalSpace height={4} />
             <FreeShippingPriceText>
               (전체끼니 합계:{' '}
-              {commaToNum(totalPrice + menuPrice * (number - 1))}원)
+              {commaToNum(totalPrice + menuPrice * (number - initialQty))}원)
             </FreeShippingPriceText>
           </Col>
         </Col>
