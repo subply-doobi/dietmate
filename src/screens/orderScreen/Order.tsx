@@ -20,6 +20,7 @@ import {
 import colors from '../../styles/colors';
 import {SCREENWIDTH} from '../../constants/constants';
 import {setOrderer, setReceiver} from '../../stores/slices/orderSlice';
+import {commaToNum} from '../../util/sumUp';
 import {
   ICustomer,
   IFormData,
@@ -65,11 +66,12 @@ const Order = () => {
     (state: RootState) => state.order,
   );
   const {foodToOrder} = orderInfo;
-  const {priceTotal} = sumUpDietTotal(orderInfo.foodToOrder);
-  console.log('orderInfo ', orderInfo);
-  console.log(priceTotal);
+  const {priceTotal, menuNum, productNum} = sumUpDietTotal(
+    orderInfo.foodToOrder,
+  );
+
   // 주문자 정보가 orderInfo에 저장되어있음
-  // console.log('Order/orderInfo:', orderInfo);
+
   const dispatch = useDispatch();
 
   let modifiedDietTotal = [];
@@ -113,7 +115,7 @@ const Order = () => {
       receiverContact: orderInfo.receiverContact
         ? orderInfo.receiverContact
         : '',
-      paymentMethod: 'kakao',
+      paymentMethod: '카카오페이',
     },
   });
 
@@ -132,8 +134,9 @@ const Order = () => {
       title: '주문식품',
       subTitle: (
         <Row style={{}}>
-          <HeaderSubTitle style={{flex: 1}}>테스트테스트</HeaderSubTitle>
-          <HeaderSubTitle>외</HeaderSubTitle>
+          <HeaderSubTitle style={{flex: 1}}>
+            총 끼니 {menuNum}개 ({productNum}개 식품)
+          </HeaderSubTitle>
         </Row>
       ),
       content: <FoodToOrder />,
@@ -177,7 +180,16 @@ const Order = () => {
     },
     {
       title: '결제금액',
-      subTitle: <HeaderSubTitle>{totalAmount}원</HeaderSubTitle>,
+      subTitle:
+        priceTotal > 30000 ? (
+          <HeaderSubTitle>
+            식품가격: {commaToNum(priceTotal)}원 | 배송비: 무료
+          </HeaderSubTitle>
+        ) : (
+          <HeaderSubTitle>
+            식품가격: {commaToNum(priceTotal)}원 | 배송비: 3,000원
+          </HeaderSubTitle>
+        ),
       content: <></>,
     },
   ];
