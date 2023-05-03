@@ -43,6 +43,8 @@ import DAlert from '../../components/common/alert/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 
 import {useHandleError} from '../../util/handleError';
+import {firebase} from '@react-native-firebase/crashlytics';
+
 const Home = () => {
   // navigation
   const {navigate} = useNavigation();
