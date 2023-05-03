@@ -47,6 +47,7 @@ import {firebase} from '@react-native-firebase/crashlytics';
 
 const Home = () => {
   // navigation
+
   const {navigate} = useNavigation();
   // console.log('HOME:', useHandleError()(new Error('test')));
   // redux
