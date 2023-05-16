@@ -24,6 +24,8 @@ import {SCREENWIDTH} from '../../constants/constants';
 import {filterAvailableFoods} from '../../util/home/filterUtils';
 import colors from '../../styles/colors';
 import {icons} from '../../assets/icons/iconSource';
+import {checkTooltipShow, updateNotShowAgain} from '../../util/asyncStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // doobi Component
 import FoodList from '../../components/home/FoodList';
@@ -43,8 +45,11 @@ import DAlert from '../../components/common/alert/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 
 import {useHandleError} from '../../util/handleError';
+import {firebase} from '@react-native-firebase/crashlytics';
+
 const Home = () => {
   // navigation
+
   const {navigate} = useNavigation();
   // console.log('HOME:', useHandleError()(new Error('test')));
   // redux
@@ -56,7 +61,7 @@ const Home = () => {
   // state
   const [productAlertShow, setProductAlertShow] = useState(false);
   const [filterModalShow, setFilterModalShow] = useState(false);
-  const [tooltipShow, setTooltipShow] = useState(true);
+  const [tooltipShow, setTooltipShow] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [filterIndex, setFilterIndex] = useState(0);
   const [sortParam, setSortParam] = useState('');
@@ -152,6 +157,12 @@ const Home = () => {
       initialDietNo && dispatch(setCurrentDiet(initialDietNo));
     };
     initializeDietNo();
+    //tooltip 관련
+    const initializeTooltip = async () => {
+      const shouldShowTooltip = await checkTooltipShow('HOME_TOOLTIP');
+      setTooltipShow(shouldShowTooltip);
+    };
+    initializeTooltip();
   }, []);
 
   // 정렬, 필터 바뀔 때마다 sortImageToggle 바꿔주기
@@ -232,6 +243,7 @@ const Home = () => {
           triangleRight={SCREENWIDTH / 8 - 8}
           onPressFn={() => {
             setTooltipShow(false);
+            updateNotShowAgain('HOME_TOOLTIP');
             navigate('BottomTabNav', {screen: 'Cart'});
           }}
         />

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "358588470833",
+    "project_id": "doob2-b3919",
+    "storage_bucket": "doob2-b3919.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358588470833:android:f613d72caf442be602e710",
+        "android_client_info": {
+          "package_name": "com.doob2.subply"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "358588470833-t4qr291g0geliand52nnh9fnhgvpmcmn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcsQii1QOpueE289cE7ZhBDYBRw8D0-Ys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "358588470833-t4qr291g0geliand52nnh9fnhgvpmcmn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

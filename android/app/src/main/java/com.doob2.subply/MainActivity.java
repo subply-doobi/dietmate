@@ -1,4 +1,4 @@
-package com.doob;
+package com.doob2.subply;
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;

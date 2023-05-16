@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Text, View} from 'react-native';
 import styled from 'styled-components/native';
+import {useSelector} from 'react-redux';
 
 import {
   AccordionContentContainer,
@@ -45,7 +46,10 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
   const {data: listDietDetail, isLoading} = useListDietDetail(dietNo);
   const {data: listDiet} = useListDiet();
   const [menuTitle, setMenuTitle] = useState();
-
+  //redux
+  const {orderInfo} = useSelector((state: RootState) => state.order);
+  const {foodToOrder} = orderInfo;
+  //useEffect
   useEffect(() => {
     const dietSeq = getDietSeq(listDiet, dietNo);
     setMenuTitle(dietSeq);
@@ -57,12 +61,11 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
   function getDietSeq(dietArr, dietNo) {
     for (let i = 0; i < dietArr.length; i++) {
       if (dietArr[i].dietNo === dietNo) {
-        return dietArr[i].dietSeq;
+        return dietArr[i].dietSeq + `  (${foodToOrder[i][0].qty}개)`;
       }
     }
     return null; // 만약 해당하는 dietNo를 찾을 수 없을 경우 null 반환
   }
-
   return (
     <>
       <Col>
@@ -97,9 +100,6 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
                       justifyContent: 'space-between',
                     }}>
                     <PriceAndQuantity>{product.price}</PriceAndQuantity>
-                    <QuantityBox>
-                      <PriceAndQuantity>{product.qty}개</PriceAndQuantity>
-                    </QuantityBox>
                   </Row>
                 </Col>
               </Row>

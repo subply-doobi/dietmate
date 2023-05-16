@@ -12,6 +12,12 @@ import RootStackNav from './src/navigators/RootStackNav';
 import ErrorAlert from './src/components/common/ErrorAlert';
 import SplashScreen from 'react-native-splash-screen';
 
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://2fd6acc146d943ddb7a659b5dc18e632@o4505112210178048.ingest.sentry.io/4505112441782272',
+});
+
 if (__DEV__) {
   import('react-query-native-devtools').then(({addPlugin}) => {
     addPlugin({queryClient});
@@ -43,4 +49,4 @@ function App(): JSX.Element {
   );
 }
 
-export default App;
+export default Sentry.wrap(App);
