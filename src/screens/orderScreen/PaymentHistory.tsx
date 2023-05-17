@@ -14,7 +14,7 @@ import {
   TextSub,
   VerticalLine,
   VerticalSpace,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 import {NavigationProps} from '../../constants/constants';
 

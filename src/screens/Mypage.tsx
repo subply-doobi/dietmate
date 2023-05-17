@@ -17,7 +17,7 @@ import {
   TextMain,
   TextSub,
   VerticalLine,
-} from '../styles/styledConsts';
+} from '../styles/StyledConsts';
 
 import DAlert from '../components/common/alert/DAlert';
 import NutrTarget from '../components/common/nutrient/NutrientTarget';
@@ -245,7 +245,7 @@ const Mypage = () => {
         <ProfileContainer>
           <ProfileTextContainer>
             <NickName>
-              섭섭 <Text style={{fontWeight: '100'}}>님</Text>
+              {baseLineData?.userId} <Text style={{fontWeight: '100'}}>님</Text>
             </NickName>
             <Hello>두비가 즐거운 식단실천을 응원합니다</Hello>
           </ProfileTextContainer>

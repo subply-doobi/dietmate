@@ -8,7 +8,7 @@ import {
   Col,
   Row,
   HorizontalLine,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 
 import {BASE_URL} from '../../query/queries/urls';

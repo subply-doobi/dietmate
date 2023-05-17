@@ -13,7 +13,7 @@ import {
   TextMain,
   TextSub,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 
 const renderWeightInput = ({field: {onChange, value}}: IFormField) => {
   return (

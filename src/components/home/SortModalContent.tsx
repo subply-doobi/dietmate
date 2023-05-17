@@ -10,7 +10,8 @@ import {
   HorizontalLine,
   BtnCTA,
   HorizontalSpace,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
+
 import DTooltip from '../common/DTooltip';
 
 interface IProps {

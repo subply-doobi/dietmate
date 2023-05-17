@@ -3,12 +3,10 @@
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 import {View} from 'react-native';
-//doobi util, redux, etc
+
+import {HorizontalLine} from '../../../styles/StyledConsts';
 import colors from '../../../styles/colors';
-import {RootState} from '../../../stores/store';
-//doobi Component
-import {HorizontalLine} from '../../../styles/styledConsts';
-//react-query
+
 import {useCountCategory} from '../../../query/queries/category';
 
 interface IProps {
@@ -66,5 +64,3 @@ const CategoryButton = styled.TouchableOpacity`
   height: 58px;
   justify-content: center;
 `;
-
-const MODAL_WIDTH = 328;

@@ -62,10 +62,10 @@ export const getExceedIdx = (
 ) => {
   const exceedArr = baseLineData
     ? [
-        parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[1] <= cal,
-        parseInt(baseLineData.carb) + NUTR_ERROR_RANGE.carb[1] <= carb,
-        parseInt(baseLineData.protein) + NUTR_ERROR_RANGE.protein[1] <= protein,
-        parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[1] <= fat,
+        parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[1] < cal,
+        parseInt(baseLineData.carb) + NUTR_ERROR_RANGE.carb[1] < carb,
+        parseInt(baseLineData.protein) + NUTR_ERROR_RANGE.protein[1] < protein,
+        parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[1] < fat,
       ]
     : [false, false, false, false];
 
@@ -79,16 +79,17 @@ export const checkNutrSatisfied = (
   protein: number,
   fat: number,
 ) => {
+  // TBD | 자동구성이랑 맞추려면. 일단 칼로리만 정확하게 맞추고 나머지는 넘지않게
   return baseLineData
     ? parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[0] <= cal &&
-        parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[1] > cal &&
-        parseInt(baseLineData.carb) + NUTR_ERROR_RANGE.carb[0] <= carb &&
+        parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[1] >= cal &&
+        // parseInt(baseLineData.carb) + NUTR_ERROR_RANGE.carb[0] <= carb &&
         parseInt(baseLineData.carb) + NUTR_ERROR_RANGE.carb[1] >= carb &&
-        parseInt(baseLineData.protein) + NUTR_ERROR_RANGE.protein[0] <=
-          protein &&
+        // parseInt(baseLineData.protein) + NUTR_ERROR_RANGE.protein[0] <=
+        //   protein &&
         parseInt(baseLineData.protein) + NUTR_ERROR_RANGE.protein[1] >=
           protein &&
-        parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[0] <= fat &&
+        // parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[0] <= fat &&
         parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[1] >= fat
     : false;
 };
@@ -127,8 +128,10 @@ export const compareNutrToTarget = (
   }
 
   let exceedNumber = 0;
+  const indexToNutr = ['calorie', 'carb', 'protein', 'fat'];
   for (let i = 0; i < current.length; i++) {
-    if (current[i] >= target[i]) exceedNumber += 1;
+    if (current[i] >= target[i] + NUTR_ERROR_RANGE[indexToNutr[i]][1])
+      exceedNumber += 1;
   }
 
   return exceedNumber === 0 ? 'notEnough' : 'exceed';

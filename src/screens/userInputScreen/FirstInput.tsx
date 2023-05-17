@@ -24,7 +24,8 @@ import {
   TextMain,
   UserInfoTextInput,
   VerticalSpace,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
+
 import Dropdown from '../../components/userInput/Dropdown';
 //react-query
 import {useGetBaseLine} from '../../query/queries/baseLine';
@@ -234,14 +235,14 @@ const FirstInput = ({navigation: {navigate}}: NavigationProps) => {
         )}
 
         {/* --- purpose --- */}
-        <Dropdown
+        {/* <Dropdown
           placeholder="식단의 목적"
           items={dietPurposeCd.isLoading ? [] : newDietPurposeCdCategory}
           value={dietPurposeValue}
           setValue={setValue}
           scrollRef={scrollRef}
           reactHookFormName={'dietPurposeCd'}
-        />
+        /> */}
       </ScrollView>
       <BtnBottomCTA
         btnStyle={

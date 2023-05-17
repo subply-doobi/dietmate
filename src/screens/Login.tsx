@@ -2,15 +2,14 @@
 //RN, 3rd
 import React, {useEffect, useCallback} from 'react';
 import styled from 'styled-components/native';
-import {NavigationAction, useNavigation} from '@react-navigation/native';
-//doobi util, redux, etc
+import {useNavigation} from '@react-navigation/native';
 import colors from '../styles/colors';
 import {kakaoLogin, validateToken} from '../query/queries/token';
 import {IBaseLine} from '../query/types/baseLine';
 //react-query
 import {useGetBaseLine} from '../query/queries/baseLine';
 //doobi Component
-import {BtnCTA, BtnText} from '../styles/styledConsts';
+import {BtnCTA, BtnText} from '../styles/StyledConsts';
 
 const navigateByBaseLine = (data: IBaseLine | any, navigation) => {
   // check user 회원가입 여부
@@ -39,6 +38,7 @@ const Login = () => {
     await kakaoLogin();
     const refetchedData = await refetch();
     refetchedData && navigateByBaseLine(refetchedData, navigation);
+    navigation.navigate('BottomTabNav', {screen: 'Home'});
   };
 
   // etc

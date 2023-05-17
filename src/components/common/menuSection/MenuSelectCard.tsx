@@ -3,8 +3,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components/native';
 
 import {RootState} from '../../../stores/store';
-import {setCurrentDiet} from '../../../stores/slices/cartSlice';
-import {Col, Row, StyledProps} from '../../../styles/styledConsts';
+import {
+  setCurrentDiet,
+  setMenuActiveSection,
+} from '../../../stores/slices/cartSlice';
+import {Col, Row, StyledProps} from '../../../styles/StyledConsts';
 import colors from '../../../styles/colors';
 import {getDietAddStatus} from '../../../util/getDietAddStatus';
 import DAlert from '../alert/DAlert';
@@ -59,6 +62,8 @@ const MenuSelectCard = () => {
               <CardBtn
                 isActivated={isActivated}
                 onPress={() => {
+                  if (isActivated) return;
+                  dispatch(setMenuActiveSection([]));
                   dispatch(setCurrentDiet(menu.dietNo));
                 }}>
                 <CardText isActivated={isActivated}>{menu?.dietSeq}</CardText>

@@ -16,7 +16,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 import {SCREENWIDTH} from '../../constants/constants';
 

@@ -10,7 +10,7 @@ import {
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {IDropdownField, validationRules} from '../../constants/constants';
 import {calculateManualCalorie} from '../../util/targetCalculation';
 import colors from '../../styles/colors';

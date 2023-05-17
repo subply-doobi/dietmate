@@ -1,23 +1,21 @@
-// RN, 3rd
-import {useState, useEffect, useMemo, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {ScrollView, TouchableWithoutFeedback} from 'react-native';
 import styled from 'styled-components/native';
-// doobi Component
-import {TextMain, Col} from '../../../styles/styledConsts';
+
+import {TextMain, Col} from '../../../styles/StyledConsts';
 import DSlider from '../../common/slider/DSlider';
 // react-query
 import {useFilterRange} from '../../../query/queries/product';
 //types
 import {FILTER_PARAMS_TYPE} from '../types/filterType';
 
-interface IProps {
-  setNutritionParam: React.Dispatch<React.SetStateAction<any>>;
-  nutritionParam: [number, number];
-  filterParams: FILTER_PARAMS_TYPE;
+interface Props {
+  setNutritionParam: (param: any) => void;
+  nutritionParam: any;
+  filterParams: any;
 }
-const NutritionContent = (props: IProps) => {
-  const {setNutritionParam, nutritionParam, filterParams} = props;
-  //cal, carb, fat, protein range
+
+const NutritionContent = (props: Props) => {
   const calorieRange = useFilterRange('calorie');
   const carbRange = useFilterRange('carb');
   const fatRange = useFilterRange('fat');
@@ -112,7 +110,17 @@ const NutritionContent = (props: IProps) => {
       setProteinValue([minProtein, maxProtein]);
       setFatValue([minFat, maxFat]);
     }
-  }, [nutritionParam]);
+  }, [
+    nutritionParam,
+    minCalorie,
+    maxCalorie,
+    minCarb,
+    maxCarb,
+    minProtein,
+    maxProtein,
+    minFat,
+    maxFat,
+  ]);
 
   return (
     <ScrollView>

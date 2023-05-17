@@ -11,7 +11,8 @@ import {
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
+
 import Dropdown from './Dropdown';
 
 interface IField {

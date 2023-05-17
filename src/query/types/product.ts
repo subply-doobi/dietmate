@@ -1,8 +1,20 @@
+export interface IFilterParams {
+  categoryParam: string;
+  nutritionParam: {
+    calorieParam: number[];
+    carbParam: number[];
+    proteinParam: number[];
+    fatParam: number[];
+  };
+  priceParam: number[];
+}
+
 export interface IListProductParams {
-  searchText: string;
-  categoryCd: string;
-  sort: string;
-  filter: string;
+  dietNo: string;
+  searchText?: string;
+  categoryCd?: string;
+  sort?: string;
+  filter?: IFilterParams;
 }
 
 export interface ICreateProductAutoParams {

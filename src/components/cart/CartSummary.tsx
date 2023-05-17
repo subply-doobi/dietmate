@@ -10,8 +10,8 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
-//react-query
+} from '../../styles/StyledConsts';
+
 import {
   useListDiet,
   useListDietDetailAll,

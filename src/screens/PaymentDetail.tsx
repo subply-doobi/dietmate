@@ -6,7 +6,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../stores/store';
 import colors from '../styles/colors';
 import {NavigationProps} from '../constants/constants';
-import {Col, Row, TextMain, VerticalLine} from '../styles/styledConsts';
+import {Col, Row, TextMain, VerticalLine} from '../styles/StyledConsts';
 
 import OrderedList from '../components/payment/OrderedList';
 import NutrientsProgress from '../components/common/nutrient/NutrientsProgress';

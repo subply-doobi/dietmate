@@ -19,7 +19,7 @@ import {
   StyledProps,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import DAlert from '../common/alert/DAlert';
 

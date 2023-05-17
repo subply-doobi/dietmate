@@ -182,11 +182,11 @@ export const getAvailableFoods = ({
         parseInt(foods[i].calorie) <= remain[0] + errorRange['calorie'][1] &&
         parseInt(foods[i].calorie) >= remain[0] + errorRange['calorie'][0] &&
         parseInt(foods[i].carb) <= remain[1] + errorRange['carb'][1] &&
-        // parseInt(foods[i].carb) >= remain[1] - errorRange['carb'][0] &&
+        // parseInt(foods[i].carb) >= remain[1] + errorRange['carb'][0] &&
         parseInt(foods[i].protein) <= remain[2] + errorRange['protein'][1] &&
-        // parseInt(foods[i].protein) >= remain[2] - errorRange['protein'][0] &&
+        // parseInt(foods[i].protein) >= remain[2] + errorRange['protein'][0] &&
         parseInt(foods[i].fat) <= remain[3] + errorRange['fat'][1] &&
-        // parseInt(foods[i].fat) >= remain[3] - errorRange['fat'][0] &&
+        // parseInt(foods[i].fat) >= remain[3] + errorRange['fat'][0] &&
         parseInt(foods[i].price) <= remain[4] &&
         menuProductNoArr.includes(foods[i].productNo) === false
       ) {

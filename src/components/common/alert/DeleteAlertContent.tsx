@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-import {Col, TextMain} from '../../../styles/styledConsts';
+import {Col, TextMain} from '../../../styles/StyledConsts';
 
 const DeleteAlertContent = ({deleteText}: {deleteText: string}) => {
   return (

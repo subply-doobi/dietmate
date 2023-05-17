@@ -1,26 +1,29 @@
 // react, RN, 3rd
 import {SetStateAction, useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import * as Progress from 'react-native-progress';
 import styled from 'styled-components/native';
 
 // doobi util, redux, etc
-import {useSelector} from 'react-redux';
 import {icons} from '../../assets/icons/iconSource';
 import {RootState} from '../../stores/store';
 import colors from '../../styles/colors';
 import {commaToNum, sumUpNutrients, sumUpPrice} from '../../util/sumUp';
+import {setMenuActiveSection} from '../../stores/slices/cartSlice';
 
 // doobi Component
-import {StyledProps} from '../../styles/styledConsts';
+import DAlert from '../common/alert/DAlert';
+import DeleteAlertContent from '../common/alert/DeleteAlertContent';
+import DTooltip from '../common/DTooltip';
+import AutoDietModal from './AutoDietModal';
 import {
   Col,
   Row,
   TextMain,
   TextSub,
   VerticalLine,
-} from '../../styles/styledConsts';
-import DAlert from '../common/alert/DAlert';
-import DeleteAlertContent from '../common/alert/DeleteAlertContent';
+  StyledProps,
+} from '../../styles/StyledConsts';
 
 // react-query
 import {useGetBaseLine} from '../../query/queries/baseLine';
@@ -31,15 +34,13 @@ import {
   useListDiet,
 } from '../../query/queries/diet';
 import {IDietDetailData} from '../../query/types/diet';
-import DTooltip from '../common/DTooltip';
-import AutoDietModal from './AutoDietModal';
 
 interface IAccordionInactiveHeader {
   idx: number;
   dietNo: string;
   dietSeq: string;
   dietDetailData: IDietDetailData;
-  setActiveSections: React.Dispatch<SetStateAction<number[]>>;
+  // setActiveSections: React.Dispatch<SetStateAction<number[]>>;
   setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
 }
 
@@ -48,17 +49,17 @@ const AccordionInactiveHeader = ({
   dietNo,
   dietSeq,
   dietDetailData,
-  setActiveSections,
+  // setActiveSections,
   setNumberPickerShow,
 }: IAccordionInactiveHeader) => {
   // redux
+  const dispatch = useDispatch();
+  const {menuActiveSection} = useSelector((state: RootState) => state.cart);
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
   const {data: dietData} = useListDiet();
-  const {data: dietEmptyData} = useGetDietDetailEmptyYn();
-  const createDietMutation = useCreateDiet();
   const deleteDietMutation = useDeleteDiet();
 
   // state
@@ -74,6 +75,7 @@ const AccordionInactiveHeader = ({
   const priceSum = sumUpPrice(dietDetailData);
   const totalPrice = priceSum * menuNoTemp;
 
+  // const barColor = colors.dark;
   const barColor = !dietDetailData
     ? colors.dark
     : dietDetailData.length === 0
@@ -165,7 +167,7 @@ const AccordionInactiveHeader = ({
         setModalVisible={setAutoDietModalShow}
         dietNo={dietNo}
         dietDetailData={dietDetailData}
-        openCurrentSection={() => setActiveSections([idx])}
+        openCurrentSection={() => dispatch(setMenuActiveSection([idx]))}
       />
       <DAlert
         alertShow={deleteAlertShow}
@@ -190,7 +192,7 @@ const Container = styled.View`
 `;
 
 const LeftBar = styled.View`
-  width: 6px;
+  width: 4px;
   height: 84px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;

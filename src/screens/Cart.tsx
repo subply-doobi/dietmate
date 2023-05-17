@@ -1,21 +1,22 @@
 // react, RN, 3rd
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {ScrollView, TouchableOpacity, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
-import {useDispatch} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import Accordion from 'react-native-collapsible/Accordion';
 
 // doobi util, redux, etc
 import colors from '../styles/colors';
 import {commaToNum, reGroupBySeller, sumUpPrice} from '../util/sumUp';
-import {setCurrentDiet} from '../stores/slices/cartSlice';
+import {setCurrentDiet, setMenuActiveSection} from '../stores/slices/cartSlice';
 import {SCREENWIDTH} from '../constants/constants';
 import {icons} from '../assets/icons/iconSource';
 import {getDietAddStatus} from '../util/getDietAddStatus';
+import {RootState} from '../stores/store';
 
 // doobi Component
-import {BtnBottomCTA, BtnText, Row, TextSub} from '../styles/styledConsts';
+import {BtnBottomCTA, BtnText, Row, TextSub} from '../styles/StyledConsts';
 import CartSummary from '../components/cart/CartSummary';
 import DAlert from '../components/common/alert/DAlert';
 import CreateLimitAlertContent from '../components/common/alert/CreateLimitAlertContent';
@@ -39,6 +40,7 @@ import {
 const Cart = () => {
   // redux
   const dispatch = useDispatch();
+  const {menuActiveSection} = useSelector((state: RootState) => state.cart);
 
   // react-query
   const {data: dietData} = useListDiet();
@@ -49,7 +51,6 @@ const Cart = () => {
   const createDietMutation = useCreateDiet();
 
   // state
-  const [activeSections, setActiveSections] = useState<number[]>([]);
   const [createAlertShow, setCreateAlertShow] = useState(false);
   const [numberPickerShow, setNumberPickerShow] = useState(false);
   const [detailDataToNoControl, setdetailDataToNoControl] =
@@ -76,7 +77,7 @@ const Cart = () => {
                 dietNo={dietData[idx].dietNo}
                 dietSeq={dietData[idx].dietSeq}
                 dietDetailData={menu.data ?? []}
-                setActiveSections={setActiveSections}
+                // setActiveSections={setActiveSections}
                 setNumberPickerShow={setNumberPickerShow}
               />
             ),
@@ -106,7 +107,7 @@ const Cart = () => {
         ];
 
   const updateSections = (activeSections: number[]) => {
-    setActiveSections(activeSections);
+    dispatch(setMenuActiveSection(activeSections));
     if (activeSections.length === 0) return;
     const currentIdx = activeSections[0];
     const currentDietNo = dietData && dietData[currentIdx].dietNo;
@@ -151,32 +152,43 @@ const Cart = () => {
     <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
         <ContentContainer>
-          {/* 장바구니 각 끼니들 accordion */}
-          <Accordion
-            activeSections={activeSections}
-            sections={ACCORDION_CONTENT}
-            touchableComponent={TouchableOpacity}
-            renderHeader={(section, _, isActive) =>
-              isActive ? section.activeHeader : section.inactiveHeader
-            }
-            renderContent={section => section.content}
-            onChange={updateSections}
-          />
+          {totalStatus === 'isInitialLoading' ? (
+            <ActivityIndicator style={{marginTop: 16}} />
+          ) : (
+            <>
+              {/* 장바구니 각 끼니들 accordion */}
+              <Accordion
+                activeSections={menuActiveSection}
+                sections={ACCORDION_CONTENT}
+                touchableComponent={TouchableOpacity}
+                renderHeader={(section, _, isActive) =>
+                  isActive ? section.activeHeader : section.inactiveHeader
+                }
+                renderContent={section => section.content}
+                onChange={updateSections}
+              />
 
-          {/* 끼니 추가 버튼 */}
-          <CreateDietBtn
-            onPress={onCreateDiet}
-            disabled={!dietEmptyData || dietEmptyData.emptyYn === 'Y'}>
-            <LeftBar />
-            {createDietMutation.isLoading ? (
-              <ActivityIndicator />
-            ) : (
-              <Row style={{flex: 1, justifyContent: 'center', marginLeft: -16}}>
-                <PlusImage source={icons.plusSquare_24} />
-                <CreateDietText>끼니 추가하기</CreateDietText>
-              </Row>
-            )}
-          </CreateDietBtn>
+              {/* 끼니 추가 버튼 */}
+              <CreateDietBtn
+                onPress={onCreateDiet}
+                disabled={!dietEmptyData || dietEmptyData.emptyYn === 'Y'}>
+                <LeftBar />
+                {createDietMutation.isLoading ? (
+                  <ActivityIndicator />
+                ) : (
+                  <Row
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      marginLeft: -16,
+                    }}>
+                    <PlusImage source={icons.plusSquare_24} />
+                    <CreateDietText>끼니 추가하기</CreateDietText>
+                  </Row>
+                )}
+              </CreateDietBtn>
+            </>
+          )}
         </ContentContainer>
 
         {/* 끼니 정보 요약 */}
@@ -261,7 +273,7 @@ const CreateDietBtn = styled.TouchableOpacity`
 const LeftBar = styled.View`
   position: absolute;
   left: 0px;
-  width: 6px;
+  width: 4px;
   height: 48px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;

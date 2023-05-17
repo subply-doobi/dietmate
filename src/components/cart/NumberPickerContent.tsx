@@ -12,7 +12,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {
   commaToNum,
   makePriceObjBySeller,

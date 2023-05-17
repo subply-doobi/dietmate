@@ -1,6 +1,6 @@
 //RN, 3rd
 import {Animated, TextInput} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import {SetStateAction, useEffect, useRef, useState} from 'react';
 import styled from 'styled-components/native';
 //doobi util, redux, etc
 import colors from '../../styles/colors';
@@ -13,16 +13,28 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import SortModalContent from './SortModalContent';
 import FilterHeader from './FilterHeader';
-//types
-import {FLATLIST_TYPE} from './types/filterType';
+import {IFilterParams} from '../../query/types/product';
 
+interface IFlatlistHeaderComponent {
+  translateY: any;
+  productData: any;
+  searchText: any;
+  setSearchText: any;
+  refetchProduct: any;
+  sortImageToggle: any;
+  setSortParam: any;
+  sortParam: any;
+  setFilterModalShow: any;
+  filterParams: IFilterParams;
+  setFilterParams: React.Dispatch<SetStateAction<IFilterParams>>;
+  setFilterIndex: any;
+  categoryName: any;
+}
 const FlatlistHeaderComponent = ({
   translateY,
-  remainNutrProductData,
-  setRemainNutrProductData,
   productData,
   searchText,
   setSearchText,
@@ -32,6 +44,7 @@ const FlatlistHeaderComponent = ({
   sortParam,
   setFilterModalShow,
   filterParams,
+  setFilterParams,
   setFilterIndex,
   categoryName,
 }: FLATLIST_TYPE) => {
@@ -53,24 +66,21 @@ const FlatlistHeaderComponent = ({
         transform: [{translateY: translateY}],
         zIndex: 10000,
         backgroundColor: colors.white,
-        paddingLeft: 16,
-        paddingRight: 16,
+        width: '100%',
+        marginLeft: 16,
+        // paddingLeft: 16,
+        // paddingRight: 16,
       }}>
       <Row
         style={{
+          flex: 1,
           justifyContent: 'space-between',
-          width: '100%',
           marginTop: 16,
+          alignItems: 'flex-end',
         }}>
         <Row style={{alignItems: 'flex-end', flex: 1}}>
           <ListTitle>검색된 결과</ListTitle>
-          <NoOfFoods>
-            {' '}
-            {remainNutrProductData === undefined
-              ? productData?.length
-              : remainNutrProductData.length}
-            개
-          </NoOfFoods>
+          <NoOfFoods> {productData?.length}개</NoOfFoods>
 
           {searchBarFocus ? (
             <SearchBox style={{flex: 1, marginRight: 8}}>
@@ -133,8 +143,10 @@ const FlatlistHeaderComponent = ({
           setFilterModalShow(true);
         }}
         filterParams={filterParams}
+        setFilterParams={setFilterParams}
+        setSortParam={setSortParam}
         filterHeaderText={categoryName}
-        setRemainNutrProductData={setRemainNutrProductData}
+        setSearchText={setSearchText}
       />
 
       <HorizontalSpace height={16} />
@@ -182,9 +194,9 @@ const NoOfFoods = styled(TextSub)`
 
 const SortBtn = styled.TouchableOpacity`
   flex-direction: row;
-  align-items: flex-end;
-  justify-content: center;
-  height: 32px;
+  /* align-items: flex-end; */
+  align-items: center;
+  /* justify-content: center; */
 `;
 
 const SortBtnText = styled(TextSub)`

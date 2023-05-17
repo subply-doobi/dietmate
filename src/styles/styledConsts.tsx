@@ -11,7 +11,7 @@ export interface StyledProps {
   backgroundColor?: string;
   lineColor?: string;
   thumbIdx?: number;
-  filterHeight?: boolean;
+  filterHeight?: number;
   willExceed?: boolean;
 }
 export const NotoSansLight = styled.Text`
@@ -103,9 +103,9 @@ export const InputHeaderText = styled.Text`
 export const UserInfoTextInput = styled.TextInput`
   justify-content: center;
   align-items: flex-start;
+  height: 40px;
   font-weight: normal;
   font-size: 16px;
-  padding-bottom: 10px;
   border-bottom-width: 1px;
   border-color: ${({isActivated}: StyledProps) =>
     isActivated ? colors.main : colors.inactivated};

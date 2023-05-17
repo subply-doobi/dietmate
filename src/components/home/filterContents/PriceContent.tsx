@@ -2,20 +2,20 @@
 import React, {useState, useEffect} from 'react';
 import {ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
-// doobi Component
-import {Col, TextMain} from '../../../styles/styledConsts';
+
+import {Col, TextMain} from '../../../styles/StyledConsts';
 import DSlider from '../../common/slider/DSlider';
 // react-query
 import {useFilterRange} from '../../../query/queries/product';
-//types
-import {FILTER_PARAMS_TYPE} from '../types/filterType';
+import {IFilterParams} from '../../../query/types/product';
 
-interface IProps {
-  setPriceParam: React.Dispatch<React.SetStateAction<any>>;
-  priceParam: [number, number];
-  filterParams: FILTER_PARAMS_TYPE;
+interface Props {
+  setPriceParam: (param: any) => void;
+  priceParam: number[];
+  filterParams: IFilterParams;
 }
-const PriceContent = (props: IProps) => {
+
+const PriceContent = (props: Props) => {
   const {setPriceParam, priceParam, filterParams} = props;
   //price range
   const priceRange = useFilterRange('price');
@@ -23,20 +23,19 @@ const PriceContent = (props: IProps) => {
   //price min, max
   const minState = !data?.minData ? 0 : Number(data.minData);
   const maxState = !data?.maxData ? 25000 : Number(data.maxData);
-  //price 초기값
-  const initialState = [
-    filterParams?.priceParam ? filterParams?.priceParam[0] : 0,
-    filterParams?.priceParam ? filterParams?.priceParam[1] : maxState,
-  ];
-  const getInitialState = () => {
-    return initialState;
-  };
-  const [priceValue, setPriceValue] = useState(() => getInitialState());
+
+  const [priceValue, setPriceValue] = useState<number[]>([]);
 
   useEffect(() => {
-    if (!priceParam) {
-      return setPriceValue([0, maxState]);
-    }
+    const initialState =
+      filterParams.priceParam.length === 0
+        ? [0, maxState]
+        : filterParams.priceParam;
+    setPriceValue(initialState);
+  }, [data]);
+
+  useEffect(() => {
+    priceParam.length === 0 && setPriceValue([0, maxState]);
   }, [priceParam]);
 
   return (
@@ -45,7 +44,7 @@ const PriceContent = (props: IProps) => {
       {isLoading ? (
         <ActivityIndicator />
       ) : (
-        data && (
+        priceValue.length === 2 && (
           <DSlider
             sliderValue={priceValue}
             setSliderValue={setPriceValue}

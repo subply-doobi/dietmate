@@ -2,7 +2,7 @@ import React from 'react';
 import {Modal} from 'react-native';
 import styled from 'styled-components/native';
 
-import {StyledProps} from '../../styles/styledConsts';
+import {StyledProps} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 
 interface IDBottomSheet {
@@ -65,7 +65,7 @@ const PopupIndicator = styled.View`
   width: 64px;
   height: 4px;
   background-color: ${colors.black};
-  border-radius: 5px;
+  border-radius: 2px;
 `;
 
 const ContentContainer = styled.View`

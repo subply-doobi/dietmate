@@ -1,10 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import * as Progress from 'react-native-progress';
 
 import colors from '../../../styles/colors';
-import {VerticalSpace} from '../../../styles/styledConsts';
+import {VerticalSpace} from '../../../styles/StyledConsts';
 import {
   checkNutrSatisfied,
   getExceedIdx,
@@ -18,6 +18,9 @@ import {NUTR_ERROR_RANGE, SCREENWIDTH} from '../../../constants/constants';
 import {RootState} from '../../../stores/store';
 import {useDispatch, useSelector} from 'react-redux';
 import {setNutrTooltipText} from '../../../stores/slices/cartSlice';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {icons} from '../../../assets/icons/iconSource';
+import {IDietDetailData} from '../../../query/types/diet';
 
 const indicatorColorsByTitle: {[key: string]: string} = {
   '칼로리(kcal)': colors.main,
@@ -64,14 +67,21 @@ const ProgressBar = ({title, numerator, denominator}: INutrientProgress) => {
   );
 };
 
-const NutrientsProgress = ({currentDietNo}: {currentDietNo: string}) => {
+const NutrientsProgress = ({
+  dietDetailData,
+}: {
+  dietDetailData: IDietDetailData;
+}) => {
+  // navigation
+  const {navigate} = useNavigation();
+  const route = useRoute();
+
   // redux
   const {nutrTooltipText} = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
 
   // react-query
   const {data: baseLineData, isInitialLoading} = useGetBaseLine();
-  const {data: dietDetailData} = useListDietDetail(currentDietNo);
 
   // etc
   const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
@@ -98,7 +108,12 @@ const NutrientsProgress = ({currentDietNo}: {currentDietNo: string}) => {
       <DTooltip
         text={nutrTooltipText}
         tooltipShow={nutrTooltipText !== ''}
-        showCheck={true}
+        showIcon={true}
+        renderCustomIcon={
+          route.name === 'Home'
+            ? () => <Icon source={icons.cartWhiteFilled_36} />
+            : undefined
+        }
         reversed={true}
         boxTop={58}
         boxLeft={exceedIdx < 3 ? tootipPosition : undefined}
@@ -106,7 +121,14 @@ const NutrientsProgress = ({currentDietNo}: {currentDietNo: string}) => {
         triangleRight={
           exceedIdx === 3 ? (SCREENWIDTH - 16) / 4 - 16 : undefined
         }
-        onPressFn={() => dispatch(setNutrTooltipText(''))}
+        onPressFn={() => {
+          if (route.name === 'Home') {
+            navigate('BottomTabNav', {screen: 'Cart'});
+            nutrTooltipText.length > 30 && dispatch(setNutrTooltipText(''));
+            return;
+          }
+          dispatch(setNutrTooltipText(''));
+        }}
       />
       {isInitialLoading ? (
         <ActivityIndicator />
@@ -172,4 +194,10 @@ const Container = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+`;
+
+const Icon = styled.Image`
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
 `;

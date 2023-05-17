@@ -1,11 +1,10 @@
-// RN, 3rd
-import {useState} from 'react';
+import React, {SetStateAction, useState} from 'react';
 import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 //doobi util, redux, etc
 import {icons} from '../../assets/icons/iconSource';
-import {Row, BtnCTA, Col} from '../../styles/styledConsts';
+import {Row, BtnCTA, Col} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 //doobi Component
 import CategoryContent from './filterContents/CategoryContent';
@@ -14,37 +13,29 @@ import PriceContent from './filterContents/PriceContent';
 import SearchContent from './filterContents/SearchContent';
 import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
-//types
-import {FILTER_MODAL_TYPE} from '../home/types/filterType';
+import NutritionContent2 from './filterContents/NutritionContent2';
+import {IFilterParams} from '../../query/types/product';
 
-const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
-  const {
-    filterIndex,
-    closeModal,
-    setFilterParams,
-    filterParams,
-    setRemainNutrProductData,
-  } = props;
-  // state
+interface Props {
+  filterIndex: number;
+  closeModal: () => void;
+  setFilterParams: React.Dispatch<SetStateAction<IFilterParams>>;
+  filterParams: any;
+}
+
+const FilterModalContent = (props: Props) => {
+  const {filterIndex, closeModal, setFilterParams, filterParams} = props;
   const [clicked, setClicked] = useState(filterIndex);
   const [categoryParam, setCategoryParam] = useState(
     filterParams.categoryParam,
   );
-  const [nutritionParam, setNutritionParam] = useState(filterModalInitialState);
-  const [priceParam, setPriceParam] = useState(filterParams.priceParam);
-  const params = {
-    categoryParam,
-    nutritionParam,
-    priceParam,
-  };
-  const [initializeModalShow, setInitializeModalShow] = useState(false);
-  const [isTotalInitailize, setIsTotalInitailize] = useState<boolean>();
+
   // filter 기본값
   const filterModalInitialState = {
-    calorieParam: filterParams.nutritionParam?.calorieParam,
-    carbParam: filterParams.nutritionParam?.carbParam,
-    proteinParam: filterParams.nutritionParam?.proteinParam,
-    fatParam: filterParams.nutritionParam?.fatParam,
+    calorieParam: filterParams.nutritionParam?.calorieParam || [],
+    carbParam: filterParams.nutritionParam?.carbParam || [],
+    proteinParam: filterParams.nutritionParam?.proteinParam || [],
+    fatParam: filterParams.nutritionParam?.fatParam || [],
   };
   // filter 설정되어있을 경우 기본값 설정
   if (filterParams.nutritionParam) {
@@ -55,7 +46,22 @@ const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
       filterParams.nutritionParam.proteinParam;
     filterModalInitialState.fatParam = filterParams.nutritionParam.fatParam;
   }
-  // filter 초기화 type
+
+  const [nutritionParam, setNutritionParam] = useState<{
+    calorieParam: number[];
+    carbParam: number[];
+    proteinParam: number[];
+    fatParam: number[];
+  }>(filterModalInitialState);
+  const [priceParam, setPriceParam] = useState<number[]>(
+    filterParams.priceParam,
+  );
+  const params = {
+    categoryParam,
+    nutritionParam,
+    priceParam,
+  };
+  const [initializeModalShow, setInitializeModalShow] = useState(false);
   const resetType = [
     {
       text: '카테고리 초기화',
@@ -67,14 +73,19 @@ const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
     {
       text: '영양성분 초기화',
       reset: () => {
-        setNutritionParam('');
+        setNutritionParam({
+          calorieParam: [],
+          carbParam: [],
+          proteinParam: [],
+          fatParam: [],
+        });
         // setFilterParams({...filterParams, nutritionParam: ''});
       },
     },
     {
       text: '가격 초기화',
       reset: () => {
-        setPriceParam('');
+        setPriceParam([]);
         // setFilterParams({...filterParams, priceParam: ''});
       },
     },
@@ -105,10 +116,10 @@ const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
             onPress={() => {
               setClicked(1);
             }}>
-            {params.nutritionParam.calorieParam ||
-            params.nutritionParam.carbParam ||
-            params.nutritionParam.proteinParam ||
-            params.nutritionParam.fatParam ? (
+            {params.nutritionParam.calorieParam.length === 2 ||
+            params.nutritionParam.carbParam.length === 2 ||
+            params.nutritionParam.proteinParam.length === 2 ||
+            params.nutritionParam.fatParam.length === 2 ? (
               <Row>
                 <Text id="1" clicked={clicked}>
                   영양성분
@@ -125,7 +136,7 @@ const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
             onPress={() => {
               setClicked(2);
             }}>
-            {params.priceParam ? (
+            {params.priceParam.length === 2 ? (
               <Row>
                 <Text id="2" clicked={clicked}>
                   가격
@@ -142,26 +153,27 @@ const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
             onPress={() => {
               setClicked(3);
             }}></Button>
-          <Button
-            onPress={() => {
-              setIsTotalInitailize(true);
-              setInitializeModalShow(true);
-            }}>
+          <InitialzieBtn
+            onPress={() => resetType.forEach(item => item.reset())}>
             <Image source={icons.initialize_24} />
-          </Button>
+          </InitialzieBtn>
         </FilterRow>
       </SafeAreaView>
     );
   };
-  //filter button 눌렸을때 보여지는 content
-  const showContent = index => {
+  const showContent = (index: number) => {
     return index === 0 ? (
       <CategoryContent
         setCategoryParam={setCategoryParam}
         categoryParam={categoryParam}
       />
     ) : index === 1 ? (
-      <NutritionContent
+      // <NutritionContent
+      //   setNutritionParam={setNutritionParam}
+      //   nutritionParam={nutritionParam}
+      //   filterParams={filterParams}
+      // />
+      <NutritionContent2
         setNutritionParam={setNutritionParam}
         nutritionParam={nutritionParam}
         filterParams={filterParams}
@@ -181,8 +193,11 @@ const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
 
   return (
     <Col style={{height: '100%'}}>
-      <ScrollView contentContainerStyle={{paddingBottom: 64}}>
-        <FilterHeaderText />
+      <FilterHeaderText />
+      <ScrollView
+        style={{marginTop: 16}}
+        contentContainerStyle={{paddingBottom: 80}}
+        showsVerticalScrollIndicator={false}>
         {/* <ShowContent index={clicked} /> */}
         {/* 이유를 알려줘 */}
         {showContent(clicked)}
@@ -202,13 +217,18 @@ const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
             {resetType[clicked].text}
           </BottomText>
         </BtnCTA>
-        <DAlert
+        {/* <DAlert
           alertShow={initializeModalShow}
           onConfirm={() => {
             if (isTotalInitailize) {
               setCategoryParam('');
               // setFilterParams('');
-              setNutritionParam('');
+              setNutritionParam({
+                calorieParam: [],
+                carbParam: [],
+                proteinParam: [],
+                fatParam: [],
+              });
               setPriceParam('');
               setInitializeModalShow(false);
             } else {
@@ -221,7 +241,7 @@ const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
             <CommonAlertContent text={`적용된 필터가\n초기화 됩니다`} />
           )}
           confirmLabel="초기화"
-        />
+        /> */}
         <BtnCTA
           style={{
             flex: 1,
@@ -230,7 +250,6 @@ const FilterModalContent = (props: FILTER_MODAL_TYPE) => {
           btnStyle={'activated'}
           onPress={() => {
             setFilterParams(params);
-            setRemainNutrProductData(undefined);
             closeModal(false);
           }}>
           <BottomText>확인</BottomText>
@@ -244,7 +263,6 @@ export default FilterModalContent;
 
 const Text = styled.Text`
   font-size: 18px;
-  margin-right: 26px;
   color: ${({id, clicked}) =>
     id === String(clicked) ? colors.textMain : colors.textSub};
   font-weight: ${({id, clicked}) =>
@@ -256,6 +274,12 @@ const BottomText = styled.Text`
   color: ${colors.white};
 `;
 const Button = styled.TouchableOpacity``;
+
+const InitialzieBtn = styled.TouchableOpacity`
+  position: absolute;
+  right: 0px;
+`;
+
 const Image = styled.Image`
   width: 24px;
   height: 24px;
@@ -263,6 +287,7 @@ const Image = styled.Image`
 const FilterRow = styled(Row)`
   justify-content: center;
   margin-top: 24px;
+  column-gap: 20px;
 `;
 const BottomRow = styled.View`
   position: absolute;
@@ -278,5 +303,5 @@ const Badge = styled.View`
   background-color: ${colors.main};
   position: absolute;
   top: 0px;
-  right: 20px;
+  right: -6px;
 `;

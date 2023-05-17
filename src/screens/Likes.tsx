@@ -15,16 +15,18 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../styles/styledConsts';
+} from '../styles/StyledConsts';
 import FoodList from '../components/home/FoodList';
 import NutrientsProgress from '../components/common/nutrient/NutrientsProgress';
 
 // react-query
 import {IProductData} from '../query/types/product';
+import {useListDietDetail} from '../query/queries/diet';
 
 const Likes = () => {
   // redux
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
+  const {data: dietDetailData} = useListDietDetail(currentDietNo);
 
   // flatList render fn
   //  const renderFoodList = useCallback(
@@ -46,7 +48,7 @@ const Likes = () => {
   // );
   return (
     <Container>
-      <NutrientsProgress currentDietNo={currentDietNo} />
+      <NutrientsProgress dietDetailData={dietDetailData} />
       <Row style={{marginTop: 32}}>
         <ListTitle>찜한 상품</ListTitle>
         <NoOfFoods>{'XX 개'}</NoOfFoods>

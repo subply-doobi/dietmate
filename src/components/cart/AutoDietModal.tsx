@@ -1,5 +1,5 @@
 // react, RN, 3rd
-import React, {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {Modal, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -7,8 +7,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
+import {useAsync} from '../../util/cart/CartCustomHooks';
+import {setCurrentDiet} from '../../stores/slices/cartSlice';
+import {makeAutoMenu} from '../../util/cart/autoMenu';
 // doobi Component
-import DSlider from '../common/slider/DSlider';
 import {
   BtnCTA,
   BtnText,
@@ -17,17 +19,14 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
+import DSlider from '../common/slider/DSlider';
 // react-query
 import {useListCategory} from '../../query/queries/category';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {IDietDetailData} from '../../query/types/diet';
-import {useAsync} from '../../util/cart/CartCustomHooks';
 import {IProductData} from '../../query/types/product';
-import {setCurrentDiet} from '../../stores/slices/cartSlice';
 import {useCreateDietDetail} from '../../query/queries/diet';
-// import {makeAutoMenu} from '../../util/autoDietTest';
-import {makeAutoMenu} from '../../util/cart/autoMenu';
 
 interface IAutoDietModal {
   modalVisible: boolean;
@@ -63,7 +62,7 @@ const AutoDietModal = ({
       setSelectedCategory(
         Array.from({length: categoryData?.length}, () => true),
       );
-  }, [categoryData?.length]);
+  }, [categoryData?.length, categoryData]);
 
   // etc
   const NoOfSelectedCategory = selectedCategory.reduce(

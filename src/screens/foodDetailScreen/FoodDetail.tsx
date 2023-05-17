@@ -22,7 +22,7 @@ import {
   TextSub,
   StickyFooter,
   Dot,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 import {IProductData} from '../../query/types/product';
 
@@ -193,7 +193,9 @@ const FoodDetail = () => {
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <Container>
         <InnerContainer>
-          {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
+          {currentDietNo && (
+            <NutrientsProgress dietDetailData={dietDetailData} />
+          )}
         </InnerContainer>
         <ScrollView
           style={{marginBottom: 20, flex: 1, zIndex: -1}}
