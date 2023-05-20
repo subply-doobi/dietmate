@@ -37,14 +37,16 @@ function App(): JSX.Element {
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <NavigationContainer ref={navigationRef}>
-            <RootStackNav />
-            <ErrorAlert />
-          </NavigationContainer>
-        </Provider>
-      </QueryClientProvider>
+      <Sentry.TouchEventBoundary>
+        <QueryClientProvider client={queryClient}>
+          <Provider store={store}>
+            <NavigationContainer ref={navigationRef}>
+              <RootStackNav />
+              <ErrorAlert />
+            </NavigationContainer>
+          </Provider>
+        </QueryClientProvider>
+      </Sentry.TouchEventBoundary>
     </>
   );
 }

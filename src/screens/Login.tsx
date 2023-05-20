@@ -38,7 +38,6 @@ const Login = () => {
     await kakaoLogin();
     const refetchedData = await refetch();
     refetchedData && navigateByBaseLine(refetchedData, navigation);
-    navigation.navigate('BottomTabNav', {screen: 'Home'});
   };
 
   // etc

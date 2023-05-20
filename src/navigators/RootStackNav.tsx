@@ -22,6 +22,7 @@ import {useDispatch} from 'react-redux';
 import {setNutrTooltipText} from '../stores/slices/cartSlice';
 import Account from '../screens/Account';
 import KakaoPay from '../components/payment/KakaoPay';
+
 const Stack = createNativeStackNavigator();
 
 const RootStackNav = () => {
