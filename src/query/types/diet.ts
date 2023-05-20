@@ -21,6 +21,7 @@ export interface IDietDetailProductData extends IProductData {
 }
 
 export type IDietDetailData = Array<IDietDetailProductData>;
+export type IDietDetailAllData = IDietDetailData;
 
 export interface IDietDetailEmptyYnData {
   emptyYn: 'N' | 'Y';

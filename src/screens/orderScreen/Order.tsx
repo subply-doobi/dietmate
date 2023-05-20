@@ -3,8 +3,8 @@ import {TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
 import styled from 'styled-components/native';
 import Accordion from 'react-native-collapsible/Accordion';
 import {useForm, useWatch} from 'react-hook-form';
-import {useSelector} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
+import {useSelector, useDispatch} from 'react-redux';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
@@ -19,37 +19,77 @@ import {
 } from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 import {SCREENWIDTH} from '../../constants/constants';
+import {setOrderer, setReceiver} from '../../stores/slices/orderSlice';
+import {commaToNum} from '../../util/sumUp';
+import {
+  ICustomer,
+  IFormData,
+  IDoobiPaymentData,
+  IPaymentProduct,
+} from './types/paymentInfo';
 
 import FoodToOrder from '../../components/order/FoodToOrder';
 import Orderer from '../../components/order/Orderer';
 import Address from '../../components/order/Address';
 import PaymentMethod from '../../components/order/PaymentMethod';
 import PaymentWebView from '../../components/order/PaymentWebView';
+import KakaoPay from '../../components/payment/KakaoPay';
 
 import {useKakaoPayReady} from '../../query/queries/order';
+import {sumUpDietTotal} from '../../util/sumUp';
 
 const Order = () => {
-  // react-query
-  const {
-    isLoading: isKakaoPayLoading,
-    isError: isKakaoPayError,
-    error: KakaoPayError,
-    paymentUrl,
-    pay,
-  } = useKakaoPayReady();
+  //navigation
+  const {navigate} = useNavigation();
 
-  // state
-  const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
-
+  //cart에 있는 제품들을 주문하기 위해 paymentProduct로 변환
+  //modifiedDietTotal을 서버에 저장
+  const getPaymentProduct = (e: any) => {
+    const products = e.map((e: any) => {
+      return {
+        categoryNm: e.categoryNm,
+        categoryCd: e.categoryCd,
+        subCategoryNm: e.subCategoryNm,
+        subCategoryCd: e.subCategoryCd,
+        dietNo: e.dietNo,
+        dietSeq: e.dietSeq,
+        price: e.price,
+        productNm: e.productNm,
+        productNo: e.productNo,
+        qty: e.qty,
+      };
+    });
+    return products;
+  };
   // redux
   const {orderInfo, selectedAddressId, orderSummary} = useSelector(
     (state: RootState) => state.order,
   );
+  const {foodToOrder} = orderInfo;
+  const {priceTotal, menuNum, productNum} = sumUpDietTotal(
+    orderInfo.foodToOrder,
+  );
 
-  // cart information -> 장바구니에서 route에 담아 보내줄 것.
-  // 근데 그냥 장바구니식품 불러와서, 수량은 장바구니 qty쓰면 되는 거 아닌가...?!
-  // TBD | 장바구니 담긴 식품 판매자별로 정리 및 식품가격 배송비 각각 변수에
-  // useKakaoPayReady
+  // 주문자 정보가 orderInfo에 저장되어있음
+
+  const dispatch = useDispatch();
+
+  let modifiedDietTotal = [];
+  for (let i = 0; i < foodToOrder.length; i++) {
+    modifiedDietTotal.push(getPaymentProduct(foodToOrder[i]));
+  }
+
+  let initialCustomerData: ICustomer = {
+    address: {base: '', addressDetail: '', postalCode: ''},
+    orderer: '', //주문자
+    ordererContact: '', //주문자 연락처
+    receiver: '', //받는분
+    receiverContact: '', //받는분 연락처
+    billingInfo: '',
+    email: '',
+  };
+  // state
+  const [customerData, setCustomerData] = useState(initialCustomerData);
 
   // etc
   let totalAmount = 2200;
@@ -60,14 +100,7 @@ const Order = () => {
   // }, 0);
 
   // react-hook-form
-  interface IFormData {
-    orderer: string;
-    ordererContact: string;
-    addressDetail: string;
-    receiver: string;
-    receiverContact: string;
-    paymentMethod: string;
-  }
+
   const {
     control,
     handleSubmit,
@@ -82,7 +115,7 @@ const Order = () => {
       receiverContact: orderInfo.receiverContact
         ? orderInfo.receiverContact
         : '',
-      paymentMethod: 'kakao',
+      paymentMethod: '카카오페이',
     },
   });
 
@@ -101,8 +134,9 @@ const Order = () => {
       title: '주문식품',
       subTitle: (
         <Row style={{}}>
-          <HeaderSubTitle style={{flex: 1}}>테스트테스트</HeaderSubTitle>
-          <HeaderSubTitle>외</HeaderSubTitle>
+          <HeaderSubTitle style={{flex: 1}}>
+            총 끼니 {menuNum}개 ({productNum}개 식품)
+          </HeaderSubTitle>
         </Row>
       ),
       content: <FoodToOrder />,
@@ -146,10 +180,20 @@ const Order = () => {
     },
     {
       title: '결제금액',
-      subTitle: <HeaderSubTitle>{totalAmount}원</HeaderSubTitle>,
+      subTitle:
+        priceTotal > 30000 ? (
+          <HeaderSubTitle>
+            식품가격: {commaToNum(priceTotal)}원 | 배송비: 무료
+          </HeaderSubTitle>
+        ) : (
+          <HeaderSubTitle>
+            식품가격: {commaToNum(priceTotal)}원 | 배송비: 3,000원
+          </HeaderSubTitle>
+        ),
       content: <></>,
     },
   ];
+
   const renderHeader = (section: any, index: number, isActive: boolean) => {
     return (
       <AccordionHeader>
@@ -172,6 +216,29 @@ const Order = () => {
   };
   const updateSections = (actives: Array<number>) => {
     setActiveSections(actives);
+    // 서버에 주문자 정보 저장 API
+    dispatch(
+      setOrderer({orderer: ordererValue, ordererContact: ordererContactValue}),
+    );
+    dispatch(
+      setReceiver({
+        receiver: receiverValue,
+        receiverContact: receiverContactValue,
+      }),
+    );
+    setCustomerData({
+      address: {
+        base: orderInfo.address[0]?.base,
+        addressDetail: orderInfo.address[0]?.detail,
+        postalCode: orderInfo.address[0]?.postalCode,
+      },
+      orderer: ordererValue,
+      ordererContact: ordererContactValue,
+      receiver: receiverValue,
+      receiverContact: receiverContactValue,
+      billingInfo: '',
+      email: '',
+    });
   };
 
   const handlePressPaymentBtn = () => {
@@ -183,7 +250,6 @@ const Order = () => {
   // useEffect(() => {
   //   handleSubmit(() => {})();
   // }, []);
-
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView
@@ -209,7 +275,13 @@ const Order = () => {
             ? 'activated'
             : 'inactivated'
         }
-        onPress={handlePressPaymentBtn}>
+        onPress={() => {
+          navigate('KakaoPayNav', {
+            priceTotal,
+            customerData,
+            modifiedDietTotal,
+          });
+        }}>
         <BtnText>
           {Object.keys(errors).length === 0 &&
           orderInfo.address[selectedAddressId]
@@ -217,11 +289,11 @@ const Order = () => {
             : '정보를 모두 입력해주세요'}
         </BtnText>
       </BtnBottomCTA>
-      <PaymentWebView
+      {/* <PaymentWebView
         paymentUrl={paymentUrl}
         isPaymentModalVisible={isPaymentModalVisible}
         setIsPaymentModalVisible={setIsPaymentModalVisible}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

@@ -28,7 +28,8 @@ interface IErrorActionByCode {
 // TBD | 일단 다 로그인 창으로 이동시키고 나중에 분리
 export const errorActionByCode: IErrorActionByCode = {
   500: (navigate: Function) => {
-    navigate('Login');
+    //reset();
+    // navigate('Login');
     // invalidateAllQueries();
   },
   405: (navigate: Function) => {
@@ -47,8 +48,9 @@ export const errorActionByCode: IErrorActionByCode = {
 
 export const useHandleError = () => {
   const dispatch = useDispatch();
-  const handleError = useCallback((e: any) => {
-    const errorCode = e.response?.status;
+  const handleError = useCallback((error: any) => {
+    const errorCode = error;
+    console.log('handleError.tsx:', errorCode);
     dispatch(openCommonAlert(errorCode));
   }, []);
 

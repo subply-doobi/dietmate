@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://13.125.135.233:8080';
+export const BASE_URL = 'http://54.180.91.42:8080';
 
 export const GET_TOKEN = `${BASE_URL}/api/every/token/get-token`; //토큰 조회
 export const GET_AUTH = `${BASE_URL}/api/member/auth/get-auth`; //인증 여부 조회
@@ -27,6 +27,7 @@ export const LIST_PRODUCT = `${BASE_URL}/api/member/product/list-product`;
 export const CREATE_PRODUCT_AUTO = `${BASE_URL}/api/member/product/create-product-auto`;
 export const CREATE_PRODUCT_MARK = `${BASE_URL}/api/member/product/create-product-mark`;
 export const DELETE_PRODUCT_MARK = `${BASE_URL}/api/member/product/delete-product-mark`;
+export const LIST_PRODUCT_MARK = `${BASE_URL}/api/member/product/list-product-mark`;
 export const FILTER = `${BASE_URL}/api/member/product/get-product-filter-range`;
 
 // api-member-code-controller

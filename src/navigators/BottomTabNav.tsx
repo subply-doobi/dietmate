@@ -61,7 +61,6 @@ const BottomTabNav = () => {
               <BottomTabIcon source={icons.like_36} />
             ),
           tabBarShowLabel: false,
-
           headerShown: true,
           headerTitle: '찜한 상품',
           headerTitleAlign: 'center',
@@ -70,7 +69,9 @@ const BottomTabNav = () => {
             fontWeight: 'bold',
             color: colors.textMain,
           },
-          headerLeft: () => <BackArrow goBackFn={goBack} />,
+          headerLeft: () => (
+            <BackArrow style={{marginLeft: 16}} goBackFn={goBack} />
+          ),
         }}
       />
       <Tab.Screen

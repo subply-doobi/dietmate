@@ -34,27 +34,19 @@ interface INavigateByBtnId {
 
 // TBD | order -> 원래는 OrderHistory로 바꿔야함! 지금은 Order페이지 테스트
 const navigateByBtnId: INavigateByBtnId = {
-  History: (btnId, navigate) => navigate('HistoryNav', {screen: btnId}),
   Likes: (btnId, navigate) => navigate('BottomTabNav', {screen: btnId}),
-  Order: (btnId, navigate) => navigate('OrderNav', {screen: btnId}),
   PaymentHistory: (btnId, navigate) =>
     navigate('PaymentHistoryNav', {screen: btnId}),
+  Account: (btnId, navigate) => navigate(btnId),
 };
 
 const Mypage = () => {
   // navigation
   const {navigate} = useNavigation();
 
-  // redux
-  const {userTarget, userInfo} = useSelector(
-    (state: RootState) => state.userInfo,
-  );
-
   // react-query
   const {data: baseLineData} = useGetBaseLine();
   const updateMutation = useUpdateBaseLine();
-
-  // console.log('mypage/data:', data);
 
   // FlatList Data
   type INutrTargetData = Array<{
@@ -245,7 +237,7 @@ const Mypage = () => {
         <ProfileContainer>
           <ProfileTextContainer>
             <NickName>
-              {baseLineData?.userId} <Text style={{fontWeight: '100'}}>님</Text>
+              {baseLineData?.nickNm} <Text style={{fontWeight: '100'}}>님</Text>
             </NickName>
             <Hello>두비가 즐거운 식단실천을 응원합니다</Hello>
           </ProfileTextContainer>

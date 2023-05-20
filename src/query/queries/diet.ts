@@ -3,7 +3,10 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '../../stores/store';
 import {queryClient} from '../store';
-import {setCurrentDiet} from '../../stores/slices/cartSlice';
+import {
+  setCurrentDiet,
+  setMenuActiveSection,
+} from '../../stores/slices/cartSlice';
 import {useHandleError} from '../../util/handleError';
 import {
   DIET,
@@ -66,6 +69,9 @@ export const useCreateDiet = (options?: IMutationOptions) => {
       // 현재 구성중인 끼니의 dietNo, dietIdx를 redux에 저장 => 장바구니와 동기화
       dispatch(setCurrentDiet(data.dietNo));
 
+      // 장바구니 accordion 기존 끼니는 닫아주기
+      dispatch(setMenuActiveSection([]));
+
       // invalidation
       queryClient.invalidateQueries({queryKey: [DIET]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
@@ -111,7 +117,7 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
         dietNo,
       ]);
       const newDietDetailData: IDietDetailData = prevDietDetailData
-        ? [...prevDietDetailData, {...food, qty: food.minQty, dietNo}]
+        ? [...prevDietDetailData, {...food, qty: 1, dietNo}]
         : [food];
 
       const newProductData: IProductData[] | undefined =
@@ -209,13 +215,12 @@ export const useGetDietDetailEmptyYn = (options?: IQueryOptions) => {
 };
 
 export const useListDietTotal = (
-  dietData: IDietData | undefined,
+  dietData: IDietData,
   options?: IQueryOptions,
 ) => {
-  if (!dietData) return;
   const enabled = options?.enabled ?? true;
   return useQueries({
-    queries: dietData?.map(dietData => {
+    queries: dietData.map(dietData => {
       return {
         queryKey: [DIET_DETAIL, dietData.dietNo],
         queryFn: () =>
@@ -229,20 +234,10 @@ export const useListDietTotal = (
 // POST //
 export const useUpdateDietDetail = () => {
   const mutation = useMutation({
-    mutationFn: ({
-      dietNo,
-      productNo,
-      qty,
-    }: {
-      dietNo: string;
-      productNo: string;
-      qty: string;
-    }) =>
-      mutationFn(
-        `${UPDATE_DIET_DETAIL}?dietNo=${dietNo}&productNo=${productNo}&qty=${qty}`,
-        'post',
-      ),
+    mutationFn: ({dietNo, qty}: {dietNo: string; qty: string}) =>
+      mutationFn(`${UPDATE_DIET_DETAIL}?dietNo=${dietNo}&qty=${qty}`, 'post'),
     onSuccess: (data, {dietNo}) => {
+      console.log('updateDietDetail success: ', data);
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL, dietNo]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
     },

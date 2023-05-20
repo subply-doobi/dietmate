@@ -32,6 +32,7 @@ import {
 } from '../../query/queries/diet';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {NUTR_ERROR_RANGE} from '../../constants/constants';
+import {useDeleteProductMark} from '../../query/queries/product';
 
 interface IFoodList {
   item: IProductData;
@@ -50,6 +51,7 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
   const {data: baseLineData} = useGetBaseLine();
   const addMutation = useCreateDietDetail();
   const deleteMutation = useDeleteDietDetail();
+  const deleteProductMarkMutation = useDeleteProductMark();
 
   // state
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
@@ -85,7 +87,7 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
     };
   }, [dietDetailData, baseLineData]);
 
-  // onDelete | onAdd fn
+  // onDelete | onAdd | onLikeDelete fn
   const onDelete = () => {
     deleteMutation.mutate({
       dietNo: currentDietNo,
@@ -98,6 +100,10 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
   const onAdd = () => {
     addMutation.mutate({dietNo: currentDietNo, food: item});
     aniPValue.setValue(addedP); // TBD | onSuccess 이후에 실행되어야함
+  };
+
+  const onLikeDelete = () => {
+    deleteProductMarkMutation.mutate(item.productNo);
   };
 
   // animation
@@ -219,8 +225,9 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
           <Row style={{justifyContent: 'space-between'}}>
             <Price>{commaToNum(item?.price)}원</Price>
             {screen === 'LikeScreen' && (
-              <DeleteLikeFoodBtn onPress={() => console.log('좋아요취소')}>
-                <DeleteLikeFoodBtnText>♡ 취소</DeleteLikeFoodBtnText>
+              <DeleteLikeFoodBtn onPress={onLikeDelete}>
+                <LikeImg source={icons.likeSmall_20} />
+                <DeleteLikeFoodBtnText>취소</DeleteLikeFoodBtnText>
               </DeleteLikeFoodBtn>
             )}
           </Row>
@@ -327,11 +334,12 @@ const DeleteLikeFoodBtn = styled.TouchableOpacity`
 `;
 
 const LikeImg = styled.Image`
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
 `;
 
 const DeleteLikeFoodBtnText = styled(TextSub)`
+  margin-left: 2px;
   font-size: 14px;
 `;
 

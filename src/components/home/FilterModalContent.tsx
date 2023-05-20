@@ -30,6 +30,7 @@ const FilterModalContent = (props: Props) => {
     filterParams.categoryParam,
   );
 
+  const [isTotalInitailize, setIsTotalInitailize] = useState<boolean>();
   // filter 기본값
   const filterModalInitialState = {
     calorieParam: filterParams.nutritionParam?.calorieParam || [],

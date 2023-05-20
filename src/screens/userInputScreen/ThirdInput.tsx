@@ -173,10 +173,21 @@ const ThirdInput = () => {
     if (dietData.length === 0) {
       createDietMutation.mutate();
       createMutation.mutate(requestBody);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
+      });
     } else {
       updateMutation.mutate(requestBody);
+      navigation.reset({
+        index: 1,
+        routes: [
+          // {name: 'BottomTabNav', params: {screen: 'Home'}},
+          {name: 'BottomTabNav', params: {screen: 'Mypage'}},
+        ],
+      });
     }
-    navigate('BottomTabNav', {screen: 'Home'});
+    // navigate('BottomTabNav', {screen: 'Home'});
   };
   // TBD | 스크롤뷰 ref를 Manual에 넘겨서 단백질입력 활성화시 스크롤 내려주기
   return (

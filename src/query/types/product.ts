@@ -52,6 +52,8 @@ export interface IProductData {
   servingSize: string;
   shippingPrice: string;
   sodium: string;
+  subAttId: string;
+  subAttUrl: string;
   subCategoryCd: string;
   subCategoryNm: string;
   sugar: string;

@@ -10,6 +10,10 @@ export const IS_IOS = Platform.OS === 'ios';
 export const FOOD_LIST_ITEM_HEIGHT = 152;
 export const HOME_FILTER_HEADER_HEIGHT = 120;
 
+// service constants
+export const SHIPPING_PRICE = 4000;
+export const FREE_SHIPPING_PRICE = 30000;
+
 // Doobi server category etc.
 export const DIET_PURPOSE_CD = {
   1: 'SP002001',
@@ -46,10 +50,10 @@ export const nutrRatioCategory = [
 ];
 // consts for screens
 export const myPageBtns = [
-  {title: '몸무게 변경', btnId: 'ChangeWeight'},
-  // {title: '내 기록', btnId: 'History'},
-  {title: '찜한 식품', btnId: 'Likes'},
+  {title: '몸무게변경', btnId: 'ChangeWeight'},
+  {title: '찜한식품', btnId: 'Likes'},
   {title: '주문내역', btnId: 'PaymentHistory'},
+  {title: '계정설정', btnId: 'Account'},
 ];
 
 export const categoryCode: {[key: string]: string} = {
