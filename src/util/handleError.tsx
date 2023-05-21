@@ -49,6 +49,7 @@ export const useHandleError = () => {
   const dispatch = useDispatch();
   const handleError = useCallback((error: any) => {
     const errorCode = error?.response?.status;
+    console.log('handleError.tsx:', error?.response);
     console.log('handleError.tsx:', errorCode);
     dispatch(openCommonAlert(errorCode));
   }, []);

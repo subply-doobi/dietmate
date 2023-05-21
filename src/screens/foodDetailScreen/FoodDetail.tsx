@@ -155,7 +155,7 @@ const FoodDetail = () => {
     if (!productData) return;
     isIncludedInLike
       ? deleteProductMarkMutation.mutate(productData.productNo)
-      : createProductMarkMutation.mutate(productData.productNo);
+      : createProductMarkMutation.mutate(123);
   };
 
   const handlePressAddCartBtn = () => {

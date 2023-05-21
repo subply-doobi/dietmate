@@ -10,6 +10,7 @@ import {IBaseLine} from '../query/types/baseLine';
 import {useGetBaseLine} from '../query/queries/baseLine';
 //doobi Component
 import {BtnCTA, BtnText} from '../styles/StyledConsts';
+import {firebase} from '@react-native-firebase/crashlytics';
 
 const navigateByBaseLine = (data: IBaseLine | any, navigation) => {
   // check user 회원가입 여부
