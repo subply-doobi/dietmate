@@ -10,6 +10,8 @@ import {IBaseLine} from '../query/types/baseLine';
 import {useGetBaseLine} from '../query/queries/baseLine';
 //doobi Component
 import {BtnCTA, BtnText} from '../styles/StyledConsts';
+//sentry
+import * as Sentry from '@sentry/react-native';
 
 const navigateByBaseLine = (data: IBaseLine | any, navigation) => {
   // check user 회원가입 여부
@@ -40,7 +42,12 @@ const Login = () => {
     refetchedData && navigateByBaseLine(refetchedData, navigation);
     navigation.navigate('BottomTabNav', {screen: 'Home'});
   };
-
+  // capture errors
+  try {
+    signInWithKakao();
+  } catch (err) {
+    Sentry.captureException(err);
+  }
   // etc
   useEffect(() => {
     const useCheckUser = async () => {

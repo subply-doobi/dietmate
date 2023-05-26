@@ -34,7 +34,7 @@ import {
   LIST_DIET,
   LIST_DIET_DETAIL,
   LIST_DIET_DETAIL_ALL,
-  LIST_PRODUCT,
+  UPDATE_DIET,
   UPDATE_DIET_DETAIL,
 } from './urls';
 import {findDietSeq} from '../../util/findDietSeq';
@@ -245,6 +245,16 @@ export const useUpdateDietDetail = () => {
   return mutation;
 };
 
+export const useUpdateDiet = (options?: IMutationOptions) => {
+  const mutation = useMutation({
+    mutationFn: ({statusCd}: {statusCd: string}) =>
+      mutationFn(`${UPDATE_DIET}?statusCd=${statusCd}`, 'post'),
+    onSuccess: data => {
+      console.log('updateDiet success: ', data);
+    },
+  });
+  return mutation;
+};
 // DELETE //
 export const useDeleteDiet = () => {
   const {currentDietNo} = useSelector((state: RootState) => state.cart);

@@ -26,8 +26,9 @@ import NutrChangeAlert from '../components/myPage/NutrientChangeAlert';
 import WeightChangeAlert from '../components/myPage/WeightChangeAlert';
 
 import {useGetBaseLine, useUpdateBaseLine} from '../query/queries/baseLine';
+import {useCreateOrder} from '../query/queries/order';
 import {convertNutr, convertNutrByWeight} from '../util/targetCalculation';
-
+import {useListDiet, useUpdateDiet} from '../query/queries/diet';
 interface INavigateByBtnId {
   [key: string]: (btnId: string, navigate: Function) => void;
 }
@@ -47,7 +48,16 @@ const Mypage = () => {
   // react-query
   const {data: baseLineData} = useGetBaseLine();
   const updateMutation = useUpdateBaseLine();
+  const updateDietMutation = useUpdateDiet();
+  const createOrderMutation = useCreateOrder();
+  const testData = useListDiet();
 
+  // console.log(
+  //   'updateDiet',
+  // updateDietMutation.mutate({
+  //   statusCd: 'SP006003',
+  // }),
+  // );
   // FlatList Data
   type INutrTargetData = Array<{
     nutrient: string;
@@ -284,7 +294,15 @@ const Mypage = () => {
                   setAlertType('weight');
                   setAlertShow(true);
                 } else {
-                  navigateByBtnId[item.btnId](item.btnId, navigate);
+                  // navigateByBtnId[item.btnId](item.btnId, navigate);
+                  createOrderMutation.mutate({
+                    statusCd: 'string',
+                    orderNo: 'string',
+                    companyCd: 'string',
+                    userId: 'string',
+                    shippingPrice: 'string',
+                  });
+                  console.log(testData);
                 }
               }}>
               <Row style={{justifyContent: 'space-between'}}>

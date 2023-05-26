@@ -17,7 +17,7 @@ import {
 } from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 import {NavigationProps} from '../../constants/constants';
-
+import useUpdateDiet from '../../query/queries/diet';
 interface IOrder {
   id: string;
   date: string;
@@ -102,11 +102,9 @@ const testData: Array<IOrder> = [
 ];
 
 const PaymentHistory = ({navigation, route}: NavigationProps) => {
-  const {pgToken, tid, foodPrice} = useSelector(
-    (state: RootState) => state.order.orderSummary,
-  );
-
   type IMenu = {id: string; foods: number[]; menuCalories: string};
+  // const orderInfo = useUpdateDiet();
+  // console.log('paymentHistory', orderInfo);
 
   const renderMenuList = ({item}: {item: IMenu}) => {
     return (

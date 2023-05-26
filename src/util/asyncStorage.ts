@@ -23,3 +23,39 @@ export const removeToken = async () => {
     console.log('wipeDoobiToken: ', e);
   }
 };
+
+export const checkTooltipShow = async (value: string) => {
+  try {
+    const notShowAgain = await AsyncStorage.getItem('NOT_SHOW_AGAIN');
+    if (notShowAgain === null) {
+      return true;
+    } else {
+      const notShowAgainList = JSON.parse(notShowAgain);
+      if (notShowAgainList.includes(value)) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateNotShowAgain = async (value: string) => {
+  try {
+    const notShowAgain = await AsyncStorage.getItem('NOT_SHOW_AGAIN');
+    if (notShowAgain === null) {
+      await AsyncStorage.setItem('NOT_SHOW_AGAIN', JSON.stringify([value]));
+    } else {
+      const notShowAgainList = JSON.parse(notShowAgain);
+      notShowAgainList.push(value);
+      await AsyncStorage.setItem(
+        'NOT_SHOW_AGAIN',
+        JSON.stringify(notShowAgainList),
+      );
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};

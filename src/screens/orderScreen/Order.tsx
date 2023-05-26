@@ -5,6 +5,7 @@ import Accordion from 'react-native-collapsible/Accordion';
 import {useForm, useWatch} from 'react-hook-form';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';

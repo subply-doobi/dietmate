@@ -25,13 +25,18 @@ export const sumUpNutrients = (dietDetail: IDietDetailData | undefined) => {
   return {cal, carb, protein, fat};
 };
 
-export const sumUpPrice = (dietDetail: IDietDetailData | undefined) => {
+/** 수량 상관없는 가격합계만 */
+export const sumUpPrice = (
+  dietDetail: IDietDetailData | undefined,
+  qtyConsidered?: boolean | undefined,
+) => {
   if (!dietDetail) {
     return 0;
   }
   let price = 0;
   for (let i = 0; i < dietDetail.length; i++) {
-    price += parseInt(dietDetail[i].price);
+    let qty = qtyConsidered ? parseInt(dietDetail[i].qty) : 1;
+    price += parseInt(dietDetail[i].price) * qty;
   }
   return price;
 };

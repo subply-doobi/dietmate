@@ -8,6 +8,7 @@ export const queryClient = new QueryClient({
       // cacheTime: 0,
       refetchOnMount: true,
       refetchOnWindowFocus: false,
+      suspense: true,
     },
   },
 });

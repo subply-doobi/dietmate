@@ -9,6 +9,7 @@ import {useHandleError} from '../util/handleError';
 import InputNav from './InputNav';
 import BottomTabNav from './BottomTabNav';
 import OrderNav from './OrderNav';
+import OrderHeaderTab from './OrderNav';
 import PaymentHistoryNav from './PaymentHistoryNav';
 import HistoryNav from './HistoryNav';
 
@@ -86,7 +87,32 @@ const RootStackNav = () => {
           },
         }}
       />
-      <Stack.Screen name="OrderNav" component={OrderNav} />
+      <Stack.Screen
+        name="OrderNav"
+        component={OrderHeaderTab}
+        options={{
+          headerShown: true,
+          headerTitle: '주문/결제',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: colors.textMain,
+          },
+          headerShadowVisible: false,
+          headerLeft: () => <BackArrow goBackFn={goBack} />,
+          headerRight: () => {
+            return (
+              <Pressable onPress={() => console.log('툴팁설명?')}>
+                <Image
+                  source={icons.question_24}
+                  style={{width: 24, height: 24}}
+                />
+              </Pressable>
+            );
+          },
+        }}
+      />
       <Stack.Screen name="KakaoPayNav" component={KakaoPay} />
       <Stack.Screen name="HistoryNav" component={HistoryNav} />
       <Stack.Screen name="PaymentHistoryNav" component={PaymentHistoryNav} />

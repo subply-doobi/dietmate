@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://13.125.206.144:8080';
+export const BASE_URL = 'http://3.36.62.63:8080';
 
 export const GET_TOKEN = `${BASE_URL}/api/every/token/get-token`; //토큰 조회
 export const GET_AUTH = `${BASE_URL}/api/member/auth/get-auth`; //인증 여부 조회
@@ -14,6 +14,7 @@ export const UPDATE_BASE_LINE = `${BASE_URL}/api/member/baseline/update-base-lin
 export const CREATE_DIET = `${BASE_URL}/api/member/diet/create-diet`;
 export const CREATE_DIET_DETAIL = `${BASE_URL}/api/member/diet/create-diet-detail`;
 export const UPDATE_DIET_DETAIL = `${BASE_URL}/api/member/diet/update-diet-detail`;
+export const UPDATE_DIET = `${BASE_URL}/api/member/diet/update-diet`; //orderTable 생성
 export const LIST_DIET = `${BASE_URL}/api/member/diet/list-diet`;
 export const LIST_DIET_DETAIL = `${BASE_URL}/api/member/diet/list-diet-detail`;
 export const LIST_DIET_DETAIL_ALL = `${BASE_URL}/api/member/diet/list-diet-detail-all`;
@@ -36,3 +37,6 @@ export const COMMON_CODE = `${BASE_URL}/api/member/code/list-code`;
 // category-controller
 export const LIST_CATEGORY = `${BASE_URL}/api/member/category/list-category/CG`;
 export const COUNT_CATEGORY = `${BASE_URL}/api/member/category/list-category-product-cnt/CG`;
+
+// api-member-order-control
+export const CREATE_ORDER = `${BASE_URL}/api/member/order/create-order`;

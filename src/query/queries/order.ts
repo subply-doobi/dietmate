@@ -6,6 +6,8 @@ import {RootState} from '../../stores/store';
 import {setOrderSummary} from '../../stores/slices/orderSlice';
 import {kakaoAppAdminKey} from '../../constants/constants';
 //기존 testKakaoPay
+import {mutationFn, queryFn} from './requestFn';
+import {CREATE_ORDER} from './urls';
 
 export const useKakaoPayReady = () => {
   const dispatch = useDispatch();
@@ -97,4 +99,14 @@ export const useKakaopayApprove = () => {
     getPaymentResult: mutation.mutate,
     data: mutation.data,
   };
+};
+
+export const useCreateOrder = () => {
+  const mutation = useMutation({
+    mutationFn: data => mutationFn(`${CREATE_ORDER}`, 'put', data),
+    onSuccess: data => {
+      console.log('useCreateOrder: onSuccess: ', data);
+    },
+  });
+  return mutation;
 };

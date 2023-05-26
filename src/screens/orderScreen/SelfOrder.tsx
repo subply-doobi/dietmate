@@ -18,25 +18,27 @@ import {
   useListDietDetail,
   useListDietDetailAll,
 } from '../../query/queries/diet';
+import {ScrollView} from 'react-native-gesture-handler';
 
-const FoodToOrder = () => {
+const SelfOrder = () => {
   const {data: listDietDetailAll, isLoading: isListDietDetailLoading} =
     useListDietDetailAll();
   const {data: listDiet} = useListDiet();
-
   if (isListDietDetailLoading) {
     return <ActivityIndicator />;
   }
   return (
-    <AccordionContentContainer>
-      {listDiet?.map((diet, index) => {
-        return (
-          <Col key={`${diet.dietNo}-${index}`}>
-            <FoodsInOneDiet dietNo={diet.dietNo} />
-          </Col>
-        );
-      })}
-    </AccordionContentContainer>
+    <ScrollView>
+      <AccordionContentContainer>
+        {listDiet?.map((diet, index) => {
+          return (
+            <Col key={`${diet.dietNo}-${index}`}>
+              <FoodsInOneDiet dietNo={diet.dietNo} />
+            </Col>
+          );
+        })}
+      </AccordionContentContainer>
+    </ScrollView>
   );
 };
 interface FoodInOneDietProps {
@@ -48,7 +50,6 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
   const [menuTitle, setMenuTitle] = useState();
   //redux
   const {orderInfo} = useSelector((state: RootState) => state.order);
-  const {foodToOrder} = orderInfo;
   //useEffect
   useEffect(() => {
     const dietSeq = getDietSeq(listDiet, dietNo);
@@ -61,11 +62,35 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
   function getDietSeq(dietArr, dietNo) {
     for (let i = 0; i < dietArr.length; i++) {
       if (dietArr[i].dietNo === dietNo) {
-        return dietArr[i].dietSeq + `  (${foodToOrder[i][0]?.qty}개)`;
+        return dietArr[i].dietSeq;
       }
     }
     return null; // 만약 해당하는 dietNo를 찾을 수 없을 경우 null 반환
   }
+  //판매사별로 묶어주기
+  const groupBySeller = listDietDetail => {
+    const group = listDietDetail.reduce((r, a) => {
+      r[a.platformNm] = [...(r[a.platformNm] || []), a];
+      return r;
+    }, {});
+    return group;
+  };
+  // console.log(groupBySeller(listDietDetail));
+  const groupedDietDetail = groupBySeller(listDietDetail);
+  const sellerList = Object.keys(groupedDietDetail);
+  const sellerList2 = Object.values(groupedDietDetail);
+  const renderMenu = index => {
+    const menu = [];
+    const foodThumbnail = [];
+    const price = [];
+    for (let i = 0; i < sellerList2.length; i++) {
+      menu.push(sellerList2[index][i]?.productNm);
+      foodThumbnail.push(sellerList2[index][i]?.mainAttUrl);
+      price.push(sellerList2[index][i]?.price);
+    }
+    return {menu, foodThumbnail, price};
+  };
+  console.log(sellerList2);
   return (
     <>
       <Col>
@@ -73,40 +98,32 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
           <View>
             <MenuTitle>{menuTitle}</MenuTitle>
             <HorizontalLine
-              style={{marginTop: 8, backgroundColor: colors.line}}
+              style={{marginTop: 16, backgroundColor: colors.black, height: 2}}
             />
           </View>
         ) : null}
-
-        {listDietDetail?.map((product, index) => {
+        {sellerList2?.map((e, i) => {
           return (
-            <View key={`${product.productNo}-${index}`}>
-              <Row style={{marginTop: 16}}>
-                <FoodThumbnail
-                  source={{
-                    uri: `${BASE_URL}${product.mainAttUrl}`,
-                  }}
-                />
-                <Col style={{flex: 1, marginLeft: 8}}>
-                  <SellerText numberOfLines={1} ellipsizeMode="tail">
-                    {product.platformNm}
-                  </SellerText>
-                  <ProductName numberOfLines={1} ellipsizeMode="tail">
-                    {product.productNm}
-                  </ProductName>
-                  <Row
-                    style={{
-                      marginTop: 8,
-                      justifyContent: 'space-between',
-                    }}>
-                    <PriceAndQuantity>{product.price}</PriceAndQuantity>
-                  </Row>
-                </Col>
-              </Row>
-              <HorizontalLine
-                lineColor={colors.lineLight}
-                style={{marginTop: 16}}
-              />
+            <View>
+              <SellerText>{e[0]?.platformNm}</SellerText>
+              {e.map((el, index) => {
+                return (
+                  <>
+                    <Row>
+                      <FoodThumbnail
+                        source={{
+                          uri: `${BASE_URL}${el.mainAttUrl}`,
+                        }}
+                        resizeMode="center"
+                      />
+                      <Col>
+                        <ProductName>{el.productNm}</ProductName>
+                        <PriceAndQuantity>{el.price}원</PriceAndQuantity>
+                      </Col>
+                    </Row>
+                  </>
+                );
+              })}
             </View>
           );
         })}
@@ -115,7 +132,7 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
   );
 };
 
-export default FoodToOrder;
+export default SelfOrder;
 
 const MenuTitle = styled(TextMain)`
   margin-top: 16px;
@@ -124,13 +141,15 @@ const MenuTitle = styled(TextMain)`
 `;
 
 const FoodThumbnail = styled.Image`
+  margin-top: 16px;
+  margin-right: 8px;
   width: 72px;
   height: 72px;
 `;
 
 const SellerText = styled(TextMain)`
+  margin-top: 24px;
   font-size: 14px;
-  font-weight: bold;
 `;
 
 const ProductName = styled(TextMain)`
@@ -143,6 +162,7 @@ const QuantityBox = styled.View`
 `;
 
 const PriceAndQuantity = styled(TextMain)`
+  margin-top: 4px;
   font-size: 16px;
   font-weight: bold;
 `;
