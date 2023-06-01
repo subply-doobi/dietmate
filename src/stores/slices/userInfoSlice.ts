@@ -67,8 +67,6 @@ export const userInfoSlice = createSlice({
         weight?: string;
         dietPurposeCd?: string;
         bmr?: string;
-        weightTimeCd?: string;
-        aerobicTimeCd?: string;
       }>,
     ) => {
       state.userInfo = {...state.userInfo, ...action.payload};

@@ -18,6 +18,7 @@ import {
   useListDietDetail,
   useListDietDetailAll,
 } from '../../query/queries/diet';
+import {RootState} from '../../stores/store';
 
 const FoodToOrder = () => {
   const {data: listDietDetailAll, isLoading: isListDietDetailLoading} =

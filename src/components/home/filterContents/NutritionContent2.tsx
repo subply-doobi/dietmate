@@ -216,9 +216,9 @@ const Btn = styled.TouchableOpacity`
   justify-content: center;
   border-radius: 5px;
   border-width: 1px;
-  border-color: ${colors.inactivated};
-  background-color: ${({isActivated}: StyledProps) =>
-    isActivated ? colors.inactivated : colors.white};
+  border-color: ${({isActivated}: StyledProps) =>
+    isActivated ? colors.main : colors.inactivated};
+  background-color: ${colors.white};
 `;
 
 const BtnText = styled(TextMain)`

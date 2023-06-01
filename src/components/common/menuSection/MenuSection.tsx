@@ -23,6 +23,11 @@ import {
   useListDiet,
   useListDietDetail,
 } from '../../../query/queries/diet';
+import {scrollTo} from 'react-native-reanimated';
+import CartFoodList from '../../cart/CartFoodList';
+import DBottomSheet from '../DBottomSheet';
+import NumberPickerContent from '../../cart/NumberPickerContent';
+import Menu from './Menu';
 
 const MenuSection = () => {
   // redux
@@ -38,6 +43,9 @@ const MenuSection = () => {
   // state
   const [dietNoToDelete, setDietNoToDelete] = useState<string>();
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
+  const [menuShow, setMenuShow] = useState(false);
+  const [numberPickerShow, setNumberPickerShow] = useState(false);
+  const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
 
   // etc
   const onDeleteDiet = () => {
@@ -62,6 +70,8 @@ const MenuSection = () => {
           </DeleteBtn>
         )}
       </HeaderRow>
+
+      {/* 끼니 삭제 알럿 */}
       <DAlert
         alertShow={deleteAlertShow}
         renderContent={() => (
@@ -74,11 +84,39 @@ const MenuSection = () => {
         onConfirm={() => onDeleteDiet()}
         onCancel={() => setDeleteAlertShow(false)}
       />
-      <ProgressContainer>
+
+      {/* progressBar */}
+      <ProgressContainer onPress={() => setMenuShow(v => !v)}>
         {dietDetailData && (
           <NutrientsProgress dietDetailData={dietDetailData} />
         )}
+        <Arrow source={menuShow ? icons.arrowUp_20 : icons.arrowDown_20} />
       </ProgressContainer>
+
+      {/* menu */}
+      {menuShow && dietDetailData && (
+        <MenuContainer>
+          <Menu
+            dietNo={currentDietNo}
+            dietDetailData={dietDetailData}
+            setDietNoToNumControl={setDietNoToNumControl}
+            setNumberPickerShow={setNumberPickerShow}
+          />
+        </MenuContainer>
+      )}
+
+      {/* 끼니 수량 조절용 BottomSheet */}
+      <DBottomSheet
+        alertShow={numberPickerShow}
+        setAlertShow={setNumberPickerShow}
+        renderContent={() => (
+          <NumberPickerContent
+            setNumberPickerShow={setNumberPickerShow}
+            dietNoToNumControl={dietNoToNumControl}
+          />
+        )}
+        onCancel={() => setNumberPickerShow(false)}
+      />
     </Container>
   );
 };
@@ -109,10 +147,22 @@ const DeleteImg = styled.Image`
   height: 18px;
 `;
 
-const ProgressContainer = styled.View`
+const ProgressContainer = styled.Pressable`
   padding-top: 0px;
   padding-bottom: 0px;
   padding-left: 16px;
   padding-right: 16px;
   background-color: ${colors.white};
+`;
+
+const Arrow = styled.Image`
+  width: 20px;
+  height: 20px;
+  align-self: center;
+  z-index: -1;
+`;
+
+const MenuContainer = styled.View`
+  background-color: ${colors.white};
+  padding: 0px 8px 16px 8px;
 `;

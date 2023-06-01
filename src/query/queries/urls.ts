@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://13.125.206.144:8080';
+export const BASE_URL = 'http://3.36.62.63:8080';
 
 export const GET_TOKEN = `${BASE_URL}/api/every/token/get-token`; //토큰 조회
 export const GET_AUTH = `${BASE_URL}/api/member/auth/get-auth`; //인증 여부 조회

@@ -2,10 +2,12 @@ import React, {SetStateAction, useState} from 'react';
 import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+
 //doobi util, redux, etc
 import {icons} from '../../assets/icons/iconSource';
 import {Row, BtnCTA, Col} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
+
 //doobi Component
 import CategoryContent from './filterContents/CategoryContent';
 import NutritionContent from './filterContents/NutritionContent';

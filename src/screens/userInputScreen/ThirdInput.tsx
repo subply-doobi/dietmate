@@ -126,6 +126,11 @@ const ThirdInput = () => {
     // return section.title;
     return (
       <AccordionHeader isActivated={isActive}>
+        {isActive ? (
+          <CheckIcon source={icons.checkboxCheckedPurple_24} />
+        ) : (
+          <CheckIcon source={icons.checkboxCheckedGrey_24} />
+        )}
         <AccordionHeaderTitle isActivated={isActive}>
           {section.title}
         </AccordionHeaderTitle>
@@ -258,6 +263,14 @@ const AccordionHeaderTitle = styled.Text`
   font-size: 16px;
   color: ${({isActivated}: StyledProps) =>
     isActivated ? colors.main : colors.textSub};
+`;
+
+const CheckIcon = styled.Image`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  align-self: flex-start;
+  left: 8px;
 `;
 
 const ArrowIcon = styled.Image`

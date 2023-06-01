@@ -43,7 +43,6 @@ export const calculateNutrTarget = (
   duration: number,
   dietPurposecd: string,
   BMR: string,
-  intensity: number,
 ) => {
   // const wcal = 0.0175 * 6 * parseFloat(weight) * timeCdToMinutes[weightTimeCd];
   // const acal = 0.0175 * 7 * parseFloat(weight) * timeCdToMinutes[aerobicTimeCd];
