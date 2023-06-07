@@ -26,6 +26,7 @@ import {
   TextSub,
 } from '../../styles/StyledConsts';
 import {IFormField, validationRules} from '../../constants/constants';
+import {useListAddress, useGetAddress} from '../../query/queries/address';
 
 interface IAddress {
   control: any;
@@ -46,7 +47,7 @@ const Address = ({
     (state: RootState) => state.order,
   );
   // 렌더링이 6번되는데....
-
+  const {data: listAddressData} = useListAddress();
   // navigation
   const navigation = useNavigation();
   // useRef (받는 분 -> 휴대폰 focus)
@@ -99,7 +100,7 @@ const Address = ({
 
   return (
     <AccordionContentContainer>
-      {orderInfo.address.map((ads, index: number) => (
+      {listAddressData?.map((ads, index: number) => (
         <Col style={{width: '100%'}} key={index}>
           <AddressBox>
             <SelectContainer
@@ -115,8 +116,8 @@ const Address = ({
                 }
               />
               <Col>
-                <AddressBase>{ads.base}</AddressBase>
-                <AddressDetail>{ads.detail}</AddressDetail>
+                <AddressBase>{ads.addr1}</AddressBase>
+                <AddressDetail>{ads.addr2}</AddressDetail>
               </Col>
             </SelectContainer>
             <EditBtn
@@ -132,10 +133,10 @@ const Address = ({
         </Col>
       ))}
       <AddressAddBtn
-        btnStyle={orderInfo.address.length === 0 ? 'borderActivated' : 'border'}
+        btnStyle={listAddressData?.length === 0 ? 'borderActivated' : 'border'}
         onPress={() => {
           // TBD | 5개 넘으면 안된다 안내 팝업
-          if (orderInfo.address.length >= 5) {
+          if (listAddressData?.length >= 5) {
             Alert.alert('주소는 5개 까지만 추가 가능합니다');
             return;
           }
@@ -158,7 +159,7 @@ const Address = ({
         <Row>
           <PlusSquareIcon
             source={
-              orderInfo.address.length === 0
+              listAddressData?.length === 0
                 ? icons.plusSquareActivated_24
                 : icons.plusSquare_24
             }

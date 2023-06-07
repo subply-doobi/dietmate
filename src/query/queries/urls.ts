@@ -38,5 +38,12 @@ export const COMMON_CODE = `${BASE_URL}/api/member/code/list-code`;
 export const LIST_CATEGORY = `${BASE_URL}/api/member/category/list-category/CG`;
 export const COUNT_CATEGORY = `${BASE_URL}/api/member/category/list-category-product-cnt/CG`;
 
-// api-member-order-control
-export const CREATE_ORDER = `${BASE_URL}/api/member/order/create-order`;
+// api-member-order-controller
+export const CREATE_ORDER = `${BASE_URL}/api/member/order/create-order`; //주문 정보 생성
+
+// api-member-address-controller
+export const CREATE_ADDRESS = `${BASE_URL}/api/member/address/create-address`;
+export const UPDATE_ADDRESS = `${BASE_URL}/api/member/address/update-address`;
+export const LIST_ADDRESS = `${BASE_URL}/api/member/address/list-address`;
+export const GET_ADDRESS = `${BASE_URL}/api/member/address/get-address`;
+export const DELETE_ADDRESS = `${BASE_URL}/api/member/address/delete-address`;

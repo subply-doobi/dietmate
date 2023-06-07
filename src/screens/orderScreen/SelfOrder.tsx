@@ -17,13 +17,14 @@ import {
   useListDiet,
   useListDietDetail,
   useListDietDetailAll,
+  useListDietTotal,
 } from '../../query/queries/diet';
 import {ScrollView} from 'react-native-gesture-handler';
 
 const SelfOrder = () => {
+  const {data: listDiet} = useListDiet();
   const {data: listDietDetailAll, isLoading: isListDietDetailLoading} =
     useListDietDetailAll();
-  const {data: listDiet} = useListDiet();
   if (isListDietDetailLoading) {
     return <ActivityIndicator />;
   }
@@ -47,15 +48,7 @@ interface FoodInOneDietProps {
 const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
   const {data: listDietDetail, isLoading} = useListDietDetail(dietNo);
   const {data: listDiet} = useListDiet();
-  const [menuTitle, setMenuTitle] = useState();
-  //redux
-  const {orderInfo} = useSelector((state: RootState) => state.order);
-  //useEffect
-  useEffect(() => {
-    const dietSeq = getDietSeq(listDiet, dietNo);
-    setMenuTitle(dietSeq);
-  }, []);
-
+  const dietSeq = getDietSeq(listDiet, dietNo);
   if (isLoading) {
     return <ActivityIndicator />;
   }
@@ -75,34 +68,21 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
     }, {});
     return group;
   };
-  // console.log(groupBySeller(listDietDetail));
   const groupedDietDetail = groupBySeller(listDietDetail);
-  const sellerList = Object.keys(groupedDietDetail);
-  const sellerList2 = Object.values(groupedDietDetail);
-  const renderMenu = index => {
-    const menu = [];
-    const foodThumbnail = [];
-    const price = [];
-    for (let i = 0; i < sellerList2.length; i++) {
-      menu.push(sellerList2[index][i]?.productNm);
-      foodThumbnail.push(sellerList2[index][i]?.mainAttUrl);
-      price.push(sellerList2[index][i]?.price);
-    }
-    return {menu, foodThumbnail, price};
-  };
-  console.log(sellerList2);
+  const sellerList = Object.values(groupedDietDetail);
+  // console.log('sellerList:', sellerList);
   return (
     <>
       <Col>
         {listDietDetail?.length ? (
           <View>
-            <MenuTitle>{menuTitle}</MenuTitle>
+            <MenuTitle>{dietSeq}</MenuTitle>
             <HorizontalLine
               style={{marginTop: 16, backgroundColor: colors.black, height: 2}}
             />
           </View>
         ) : null}
-        {sellerList2?.map((e, i) => {
+        {sellerList?.map((e, i) => {
           return (
             <View>
               <SellerText>{e[0]?.platformNm}</SellerText>

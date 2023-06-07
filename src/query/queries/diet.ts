@@ -247,10 +247,14 @@ export const useUpdateDietDetail = () => {
 
 export const useUpdateDiet = (options?: IMutationOptions) => {
   const mutation = useMutation({
-    mutationFn: ({statusCd}: {statusCd: string}) =>
-      mutationFn(`${UPDATE_DIET}?statusCd=${statusCd}`, 'post'),
+    mutationFn: ({statusCd, orderNo}: {statusCd: string; orderNo: string}) =>
+      mutationFn(
+        `${UPDATE_DIET}?statusCd=${statusCd}&orderNo=${orderNo}`,
+        'post',
+      ),
     onSuccess: data => {
       console.log('updateDiet success: ', data);
+      queryClient.invalidateQueries({queryKey: [DIET]});
     },
   });
   return mutation;

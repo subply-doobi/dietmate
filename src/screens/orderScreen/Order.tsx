@@ -5,7 +5,6 @@ import Accordion from 'react-native-collapsible/Accordion';
 import {useForm, useWatch} from 'react-hook-form';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
 import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
@@ -38,8 +37,13 @@ import KakaoPay from '../../components/payment/KakaoPay';
 
 import {useKakaoPayReady} from '../../query/queries/order';
 import {sumUpDietTotal} from '../../util/sumUp';
+import {useListAddress, useGetAddress} from '../../query/queries/address';
 
 const Order = () => {
+  // const {data: listAddressData} = useListAddress();
+  // console.log('listAddressData:', listAddressData);
+  // const {data: getAddressData} = useGetAddress();
+  // console.log('getAddressData:', getAddressData);
   //navigation
   const {navigate} = useNavigation();
 

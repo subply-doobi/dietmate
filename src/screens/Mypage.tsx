@@ -54,9 +54,10 @@ const Mypage = () => {
 
   // console.log(
   //   'updateDiet',
-  // updateDietMutation.mutate({
-  //   statusCd: 'SP006003',
-  // }),
+  //   updateDietMutation.mutate({
+  //     statusCd: 'SP006003',
+  //     orderNo:'',
+  //   }),
   // );
   // FlatList Data
   type INutrTargetData = Array<{
@@ -291,16 +292,15 @@ const Mypage = () => {
             <PageBtn
               onPress={() => {
                 if (item.btnId === 'ChangeWeight') {
-                  setAlertType('weight');
-                  setAlertShow(true);
+                  // setAlertType('weight');
+                  // setAlertShow(true);
+                  createOrderMutation.mutate({});
                 } else {
                   // navigateByBtnId[item.btnId](item.btnId, navigate);
-                  createOrderMutation.mutate({
-                    statusCd: 'string',
-                    orderNo: 'string',
-                    companyCd: 'string',
-                    userId: 'string',
-                    shippingPrice: 'string',
+                  // createOrderMutation.mutate({});
+                  updateDietMutation.mutate({
+                    statusCd: 'SP006001',
+                    orderNo: 'OD20230607000000011',
                   });
                   console.log(testData);
                 }

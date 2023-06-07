@@ -42,6 +42,8 @@ import {
 import colors from '../../styles/colors';
 
 import DAlert from '../../components/common/alert/DAlert';
+import {useCreateAddress} from '../../query/queries/address';
+import {useListAddress, useGetAddress} from '../../query/queries/address';
 
 const renderDeleteAlertContent = () => (
   <AlertContentContainer>
@@ -54,10 +56,13 @@ const AddressEdit = ({
   navigation: {navigate, setOptions},
   route,
 }: NavigationProps) => {
+  const {data: listAddressData} = useListAddress();
+  console.log('ADDRESSEDIT/listAddressData', listAddressData);
   const currentAddressId =
     route.params?.currentAddressId ?? route.params?.currentAddressId;
   const isCreate = currentAddressId === undefined ? true : false;
-
+  //react-query
+  const createAddressMutation = useCreateAddress();
   // redux
   const dispatch = useDispatch();
   const {
@@ -234,7 +239,18 @@ const AddressEdit = ({
           </AddressEditBtn>
           <AddressConfirmBtn
             btnStyle="activated"
-            onPress={() => handlePressConfirmBtn()}>
+            onPress={() => {
+              handlePressConfirmBtn();
+              createAddressMutation.mutate({
+                addrNo: 'string',
+                zipCode: postalCode,
+                addr1: addressBase,
+                addr2: addressDetailValue,
+                companyCd: 'string',
+                userId: 'string',
+                useYn: 'string',
+              });
+            }}>
             <BtnText>확인</BtnText>
           </AddressConfirmBtn>
         </StickyFooter>

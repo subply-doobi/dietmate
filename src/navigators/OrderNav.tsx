@@ -44,9 +44,7 @@ const OrderHeaderTab = () => {
     </Tab.Navigator>
   );
 };
-const testNav = () => {
-  return <Stack.Navigator></Stack.Navigator>;
-};
+
 const OrderNav = () => {
   const navigation = useNavigation();
   const {goBack, navigate} = navigation;
@@ -67,29 +65,7 @@ const OrderNav = () => {
           headerLeft: () => <BackArrow goBackFn={goBack} />,
         }}
       />
-      <Stack.Screen
-        name="AddressEdit"
-        component={AddressEdit}
-        options={{
-          headerTitle: '배송지 수정',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontSize: 18,
-            fontWeight: 'bold',
-            color: colors.textMain,
-          },
-          headerLeft: () => (
-            <BackArrow
-              goBackFn={() =>
-                navigate('OrderNav', {
-                  screen: 'Order',
-                  params: {from: 'AddressEdit'},
-                })
-              }
-            />
-          ),
-        }}
-      />
+
       <Stack.Screen
         name="PaymentComplete"
         component={PaymentComplete}

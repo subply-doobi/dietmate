@@ -9,6 +9,7 @@ import {useHandleError} from '../util/handleError';
 import InputNav from './InputNav';
 import BottomTabNav from './BottomTabNav';
 import OrderNav from './OrderNav';
+import AddressEdit from '../screens/orderScreen/AddressEdit';
 import OrderHeaderTab from './OrderNav';
 import PaymentHistoryNav from './PaymentHistoryNav';
 import HistoryNav from './HistoryNav';
@@ -111,6 +112,30 @@ const RootStackNav = () => {
               </Pressable>
             );
           },
+        }}
+      />
+      <Stack.Screen
+        name="AddressEdit"
+        component={AddressEdit}
+        options={{
+          headerShown: true,
+          headerTitle: '배송지 수정',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: colors.textMain,
+          },
+          headerLeft: () => (
+            <BackArrow
+              goBackFn={() =>
+                navigate('OrderNav', {
+                  screen: 'Order',
+                  params: {from: 'AddressEdit'},
+                })
+              }
+            />
+          ),
         }}
       />
       <Stack.Screen name="KakaoPayNav" component={KakaoPay} />
