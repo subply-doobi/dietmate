@@ -146,7 +146,6 @@ const Cart = () => {
   }, [dietTotalData]);
 
   // Fn
-
   const updateSections = (activeSections: number[]) => {
     dispatch(setMenuActiveSection(activeSections));
     if (activeSections.length === 0) return;

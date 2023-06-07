@@ -83,7 +83,9 @@ const FilterHeader = (props: IFilterHeader) => {
       <Row style={{justifyContent: 'space-between'}}>
         <Row style={{columnGap: 8}}>
           <RemainNutrFilterBtn onPress={onPressRemainNutrProduct}>
-            <FilterBtnText>남은영양 이하</FilterBtnText>
+            <FilterBtnText style={{color: 'white'}}>
+              남은영양 이하
+            </FilterBtnText>
           </RemainNutrFilterBtn>
           <FilterBtn
             onPress={() => {
@@ -91,7 +93,8 @@ const FilterHeader = (props: IFilterHeader) => {
               setFilterIndex(0);
             }}
             isActivated={filterParams.categoryParam ? true : false}>
-            <FilterBtnText>
+            <FilterBtnText
+              isActivated={filterParams.categoryParam ? true : false}>
               {filterParams.categoryParam ? filterHeaderText : '카테고리'}
             </FilterBtnText>
           </FilterBtn>
@@ -108,7 +111,17 @@ const FilterHeader = (props: IFilterHeader) => {
                 ? true
                 : false
             }>
-            <FilterBtnText>영양성분</FilterBtnText>
+            <FilterBtnText
+              isActivated={
+                filterParams.nutritionParam.calorieParam.length === 2 ||
+                filterParams.nutritionParam.carbParam.length === 2 ||
+                filterParams.nutritionParam.proteinParam.length === 2 ||
+                filterParams.nutritionParam.fatParam.length === 2
+                  ? true
+                  : false
+              }>
+              영양성분
+            </FilterBtnText>
           </FilterBtn>
           <FilterBtn
             onPress={() => {
@@ -116,7 +129,10 @@ const FilterHeader = (props: IFilterHeader) => {
               setFilterIndex(2);
             }}
             isActivated={filterParams.priceParam.length === 2 ? true : false}>
-            <FilterBtnText>가격</FilterBtnText>
+            <FilterBtnText
+              isActivated={filterParams.priceParam.length === 2 ? true : false}>
+              가격
+            </FilterBtnText>
           </FilterBtn>
         </Row>
         <InitializeBtn
@@ -144,36 +160,25 @@ export default FilterHeader;
 
 const FilterBtn = styled.TouchableOpacity`
   height: 32px;
-  /* margin-left: 8px; */
   padding: 6px 8px 6px 8px;
   border-radius: 16px;
   border-width: 1px;
-  border-color: ${colors.inactivated};
-  background-color: ${({isActivated}: StyledProps) =>
-    isActivated ? colors.backgroundLight : colors.white};
+  border-color: ${({isActivated}: StyledProps) =>
+    isActivated ? colors.dark : colors.inactivated};
+  background-color: ${colors.white};
 `;
 
 const RemainNutrFilterBtn = styled.TouchableOpacity`
   height: 32px;
   padding: 6px 8px 6px 8px;
   border-radius: 5px;
-  border-width: 1px;
-  border-color: ${colors.highlight};
-  background-color: ${colors.white};
+  background-color: ${colors.dark};
 `;
 
 const FilterBtnText = styled(TextMain)`
   font-size: 14px;
-`;
-
-const Badge = styled.View`
-  width: 6px;
-  height: 6px;
-  border-radius: 8px;
-  background-color: ${colors.main};
-  position: absolute;
-  top: 0px;
-  right: -8px;
+  color: ${({isActivated}: StyledProps) =>
+    isActivated ? colors.textMain : colors.textSub};
 `;
 
 const InitializeBtn = styled.TouchableOpacity`

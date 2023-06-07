@@ -15,6 +15,7 @@ interface IDtooltip {
   boxTop?: number;
   boxLeft?: number;
   boxRight?: number;
+  triangle?: boolean;
   triangleLeft?: number;
   triangleRight?: number;
   onPressFn?: Function;
@@ -39,6 +40,7 @@ const DTooltip = ({
   boxTop,
   boxLeft,
   boxRight,
+  triangle = true,
   triangleLeft,
   triangleRight,
   onPressFn,
@@ -63,12 +65,14 @@ const DTooltip = ({
       : triangleRight !== undefined
       ? {right: triangleRight - 6}
       : {left: 10};
-
+  console.log('tri:', triangle);
   return tooltipShow ? (
     <Container
       style={{...boxVerticalStyle, ...boxHorizontalStyle, ...style}}
       onPress={() => (onPressFn ? onPressFn() : {})}>
-      {reversed && <TooltipTriangleRvs style={{...triangleHorizontalStyle}} />}
+      {reversed && triangle && (
+        <TooltipTriangleRvs style={{...triangleHorizontalStyle}} />
+      )}
       <TooltipBox>
         {customContent ? customContent() : <TooltipText>{text}</TooltipText>}
         {showIcon ? (
@@ -81,7 +85,9 @@ const DTooltip = ({
           )
         ) : null}
       </TooltipBox>
-      {!reversed && <TooltipTriangle style={{...triangleHorizontalStyle}} />}
+      {!reversed && triangle && (
+        <TooltipTriangle style={{...triangleHorizontalStyle}} />
+      )}
     </Container>
   ) : (
     <></>

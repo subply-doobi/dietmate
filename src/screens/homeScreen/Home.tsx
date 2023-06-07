@@ -160,7 +160,8 @@ const Home = () => {
     //tooltip 관련
     const initializeTooltip = async () => {
       const shouldShowTooltip = await checkTooltipShow('HOME_TOOLTIP');
-      setTooltipShow(shouldShowTooltip);
+      console.log('home: showlus', shouldShowTooltip);
+      setTooltipShow(!!shouldShowTooltip);
     };
     initializeTooltip();
   }, []);
