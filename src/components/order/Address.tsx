@@ -34,7 +34,15 @@ interface IAddress {
   errors: any;
   setValue: any;
 }
-
+interface IListAddressData {
+  addr1: string;
+  addr2: string;
+  addrNo?: string;
+  companyCd?: string;
+  useYn?: string;
+  userId?: string;
+  zipCode: string;
+}
 const Address = ({
   control,
   handleSubmit,
@@ -48,6 +56,7 @@ const Address = ({
   );
   // 렌더링이 6번되는데....
   const {data: listAddressData} = useListAddress();
+  console.log(listAddressData);
   // navigation
   const navigation = useNavigation();
   // useRef (받는 분 -> 휴대폰 focus)
@@ -100,7 +109,7 @@ const Address = ({
 
   return (
     <AccordionContentContainer>
-      {listAddressData?.map((ads, index: number) => (
+      {listAddressData?.map((ads: any, index: number) => (
         <Col style={{width: '100%'}} key={index}>
           <AddressBox>
             <SelectContainer
@@ -124,6 +133,10 @@ const Address = ({
               onPress={() => {
                 navigation.navigate('AddressEdit', {
                   currentAddressId: index,
+                  addressNo: ads.addrNo,
+                  addr1: ads.addr1,
+                  addr2: ads.addr2,
+                  zipCode: ads.zipCode,
                 });
               }}>
               <EditIcon source={icons.edit_24} />

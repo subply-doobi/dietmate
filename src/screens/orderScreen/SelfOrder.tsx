@@ -11,6 +11,7 @@ import {
   HorizontalLine,
 } from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
+import IProductData from '../../query/types/product';
 
 import {BASE_URL} from '../../query/queries/urls';
 import {
@@ -21,6 +22,11 @@ import {
 } from '../../query/queries/diet';
 import {ScrollView} from 'react-native-gesture-handler';
 
+interface FoodInOneDietProps {
+  dietNo: string;
+}
+
+type ISellerList = Array<IProductData>;
 const SelfOrder = () => {
   const {data: listDiet} = useListDiet();
   const {data: listDietDetailAll, isLoading: isListDietDetailLoading} =
@@ -42,9 +48,6 @@ const SelfOrder = () => {
     </ScrollView>
   );
 };
-interface FoodInOneDietProps {
-  dietNo: string;
-}
 const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
   const {data: listDietDetail, isLoading} = useListDietDetail(dietNo);
   const {data: listDiet} = useListDiet();
@@ -61,18 +64,17 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
     return null; // 만약 해당하는 dietNo를 찾을 수 없을 경우 null 반환
   }
   //판매사별로 묶어주기
-  const groupBySeller = listDietDetail => {
-    const group = listDietDetail.reduce((r, a) => {
+  const groupBySeller = (arg: any) => {
+    const group = arg.reduce((r, a) => {
       r[a.platformNm] = [...(r[a.platformNm] || []), a];
       return r;
     }, {});
     return group;
   };
   const groupedDietDetail = groupBySeller(listDietDetail);
-  const sellerList = Object.values(groupedDietDetail);
-  // console.log('sellerList:', sellerList);
+  const sellerList: ISellerList = Object.values(groupedDietDetail);
   return (
-    <>
+    <View>
       <Col>
         {listDietDetail?.length ? (
           <View>
@@ -84,11 +86,11 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
         ) : null}
         {sellerList?.map((e, i) => {
           return (
-            <View>
+            <View key={i}>
               <SellerText>{e[0]?.platformNm}</SellerText>
-              {e.map((el, index) => {
+              {e.map((el: IProductData, index: number) => {
                 return (
-                  <>
+                  <View key={el.mainAttUrl}>
                     <Row>
                       <FoodThumbnail
                         source={{
@@ -101,14 +103,14 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
                         <PriceAndQuantity>{el.price}원</PriceAndQuantity>
                       </Col>
                     </Row>
-                  </>
+                  </View>
                 );
               })}
             </View>
           );
         })}
       </Col>
-    </>
+    </View>
   );
 };
 

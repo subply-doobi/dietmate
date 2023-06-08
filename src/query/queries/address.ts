@@ -2,6 +2,7 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 import {queryClient} from '../store';
 
 import {queryFn, mutationFn} from './requestFn';
+import {useHandleError} from '../../util/handleError';
 
 import {
   CREATE_ADDRESS,
@@ -11,15 +12,16 @@ import {
   DELETE_ADDRESS,
 } from '../queries/urls';
 
-interface IAddress {
-  addrNo: 'string';
-  zipCode: 'string';
-  addr1: 'string';
-  addr2: 'string';
-  companyCd: 'string';
-  userId: 'string';
-  useYn: 'string';
+export interface IAddress {
+  addrNo: string;
+  zipCode: string;
+  addr1: string;
+  addr2: string;
+  companyCd: string;
+  userId: string;
+  useYn: string;
 }
+
 //PUT
 export const useCreateAddress = () => {
   const mutation = useMutation({
@@ -50,4 +52,30 @@ export const useGetAddress = () => {
     queryFn: () => queryFn(GET_ADDRESS),
     onSuccess: () => console.log('GET_ADDRESS 성공'),
   });
+};
+//POST
+export const useUpdateAddress = () => {
+  const mutation = useMutation({
+    mutationFn: (requestBody: IAddress) =>
+      mutationFn<IAddress>(UPDATE_ADDRESS, 'post', requestBody),
+    onSuccess: () => {
+      console.log('주소 업데이트 성공!');
+      queryClient.invalidateQueries({queryKey: [LIST_ADDRESS]});
+    },
+  });
+  return mutation;
+};
+//DELETE
+export const useDeleteAddress = () => {
+  const handleError = useHandleError();
+  const mutation = useMutation({
+    mutationFn: addrNo =>
+      mutationFn(`${DELETE_ADDRESS}/${addrNo?.addressNo}`, 'delete'),
+    onSuccess: () => {
+      console.log('주소 삭제 성공');
+      queryClient.invalidateQueries({queryKey: [LIST_ADDRESS]});
+    },
+    onError: error => handleError(error),
+  });
+  return mutation;
 };

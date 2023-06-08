@@ -43,7 +43,14 @@ import colors from '../../styles/colors';
 
 import DAlert from '../../components/common/alert/DAlert';
 import {useCreateAddress} from '../../query/queries/address';
-import {useListAddress, useGetAddress} from '../../query/queries/address';
+import {
+  useListAddress,
+  useGetAddress,
+  useDeleteAddress,
+  IAddress,
+  useUpdateAddress,
+} from '../../query/queries/address';
+import {dateTimestampInSeconds} from '@sentry/utils';
 
 const renderDeleteAlertContent = () => (
   <AlertContentContainer>
@@ -56,8 +63,13 @@ const AddressEdit = ({
   navigation: {navigate, setOptions},
   route,
 }: NavigationProps) => {
-  const {data: listAddressData} = useListAddress();
-  console.log('ADDRESSEDIT/listAddressData', listAddressData);
+  const deleteAddressMutation = useDeleteAddress();
+  const updateAddressMutation = useUpdateAddress();
+  const addressNo = route.params?.addressNo;
+  const addr1 = route.params?.addr1;
+  const addr2 = route.params?.addr2;
+  const zipCode = route.params?.zipCode;
+
   const currentAddressId =
     route.params?.currentAddressId ?? route.params?.currentAddressId;
   const isCreate = currentAddressId === undefined ? true : false;
@@ -83,10 +95,20 @@ const AddressEdit = ({
     formState: {errors, isValid},
   } = useForm<{addressDetail: string}>({
     defaultValues: {
-      addressDetail: isCreate ? '' : address[currentAddressId]?.detail,
+      addressDetail: isCreate ? '' : addr2,
     },
   });
   const addressDetailValue = useWatch({control, name: 'addressDetail'});
+  //update address할때 전달하는 requestBody
+  const requestBody: IAddress = {
+    addrNo: addressNo,
+    zipCode: postalCode,
+    addr1: addressBase,
+    addr2: addressDetailValue,
+    companyCd: 'string',
+    userId: 'string',
+    useYn: 'string',
+  };
   const renderDetailInput = ({field: {onChange, value}}: IFormField) => {
     return (
       <>
@@ -137,8 +159,8 @@ const AddressEdit = ({
     setOptions({
       headerTitle: isCreate ? '배송지 추가' : '배송지 변경',
     });
-    setPostalCode(isCreate ? '' : address[currentAddressId]?.postalCode);
-    setAddressBase(isCreate ? '' : address[currentAddressId]?.base);
+    setPostalCode(isCreate ? '' : zipCode);
+    setAddressBase(isCreate ? '' : addr1);
     setAddressDetailValue(
       'addressDetail',
       isCreate ? '' : address[currentAddressId]?.detail,
@@ -221,6 +243,7 @@ const AddressEdit = ({
                   ),
                 );
                 navigate('Order');
+                deleteAddressMutation.mutate({addressNo});
               }}
               renderContent={renderDeleteAlertContent}
               confirmLabel={'삭제'}
@@ -241,15 +264,17 @@ const AddressEdit = ({
             btnStyle="activated"
             onPress={() => {
               handlePressConfirmBtn();
-              createAddressMutation.mutate({
-                addrNo: 'string',
-                zipCode: postalCode,
-                addr1: addressBase,
-                addr2: addressDetailValue,
-                companyCd: 'string',
-                userId: 'string',
-                useYn: 'string',
-              });
+              isCreate
+                ? createAddressMutation.mutate({
+                    addrNo: 'string',
+                    zipCode: postalCode,
+                    addr1: addressBase,
+                    addr2: addressDetailValue,
+                    companyCd: 'string',
+                    userId: 'string',
+                    useYn: 'string',
+                  })
+                : updateAddressMutation.mutate(requestBody);
             }}>
             <BtnText>확인</BtnText>
           </AddressConfirmBtn>
