@@ -195,6 +195,8 @@ interface IValidationRules {
     [key: string]: any;
   };
 }
+const regex = /^[ㄱ-ㅎ|가-힣]+$/; //문자열에 한글만 있는지 확인
+
 export const validationRules: IValidationRules = {
   age: {
     required: '필수 정보입니다',
@@ -204,6 +206,15 @@ export const validationRules: IValidationRules = {
         (parseInt(v) >= 10 && parseInt(v) <= 100) ||
         '10~100세 안으로 입력해주세요',
     },
+  },
+  orderer: {
+    required: '필수 정보입니다',
+    validate: {
+      isValid: v => regex.test(v) || '한글로 입력',
+    },
+  },
+  ordererContact: {
+    required: '필수 정보입니다',
   },
   height: {
     required: '필수 정보입니다',

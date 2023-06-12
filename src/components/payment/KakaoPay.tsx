@@ -1,7 +1,11 @@
 import React from 'react';
 import IMP from 'iamport-react-native';
 import axios from 'axios';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 
 interface IIamportPayment {
   pg: string; //kakaopay, html5_inicis 등등
@@ -22,6 +26,7 @@ interface IIamportPayment {
 
 const KakaoPay = () => {
   const route = useRoute();
+  const {navigate} = useNavigation();
   const {customerData, modifiedDietTotal, priceTotal} = route.params;
 
   // console.log('priceTotal:', priceTotal);
@@ -52,7 +57,12 @@ const KakaoPay = () => {
     <IMP.Payment
       userCode={'imp88778331'} // this one you can get in the iamport console.
       data={kakaopayData}
-      callback={response => console.log(response)}
+      callback={response => {
+        console.log('결제 응답', response);
+        response.imp_success === 'true'
+          ? console.log('결제성공')
+          : navigate('Order');
+      }}
     />
   );
 };

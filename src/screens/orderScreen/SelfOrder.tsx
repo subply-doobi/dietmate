@@ -4,7 +4,8 @@ import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 
 import {
-  AccordionContentContainer,
+  BtnBottomCTA,
+  BtnText,
   TextMain,
   Col,
   Row,
@@ -12,6 +13,9 @@ import {
 } from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 import IProductData from '../../query/types/product';
+import {commaToNum} from '../../util/sumUp';
+import {icons} from '../../assets/icons/iconSource';
+import {SCREENWIDTH} from '../../constants/constants';
 
 import {BASE_URL} from '../../query/queries/urls';
 import {
@@ -35,17 +39,25 @@ const SelfOrder = () => {
     return <ActivityIndicator />;
   }
   return (
-    <ScrollView>
-      <AccordionContentContainer>
-        {listDiet?.map((diet, index) => {
-          return (
-            <Col key={`${diet.dietNo}-${index}`}>
-              <FoodsInOneDiet dietNo={diet.dietNo} />
-            </Col>
-          );
-        })}
-      </AccordionContentContainer>
-    </ScrollView>
+    <>
+      <ScrollView>
+        <SelfOrderContainer>
+          {listDiet?.map((diet, index) => {
+            return (
+              <Col key={`${diet.dietNo}-${index}`}>
+                <FoodsInOneDiet dietNo={diet.dietNo} />
+              </Col>
+            );
+          })}
+        </SelfOrderContainer>
+      </ScrollView>
+      <BtnBottomCTA
+        style={{width: SCREENWIDTH - 32, marginTop: -20}}
+        btnStyle={'activated'}
+        onPress={() => console.log('주문내역에 저장')}>
+        <BtnText>주문내역에 저장하기</BtnText>
+      </BtnBottomCTA>
+    </>
   );
 };
 const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
@@ -74,50 +86,59 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
   const groupedDietDetail = groupBySeller(listDietDetail);
   const sellerList: ISellerList = Object.values(groupedDietDetail);
   return (
-    <View>
-      <Col>
-        {listDietDetail?.length ? (
-          <View>
-            <MenuTitle>{dietSeq}</MenuTitle>
-            <HorizontalLine
-              style={{marginTop: 16, backgroundColor: colors.black, height: 2}}
-            />
+    <CardSection>
+      {listDietDetail?.length ? (
+        <View>
+          <MenuTitle>{dietSeq}</MenuTitle>
+          <HorizontalLine
+            style={{marginTop: 16, backgroundColor: colors.black, height: 2}}
+          />
+        </View>
+      ) : null}
+      {sellerList?.map((e, i) => {
+        return (
+          <View key={i}>
+            <HomeLinkButton>
+              <Row style={{marginTop: 24}}>
+                <SellerText>{e[0]?.platformNm}</SellerText>
+                <LinkImage source={icons.mainPurpleLine_20} />
+              </Row>
+            </HomeLinkButton>
+
+            {e.map((el: IProductData, index: number) => {
+              return (
+                <View key={el.mainAttUrl}>
+                  <Row>
+                    <FoodThumbnail
+                      source={{
+                        uri: `${BASE_URL}${el.mainAttUrl}`,
+                      }}
+                      resizeMode="center"
+                    />
+                    <Col>
+                      <ProductName>{el.productNm}</ProductName>
+                      <PriceAndQuantity>
+                        {commaToNum(el.price)}원
+                      </PriceAndQuantity>
+                      <LinkButton>
+                        <LinkText>구매링크</LinkText>
+                      </LinkButton>
+                    </Col>
+                  </Row>
+                </View>
+              );
+            })}
           </View>
-        ) : null}
-        {sellerList?.map((e, i) => {
-          return (
-            <View key={i}>
-              <SellerText>{e[0]?.platformNm}</SellerText>
-              {e.map((el: IProductData, index: number) => {
-                return (
-                  <View key={el.mainAttUrl}>
-                    <Row>
-                      <FoodThumbnail
-                        source={{
-                          uri: `${BASE_URL}${el.mainAttUrl}`,
-                        }}
-                        resizeMode="center"
-                      />
-                      <Col>
-                        <ProductName>{el.productNm}</ProductName>
-                        <PriceAndQuantity>{el.price}원</PriceAndQuantity>
-                      </Col>
-                    </Row>
-                  </View>
-                );
-              })}
-            </View>
-          );
-        })}
-      </Col>
-    </View>
+        );
+      })}
+    </CardSection>
   );
 };
 
 export default SelfOrder;
 
 const MenuTitle = styled(TextMain)`
-  margin-top: 16px;
+  margin-top: 24px;
   font-size: 16px;
   font-weight: bold;
 `;
@@ -125,17 +146,22 @@ const MenuTitle = styled(TextMain)`
 const FoodThumbnail = styled.Image`
   margin-top: 16px;
   margin-right: 8px;
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
+  border-radius: 5px;
+`;
+
+const LinkImage = styled.Image`
+  width: 20px;
+  height: 20px;
 `;
 
 const SellerText = styled(TextMain)`
-  margin-top: 24px;
   font-size: 14px;
 `;
 
 const ProductName = styled(TextMain)`
-  font-size: 14px;
+  font-size: 12px;
 `;
 
 const QuantityBox = styled.View`
@@ -147,4 +173,27 @@ const PriceAndQuantity = styled(TextMain)`
   margin-top: 4px;
   font-size: 16px;
   font-weight: bold;
+`;
+const LinkText = styled(TextMain)`
+  font-size: 12px;
+  color: ${colors.main};
+`;
+
+const LinkButton = styled.TouchableOpacity`
+  position: absolute;
+  left: 230px;
+  top: 45px;
+`;
+
+const HomeLinkButton = styled.TouchableOpacity``;
+
+const CardSection = styled.View`
+  margin-top: 24px;
+  padding: 0px 8px 16px 8px;
+  border-radius: 5px;
+  background-color: ${colors.white};
+`;
+
+const SelfOrderContainer = styled.View`
+  padding: 0px 16px 32px 16px;
 `;

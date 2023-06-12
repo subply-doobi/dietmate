@@ -12,6 +12,7 @@ import AddressEdit from '../screens/orderScreen/AddressEdit';
 import BackArrow from '../components/common/BackArrow';
 import PaymentComplete from '../screens/orderScreen/PaymentComplete';
 import PaymentHistory from '../screens/orderScreen/PaymentHistory';
+import {notifyManager} from 'react-query';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -24,6 +25,7 @@ const OrderHeaderTab = () => {
           backgroundColor: colors.main,
           height: 4,
         },
+        tabBarPressColor: colors.white,
       }}>
       <Tab.Screen
         name="DoobiOrder"

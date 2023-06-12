@@ -213,7 +213,10 @@ const AddressEdit = ({
                     flexDirection: 'row',
                     justifyContent: 'flex-start',
                   }}>
-                  <Pressable onPress={() => setPostModalVisible(false)}>
+                  <Pressable
+                    onPress={() => {
+                      setPostModalVisible(false);
+                    }}>
                     <BackBtn source={icons.back_24} />
                   </Pressable>
                 </View>
@@ -225,6 +228,7 @@ const AddressEdit = ({
                     setPostalCode(String(data.zonecode));
                     setShowDetails(true);
                     setPostModalVisible(false);
+                    setAddressDetailValue('addressDetail', '');
                   }}
                   onError={() => console.error('오류')}
                 />

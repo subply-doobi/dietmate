@@ -56,7 +56,6 @@ const Address = ({
   );
   // 렌더링이 6번되는데....
   const {data: listAddressData} = useListAddress();
-  console.log(listAddressData);
   // navigation
   const navigation = useNavigation();
   // useRef (받는 분 -> 휴대폰 focus)

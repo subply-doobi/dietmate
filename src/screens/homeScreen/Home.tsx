@@ -107,7 +107,16 @@ const Home = () => {
       },
     },
   );
-
+  //카테고리별로 묶어주기
+  // const groupByCategory = (arg: any) => {
+  //   const group = arg.reduce((r, a) => {
+  //     r[a.categoryNm] = [...(r[a.categoryNm] || []), a];
+  //     return r;
+  //   }, {});
+  //   return group;
+  // };
+  // const groupedCategory = groupByCategory(productData);
+  // console.log('catecatecate:', groupedCategory);
   // etc
   // category code로 category name 찾기
   const categoryNameArr = Object.keys(categoryCode);

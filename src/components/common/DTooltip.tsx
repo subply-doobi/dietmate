@@ -65,7 +65,6 @@ const DTooltip = ({
       : triangleRight !== undefined
       ? {right: triangleRight - 6}
       : {left: 10};
-  console.log('tri:', triangle);
   return tooltipShow ? (
     <Container
       style={{...boxVerticalStyle, ...boxHorizontalStyle, ...style}}

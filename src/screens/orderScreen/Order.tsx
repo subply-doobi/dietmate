@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
 import styled from 'styled-components/native';
 import Accordion from 'react-native-collapsible/Accordion';
-import {useForm, useWatch} from 'react-hook-form';
+import {useForm, useWatch, Controller} from 'react-hook-form';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
@@ -49,23 +49,7 @@ const Order = () => {
 
   //cart에 있는 제품들을 주문하기 위해 paymentProduct로 변환
   //modifiedDietTotal을 서버에 저장
-  const getPaymentProduct = (e: any) => {
-    const products = e.map((e: any) => {
-      return {
-        categoryNm: e.categoryNm,
-        categoryCd: e.categoryCd,
-        subCategoryNm: e.subCategoryNm,
-        subCategoryCd: e.subCategoryCd,
-        dietNo: e.dietNo,
-        dietSeq: e.dietSeq,
-        price: e.price,
-        productNm: e.productNm,
-        productNo: e.productNo,
-        qty: e.qty,
-      };
-    });
-    return products;
-  };
+
   // redux
   const {orderInfo, selectedAddressId, orderSummary} = useSelector(
     (state: RootState) => state.order,
@@ -78,11 +62,6 @@ const Order = () => {
   // 주문자 정보가 orderInfo에 저장되어있음
 
   const dispatch = useDispatch();
-
-  let modifiedDietTotal = [];
-  for (let i = 0; i < foodToOrder.length; i++) {
-    modifiedDietTotal.push(getPaymentProduct(foodToOrder[i]));
-  }
 
   let initialCustomerData: ICustomer = {
     address: {base: '', addressDetail: '', postalCode: ''},
@@ -123,7 +102,7 @@ const Order = () => {
       paymentMethod: '카카오페이',
     },
   });
-
+  // console.log('유효성검사:', useForm());
   const ordererValue = useWatch({control, name: 'orderer'});
   const ordererContactValue = useWatch({control, name: 'ordererContact'});
   const addressDetailValue = useWatch({control, name: 'addressDetail'});
@@ -274,23 +253,18 @@ const Order = () => {
       </ScrollView>
       <BtnBottomCTA
         style={{width: SCREENWIDTH - 32}}
-        btnStyle={
-          Object.keys(errors).length === 0 &&
-          orderInfo.address[selectedAddressId]
-            ? 'activated'
-            : 'inactivated'
-        }
+        btnStyle={isValid ? 'activated' : 'inactivated'}
         onPress={() => {
-          navigate('KakaoPayNav', {
-            priceTotal,
-            customerData,
-            modifiedDietTotal,
-          });
+          isValid
+            ? navigate('KakaoPayNav', {
+                priceTotal,
+                customerData,
+              })
+            : console.log('정보를 모두 입력해주세요');
         }}>
         <BtnText>
-          {Object.keys(errors).length === 0 &&
-          orderInfo.address[selectedAddressId]
-            ? `총 ${totalAmount}원 결제하기`
+          {isValid
+            ? `총 ${commaToNum(priceTotal)}원 결제하기`
             : '정보를 모두 입력해주세요'}
         </BtnText>
       </BtnBottomCTA>

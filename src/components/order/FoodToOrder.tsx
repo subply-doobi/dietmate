@@ -11,6 +11,7 @@ import {
   HorizontalLine,
 } from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
+import {commaToNum} from '../../util/sumUp';
 
 import {BASE_URL} from '../../query/queries/urls';
 import {
@@ -97,7 +98,9 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
                       marginTop: 8,
                       justifyContent: 'space-between',
                     }}>
-                    <PriceAndQuantity>{product.price}</PriceAndQuantity>
+                    <PriceAndQuantity>
+                      {commaToNum(product.price)}원
+                    </PriceAndQuantity>
                   </Row>
                 </Col>
               </Row>
@@ -118,8 +121,9 @@ const MenuTitle = styled(TextMain)`
 `;
 
 const FoodThumbnail = styled.Image`
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
+  border-radius: 5px;
 `;
 
 const SellerText = styled(TextMain)`
@@ -128,7 +132,7 @@ const SellerText = styled(TextMain)`
 `;
 
 const ProductName = styled(TextMain)`
-  font-size: 14px;
+  font-size: 12px;
 `;
 
 const QuantityBox = styled.View`

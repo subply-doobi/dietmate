@@ -48,6 +48,7 @@ export const icons = {
   likeActivated_36: require(`./36_like_activated.png`),
   likeInactivated_36: require(`./36_like.png`),
   main_36: require(`./36_main.png`),
+  mainPurpleLine_20: require(`./20_main_purpleLine.png`),
   mainActivated_36: require(`./36_main_activated.png`),
   mypage_36: require(`./36_mypage.png`),
   mypageActivated_36: require(`./36_mypage_activated.png`),
