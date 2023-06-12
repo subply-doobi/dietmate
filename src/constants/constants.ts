@@ -209,9 +209,9 @@ export const validationRules: IValidationRules = {
   },
   orderer: {
     required: '필수 정보입니다',
-    validate: {
-      isValid: v => regex.test(v) || '한글로 입력',
-    },
+    // validate: {
+    // isValid: v => regex.test(v) || '한글로 입력',
+    // },
   },
   ordererContact: {
     required: '필수 정보입니다',

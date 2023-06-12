@@ -59,9 +59,12 @@ const KakaoPay = () => {
       data={kakaopayData}
       callback={response => {
         console.log('결제 응답', response);
-        response.imp_success === 'true'
-          ? console.log('결제성공')
-          : navigate('Order');
+        // response.imp_success === 'true'
+        //   ? console.log('결제성공')
+        //   : navigate('Order');
+        response.error_msg === '[결제포기] 사용자가 결제를 취소하셨습니다'
+          ? navigate('Order')
+          : console.log('결제 정상 응답');
       }}
     />
   );
