@@ -13,7 +13,13 @@ export const useCreateBaseLine = () => {
   const mutation = useMutation({
     mutationFn: (baseLine: IBaseLine) =>
       mutationFn<IBaseLine>(CREATE_BASE_LINE, 'put', baseLine),
-    onSuccess: data => queryClient.invalidateQueries({queryKey: [BASE_LINE]}),
+    onSuccess: data => {
+      queryClient.invalidateQueries({queryKey: [BASE_LINE]});
+      console.log('생성');
+    },
+    onError: error => {
+      console.log(error);
+    },
   });
   return mutation;
 };
@@ -36,6 +42,10 @@ export const useUpdateBaseLine = () => {
       mutationFn<IBaseLine>(UPDATE_BASE_LINE, 'post', baseLine),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: [BASE_LINE]});
+      console.log('수정');
+    },
+    onError: error => {
+      console.log(error);
     },
   });
   return mutation;

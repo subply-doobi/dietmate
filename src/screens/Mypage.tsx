@@ -51,7 +51,7 @@ const Mypage = () => {
   const updateDietMutation = useUpdateDiet();
   const createOrderMutation = useCreateOrder();
   const testData = useListDiet();
-
+  console.log(baseLineData);
   // console.log(
   //   'updateDiet',
   //   updateDietMutation.mutate({

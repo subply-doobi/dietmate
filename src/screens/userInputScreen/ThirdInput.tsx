@@ -52,7 +52,6 @@ const ThirdInput = () => {
   const createMutation = useCreateBaseLine();
   const {data: dietData} = useListDiet();
   const createDietMutation = useCreateDiet();
-
   // redux
   const {userInfo, userTarget} = useSelector(
     (state: RootState) => state.userInfo,
@@ -173,7 +172,7 @@ const ThirdInput = () => {
       fatManual,
     };
     const requestBody = convertDataByMethod[calculationMethod](dataToConvert);
-    // console.log('ThirdInput/requestBody:', requestBody);
+    console.log('ThirdInput/requestBody:', requestBody);
     if (!dietData) return;
     if (dietData.length === 0) {
       createDietMutation.mutate();

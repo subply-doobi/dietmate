@@ -60,8 +60,8 @@ const Cart = () => {
   const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
 
   // navigation
-  const navigation = useNavigation();
-  const {navigate} = navigation;
+  const {navigate} = useNavigation();
+  // const {navigate} = navigation;
   const isFocused = useIsFocused();
 
   // 추가된 식품 하나도 없으면 주문버튼 비활성

@@ -35,7 +35,6 @@ const Login = () => {
 
   // react-query
   const {data, refetch} = useGetBaseLine({enabled: false});
-
   const signInWithKakao = async (): Promise<void> => {
     await kakaoLogin();
     const refetchedData = await refetch();

@@ -17,6 +17,7 @@ import SplashScreen from 'react-native-splash-screen';
 
 import * as Sentry from '@sentry/react-native';
 import {ErrorBoundary} from 'react-error-boundary';
+import CustomErrorBoundary from './src/components/common/CustomErrorBoundary';
 
 Sentry.init({
   dsn: 'https://2fd6acc146d943ddb7a659b5dc18e632@o4505112210178048.ingest.sentry.io/4505112441782272',
@@ -44,16 +45,27 @@ function App(): JSX.Element {
     <>
       <Sentry.TouchEventBoundary>
         <QueryClientProvider client={queryClient}>
-          <ErrorBoundary
-            onReset={reset}
-            fallbackRender={({resetErrorBoundary}) => <ErrorAlert />}>
-            <Provider store={store}>
-              <NavigationContainer ref={navigationRef}>
+          <Provider store={store}>
+            <NavigationContainer ref={navigationRef}>
+              <CustomErrorBoundary
+                onReset={reset}
+                fallbackRender={({resetErrorBoundary}) => (
+                  <ErrorAlert
+                    alertShow={true}
+                    onConfirm={() => {
+                      resetErrorBoundary();
+                    }}
+                    onCancel={() => {
+                      resetErrorBoundary();
+                    }}
+                    NoOfBtn={1}
+                  />
+                )}>
                 <RootStackNav />
                 <ErrorAlert />
-              </NavigationContainer>
-            </Provider>
-          </ErrorBoundary>
+              </CustomErrorBoundary>
+            </NavigationContainer>
+          </Provider>
         </QueryClientProvider>
       </Sentry.TouchEventBoundary>
     </>

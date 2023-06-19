@@ -123,6 +123,7 @@ const renderWeightInput = (
 
 const FirstInput = ({navigation: {navigate}}: NavigationProps) => {
   const {data, isLoading} = useGetBaseLine();
+  console.log(data);
   const dietPurposeCd = useDietPurposeCode('SP002');
   const dietPurposeCdCategory = dietPurposeCd.data;
   const newDietPurposeCdCategory = dietPurposeCdCategory?.map(item => {
