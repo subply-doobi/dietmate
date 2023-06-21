@@ -15,6 +15,36 @@ export const SHIPPING_PRICE = 4000;
 export const FREE_SHIPPING_PRICE = 30000;
 
 // Doobi server category etc.
+
+//주간 운동 횟수
+export const WORKOUT_PURPOSE_CD = [
+  {label: '안함', value: 'SP008001'},
+  {label: '1회', value: 'SP008002'},
+  {label: '2회', value: 'SP008003'},
+  {label: '3회', value: 'SP008004'},
+  {label: '4회', value: 'SP008005'},
+  {label: '5회', value: 'SP008006'},
+  {label: '6회', value: 'SP008007'},
+  {label: '으악그만', value: 'SP008008'},
+];
+
+//회당 운동 시간(분)
+export const WORKOUT_FREQUENCY_CD = [
+  {label: '30분 이하', value: 'SP009001'},
+  {label: '60분 이하', value: 'SP009002'},
+  {label: '90분 이하', value: 'SP009003'},
+  {label: '120분 이하', value: 'SP009004'},
+  {label: '으악그만', value: 'SP009005'},
+];
+
+//운동 강도(누가 뭐래도 내 느낌)
+export const WORKOUT_INTENSITY_CD = [
+  {label: '이정도면 잠들기도 가능', value: 'SP010001'},
+  {label: '적당한 산책 느낌', value: 'SP010002'},
+  {label: '숨이 가쁘지만 버틸 만한 정도', value: 'SP010003'},
+  {label: '중간중간 쉬지 않으면 못버틴다', value: 'SP010004'},
+  {label: '유언장이 준비되어 있다', value: 'SP010005'},
+];
 export const DIET_PURPOSE_CD = {
   1: 'SP002001',
   2: 'SP002002',

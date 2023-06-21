@@ -40,9 +40,9 @@ export const useUpdateBaseLine = () => {
   const mutation = useMutation({
     mutationFn: (baseLine: IBaseLine) =>
       mutationFn<IBaseLine>(UPDATE_BASE_LINE, 'post', baseLine),
-    onSuccess: () => {
+    onSuccess: res => {
       queryClient.invalidateQueries({queryKey: [BASE_LINE]});
-      console.log('수정');
+      console.log('수정', res);
     },
     onError: error => {
       console.log(error);
