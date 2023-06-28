@@ -105,6 +105,22 @@ const Address = ({
       </>
     );
   };
+  const renderEntranceInput = ({field: {onChange, value}}: IFormField) => {
+    return (
+      <>
+        <InputHeader isActivated={value ? true : false}>
+          배송 참고사항
+        </InputHeader>
+        <Input
+          placeholder={'예) 3847*'}
+          value={value}
+          onChangeText={onChange}
+          isActivated={value ? true : false}
+          keyboardType="default"
+        />
+      </>
+    );
+  };
 
   return (
     <AccordionContentContainer>
@@ -222,6 +238,48 @@ const Address = ({
         render={field => renderReceiverContactInput(field)}
         name="receiverContact"
       />
+      <Col style={{marginTop: 40}}>
+        <ContentTitle>공동현관 출입</ContentTitle>
+        <Col style={{marginTop: 30}} />
+        <Row>
+          <EntarnceCheckBox>
+            <CheckIcon
+              source={
+                isChecked ? icons.checkboxCheckedPurple_24 : icons.checkbox_24
+              }
+              style={{marginRight: 10}}
+            />
+          </EntarnceCheckBox>
+          <EntranceCheckBoxText>공동현관 없음 (자유출입)</EntranceCheckBoxText>
+        </Row>
+        <EntranceRow>
+          <EntarnceCheckBox>
+            <CheckIcon
+              source={
+                isChecked ? icons.checkboxCheckedPurple_24 : icons.checkbox_24
+              }
+              style={{marginRight: 10}}
+            />
+          </EntarnceCheckBox>
+          <EntranceCheckBoxText>공동현관 비밀번호</EntranceCheckBoxText>
+        </EntranceRow>
+        <EntranceRow>
+          <EntarnceCheckBox style={{marginRight: 10}}>
+            <CheckIcon
+              source={
+                isChecked ? icons.checkboxCheckedPurple_24 : icons.checkbox_24
+              }
+            />
+          </EntarnceCheckBox>
+          <EntranceCheckBoxText>기타</EntranceCheckBoxText>
+        </EntranceRow>
+      </Col>
+
+      <Controller
+        control={control}
+        render={field => renderEntranceInput(field)}
+        name="entrance"
+      />
       {errors.receiverContact && (
         <ErrorBox>
           <ErrorText>{errors.receiverContact.message}</ErrorText>
@@ -291,7 +349,13 @@ const ContentTitle = styled(TextMain)`
 const GuideText = styled(TextMain)`
   font-size: 16px;
 `;
-
+const EntranceCheckBoxText = styled(TextMain)`
+  font-size: 14px;
+`;
+const EntarnceCheckBox = styled.TouchableOpacity``;
 const Checkbox = styled.TouchableOpacity`
   margin-left: 8px;
+`;
+const EntranceRow = styled(Row)`
+  margin-top: 28px;
 `;

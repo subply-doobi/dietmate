@@ -106,7 +106,7 @@ export const UserInfoTextInput = styled.TextInput`
   font-size: 16px;
   border-bottom-width: 1px;
   border-color: ${({isActivated}: StyledProps) =>
-    isActivated ? colors.inactivated : colors.inactivated};
+    isActivated ? colors.main : colors.inactivated};
 `;
 
 export const InputHeader = styled(InputHeaderText)`

@@ -177,7 +177,6 @@ const SecondInput = () => {
           item => item.cd === baseData?.sportsStrengthCd,
         ),
       });
-    console.log('frequency', frequency);
   }, [workoutPurposeCode.isSuccess]);
 
   const workoutButtonRange = [
