@@ -17,158 +17,39 @@ import {
 } from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 import {NavigationProps} from '../../constants/constants';
-import useUpdateDiet from '../../query/queries/diet';
-interface IOrder {
-  id: string;
-  date: string;
-  menu: Array<{
-    id: string;
-    foods: Array<number>;
-    menuCalories: string;
-    nutr: Array<{nutr: string; value: string}>;
-  }>;
-  totalPrice: string;
+import {useUpdateDiet} from '../../query/queries/diet';
+import {useGetOrder, useUpdateOrder} from '../../query/queries/order';
+import {ScrollView} from 'react-native-gesture-handler';
+import {ActivityIndicator} from 'react-native';
+
+interface IOrderData {
+  buyDate: string;
+  calorie: string;
+  crb: string;
 }
-const testData: Array<IOrder> = [
-  {
-    id: '1',
-    date: '2022.07.11 | 16.32',
-    menu: [
-      {
-        id: '1',
-        foods: [1, 2, 3],
-        menuCalories: '830kcal',
-        nutr: [
-          {nutr: '칼로리', value: '521 kcal'},
-          {nutr: '탄수화물', value: '61 g'},
-          {nutr: '단백질', value: '30 g'},
-          {nutr: '지방', value: '14 g'},
-        ],
-      },
-      {
-        id: '2',
-        foods: [4, 5],
-        menuCalories: '817kcal',
-        nutr: [
-          {nutr: '칼로리', value: '521 kcal'},
-          {nutr: '탄수화물', value: '61 g'},
-          {nutr: '단백질', value: '30 g'},
-          {nutr: '지방', value: '14 g'},
-        ],
-      },
-    ],
-    totalPrice: '25000',
-  },
-  {
-    id: '2',
-    date: '2022.07.11 | 16.32',
-    menu: [
-      {
-        id: '1',
-        foods: [1, 2, 3],
-        menuCalories: '830kcal',
-        nutr: [
-          {nutr: '칼로리', value: '521 kcal'},
-          {nutr: '탄수화물', value: '61 g'},
-          {nutr: '단백질', value: '30 g'},
-          {nutr: '지방', value: '14 g'},
-        ],
-      },
-      {
-        id: '2',
-        foods: [4, 5],
-        menuCalories: '817kcal',
-        nutr: [
-          {nutr: '칼로리', value: '521 kcal'},
-          {nutr: '탄수화물', value: '61 g'},
-          {nutr: '단백질', value: '30 g'},
-          {nutr: '지방', value: '14 g'},
-        ],
-      },
-      {
-        id: '3',
-        foods: [6, 7, 8],
-        menuCalories: '817kcal',
-        nutr: [
-          {nutr: '칼로리', value: '521 kcal'},
-          {nutr: '탄수화물', value: '61 g'},
-          {nutr: '단백질', value: '30 g'},
-          {nutr: '지방', value: '14 g'},
-        ],
-      },
-    ],
-    totalPrice: '25000',
-  },
-];
 
 const PaymentHistory = ({navigation, route}: NavigationProps) => {
-  type IMenu = {id: string; foods: number[]; menuCalories: string};
-  // const orderInfo = useUpdateDiet();
-  // console.log('paymentHistory', orderInfo);
+  const {data: orderData, isLoading} = useGetOrder();
+  // add all calorie of orderData except undefined
+  const totalCalorie = orderData
+    ?.map(e => e.calorie)
+    .filter(e => e !== undefined)
+    .reduce((acc, cur) => acc + parseInt(cur), 0);
+  console.log(totalCalorie);
 
-  const renderMenuList = ({item}: {item: IMenu}) => {
-    return (
-      <Col>
-        <CaloriesText>{item.menuCalories}</CaloriesText>
-        <Row style={{marginTop: 8}}>
-          {item.foods.map((food, index) => (
-            <Row key={index}>
-              <ThumbnailImage />
-              {item.foods.length - 1 === index || <VerticalSpace width={8} />}
-            </Row>
-          ))}
-        </Row>
-      </Col>
-    );
-  };
-
-  const renderOrderList = ({item}: {item: IOrder}) => (
-    <>
-      <Row
-        style={{
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-        }}>
-        <OrderDate>{item.date}</OrderDate>
-        <DetailBtn
-          onPress={() =>
-            navigate('PaymentDetail', {
-              item,
-            })
-          }>
-          <DetailBtnText>상세보기</DetailBtnText>
-        </DetailBtn>
-      </Row>
-      <HorizontalLine style={{marginTop: 8}} />
-      <Row>
-        <Arrow source={icons.arrowLeft_20} />
-        <FlatList
-          horizontal={true}
-          data={item.menu}
-          renderItem={renderMenuList}
-          showsHorizontalScrollIndicator={false}
-          ItemSeparatorComponent={() => (
-            <VerticalLine
-              height={56}
-              style={{marginHorizontal: 8, alignSelf: 'flex-end'}}
-            />
-          )}
-        />
-        <Arrow source={icons.arrowRight_20} />
-      </Row>
-      <TotalPrice>{item.totalPrice} 원</TotalPrice>
-    </>
-  );
-  return (
-    <SafeAreaView style={{flex: 1, marginHorizontal: 16}}>
-      <HorizontalSpace height={24} />
-      <FlatList
-        data={testData}
-        renderItem={renderOrderList}
-        ItemSeparatorComponent={() => <HorizontalSpace height={24} />}
-        keyExtractor={item => item.id}
-      />
-    </SafeAreaView>
+  return isLoading ? (
+    <ActivityIndicator />
+  ) : (
+    <ScrollView>
+      <OrderDate>{orderData[0]?.buyDate}</OrderDate>
+      {orderData?.map((e, i) => {
+        return (
+          <Col key={i}>
+            <CaloriesText>{totalCalorie}</CaloriesText>
+          </Col>
+        );
+      })}
+    </ScrollView>
   );
 };
 

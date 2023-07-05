@@ -21,3 +21,5 @@ export const PRODUCT_AUTO = 'PRODUCT_AUTO';
 export const PRODUCTS = 'PRODUCTS';
 export const PRODUCT = 'PRODUCT';
 export const MARK = 'MARK';
+//order
+export const ORDER = 'ORDER';

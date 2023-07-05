@@ -40,6 +40,9 @@ export const COUNT_CATEGORY = `${BASE_URL}/api/member/category/list-category-pro
 
 // api-member-order-controller
 export const CREATE_ORDER = `${BASE_URL}/api/member/order/create-order`; //주문 정보 생성
+export const UPDATE_ORDER = `${BASE_URL}/api/member/order/update-order`; //주문 정보 수정
+export const LIST_ORDER = `${BASE_URL}/api/member/order/list-order`; //주문 정보 조회
+export const DELETE_ORDER = `${BASE_URL}/api/member/order/delete-order`; //주문 정보 삭제
 
 // api-member-address-controller
 export const CREATE_ADDRESS = `${BASE_URL}/api/member/address/create-address`;
