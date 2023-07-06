@@ -28,17 +28,11 @@ interface IOrderData {
   calorie: string;
   crb: string;
 }
-
+interface IOrderDataGroupedByBuyDate {
+  [key: string]: IOrderData[];
+}
 const PaymentHistory = ({navigation, route}: NavigationProps) => {
   const {data: orderData, isLoading} = useGetOrder();
-  // add all calorie of orderData except undefined
-  const totalCalorie = orderData
-    ?.map(e => e.calorie)
-    .filter(e => e !== undefined)
-    .reduce((acc, cur) => acc + parseInt(cur), 0);
-  const updateDietMutation = useUpdateDiet();
-  const updateOrderMutation = useUpdateOrder();
-
   //dietNo별로 새로 만든 배열
   const orderDataGroupedByDietNo = orderData?.reduce((acc, cur) => {
     if (acc[cur.dietNo]) {
@@ -48,39 +42,23 @@ const PaymentHistory = ({navigation, route}: NavigationProps) => {
     }
     return acc;
   }, {});
-  //remove key of orderDataGroupedByDietNo
+  //orderDataGroupedByDietNo key제거
   const orderDataGroupedByDietNoArray = Object.values(orderDataGroupedByDietNo);
 
-  //orderDataGroupedByBuyDate가 원하는 data 모양
-  const orderDataGroupedByBuyDate = orderDataGroupedByDietNoArray?.reduce(
-    (acc, cur) => {
+  //orderDataGroupedByBuyDate
+  const orderDataGroupedByBuyDate: IOrderDataGroupedByBuyDate =
+    orderDataGroupedByDietNoArray?.reduce((acc: any, cur: any) => {
       if (acc[cur[0].buyDate]) {
         acc[cur[0].buyDate].push(cur);
       } else {
         acc[cur[0].buyDate] = [cur];
       }
       return acc;
-    },
-    {},
-  );
+    }, {});
 
-  // const buyDate = Object.keys(orderDataGroupedByBuyDate);
+  const buyDate = Object.keys(orderDataGroupedByBuyDate);
   const productData = Object.values(orderDataGroupedByBuyDate);
-  console.log('productData', productData[1]?.length);
-  const renderProduct = arg => {
-    for (let i = 0; i < productData[1]?.length; i++) {
-      return productData[arg][i].map((e, i) => (
-        <>
-          <ThumbnailImage source={{uri: `${BASE_URL}${e.mainAttUrl}`}} />
-        </>
-      ));
-    }
-  };
-  const test = arg => {
-    for (let i = 0; i < productData.length; i++) {
-      console.log('testest', i);
-    }
-  };
+  console.log(productData[0]);
   return isLoading ? (
     <ActivityIndicator />
   ) : (
@@ -95,46 +73,31 @@ const PaymentHistory = ({navigation, route}: NavigationProps) => {
           </Row>
           <HorizontalLine />
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <Row>
-              {/* {productData[i][0].map((e, i) => (
+            {productData[i].map((e, i) => {
+              return (
                 <>
-                  <ThumbnailImage
-                    source={{uri: `${BASE_URL}${e.mainAttUrl}`}}
-                  />
+                  <MakeVertical>
+                    {e.map(e => {
+                      return <CaloriesText>{e?.calorie}kcal</CaloriesText>;
+                    })}
+                    <Row>
+                      {e.map(e => {
+                        return (
+                          <>
+                            <ThumbnailImage
+                              source={{uri: `${BASE_URL}${e.mainAttUrl}`}}
+                            />
+                          </>
+                        );
+                      })}
+                      <VerticalLine
+                        style={{margin: 20, width: 20, backgroundColor: 'red'}}
+                      />
+                    </Row>
+                  </MakeVertical>
                 </>
-              ))}
-              <VerticalLine
-                style={{margin: 20, width: 20, backgroundColor: 'red'}}
-              />
-              {productData[i][1].map((e, i) => (
-                <>
-                  <ThumbnailImage
-                    source={{uri: `${BASE_URL}${e.mainAttUrl}`}}
-                  />
-                </>
-              ))}
-              <VerticalLine
-                style={{margin: 20, width: 20, backgroundColor: 'red'}}
-              />
-              {productData[i][2]?.map((e, i) => (
-                <>
-                  <ThumbnailImage
-                    source={{uri: `${BASE_URL}${e.mainAttUrl}`}}
-                  />
-                </>
-              ))}
-              <VerticalLine
-                style={{margin: 20, width: 20, backgroundColor: 'red'}}
-              />
-              {productData[i][3]?.map((e, i) => (
-                <>
-                  <ThumbnailImage
-                    source={{uri: `${BASE_URL}${e.mainAttUrl}`}}
-                  />
-                </>
-              ))} */}
-              {renderProduct(i)}
-            </Row>
+              );
+            })}
           </ScrollView>
         </Col>
       ))}
@@ -157,14 +120,16 @@ const DetailBtn = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
 `;
-
+const MakeVertical = styled.View`
+  flex-direction: column;
+`;
 const DetailBtnText = styled(TextMain)`
   font-size: 14px;
 `;
 
 const CaloriesText = styled(TextMain)`
   margin-top: 8px;
-  font-size: 14px;
+  font-size: 20px;
 `;
 
 const Arrow = styled.Image`

@@ -52,7 +52,8 @@ const Mypage = () => {
   // react-query
   const {data: baseLineData} = useGetBaseLine();
   const updateMutation = useUpdateBaseLine();
-
+  const {data: orderData, isLoading} = useGetOrder();
+  console.log('orderData', orderData);
   // FlatList Data
   type INutrTargetData = Array<{
     nutrient: string;
