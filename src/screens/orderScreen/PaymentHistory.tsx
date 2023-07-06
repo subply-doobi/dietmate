@@ -21,6 +21,7 @@ import {useUpdateDiet} from '../../query/queries/diet';
 import {useGetOrder, useUpdateOrder} from '../../query/queries/order';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ActivityIndicator} from 'react-native';
+import {BASE_URL} from '../../query/queries/urls';
 
 interface IOrderData {
   buyDate: string;
@@ -35,20 +36,108 @@ const PaymentHistory = ({navigation, route}: NavigationProps) => {
     ?.map(e => e.calorie)
     .filter(e => e !== undefined)
     .reduce((acc, cur) => acc + parseInt(cur), 0);
-  console.log(totalCalorie);
+  const updateDietMutation = useUpdateDiet();
+  const updateOrderMutation = useUpdateOrder();
 
+  //dietNo별로 새로 만든 배열
+  const orderDataGroupedByDietNo = orderData?.reduce((acc, cur) => {
+    if (acc[cur.dietNo]) {
+      acc[cur.dietNo].push(cur);
+    } else {
+      acc[cur.dietNo] = [cur];
+    }
+    return acc;
+  }, {});
+  //remove key of orderDataGroupedByDietNo
+  const orderDataGroupedByDietNoArray = Object.values(orderDataGroupedByDietNo);
+
+  //orderDataGroupedByBuyDate가 원하는 data 모양
+  const orderDataGroupedByBuyDate = orderDataGroupedByDietNoArray?.reduce(
+    (acc, cur) => {
+      if (acc[cur[0].buyDate]) {
+        acc[cur[0].buyDate].push(cur);
+      } else {
+        acc[cur[0].buyDate] = [cur];
+      }
+      return acc;
+    },
+    {},
+  );
+
+  // const buyDate = Object.keys(orderDataGroupedByBuyDate);
+  const productData = Object.values(orderDataGroupedByBuyDate);
+  console.log('productData', productData[1]?.length);
+  const renderProduct = arg => {
+    for (let i = 0; i < productData[1]?.length; i++) {
+      return productData[arg][i].map((e, i) => (
+        <>
+          <ThumbnailImage source={{uri: `${BASE_URL}${e.mainAttUrl}`}} />
+        </>
+      ));
+    }
+  };
+  const test = arg => {
+    for (let i = 0; i < productData.length; i++) {
+      console.log('testest', i);
+    }
+  };
   return isLoading ? (
     <ActivityIndicator />
   ) : (
     <ScrollView>
-      <OrderDate>{orderData[0]?.buyDate}</OrderDate>
-      {orderData?.map((e, i) => {
-        return (
-          <Col key={i}>
-            <CaloriesText>{totalCalorie}</CaloriesText>
-          </Col>
-        );
-      })}
+      {buyDate.map((e, i) => (
+        <Col key={i}>
+          <Row>
+            <OrderDate>{e}</OrderDate>
+            <DetailBtn>
+              <DetailBtnText>상세보기</DetailBtnText>
+            </DetailBtn>
+          </Row>
+          <HorizontalLine />
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <Row>
+              {/* {productData[i][0].map((e, i) => (
+                <>
+                  <ThumbnailImage
+                    source={{uri: `${BASE_URL}${e.mainAttUrl}`}}
+                  />
+                </>
+              ))}
+              <VerticalLine
+                style={{margin: 20, width: 20, backgroundColor: 'red'}}
+              />
+              {productData[i][1].map((e, i) => (
+                <>
+                  <ThumbnailImage
+                    source={{uri: `${BASE_URL}${e.mainAttUrl}`}}
+                  />
+                </>
+              ))}
+              <VerticalLine
+                style={{margin: 20, width: 20, backgroundColor: 'red'}}
+              />
+              {productData[i][2]?.map((e, i) => (
+                <>
+                  <ThumbnailImage
+                    source={{uri: `${BASE_URL}${e.mainAttUrl}`}}
+                  />
+                </>
+              ))}
+              <VerticalLine
+                style={{margin: 20, width: 20, backgroundColor: 'red'}}
+              />
+              {productData[i][3]?.map((e, i) => (
+                <>
+                  <ThumbnailImage
+                    source={{uri: `${BASE_URL}${e.mainAttUrl}`}}
+                  />
+                </>
+              ))} */}
+              {renderProduct(i)}
+            </Row>
+          </ScrollView>
+        </Col>
+      ))}
     </ScrollView>
   );
 };
@@ -84,7 +173,7 @@ const Arrow = styled.Image`
   height: 20px;
 `;
 
-const ThumbnailImage = styled.View`
+const ThumbnailImage = styled.Image`
   background-color: ${colors.backgroundLight};
   width: 56px;
   height: 56px;
