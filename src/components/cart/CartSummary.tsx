@@ -36,7 +36,8 @@ const CartSummary = () => {
       <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
         <SummaryText>총 끼니 ({menuNum} 개)</SummaryText>
         <SummaryValue>
-          끼니 당 {commaToNum(Math.floor(priceTotal / menuNum), 0)} 원
+          끼니 당{' '}
+          {menuNum === 0 ? 0 : commaToNum(Math.floor(priceTotal / menuNum))} 원
         </SummaryValue>
       </Row>
       <HorizontalLine style={{marginTop: 8}} />
@@ -45,8 +46,8 @@ const CartSummary = () => {
         <SummaryValue>{commaToNum(priceTotal)} 원</SummaryValue>
       </Row>
       <Row style={{marginTop: 8, justifyContent: 'space-between'}}>
-        <SummaryText>배송비 (30,000원 이상 무료배송)</SummaryText>
-        <SummaryValue>{priceTotal >= 30000 ? '무료' : '4,000원'}</SummaryValue>
+        <SummaryText>배송비 </SummaryText>
+        <SummaryValue>{'4,000원'}</SummaryValue>
       </Row>
     </TotalSummaryContainer>
   );

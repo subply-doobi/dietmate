@@ -168,6 +168,8 @@ const FirstInput = ({navigation: {navigate}}: NavigationProps) => {
   const weightValue = useWatch({control, name: 'weight'});
   const dietPurposeValue = useWatch({control, name: 'dietPurposeCd'});
 
+  console.log('firstInput:', data);
+
   return (
     <Container>
       <ScrollView

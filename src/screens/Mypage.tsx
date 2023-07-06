@@ -52,6 +52,7 @@ const Mypage = () => {
   const createOrderMutation = useCreateOrder();
   const testData = useListDiet();
 
+  console.log('cart', baseLineData);
   // console.log(
   //   'updateDiet',
   //   updateDietMutation.mutate({
