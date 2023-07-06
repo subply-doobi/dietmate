@@ -14,6 +14,7 @@ import {
   TextSub,
   VerticalLine,
   VerticalSpace,
+  Container,
 } from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 import {NavigationProps} from '../../constants/constants';
@@ -22,14 +23,22 @@ import {useGetOrder, useUpdateOrder} from '../../query/queries/order';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ActivityIndicator} from 'react-native';
 import {BASE_URL} from '../../query/queries/urls';
-
+import {commaToNum} from '../../util/sumUp';
+import {isSearchBarAvailableForCurrentPlatform} from 'react-native-screens';
 interface IOrderData {
   buyDate: string;
   calorie: string;
-  crb: string;
 }
 interface IOrderDataGroupedByBuyDate {
   [key: string]: IOrderData[];
+}
+interface IProductData {
+  buyDate: string;
+  calorie: string;
+  crb: string;
+  mainAttUrl: string;
+  price: string;
+  dietNo: string;
 }
 const PaymentHistory = ({navigation, route}: NavigationProps) => {
   const {data: orderData, isLoading} = useGetOrder();
@@ -43,11 +52,12 @@ const PaymentHistory = ({navigation, route}: NavigationProps) => {
     return acc;
   }, {});
   //orderDataGroupedByDietNo key제거
-  const orderDataGroupedByDietNoArray = Object.values(orderDataGroupedByDietNo);
-
-  //orderDataGroupedByBuyDate
+  const orderDataGroupedByDietNoWithoutKey = Object.values(
+    orderDataGroupedByDietNo,
+  );
+  //날짜별로 구매내역
   const orderDataGroupedByBuyDate: IOrderDataGroupedByBuyDate =
-    orderDataGroupedByDietNoArray?.reduce((acc: any, cur: any) => {
+    orderDataGroupedByDietNoWithoutKey?.reduce((acc: any, cur: any) => {
       if (acc[cur[0].buyDate]) {
         acc[cur[0].buyDate].push(cur);
       } else {
@@ -58,50 +68,78 @@ const PaymentHistory = ({navigation, route}: NavigationProps) => {
 
   const buyDate = Object.keys(orderDataGroupedByBuyDate);
   const productData = Object.values(orderDataGroupedByBuyDate);
-  console.log(productData[0]);
+  // console.log(orderDataGroupedByDietNo);
+  //dietNo별로 칼로리 총합
+  const totalCalorie = (arg: number) =>
+    orderDataGroupedByDietNoWithoutKey[arg]?.reduce((acc: any, cur: any) => {
+      return acc + parseInt(cur.calorie);
+    }, 0);
+  //주문별 총합
+  const totalPrice = (arg: number) =>
+    productData[arg]?.reduce((acc: any, cur: any) => {
+      if (cur[0]?.price === undefined) return acc;
+      return (
+        acc +
+        cur.reduce((acc: any, cur: any) => {
+          return acc + parseInt(cur?.price);
+        }, 0)
+      );
+    }, 0);
+
   return isLoading ? (
     <ActivityIndicator />
   ) : (
-    <ScrollView>
-      {buyDate.map((e, i) => (
-        <Col key={i}>
-          <Row>
-            <OrderDate>{e}</OrderDate>
-            <DetailBtn>
-              <DetailBtnText>상세보기</DetailBtnText>
-            </DetailBtn>
-          </Row>
-          <HorizontalLine />
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {productData[i].map((e, i) => {
-              return (
-                <>
-                  <MakeVertical>
-                    {e.map(e => {
-                      return <CaloriesText>{e?.calorie}kcal</CaloriesText>;
-                    })}
-                    <Row>
-                      {e.map(e => {
-                        return (
-                          <>
-                            <ThumbnailImage
-                              source={{uri: `${BASE_URL}${e.mainAttUrl}`}}
-                            />
-                          </>
-                        );
-                      })}
-                      <VerticalLine
-                        style={{margin: 20, width: 20, backgroundColor: 'red'}}
-                      />
-                    </Row>
-                  </MakeVertical>
-                </>
-              );
-            })}
-          </ScrollView>
-        </Col>
-      ))}
-    </ScrollView>
+    <Container>
+      <ScrollView>
+        {buyDate.map((e, i) => (
+          <Col key={i}>
+            <Row style={{justifyContent: 'space-between'}}>
+              <OrderDate>{e}</OrderDate>
+              <DetailBtn>
+                <DetailBtnText>상세보기</DetailBtnText>
+              </DetailBtn>
+            </Row>
+            <HorizontalLine />
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              {productData[i].map(
+                (element: any, productDataIndex: number, array) => {
+                  return (
+                    <Col key={i + productDataIndex}>
+                      <MakeVertical>
+                        <CaloriesText>
+                          {i === 0
+                            ? totalCalorie(productDataIndex)
+                            : totalCalorie(
+                                productDataIndex + productData[i - 1]?.length,
+                              )}
+                          kcal
+                        </CaloriesText>
+                        <Row>
+                          {element.map((ele: any) => {
+                            return (
+                              <>
+                                <ThumbnailImage
+                                  source={{uri: `${BASE_URL}${ele.mainAttUrl}`}}
+                                />
+                              </>
+                            );
+                          })}
+                          <VerticalLine style={{margin: 20}} />
+                        </Row>
+                      </MakeVertical>
+                    </Col>
+                  );
+                },
+              )}
+            </ScrollView>
+            <HorizontalLine style={{marginTop: 8}} />
+            <TotalPrice>{commaToNum(totalPrice(i))}원</TotalPrice>
+          </Col>
+        ))}
+      </ScrollView>
+    </Container>
   );
 };
 
@@ -110,7 +148,9 @@ export default PaymentHistory;
 const OrderDate = styled(TextSub)`
   font-size: 12px;
 `;
-
+const OrderDateContainer = styled.View`
+  justify-content: space-between;
+`;
 const DetailBtn = styled.TouchableOpacity`
   width: 64px;
   height: 24px;
@@ -119,6 +159,8 @@ const DetailBtn = styled.TouchableOpacity`
   border-color: ${colors.lineLight};
   align-items: center;
   justify-content: center;
+  margin-bottom: 8px;
+  margin-left: 8px;
 `;
 const MakeVertical = styled.View`
   flex-direction: column;
@@ -129,7 +171,7 @@ const DetailBtnText = styled(TextMain)`
 
 const CaloriesText = styled(TextMain)`
   margin-top: 8px;
-  font-size: 20px;
+  font-size: 14px;
 `;
 
 const Arrow = styled.Image`
@@ -143,10 +185,13 @@ const ThumbnailImage = styled.Image`
   width: 56px;
   height: 56px;
   border-radius: 2px;
+  margin-top: 8px;
+  margin-right: 8px;
 `;
 
 const TotalPrice = styled(TextMain)`
   margin-top: 8px;
+  margin-bottom: 24px;
   font-size: 16px;
   font-weight: bold;
   align-self: flex-end;
