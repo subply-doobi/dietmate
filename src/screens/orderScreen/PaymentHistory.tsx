@@ -18,6 +18,7 @@ import {
 } from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 import {NavigationProps} from '../../constants/constants';
+import {useNavigation} from '@react-navigation/native';
 import {useUpdateDiet} from '../../query/queries/diet';
 import {useGetOrder, useUpdateOrder} from '../../query/queries/order';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -40,8 +41,9 @@ interface IProductData {
   price: string;
   dietNo: string;
 }
-const PaymentHistory = ({navigation, route}: NavigationProps) => {
+const PaymentHistory = () => {
   const {data: orderData, isLoading} = useGetOrder();
+  const {navigate} = useNavigation();
   //dietNo별로 새로 만든 배열
   const orderDataGroupedByDietNo = orderData?.reduce((acc, cur) => {
     if (acc[cur.dietNo]) {
@@ -95,7 +97,17 @@ const PaymentHistory = ({navigation, route}: NavigationProps) => {
           <Col key={i}>
             <Row style={{justifyContent: 'space-between'}}>
               <OrderDate>{e}</OrderDate>
-              <DetailBtn>
+              <DetailBtn
+                onPress={() =>
+                  navigate('PaymentHistoryNav', {
+                    screen: 'PaymentDetail',
+                    params: {
+                      productData: productData[i],
+                      buyDate: e,
+                      totalPrice: totalPrice(i),
+                    },
+                  })
+                }>
                 <DetailBtnText>상세보기</DetailBtnText>
               </DetailBtn>
             </Row>
@@ -117,13 +129,13 @@ const PaymentHistory = ({navigation, route}: NavigationProps) => {
                           kcal
                         </CaloriesText>
                         <Row>
-                          {element.map((ele: any) => {
+                          {element.map((ele: any, eleIndex: number) => {
                             return (
-                              <>
+                              <Col key={eleIndex}>
                                 <ThumbnailImage
                                   source={{uri: `${BASE_URL}${ele.mainAttUrl}`}}
                                 />
-                              </>
+                              </Col>
                             );
                           })}
                           <VerticalLine style={{margin: 20}} />
