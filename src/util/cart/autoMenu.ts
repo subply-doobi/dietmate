@@ -1,14 +1,10 @@
+import {NUTR_ERROR_RANGE} from '../../constants/constants';
 import {IBaseLine} from '../../query/types/baseLine';
 import {IProductData, IProductsData} from '../../query/types/product';
 
-const RECOMMEND_TRY = 50;
-const UNIT_TRY = 30;
-const ERROR_RANGE = {
-  calorie: [-50, 50],
-  carb: [-15, 15],
-  protein: [-5, 5],
-  fat: [-3, 3],
-};
+const RECOMMEND_TRY = 100;
+const UNIT_TRY = 50;
+const ERROR_RANGE = NUTR_ERROR_RANGE;
 
 const getSum = (menu: IProductsData) => {
   // 1: cal | 2: carb | 3: protein | 4: fat | 5: price
@@ -75,7 +71,7 @@ interface IGetAvailableFoods {
   unitCalorie?: number;
   currentUnitIdx?: number;
 }
-const getAvailableFoods = ({
+export const getAvailableFoods = ({
   foods,
   menu,
   target,
@@ -186,11 +182,11 @@ const getAvailableFoods = ({
         parseInt(foods[i].calorie) <= remain[0] + errorRange['calorie'][1] &&
         parseInt(foods[i].calorie) >= remain[0] + errorRange['calorie'][0] &&
         parseInt(foods[i].carb) <= remain[1] + errorRange['carb'][1] &&
-        // parseInt(foods[i].carb) >= remain[1] - errorRange['carb'][0] &&
+        // parseInt(foods[i].carb) >= remain[1] + errorRange['carb'][0] &&
         parseInt(foods[i].protein) <= remain[2] + errorRange['protein'][1] &&
-        // parseInt(foods[i].protein) >= remain[2] - errorRange['protein'][0] &&
+        // parseInt(foods[i].protein) >= remain[2] + errorRange['protein'][0] &&
         parseInt(foods[i].fat) <= remain[3] + errorRange['fat'][1] &&
-        // parseInt(foods[i].fat) >= remain[3] - errorRange['fat'][0] &&
+        // parseInt(foods[i].fat) >= remain[3] + errorRange['fat'][0] &&
         parseInt(foods[i].price) <= remain[4] &&
         menuProductNoArr.includes(foods[i].productNo) === false
       ) {
@@ -310,12 +306,7 @@ const initialize = (
 ) => {
   // 0: cal | 1: carb | 2: protein | 3: fat | 4: price
 
-  const errorRange = {
-    calorie: [-50, 50],
-    carb: [-15, 15],
-    protein: [-5, 5],
-    fat: [-3, 3],
-  };
+  const errorRange = ERROR_RANGE;
 
   const target = [
     parseInt(baseLine.calorie),

@@ -1,6 +1,7 @@
 export interface IBaseLine {
   companyCd: string;
   userId: string;
+  nickNm: string;
   calorie: string;
   carb: string;
   protein: string;
@@ -10,6 +11,4 @@ export interface IBaseLine {
   height: string;
   weight: string;
   dietPurposeCd: string;
-  weightTimeCd: string;
-  aerobicTimeCd: string;
 }

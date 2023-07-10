@@ -3,8 +3,8 @@ import {Modal} from 'react-native';
 import styled from 'styled-components/native';
 
 import colors from '../../../styles/colors';
-import {SCREENWIDTH} from '../../../constants/constants';
-import {Row, StyledProps, TextMain} from '../../../styles/styledConsts';
+import {DALERT_WIDTH, SCREENWIDTH} from '../../../constants/constants';
+import {Row, StyledProps, TextMain} from '../../../styles/StyledConsts';
 
 interface IDAlert {
   alertShow: boolean;
@@ -69,7 +69,7 @@ const ModalBackGround = styled.View`
 
 const PopUpContainer = styled.View`
   width: ${({width}: StyledProps) =>
-    width ? `${width}px` : `${SCREENWIDTH - 80}px`};
+    width ? `${width}px` : `${DALERT_WIDTH}px`};
   height: ${({height}: StyledProps) => (height ? `${height}px` : 'auto')};
   background-color: ${({backgroundColor}: StyledProps) =>
     backgroundColor ? backgroundColor : colors.white};

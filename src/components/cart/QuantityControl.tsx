@@ -2,7 +2,7 @@ import {SetStateAction} from 'react';
 import styled from 'styled-components/native';
 
 import {icons} from '../../assets/icons/iconSource';
-import {TextMain} from '../../styles/styledConsts';
+import {TextMain} from '../../styles/StyledConsts';
 import {IDietDetailProductData} from '../../query/types/diet';
 
 const QuantityControl = ({

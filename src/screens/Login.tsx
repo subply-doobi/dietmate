@@ -1,19 +1,24 @@
+// Description: 로그인 화면
+//RN, 3rd
 import React, {useEffect, useCallback} from 'react';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
-import {BtnCTA, BtnText} from '../styles/styledConsts';
 import colors from '../styles/colors';
-
-import {useGetBaseLine} from '../query/queries/baseLine';
 import {kakaoLogin, validateToken} from '../query/queries/token';
 import {IBaseLine} from '../query/types/baseLine';
+//react-query
+import {useGetBaseLine} from '../query/queries/baseLine';
+//doobi Component
+import {BtnCTA, BtnText} from '../styles/StyledConsts';
+//sentry
+import * as Sentry from '@sentry/react-native';
 
 const navigateByBaseLine = (data: IBaseLine | any, navigation) => {
+  // check user 회원가입 여부
   const hasBaseLine =
     data?.constructor === Object && Object.keys(data).length === 0
       ? false
       : true;
-
   if (hasBaseLine) {
     navigation.reset({
       index: 0,
@@ -30,19 +35,24 @@ const Login = () => {
 
   // react-query
   const {data, refetch} = useGetBaseLine({enabled: false});
-
   const signInWithKakao = async (): Promise<void> => {
     await kakaoLogin();
     const refetchedData = await refetch();
     refetchedData && navigateByBaseLine(refetchedData, navigation);
+    navigation.navigate('BottomTabNav', {screen: 'Home'});
   };
-
+  // capture errors
+  try {
+    signInWithKakao();
+  } catch (err) {
+    Sentry.captureException(err);
+  }
   // etc
   useEffect(() => {
     const useCheckUser = async () => {
       const {isValidated} = await validateToken();
       if (!isValidated) return;
-      const refetchedData = await refetch();
+      const refetchedData = await refetch().then(res => res.data);
       refetchedData && navigateByBaseLine(refetchedData, navigation);
     };
 

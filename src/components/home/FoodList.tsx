@@ -19,7 +19,7 @@ import {
   StyledProps,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import DAlert from '../common/alert/DAlert';
 
@@ -31,6 +31,8 @@ import {
   useListDietDetail,
 } from '../../query/queries/diet';
 import {useGetBaseLine} from '../../query/queries/baseLine';
+import {NUTR_ERROR_RANGE} from '../../constants/constants';
+import {useDeleteProductMark} from '../../query/queries/product';
 
 interface IFoodList {
   item: IProductData;
@@ -43,10 +45,13 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
 
   // react-query
-  const {data: dietDetailData} = useListDietDetail(currentDietNo);
+  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
+    enabled: currentDietNo ? true : false,
+  });
   const {data: baseLineData} = useGetBaseLine();
   const addMutation = useCreateDietDetail();
   const deleteMutation = useDeleteDietDetail();
+  const deleteProductMarkMutation = useDeleteProductMark();
 
   // state
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
@@ -54,7 +59,6 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
   // etc
   // 장바구니에 해당 상품이 들어있는지
   const isAdded = item.productChoiceYn === 'Y';
-
   // 남은 영양 계산
   const {calExceed, carbExceed, proteinExceed, fatExceed} = useMemo(() => {
     if (!dietDetailData || !baseLineData) {
@@ -67,15 +71,22 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
     }
     const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
     return {
-      calExceed: parseInt(baseLineData.calorie) - cal < parseInt(item.calorie),
-      carbExceed: parseInt(baseLineData.carb) - carb < parseInt(item.carb),
+      calExceed:
+        parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[1] - cal <
+        parseInt(item.calorie),
+      carbExceed:
+        parseInt(baseLineData.carb) + NUTR_ERROR_RANGE.carb[1] - carb <
+        parseInt(item.carb),
       proteinExceed:
-        parseInt(baseLineData.protein) - protein < parseInt(item.protein),
-      fatExceed: parseInt(baseLineData.fat) - fat < parseInt(item.fat),
+        parseInt(baseLineData.protein) + NUTR_ERROR_RANGE.protein[1] - protein <
+        parseInt(item.protein),
+      fatExceed:
+        parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[1] - fat <
+        parseInt(item.fat),
     };
   }, [dietDetailData, baseLineData]);
 
-  // onDelete | onAdd fn
+  // onDelete | onAdd | onLikeDelete fn
   const onDelete = () => {
     deleteMutation.mutate({
       dietNo: currentDietNo,
@@ -88,6 +99,10 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
   const onAdd = () => {
     addMutation.mutate({dietNo: currentDietNo, food: item});
     aniPValue.setValue(addedP); // TBD | onSuccess 이후에 실행되어야함
+  };
+
+  const onLikeDelete = () => {
+    deleteProductMarkMutation.mutate(item.productNo);
   };
 
   // animation
@@ -209,8 +224,9 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
           <Row style={{justifyContent: 'space-between'}}>
             <Price>{commaToNum(item?.price)}원</Price>
             {screen === 'LikeScreen' && (
-              <DeleteLikeFoodBtn onPress={() => console.log('좋아요취소')}>
-                <DeleteLikeFoodBtnText>♡ 취소</DeleteLikeFoodBtnText>
+              <DeleteLikeFoodBtn onPress={onLikeDelete}>
+                <LikeImg source={icons.likeSmall_20} />
+                <DeleteLikeFoodBtnText>취소</DeleteLikeFoodBtnText>
               </DeleteLikeFoodBtn>
             )}
           </Row>
@@ -221,7 +237,6 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
           style={{width: aniWidthByPosition}}
           onPress={() => setDeleteAlertShow(true)}>
           <AniCartImage
-            {...panResponder.panHandlers}
             style={{transform: [{scale: aniScaleByPosition}]}}
             source={icons.cartWhite_40}
           />
@@ -318,11 +333,12 @@ const DeleteLikeFoodBtn = styled.TouchableOpacity`
 `;
 
 const LikeImg = styled.Image`
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
 `;
 
 const DeleteLikeFoodBtnText = styled(TextSub)`
+  margin-left: 2px;
   font-size: 14px;
 `;
 

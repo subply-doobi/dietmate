@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, SafeAreaView, StyleSheet} from 'react-native';
 
-import {HorizontalSpace} from '../../../styles/styledConsts';
+import {HorizontalSpace} from '../../../styles/StyledConsts';
 import colors from '../../../styles/colors';
 
 const ShippingPart = () => {

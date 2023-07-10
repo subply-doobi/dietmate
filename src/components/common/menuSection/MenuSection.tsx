@@ -7,7 +7,7 @@ import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../stores/store';
 import {icons} from '../../../assets/icons/iconSource';
-import {Row} from '../../../styles/styledConsts';
+import {Row} from '../../../styles/StyledConsts';
 import {findDietSeq} from '../../../util/findDietSeq';
 import colors from '../../../styles/colors';
 
@@ -18,7 +18,16 @@ import DeleteAlertContent from '../alert/DeleteAlertContent';
 import NutrientsProgress from '../nutrient/NutrientsProgress';
 
 // react-query
-import {useDeleteDiet, useListDiet} from '../../../query/queries/diet';
+import {
+  useDeleteDiet,
+  useListDiet,
+  useListDietDetail,
+} from '../../../query/queries/diet';
+import {scrollTo} from 'react-native-reanimated';
+import CartFoodList from '../../cart/CartFoodList';
+import DBottomSheet from '../DBottomSheet';
+import NumberPickerContent from '../../cart/NumberPickerContent';
+import Menu from './Menu';
 
 const MenuSection = () => {
   // redux
@@ -27,14 +36,20 @@ const MenuSection = () => {
   // react-query
   const {data: dietData} = useListDiet();
   const deleteDietMutation = useDeleteDiet();
+  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
+    enabled: currentDietNo ? true : false,
+  });
 
   // state
   const [dietNoToDelete, setDietNoToDelete] = useState<string>();
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
+  const [menuShow, setMenuShow] = useState(false);
+  const [numberPickerShow, setNumberPickerShow] = useState(false);
+  const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
 
   // etc
   const onDeleteDiet = () => {
-    if (!dietData) return;
+    if (!dietData || dietData.length === 1) return;
     dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
     setDeleteAlertShow(false);
   };
@@ -45,14 +60,18 @@ const MenuSection = () => {
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <MenuSelectCard />
         </ScrollView>
-        <DeleteBtn
-          onPress={() => {
-            setDietNoToDelete(currentDietNo);
-            setDeleteAlertShow(true);
-          }}>
-          <DeleteImg source={icons.deleteRound_18} />
-        </DeleteBtn>
+        {dietData && dietData.length > 1 && (
+          <DeleteBtn
+            onPress={() => {
+              setDietNoToDelete(currentDietNo);
+              setDeleteAlertShow(true);
+            }}>
+            <DeleteImg source={icons.deleteRound_18} />
+          </DeleteBtn>
+        )}
       </HeaderRow>
+
+      {/* 끼니 삭제 알럿 */}
       <DAlert
         alertShow={deleteAlertShow}
         renderContent={() => (
@@ -65,9 +84,39 @@ const MenuSection = () => {
         onConfirm={() => onDeleteDiet()}
         onCancel={() => setDeleteAlertShow(false)}
       />
-      <ProgressContainer>
-        {currentDietNo && <NutrientsProgress currentDietNo={currentDietNo} />}
+
+      {/* progressBar */}
+      <ProgressContainer onPress={() => setMenuShow(v => !v)}>
+        {dietDetailData && (
+          <NutrientsProgress dietDetailData={dietDetailData} />
+        )}
+        <Arrow source={menuShow ? icons.arrowUp_20 : icons.arrowDown_20} />
       </ProgressContainer>
+
+      {/* menu */}
+      {menuShow && dietDetailData && (
+        <MenuContainer>
+          <Menu
+            dietNo={currentDietNo}
+            dietDetailData={dietDetailData}
+            setDietNoToNumControl={setDietNoToNumControl}
+            setNumberPickerShow={setNumberPickerShow}
+          />
+        </MenuContainer>
+      )}
+
+      {/* 끼니 수량 조절용 BottomSheet */}
+      <DBottomSheet
+        alertShow={numberPickerShow}
+        setAlertShow={setNumberPickerShow}
+        renderContent={() => (
+          <NumberPickerContent
+            setNumberPickerShow={setNumberPickerShow}
+            dietNoToNumControl={dietNoToNumControl}
+          />
+        )}
+        onCancel={() => setNumberPickerShow(false)}
+      />
     </Container>
   );
 };
@@ -78,6 +127,7 @@ const Container = styled.View`
   background-color: ${colors.backgroundLight2};
   padding: 0 0 8px;
   width: 100%;
+  z-index: 1000;
 `;
 
 const HeaderRow = styled(Row)`
@@ -97,10 +147,22 @@ const DeleteImg = styled.Image`
   height: 18px;
 `;
 
-const ProgressContainer = styled.View`
+const ProgressContainer = styled.Pressable`
   padding-top: 0px;
   padding-bottom: 0px;
   padding-left: 16px;
   padding-right: 16px;
   background-color: ${colors.white};
+`;
+
+const Arrow = styled.Image`
+  width: 20px;
+  height: 20px;
+  align-self: center;
+  z-index: -1;
+`;
+
+const MenuContainer = styled.View`
+  background-color: ${colors.white};
+  padding: 0px 8px 16px 8px;
 `;

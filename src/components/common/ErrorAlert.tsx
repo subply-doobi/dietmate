@@ -5,21 +5,23 @@ import {RootState} from '../../stores/store';
 import {errorActionByCode} from '../../util/handleError';
 import DAlert from './alert/DAlert';
 import RequestAlertContent from './alert/RequestAlertContent';
-
-const CommonAlert = () => {
+import {useQueryErrorResetBoundary} from '@tanstack/react-query';
+const ErrorAlert = props => {
   // navigation
   const {navigate} = useNavigation();
   const {errorCode} = useSelector((state: RootState) => state.commonAlert);
   const dispatch = useDispatch();
-
+  const {reset} = useQueryErrorResetBoundary();
   return (
     <>
       <DAlert
         alertShow={errorCode ? true : false}
         onConfirm={() => {
-          errorCode &&
-            errorActionByCode[errorCode] &&
-            errorActionByCode[errorCode](navigate);
+          errorCode === 500
+            ? reset()
+            : errorCode &&
+              errorActionByCode[errorCode] &&
+              errorActionByCode[errorCode](navigate);
           dispatch(closeCommonAlert());
         }}
         onCancel={() => {
@@ -32,4 +34,4 @@ const CommonAlert = () => {
   );
 };
 
-export default CommonAlert;
+export default ErrorAlert;

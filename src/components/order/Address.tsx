@@ -24,8 +24,9 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {IFormField, validationRules} from '../../constants/constants';
+import {useListAddress, useGetAddress} from '../../query/queries/address';
 
 interface IAddress {
   control: any;
@@ -33,7 +34,70 @@ interface IAddress {
   errors: any;
   setValue: any;
 }
+interface IListAddressData {
+  addr1: string;
+  addr2: string;
+  addrNo?: string;
+  companyCd?: string;
+  useYn?: string;
+  userId?: string;
+  zipCode: string;
+}
 
+const renderEntranceInput = ({field: {onChange, value}}: IFormField) => {
+  return (
+    <>
+      <InputHeader isActivated={value ? true : false}>
+        배송 참고사항
+      </InputHeader>
+      <Input
+        placeholder={'예) 3847*'}
+        value={value}
+        onChangeText={onChange}
+        isActivated={value ? true : false}
+        keyboardType="default"
+      />
+    </>
+  );
+};
+const entranceType = ['공동현관 없음(자유출입)', '공동현관 비밀번호', '기타'];
+const EntranceMethodContainer = ({control}) => {
+  // 공동형관 출입 checkBox
+  const [isEntranceChecked, setIsEntranceChecked] =
+    useState('공동현관 없음(자유출입)');
+  return (
+    <>
+      <ContentTitle style={{marginTop: 30}}>공동현관 출입</ContentTitle>
+      <Col style={{marginTop: 30}} />
+      {entranceType.map((e, i) => {
+        return (
+          <Row key={i} style={{marginBottom: 28}}>
+            <EntranceCheckBox
+              onPress={() => {
+                setIsEntranceChecked(e);
+              }}>
+              <CheckIcon
+                source={
+                  isEntranceChecked === e
+                    ? icons.checkboxCheckedPurple_24
+                    : icons.checkbox_24
+                }
+                style={{marginRight: 10}}
+              />
+            </EntranceCheckBox>
+            <EntranceCheckBoxText>{e}</EntranceCheckBoxText>
+          </Row>
+        );
+      })}
+
+      <Controller
+        control={control}
+        render={field => renderEntranceInput(field)}
+        name="entrance"
+      />
+    </>
+  );
+};
 const Address = ({
   control,
   handleSubmit,
@@ -46,7 +110,7 @@ const Address = ({
     (state: RootState) => state.order,
   );
   // 렌더링이 6번되는데....
-
+  const {data: listAddressData} = useListAddress();
   // navigation
   const navigation = useNavigation();
   // useRef (받는 분 -> 휴대폰 focus)
@@ -99,7 +163,7 @@ const Address = ({
 
   return (
     <AccordionContentContainer>
-      {orderInfo.address.map((ads, index: number) => (
+      {listAddressData?.map((ads: any, index: number) => (
         <Col style={{width: '100%'}} key={index}>
           <AddressBox>
             <SelectContainer
@@ -115,14 +179,18 @@ const Address = ({
                 }
               />
               <Col>
-                <AddressBase>{ads.base}</AddressBase>
-                <AddressDetail>{ads.detail}</AddressDetail>
+                <AddressBase>{ads.addr1}</AddressBase>
+                <AddressDetail>{ads.addr2}</AddressDetail>
               </Col>
             </SelectContainer>
             <EditBtn
               onPress={() => {
                 navigation.navigate('AddressEdit', {
                   currentAddressId: index,
+                  addressNo: ads.addrNo,
+                  addr1: ads.addr1,
+                  addr2: ads.addr2,
+                  zipCode: ads.zipCode,
                 });
               }}>
               <EditIcon source={icons.edit_24} />
@@ -132,10 +200,10 @@ const Address = ({
         </Col>
       ))}
       <AddressAddBtn
-        btnStyle={orderInfo.address.length === 0 ? 'borderActivated' : 'border'}
+        btnStyle={listAddressData?.length === 0 ? 'borderActivated' : 'border'}
         onPress={() => {
           // TBD | 5개 넘으면 안된다 안내 팝업
-          if (orderInfo.address.length >= 5) {
+          if (listAddressData?.length >= 5) {
             Alert.alert('주소는 5개 까지만 추가 가능합니다');
             return;
           }
@@ -158,7 +226,7 @@ const Address = ({
         <Row>
           <PlusSquareIcon
             source={
-              orderInfo.address.length === 0
+              listAddressData?.length === 0
                 ? icons.plusSquareActivated_24
                 : icons.plusSquare_24
             }
@@ -209,6 +277,7 @@ const Address = ({
         render={field => renderReceiverContactInput(field)}
         name="receiverContact"
       />
+      <EntranceMethodContainer control={control} />
       {errors.receiverContact && (
         <ErrorBox>
           <ErrorText>{errors.receiverContact.message}</ErrorText>
@@ -278,7 +347,13 @@ const ContentTitle = styled(TextMain)`
 const GuideText = styled(TextMain)`
   font-size: 16px;
 `;
-
+const EntranceCheckBoxText = styled(TextMain)`
+  font-size: 14px;
+`;
+const EntranceCheckBox = styled.TouchableOpacity``;
 const Checkbox = styled.TouchableOpacity`
   margin-left: 8px;
+`;
+const EntranceRow = styled(Row)`
+  margin-top: 28px;
 `;

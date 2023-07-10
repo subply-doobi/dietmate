@@ -1,10 +1,10 @@
-import React from 'react';
+// RN, 3rd
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
-
+//doobi util, redux, etc
 import {RootState} from '../../stores/store';
 import colors from '../../styles/colors';
-import {Col} from '../../styles/styledConsts';
+import {Col} from '../../styles/StyledConsts';
 import {purposeCdToValue} from '../../constants/constants';
 
 const Auto = () => {

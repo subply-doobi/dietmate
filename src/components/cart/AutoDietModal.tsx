@@ -1,17 +1,16 @@
 // react, RN, 3rd
-import React, {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {Modal, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
-
 // doobi util, redux, etc
 import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
-// import {makeAutoMenu} from '../../util/autoDietTest';
-
+import {useAsync} from '../../util/cart/cartCustomHooks';
+import {setCurrentDiet} from '../../stores/slices/cartSlice';
+import {makeAutoMenu} from '../../util/cart/autoMenu';
 // doobi Component
-import DSlider from '../common/slider/DSlider';
 import {
   BtnCTA,
   BtnText,
@@ -20,19 +19,15 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
-
+} from '../../styles/StyledConsts';
+import DSlider from '../common/slider/DSlider';
 // react-query
-import {useCreateProductAuto} from '../../query/queries/product';
 import {useListCategory} from '../../query/queries/category';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {IDietDetailData} from '../../query/types/diet';
-import {useAsync} from '../../util/cart/cartCustomHooks';
 import {IProductData} from '../../query/types/product';
-import {setCurrentDiet} from '../../stores/slices/cartSlice';
-import {useCreateDietDetail} from '../../query/queries/diet';
-// import {makeAutoMenu} from '../../util/autoDietTest';
-import {makeAutoMenu} from '../../util/cart/autoMenu';
+import {useCreateDietDetail, useListDietDetail} from '../../query/queries/diet';
+import {makeAutoMenu2} from '../../util/cart/autoMenu2';
 
 interface IAutoDietModal {
   modalVisible: boolean;
@@ -51,24 +46,24 @@ const AutoDietModal = ({
   // redux
   const dispatch = useDispatch();
   const {totalFoodList} = useSelector((state: RootState) => state.cart);
+
   // react-query
   const {data: baseLineData} = useGetBaseLine();
   const {data: categoryData} = useListCategory();
-  // const autoMenuMutation = useCreateProductAuto();
   const createDietDetailMutation = useCreateDietDetail();
 
   // useState
   // index 0: 도시락 | 1: 닭가슴살 | 2: 샐러드 | 3: 영양간식 | 4: 과자 | 5: 음료
   const [selectedCategory, setSelectedCategory] = useState<boolean[]>([]);
   const [sliderValue, setSliderValue] = useState<number[]>([4000, 12000]);
-  // const [isAutoMenuLoading, setIsAutoMenuLoading] = useState(false);
+  const [autoFailedNum, setAutoFailedNum] = useState<number>(0);
 
   useEffect(() => {
     categoryData &&
       setSelectedCategory(
         Array.from({length: categoryData?.length}, () => true),
       );
-  }, [categoryData?.length]);
+  }, [categoryData?.length, categoryData]);
 
   // etc
   const NoOfSelectedCategory = selectedCategory.reduce(
@@ -106,15 +101,14 @@ const AutoDietModal = ({
     reload,
   } = useAsync<{
     recommendedFoods: IProductData[];
-    sumNutr: number[];
-    sumPrice: number;
+    sum: number[];
   }>({
     asyncFunction: async () => {
-      const data = await makeAutoMenu({
+      const data = await makeAutoMenu2({
         totalFoodList,
-        dietDetail: dietDetailData,
+        initialMenu: dietDetailData, // !!!!!!!!!!!!! 바뀜 !!!!!!!!!!
         baseLine: baseLineData,
-        selectedCategory: selectedCategoryIdx,
+        selectedCategoryIdx,
         priceTarget: sliderValue,
       }).then(res => res);
       return data;
@@ -138,7 +132,13 @@ const AutoDietModal = ({
   const renderIsSuccessContent = () => {
     const onAddAutoMenu = async () => {
       setModalVisible(false);
+      if (autoMenu?.recommendedFoods.length === 0) {
+        console.log('상품없음');
+        return;
+      }
       if (!autoMenu) return;
+
+      // TODO | 이미 들어가있는 것 제외하고 data를 받아와야함
       const addAutoMenuMutation = autoMenu?.recommendedFoods.map(food =>
         createDietDetailMutation.mutateAsync({
           dietNo,
@@ -157,11 +157,11 @@ const AutoDietModal = ({
       <AutoMenuStatusContainer>
         <AutoMenuStatusText>{`끼니 구성이 완료되었어요`}</AutoMenuStatusText>
         <NutrInfoText>
-          칼로리<NutrInfoValue>{`${autoMenu?.sumNutr[0]}kcal `}</NutrInfoValue>
+          칼로리<NutrInfoValue>{`${autoMenu?.sum[0]}kcal `}</NutrInfoValue>
           탄수화물
-          <NutrInfoValue>{`${autoMenu?.sumNutr[1]}g `}</NutrInfoValue>단백질
-          <NutrInfoValue>{`${autoMenu?.sumNutr[2]}g `}</NutrInfoValue>지방
-          <NutrInfoValue>{`${autoMenu?.sumNutr[3]}g `}</NutrInfoValue>
+          <NutrInfoValue>{`${autoMenu?.sum[1]}g `}</NutrInfoValue>단백질
+          <NutrInfoValue>{`${autoMenu?.sum[2]}g `}</NutrInfoValue>지방
+          <NutrInfoValue>{`${autoMenu?.sum[3]}g `}</NutrInfoValue>
         </NutrInfoText>
         <Row style={{width: '100%', marginTop: 24, flexDirection: 'row'}}>
           <ConfirmBtn onPress={onAddAutoMenu}>
@@ -175,16 +175,23 @@ const AutoDietModal = ({
     return (
       <AutoMenuStatusContainer>
         <AutoMenuStatusText>{`식품조합을 찾지 못했습니다\n다시 시도해주세요`}</AutoMenuStatusText>
-        <NutrInfoText>{`계속 찾지 못한다면 목표칼로리를 변경하거나\n추천받을 카테고리 혹은 가격을 바꾸고 시도해주세요`}</NutrInfoText>
+        <NutrInfoText>{`계속 찾지 못한다면 식품을 일부 제거하거나\n추천받을 카테고리 혹은 가격을 바꾸고 시도해주세요`}</NutrInfoText>
         <Row style={{width: '100%', marginTop: 24, flexDirection: 'row'}}>
-          <ConfirmBtn onPress={() => setModalVisible(false)}>
+          <ConfirmBtn
+            onPress={() => {
+              setAutoFailedNum(v => v + 1);
+              setModalVisible(false);
+            }}>
             <ConfirmBtnText style={{color: colors.textSub}}>
               취소
             </ConfirmBtnText>
           </ConfirmBtn>
           <ConfirmBtn
             style={{borderLeftWidth: 1, borderLeftColor: colors.inactivated}}
-            onPress={reload}>
+            onPress={() => {
+              setAutoFailedNum(v => v + 1);
+              reload();
+            }}>
             <ConfirmBtnText>재시도</ConfirmBtnText>
           </ConfirmBtn>
         </Row>
@@ -236,7 +243,10 @@ const AutoDietModal = ({
         <BtnCTA
           btnStyle={btnDisabled ? 'inactivated' : 'activated'}
           disabled={btnDisabled}
-          onPress={reload}>
+          onPress={() => {
+            setAutoFailedNum(0);
+            reload();
+          }}>
           <BtnText>
             {btnDisabled ? '3가지 이상 선택해주세요' : '한 끼니 자동구성'}
           </BtnText>
@@ -255,9 +265,9 @@ const AutoDietModal = ({
           ? renderIsLoadingContent()
           : isSuccess
           ? renderIsSuccessContent()
-          : isError
-          ? renderIsErrorContent()
-          : renderBaseContent()}
+          : autoFailedNum > 1 || !isError
+          ? renderBaseContent()
+          : renderIsErrorContent()}
       </ModalBackGround>
     </Modal>
   );

@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 
-import {TextMain} from '../styles/styledConsts';
+import {TextMain} from '../styles/StyledConsts';
 
 export const useChangeHeaderTitle = (title: string) => {
   const navigation = useNavigation();

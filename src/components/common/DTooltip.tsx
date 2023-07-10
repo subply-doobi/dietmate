@@ -1,17 +1,30 @@
 import styled from 'styled-components/native';
 
 import colors from '../../styles/colors';
+import {icons} from '../../assets/icons/iconSource';
+import {Image} from 'react-native';
+import {Col} from '../../styles/StyledConsts';
 
 interface IDtooltip {
   tooltipShow: boolean;
-  text: string;
+  text?: string;
+  showIcon?: boolean;
+  renderCustomIcon?: (() => React.ReactElement<Image>) | undefined;
+  reversed?: boolean;
   boxBottom?: number;
   boxTop?: number;
   boxLeft?: number;
   boxRight?: number;
+  triangle?: boolean;
   triangleLeft?: number;
   triangleRight?: number;
   onPressFn?: Function;
+  style?: {
+    flex?: number;
+    width?: number | string;
+    height?: number | string;
+  };
+  customContent?: () => React.ReactElement;
 }
 
 /** tooltip 박스는 bottom | top | left | right 값 없을 때 bottom, left 기준.
@@ -20,13 +33,19 @@ interface IDtooltip {
 const DTooltip = ({
   tooltipShow,
   text,
+  showIcon,
+  renderCustomIcon,
+  reversed,
   boxBottom,
   boxTop,
   boxLeft,
   boxRight,
+  triangle = true,
   triangleLeft,
   triangleRight,
   onPressFn,
+  style,
+  customContent,
 }: IDtooltip) => {
   const boxVerticalStyle =
     boxBottom !== undefined
@@ -46,15 +65,28 @@ const DTooltip = ({
       : triangleRight !== undefined
       ? {right: triangleRight - 6}
       : {left: 10};
-
   return tooltipShow ? (
     <Container
-      style={{...boxVerticalStyle, ...boxHorizontalStyle}}
+      style={{...boxVerticalStyle, ...boxHorizontalStyle, ...style}}
       onPress={() => (onPressFn ? onPressFn() : {})}>
+      {reversed && triangle && (
+        <TooltipTriangleRvs style={{...triangleHorizontalStyle}} />
+      )}
       <TooltipBox>
-        <TooltipText>{text}</TooltipText>
+        {customContent ? customContent() : <TooltipText>{text}</TooltipText>}
+        {showIcon ? (
+          renderCustomIcon ? (
+            renderCustomIcon()
+          ) : (
+            <IconContainer>
+              <CheckBox source={icons.checkboxCheckedWhite_24} />
+            </IconContainer>
+          )
+        ) : null}
       </TooltipBox>
-      <TooltipTriangle style={{...triangleHorizontalStyle}} />
+      {!reversed && triangle && (
+        <TooltipTriangle style={{...triangleHorizontalStyle}} />
+      )}
     </Container>
   ) : (
     <></>
@@ -63,23 +95,37 @@ const DTooltip = ({
 
 export default DTooltip;
 
-const Container = styled.TouchableOpacity`
+const Container = styled.Pressable`
   position: absolute;
   margin: 0px 0px 6px 0px;
   z-index: 1000;
 `;
 
 const TooltipBox = styled.View`
+  flex-direction: row;
   background-color: ${colors.warning};
   padding: 5px;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   border-radius: 3px;
 `;
 
 const TooltipText = styled.Text`
   font-size: 14px;
   color: ${colors.white};
+`;
+
+const IconContainer = styled.View`
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+`;
+
+const CheckBox = styled.Image`
+  width: 14px;
+  height: 14px;
 `;
 
 const TooltipTriangle = styled.View`
@@ -90,8 +136,21 @@ const TooltipTriangle = styled.View`
   border-left-width: 6px;
   border-right-width: 6px;
   border-top-width: 9px;
-  background-color: transparent;
+  /* background-color: transparent; */
   border-left-color: transparent;
   border-right-color: transparent;
   border-top-color: ${colors.warning};
+`;
+const TooltipTriangleRvs = styled.View`
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: -6px;
+  border-left-width: 6px;
+  border-right-width: 6px;
+  border-bottom-width: 9px;
+  background-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: ${colors.warning};
 `;

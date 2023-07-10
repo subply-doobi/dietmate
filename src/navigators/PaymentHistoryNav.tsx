@@ -5,6 +5,7 @@ import {NavigationProps} from '../constants/constants';
 
 import PaymentDetail from '../screens/PaymentDetail';
 import PaymentHistory from '../screens/orderScreen/PaymentHistory';
+import PaymentHistoryDetail from '../screens/orderScreen/PaymentHistoryDetail';
 import BackArrow from '../components/common/BackArrow';
 
 const Stack = createNativeStackNavigator();
@@ -36,7 +37,7 @@ const PaymentHistoryNav = ({navigation: {navigate}}: NavigationProps) => {
         component={PaymentDetail}
         options={{
           headerTitleAlign: 'center',
-          headerTitle: '',
+          headerTitle: 'ssss',
           headerTitleStyle: {
             fontSize: 18,
             fontWeight: 'bold',

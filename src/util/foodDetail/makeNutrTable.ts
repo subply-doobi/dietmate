@@ -19,7 +19,7 @@ export const makeTableData = (
     {
       name: 'calorie',
       column1: '칼로리',
-      column2: `${food.calorie ? Math.ceil(Number(food.calorie)) : ''} g`,
+      column2: `${food.calorie ? Math.ceil(Number(food.calorie)) : ''} kcal`,
       rate: baseLineData
         ? `${Math.ceil(
             (Number(food.calorie) / Number(baseLineData.calorie)) * 3 * 100,
@@ -119,7 +119,7 @@ export const makeTableData = (
     {
       name: 'itemReportNo',
       column1: '품목보고번호',
-      // TBD | itemReportNo 데이터 없다
+      // itemReportNo 데이터 없으면 '-' 표시
       column2: `${food.manufacturerBizNo ? food.manufacturerBizNo : '-'}`,
     },
     {

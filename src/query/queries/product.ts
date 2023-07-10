@@ -2,7 +2,7 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 
 import {queryClient} from '../store';
 import {mutationFn, queryFn} from './requestFn';
-import {DIET_DETAIL, PRODUCTS, PRODUCT} from '../keys';
+import {DIET_DETAIL, PRODUCTS, PRODUCT, MARK} from '../keys';
 import {IQueryOptions} from '../types/common';
 
 import {
@@ -12,27 +12,28 @@ import {
   LIST_PRODUCT,
   FILTER,
   GET_PRODUCT,
+  LIST_PRODUCT_MARK,
 } from './urls';
-import {IProductData, IProductsData} from '../types/product';
+import {
+  IListProductParams,
+  IProductData,
+  IProductsData,
+} from '../types/product';
 
+// PUT //
 export const useCreateProductMark = () => {
   const mutation = useMutation({
     mutationFn: (productNo: string) =>
       mutationFn(`${CREATE_PRODUCT_MARK}/${productNo}`, 'put'),
+    onSuccess: data => {
+      console.log('like!');
+      queryClient.invalidateQueries({queryKey: [MARK]});
+      queryClient.invalidateQueries({queryKey: [PRODUCT]});
+    },
   });
   return mutation;
 };
 
-export const useDeleteProductMark = () => {
-  const mutation = useMutation({
-    mutationFn: (productNo: string) =>
-      mutationFn(`${DELETE_PRODUCT_MARK}/${productNo}`, 'delete'),
-    onSuccess: data => console.log(data),
-  });
-  return mutation;
-};
-
-// PUT
 export const useCreateProductAuto = () => {
   const mutation = useMutation({
     mutationFn: ({
@@ -74,13 +75,7 @@ export const useGetProduct = (
 };
 
 export const useListProduct = (
-  params: {
-    dietNo: string;
-    searchText?: string;
-    categoryCd?: string;
-    sort?: string;
-    filter?: string;
-  },
+  params: IListProductParams,
   options?: IQueryOptions,
 ) => {
   const enabled = options?.enabled ?? true;
@@ -88,30 +83,34 @@ export const useListProduct = (
   const searchText = params?.searchText ? params?.searchText : '';
   const categoryCd = params?.categoryCd ? params?.categoryCd : '';
   const sort = params?.sort ? params?.sort : '';
-  const filter = params?.filter ? params?.filter : '';
-  const calorie = filter.filterParams?.nutritionParam?.calorieParam
-    ? filter.filterParams?.nutritionParam?.calorieParam
-    : '';
-  const protein = filter.filterParams?.nutritionParam?.proteinParam
-    ? filter.filterParams?.nutritionParam?.proteinParam
-    : '';
-  const carb = filter.filterParams?.nutritionParam?.carbParam
-    ? filter.filterParams?.nutritionParam?.carbParam
-    : '';
-  const fat = filter.filterParams?.nutritionParam?.fatParam
-    ? filter.filterParams?.nutritionParam?.fatParam
-    : '';
-  const price = filter.filterParams?.priceParam
-    ? filter.filterParams?.priceParam
-    : '';
-  const categoryParam = categoryCd === '' ? '' : categoryCd;
-  const calorieParam = calorie ? `Calorie,${calorie[0]},${calorie[1]}|` : '';
-  const carbParam = carb ? `Carb,${carb[0]},${carb[1]}|` : '';
-  const proteinParam = protein ? `Protein,${protein[0]},${protein[1]}|` : '';
-  const priceParam = price ? `Price,${price[0]},${price[1]}|` : '';
-  const fatParam = fat ? `Fat,${fat[0]},${fat[1]}|` : '';
+  const filter = params?.filter
+    ? params?.filter
+    : {
+        categoryParam: '',
+        nutritionParam: {
+          calorieParam: [],
+          carbParam: [],
+          proteinParam: [],
+          fatParam: [],
+        },
+        priceParam: [],
+      };
 
-  // console.log('product:', priceParam);
+  const calorie = filter.nutritionParam.calorieParam;
+  const carb = filter.nutritionParam.carbParam;
+  const protein = filter.nutritionParam.proteinParam;
+  const fat = filter.nutritionParam.fatParam;
+  const price = filter.priceParam;
+
+  const categoryParam = categoryCd === '' ? '' : categoryCd;
+
+  const calorieParam =
+    calorie.length === 2 ? `Calorie,${calorie[0]},${calorie[1]}|` : '';
+  const carbParam = carb.length === 2 ? `Carb,${carb[0]},${carb[1]}|` : '';
+  const proteinParam =
+    protein.length === 2 ? `Protein,${protein[0]},${protein[1]}|` : '';
+  const fatParam = fat.length === 2 ? `Fat,${fat[0]},${fat[1]}|` : '';
+  const priceParam = price.length === 2 ? `Price,${price[0]},${price[1]}|` : '';
 
   return useQuery<IProductsData>({
     queryKey: [PRODUCTS, dietNo],
@@ -134,4 +133,30 @@ export const useFilterRange = (filterType, options?: IQueryOptions) => {
     onSuccess: data => {},
     enabled,
   });
+};
+
+export const useListProductMark = (options?: IQueryOptions) => {
+  const enabled = options?.enabled ?? true;
+  return useQuery<IProductsData>({
+    queryKey: [MARK],
+    queryFn: () => queryFn(`${LIST_PRODUCT_MARK}`),
+    onSuccess: data => {
+      options?.onSuccess && options?.onSuccess(data);
+      console.log('listProductMark: ', data);
+    },
+    enabled,
+  });
+};
+
+// DELETE //
+export const useDeleteProductMark = () => {
+  const mutation = useMutation({
+    mutationFn: (productNo: string) =>
+      mutationFn(`${DELETE_PRODUCT_MARK}/${productNo}`, 'delete'),
+    onSuccess: data => {
+      queryClient.invalidateQueries({queryKey: [MARK]});
+      queryClient.invalidateQueries({queryKey: [PRODUCT]});
+    },
+  });
+  return mutation;
 };

@@ -9,7 +9,7 @@ import {updateUserInfo} from '../stores/slices/userInfoSlice';
 import colors from '../styles/colors';
 import {NavigationProps, SCREENWIDTH} from '../constants/constants';
 import {changeNutrByWeight} from '../util/alertActions';
-import {BtnBottomCTA, BtnText} from '../styles/styledConsts';
+import {BtnBottomCTA, BtnText} from '../styles/StyledConsts';
 
 import DAlert from '../components/common/alert/DAlert';
 import WeightChangeAlert from '../components/myPage/WeightChangeAlert';

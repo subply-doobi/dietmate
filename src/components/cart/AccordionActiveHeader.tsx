@@ -1,28 +1,22 @@
 // react, RN, 3rd
+import {useState} from 'react';
 import styled from 'styled-components/native';
 
 // doobi util, redux, etc
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
+import {commaToNum, sumUpPrice} from '../../util/sumUp';
 
 // doobi Component
-import {Row, StyledProps, TextMain} from '../../styles/styledConsts';
-
-// react-query
-import {
-  useCreateDiet,
-  useDeleteDiet,
-  useGetDietDetailEmptyYn,
-  useListDiet,
-} from '../../query/queries/diet';
-import {useState} from 'react';
-import {commaToNum, sumUpPrice} from '../../util/sumUp';
+import {Row, StyledProps} from '../../styles/StyledConsts';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
+
+// react-query
+import {useDeleteDiet, useListDiet} from '../../query/queries/diet';
 import {queryClient} from '../../query/store';
 import {DIET_DETAIL} from '../../query/keys';
 import {IDietDetailData} from '../../query/types/diet';
-import AutoDietModal from './AutoDietModal';
 
 interface IAccordionActiveHeader {
   idx: number;
@@ -46,19 +40,20 @@ const AccordionActiveHeader = ({
   // etc
   const priceSum = sumUpPrice(dietDetailData);
 
-  const HeaderColor = !dietDetailData
-    ? colors.dark
-    : dietDetailData.length === 0
-    ? colors.dark
-    : idx % 5 === 0
-    ? colors.main
-    : idx % 5 === 1
-    ? colors.blue
-    : idx % 5 === 2
-    ? colors.green
-    : idx % 5 === 3
-    ? colors.orange
-    : colors.warning;
+  const HeaderColor = colors.darker;
+  // const HeaderColor = !dietDetailData
+  //   ? colors.dark
+  //   : dietDetailData.length === 0
+  //   ? colors.dark
+  //   : idx % 5 === 0
+  //   ? colors.main
+  //   : idx % 5 === 1
+  //   ? colors.blue
+  //   : idx % 5 === 2
+  //   ? colors.green
+  //   : idx % 5 === 3
+  //   ? colors.orange
+  //   : colors.warning;
 
   const onDeleteDiet = () => {
     deleteDietMutation.mutate({dietNo});
@@ -71,13 +66,13 @@ const AccordionActiveHeader = ({
       <MenuSeq>{dietSeq}</MenuSeq>
       <Row>
         <PriceSum>{commaToNum(priceSum)}원</PriceSum>
-        <DeleteBtn
-          onPress={() => setDeleteAlertShow(true)}
-          disabled={dietData && dietData?.length > 1 ? false : true}>
-          {dietData && dietData?.length > 1 && (
+        {dietData && dietData?.length > 1 && (
+          <DeleteBtn
+            onPress={() => setDeleteAlertShow(true)}
+            disabled={dietData && dietData?.length > 1 ? false : true}>
             <DeleteImage source={icons.cancelRound_24} />
-          )}
-        </DeleteBtn>
+          </DeleteBtn>
+        )}
       </Row>
       <DAlert
         alertShow={deleteAlertShow}
@@ -114,13 +109,13 @@ const MenuSeq = styled.Text`
 const PriceSum = styled.Text`
   font-size: 16px;
   font-weight: bold;
-  margin-left: 24px;
+  margin-right: 16px;
   color: ${colors.white};
 `;
 
 const DeleteBtn = styled.TouchableOpacity`
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   justify-content: center;
   align-items: center;
 `;

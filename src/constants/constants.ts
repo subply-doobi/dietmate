@@ -4,11 +4,47 @@ import {Dimensions, Platform} from 'react-native';
 export const {width, height} = Dimensions.get('screen');
 export const SCREENWIDTH = Math.min(width, height);
 export const SCREENHEIGHT = Math.max(width, height);
+export const DALERT_WIDTH = SCREENWIDTH - 80;
 export const IS_ANDROID = Platform.OS === 'android';
 export const IS_IOS = Platform.OS === 'ios';
 export const FOOD_LIST_ITEM_HEIGHT = 152;
+export const HOME_FILTER_HEADER_HEIGHT = 120;
+
+// service constants
+export const SHIPPING_PRICE = 4000;
+export const FREE_SHIPPING_PRICE = 30000;
 
 // Doobi server category etc.
+
+//주간 운동 횟수
+export const WORKOUT_PURPOSE_CD = [
+  {label: '안함', value: 'SP008001'},
+  {label: '1회', value: 'SP008002'},
+  {label: '2회', value: 'SP008003'},
+  {label: '3회', value: 'SP008004'},
+  {label: '4회', value: 'SP008005'},
+  {label: '5회', value: 'SP008006'},
+  {label: '6회', value: 'SP008007'},
+  {label: '으악그만', value: 'SP008008'},
+];
+
+//회당 운동 시간(분)
+export const WORKOUT_FREQUENCY_CD = [
+  {label: '30분 이하', value: 'SP009001'},
+  {label: '60분 이하', value: 'SP009002'},
+  {label: '90분 이하', value: 'SP009003'},
+  {label: '120분 이하', value: 'SP009004'},
+  {label: '으악그만', value: 'SP009005'},
+];
+
+//운동 강도(누가 뭐래도 내 느낌)
+export const WORKOUT_INTENSITY_CD = [
+  {label: '이정도면 잠들기도 가능', value: 'SP010001'},
+  {label: '적당한 산책 느낌', value: 'SP010002'},
+  {label: '숨이 가쁘지만 버틸 만한 정도', value: 'SP010003'},
+  {label: '중간중간 쉬지 않으면 못버틴다', value: 'SP010004'},
+  {label: '유언장이 준비되어 있다', value: 'SP010005'},
+];
 export const DIET_PURPOSE_CD = {
   1: 'SP002001',
   2: 'SP002002',
@@ -38,19 +74,19 @@ export const aerobicTrainingCategrory = [
   {label: '하루 2시간 이상', value: 'SP004005'},
 ];
 export const nutrRatioCategory = [
-  {label: '55 : 20 : 25(보건복지부 추천)', value: 'SP005001'},
+  {label: '55 : 20 : 25(보건복지부 권장)', value: 'SP005001'},
   {label: '20 : 20: 60(저탄고지 식단)', value: 'SP005002'},
   {label: '40 : 40 : 20(벌크업용)', value: 'SP005003'},
 ];
 // consts for screens
 export const myPageBtns = [
-  {title: '몸무게 변경', btnId: 'ChangeWeight'},
-  // {title: '내 기록', btnId: 'History'},
-  {title: '찜한 식품', btnId: 'Likes'},
+  {title: '몸무게변경', btnId: 'ChangeWeight'},
+  {title: '찜한식품', btnId: 'Likes'},
   {title: '주문내역', btnId: 'PaymentHistory'},
+  {title: '계정설정', btnId: 'Account'},
 ];
 
-export const categoryCode = {
+export const categoryCode: {[key: string]: string} = {
   도시락: 'CG001',
   닭가슴살: 'CG002',
   샐러드: 'CG003',
@@ -58,6 +94,55 @@ export const categoryCode = {
   과자: 'CG005',
   음료: 'CG006',
 };
+
+interface INutrErrorRange {
+  [key: string]: [number, number];
+}
+export const NUTR_ERROR_RANGE: INutrErrorRange = {
+  calorie: [-50, 50],
+  carb: [-15, 15],
+  protein: [-5, 5],
+  fat: [-3, 3],
+};
+
+export const filterBtnRange = [
+  {
+    label: '칼로리 (kcal)',
+    value: [
+      [0, 100],
+      [100, 200],
+      [200, 300],
+      [300, 460],
+    ],
+  },
+  {
+    label: '탄수화물 (g)',
+    value: [
+      [0, 20],
+      [20, 40],
+      [40, 60],
+      [60, 80],
+    ],
+  },
+  {
+    label: '단백질 (g)',
+    value: [
+      [0, 10],
+      [10, 20],
+      [20, 30],
+      [30, 42],
+    ],
+  },
+  {
+    label: '지방 (g)',
+    value: [
+      [0, 5],
+      [5, 10],
+      [10, 15],
+      [15, 20],
+    ],
+  },
+];
 
 interface ITimeToMinutes {
   [key: string]: number;
@@ -93,7 +178,7 @@ export const purposeCdToValue: IPurposeToCalorie = {
     additionalCalorie: '-700',
   },
   SP002003: {
-    targetText: '유지',
+    targetText: '체중 유지',
     additionalCalorieText: '0kcal',
     additionalCalorie: '0',
   },
@@ -140,6 +225,8 @@ interface IValidationRules {
     [key: string]: any;
   };
 }
+const regex = /^[ㄱ-ㅎ|가-힣]+$/; //문자열에 한글만 있는지 확인
+
 export const validationRules: IValidationRules = {
   age: {
     required: '필수 정보입니다',
@@ -149,6 +236,15 @@ export const validationRules: IValidationRules = {
         (parseInt(v) >= 10 && parseInt(v) <= 100) ||
         '10~100세 안으로 입력해주세요',
     },
+  },
+  orderer: {
+    required: '필수 정보입니다',
+    // validate: {
+    // isValid: v => regex.test(v) || '한글로 입력',
+    // },
+  },
+  ordererContact: {
+    required: '필수 정보입니다',
   },
   height: {
     required: '필수 정보입니다',

@@ -8,8 +8,9 @@ import {
   ErrorText,
   InputHeaderText,
   TextMain,
+  TextSub,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 import {validationRules} from '../../constants/constants';
 import {IFormField} from '../../constants/constants';
 
@@ -55,12 +56,21 @@ const NutrChangeAlert = ({
   return (
     <Container>
       <Col style={{marginTop: 24}}>
-        <GuideText>다른 영양소는 칼로리에 맞게</GuideText>
-        <GuideText>자동으로 조절됩니다</GuideText>
+        <GuideText>
+          다른 영양소는{' '}
+          <GuideText style={{fontWeight: 'bold'}}>목표 칼로리</GuideText>에 맞춰
+        </GuideText>
+        <GuideText>
+          <GuideText style={{fontWeight: 'bold'}}>자동으로 조절</GuideText>
+          됩니다
+        </GuideText>
       </Col>
       <Col style={{marginTop: 16}}>
-        <GuideText>모든 영양소를 조정하고 싶은 경우는</GuideText>
-        <GuideText>고객정보변경을 이용해주세요</GuideText>
+        <GuideTextSub>모든 영양소를 수정하고 싶은 경우는</GuideTextSub>
+        <GuideTextSub>
+          <GuideTextSub style={{fontWeight: 'bold'}}>고객정보변경</GuideTextSub>
+          을 이용해주세요
+        </GuideTextSub>
       </Col>
       <Controller
         control={control}
@@ -84,6 +94,9 @@ const Container = styled.View`
 `;
 
 const GuideText = styled(TextMain)`
+  font-size: 16px;
+`;
+const GuideTextSub = styled(TextSub)`
   font-size: 16px;
 `;
 

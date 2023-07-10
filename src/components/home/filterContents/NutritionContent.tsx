@@ -1,26 +1,33 @@
-import React, {useState, useEffect, useMemo, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {ScrollView, TouchableWithoutFeedback} from 'react-native';
 import styled from 'styled-components/native';
 
-import {TextMain, Col} from '../../../styles/styledConsts';
+import {TextMain, Col} from '../../../styles/StyledConsts';
 import DSlider from '../../common/slider/DSlider';
-
+// react-query
 import {useFilterRange} from '../../../query/queries/product';
+//types
+import {FILTER_PARAMS_TYPE} from '../types/filterType';
 
-const NutritionContent = props => {
+interface Props {
+  setNutritionParam: (param: any) => void;
+  nutritionParam: any;
+  filterParams: any;
+}
+
+const NutritionContent = (props: Props) => {
   const calorieRange = useFilterRange('calorie');
   const carbRange = useFilterRange('carb');
   const fatRange = useFilterRange('fat');
   const proteinRange = useFilterRange('protein');
-  const {setNutritionParam, nutritionParam, filterParams} = props;
-
-  //calorie
+  //calorie min, max
   const minCalorie = !calorieRange?.data
     ? 20
     : Number(Math.floor(calorieRange?.data?.minData));
   const maxCalorie = !calorieRange?.data
     ? 457
     : Number(Math.floor(calorieRange?.data?.maxData));
+  //calorie 초기값
   const calorieInitialState = [
     filterParams.nutritionParam?.calorieParam
       ? filterParams.nutritionParam?.calorieParam[0]
@@ -29,13 +36,15 @@ const NutritionContent = props => {
       ? filterParams.nutritionParam?.calorieParam[1]
       : maxCalorie,
   ];
-  //carb
+
+  //carb min, max
   const minCarb = !carbRange?.data
     ? 0
     : Number(Math.floor(carbRange?.data?.minData));
   const maxCarb = !carbRange?.data
     ? 77
     : Number(Math.floor(carbRange?.data?.maxData));
+  //carb 초기값
   const carbInitialState = [
     filterParams.nutritionParam?.carbParam
       ? filterParams.nutritionParam?.carbParam[0]
@@ -45,13 +54,14 @@ const NutritionContent = props => {
       : maxCarb,
   ];
 
-  //protein
+  //protein min, max
   const minProtein = !proteinRange?.data
     ? 1
     : Number(Math.floor(proteinRange?.data?.minData));
   const maxProtein = !proteinRange?.data
     ? 41
     : Number(Math.floor(proteinRange?.data?.maxData));
+  //protein 초기값
   const proteinInitialState = [
     filterParams.nutritionParam?.proteinParam
       ? filterParams.nutritionParam?.proteinParam[0]
@@ -61,13 +71,14 @@ const NutritionContent = props => {
       : maxProtein,
   ];
 
-  //fat
+  //fat min, max
   const minFat = !fatRange?.data
     ? 0
     : Number(Math.floor(fatRange?.data?.minData));
   const maxFat = !fatRange?.data
     ? 19
     : Number(Math.floor(fatRange?.data?.maxData));
+  //fat 초기값
   const fatInitialState = [
     filterParams.nutritionParam?.fatParam
       ? filterParams.nutritionParam?.fatParam[0]
@@ -76,7 +87,7 @@ const NutritionContent = props => {
       ? filterParams.nutritionParam?.fatParam[1]
       : maxFat,
   ];
-
+  //state
   const [calorieValue, setCalorieValue] = useState(calorieInitialState);
   const [carbValue, setCarbrValue] = useState(carbInitialState);
   const [proteinValue, setProteinValue] = useState(proteinInitialState);
@@ -91,15 +102,25 @@ const NutritionContent = props => {
     }),
     [calorieValue, carbValue, proteinValue, fatValue],
   );
-
+  //useEffect
   useEffect(() => {
-    if (nutritionParam) {
-      setCalorieValue(nutritionParam?.calorieParam);
-      setCarbrValue(nutritionParam?.carbParam);
-      setProteinValue(nutritionParam?.proteinParam);
-      setFatValue(nutritionParam?.fatParam);
+    if (!nutritionParam) {
+      setCalorieValue([minCalorie, maxCalorie]);
+      setCarbrValue([minCarb, maxCarb]);
+      setProteinValue([minProtein, maxProtein]);
+      setFatValue([minFat, maxFat]);
     }
-  }, [nutritionParam]);
+  }, [
+    nutritionParam,
+    minCalorie,
+    maxCalorie,
+    minCarb,
+    maxCarb,
+    minProtein,
+    maxProtein,
+    minFat,
+    maxFat,
+  ]);
 
   return (
     <ScrollView>

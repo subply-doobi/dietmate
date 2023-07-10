@@ -1,11 +1,22 @@
 import axios from 'axios';
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '../../stores/store';
 import {setOrderSummary} from '../../stores/slices/orderSlice';
 import {kakaoAppAdminKey} from '../../constants/constants';
+import {DIET, ORDER, DIET_DETAIL, DIET_DETAIL_ALL} from '../keys';
+import {queryClient} from '../store';
+
 //기존 testKakaoPay
+import {mutationFn, queryFn} from './requestFn';
+import {
+  CREATE_ORDER,
+  UPDATE_ORDER,
+  LIST_ORDER,
+  DELETE_ORDER,
+  UPDATE_DIET,
+} from './urls';
 
 export const useKakaoPayReady = () => {
   const dispatch = useDispatch();
@@ -97,4 +108,66 @@ export const useKakaopayApprove = () => {
     getPaymentResult: mutation.mutate,
     data: mutation.data,
   };
+};
+
+export const useCreateOrder = () => {
+  const mutation = useMutation({
+    mutationFn: data => mutationFn(`${CREATE_ORDER}`, 'put', data),
+    // .then(res => {
+    //   mutationFn(
+    //     `${UPDATE_ORDER}?statusCd=SP006003&orderNo=${res.orderNo}`,
+    //     'post',
+    //   );
+    //   mutationFn(
+    //     `${UPDATE_DIET}?statusCd=SP006003&orderNo=${res.orderNo}`,
+    //     'post',
+    //   );
+    // }
+    // ),
+    onSuccess: data => {
+      console.log('useCreateOrder: onSuccess: ', data);
+      queryClient.invalidateQueries({queryKey: [ORDER]});
+      queryClient.invalidateQueries({queryKey: [DIET]});
+      queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
+      queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
+    },
+    onError: error => {
+      console.log('useCreateOrder: onError: ', error);
+    },
+  });
+  return mutation;
+};
+
+export const useUpdateOrder = () => {
+  const mutation = useMutation({
+    mutationFn: ({statusCd, orderNo}: {statusCd: string; orderNo: string}) =>
+      mutationFn(
+        `${UPDATE_ORDER}?statusCd=${statusCd}&orderNo=${orderNo}`,
+        'post',
+      ),
+    onSuccess: data => {
+      console.log('updateOrder success: ', data);
+      queryClient.invalidateQueries({queryKey: [ORDER]});
+    },
+  });
+  return mutation;
+};
+
+export const useGetOrder = () => {
+  return useQuery({
+    queryKey: [ORDER],
+    queryFn: () => queryFn(`${LIST_ORDER}`),
+  });
+};
+
+export const useDeleteOrder = () => {
+  const mutation = useMutation({
+    mutationFn: ({orderNo}: {orderNo: string}) =>
+      mutationFn(`${DELETE_ORDER}/${orderNo}`, 'delete'),
+    onSuccess: data => {
+      console.log('deleteOrder success: ', data);
+      queryClient.invalidateQueries({queryKey: [ORDER]});
+    },
+  });
+  return mutation;
 };
