@@ -13,6 +13,7 @@ import AddressEdit from '../screens/orderScreen/AddressEdit';
 import OrderHeaderTab from './OrderNav';
 import PaymentHistoryNav from './PaymentHistoryNav';
 import HistoryNav from './HistoryNav';
+import ErrorAlert from '../components/common/ErrorAlert';
 
 import Guide from '../screens/Guide';
 import Login from '../screens/Login';
@@ -24,6 +25,7 @@ import {useDispatch} from 'react-redux';
 import {setNutrTooltipText} from '../stores/slices/cartSlice';
 import Account from '../screens/Account';
 import KakaoPay from '../components/payment/KakaoPay';
+import CustomErrorBoundary from '../components/common/CustomErrorBoundary';
 
 const Stack = createNativeStackNavigator();
 
@@ -156,6 +158,10 @@ const RootStackNav = () => {
           headerShadowVisible: false,
           headerLeft: () => <BackArrow goBackFn={goBack} />,
         }}
+      />
+      <Stack.Screen
+        name="CustomErrorBoundary"
+        component={CustomErrorBoundary}
       />
     </Stack.Navigator>
   );

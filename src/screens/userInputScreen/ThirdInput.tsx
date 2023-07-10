@@ -40,6 +40,27 @@ interface IFormData {
   proteinManual: string;
   fatManual: string;
 }
+interface IRequestBody {
+  calorie: string;
+  carb: string;
+  protein: string;
+  fat: string;
+  companyCd: string;
+  userId: string;
+  nickNm: string;
+  gender: string;
+  age: string;
+  height: string;
+  weight: string;
+  dietPurposeCd: string;
+  sportsSeqCd: string;
+  sportsTimeCd: string;
+  sportsStrengthCd: string;
+  dietPurposeNm: string;
+  sportsSeqNm: string;
+  sportsTimeNm: string;
+  sportsStrengthNm: string;
+}
 
 const ThirdInput = () => {
   // navigation
@@ -48,16 +69,16 @@ const ThirdInput = () => {
 
   // react-query
   const {data} = useGetBaseLine();
+  // console.log('thirdInput/baseLine', data);
   const updateMutation = useUpdateBaseLine();
   const createMutation = useCreateBaseLine();
   const {data: dietData} = useListDiet();
   const createDietMutation = useCreateDiet();
-
   // redux
   const {userInfo, userTarget} = useSelector(
     (state: RootState) => state.userInfo,
   );
-
+  const totalBaseLine: IRequestBody = {...userInfo, ...userTarget};
   // ref
   const scrollRef = useRef<ScrollView>(null);
 
@@ -172,8 +193,9 @@ const ThirdInput = () => {
       proteinManual,
       fatManual,
     };
-    const requestBody = convertDataByMethod[calculationMethod](dataToConvert);
-    // console.log('ThirdInput/requestBody:', requestBody);
+    const requestBody: IRequestBody =
+      convertDataByMethod[calculationMethod](dataToConvert);
+    // console.log('requestBody', requestBody);
     if (!dietData) return;
     if (dietData.length === 0) {
       createDietMutation.mutate();

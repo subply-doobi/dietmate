@@ -12,21 +12,7 @@ interface ISubmitParams {
 }
 
 const convertDataByAutoMethod = ({userInfo, userTarget}: ISubmitParams) => {
-  return {
-    companyCd: '',
-    userId: '',
-    calorie: userTarget.calorie,
-    carb: userTarget.carb,
-    protein: userTarget.protein,
-    fat: userTarget.fat,
-    gender: userInfo.gender,
-    age: userInfo.age,
-    height: userInfo.height,
-    weight: userInfo.weight,
-    dietPurposeCd: userInfo.dietPurposeCd,
-    weightTimeCd: userInfo.weightTimeCd,
-    aerobicTimeCd: userInfo.aerobicTimeCd,
-  };
+  return {...userInfo, ...userTarget};
 };
 const convertDataByRatioMethod = ({
   userInfo,
@@ -52,8 +38,9 @@ const convertDataByRatioMethod = ({
     height: userInfo.height,
     weight: userInfo.weight,
     dietPurposeCd: userInfo.dietPurposeCd,
-    weightTimeCd: userInfo.weightTimeCd,
-    aerobicTimeCd: userInfo.aerobicTimeCd,
+    sportsTimeCd: userInfo.sportsTimeCd,
+    sportsIntensityCd: userInfo.sportsStrengthCd,
+    sportsSeq: userInfo.sportsSeqCd,
   };
 };
 const convertDataByManualMethod = ({
@@ -81,8 +68,9 @@ const convertDataByManualMethod = ({
     height: userInfo.height,
     weight: userInfo.weight,
     dietPurposeCd: userInfo.dietPurposeCd,
-    weightTimeCd: userInfo.weightTimeCd,
-    aerobicTimeCd: userInfo.aerobicTimeCd,
+    sportsTimeCd: userInfo.sportsTimeCd,
+    sportsIntensityCd: userInfo.sportsStrengthCd,
+    sportsSeq: userInfo.sportsSeqCd,
   };
 };
 

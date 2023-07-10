@@ -43,6 +43,61 @@ interface IListAddressData {
   userId?: string;
   zipCode: string;
 }
+
+const renderEntranceInput = ({field: {onChange, value}}: IFormField) => {
+  return (
+    <>
+      <InputHeader isActivated={value ? true : false}>
+        배송 참고사항
+      </InputHeader>
+      <Input
+        placeholder={'예) 3847*'}
+        value={value}
+        onChangeText={onChange}
+        isActivated={value ? true : false}
+        keyboardType="default"
+      />
+    </>
+  );
+};
+const entranceType = ['공동현관 없음(자유출입)', '공동현관 비밀번호', '기타'];
+const EntranceMethodContainer = ({control}) => {
+  // 공동형관 출입 checkBox
+  const [isEntranceChecked, setIsEntranceChecked] =
+    useState('공동현관 없음(자유출입)');
+  return (
+    <>
+      <ContentTitle style={{marginTop: 30}}>공동현관 출입</ContentTitle>
+      <Col style={{marginTop: 30}} />
+      {entranceType.map((e, i) => {
+        return (
+          <Row key={i} style={{marginBottom: 28}}>
+            <EntranceCheckBox
+              onPress={() => {
+                setIsEntranceChecked(e);
+              }}>
+              <CheckIcon
+                source={
+                  isEntranceChecked === e
+                    ? icons.checkboxCheckedPurple_24
+                    : icons.checkbox_24
+                }
+                style={{marginRight: 10}}
+              />
+            </EntranceCheckBox>
+            <EntranceCheckBoxText>{e}</EntranceCheckBoxText>
+          </Row>
+        );
+      })}
+
+      <Controller
+        control={control}
+        render={field => renderEntranceInput(field)}
+        name="entrance"
+      />
+    </>
+  );
+};
 const Address = ({
   control,
   handleSubmit,
@@ -222,6 +277,7 @@ const Address = ({
         render={field => renderReceiverContactInput(field)}
         name="receiverContact"
       />
+      <EntranceMethodContainer control={control} />
       {errors.receiverContact && (
         <ErrorBox>
           <ErrorText>{errors.receiverContact.message}</ErrorText>
@@ -291,7 +347,13 @@ const ContentTitle = styled(TextMain)`
 const GuideText = styled(TextMain)`
   font-size: 16px;
 `;
-
+const EntranceCheckBoxText = styled(TextMain)`
+  font-size: 14px;
+`;
+const EntranceCheckBox = styled.TouchableOpacity``;
 const Checkbox = styled.TouchableOpacity`
   margin-left: 8px;
+`;
+const EntranceRow = styled(Row)`
+  margin-top: 28px;
 `;

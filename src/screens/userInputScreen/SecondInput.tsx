@@ -27,6 +27,11 @@ import {calculateNutrTarget} from '../../util/targetCalculation';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {useNavigation} from '@react-navigation/native';
 import DTooltip from '../../components/common/DTooltip';
+import {
+  useWorkoutPurposeCode,
+  useWorkoutIntensityCode,
+  useWorkoutFrequencyCode,
+} from '../../query/queries/code';
 
 interface IFormData {
   bmrKnown: string;
@@ -66,9 +71,12 @@ const onHandlePress = (
   navigate: Function,
   userInfo: IUserInfo,
   bmrKnownValue: string,
-  frequencyIdx: number,
+  frequencyIndex: number,
+  frequencyCd: string,
   durationIdx: number,
+  durationCd: string,
   intensityIdx: number,
+  intensityCd: string,
 ) => {
   // 기초대사량 직접 입력된 경우는 입력된 bmr로
   const bmrMod = bmrKnownValue ? bmrKnownValue : userInfo.bmr;
@@ -81,7 +89,7 @@ const onHandlePress = (
   const duration = durationIdx * 30 + 15;
   const nutrTarget = calculateNutrTarget(
     userInfo.weight,
-    frequencyIdx,
+    frequencyIndex,
     mets,
     duration,
     userInfo.dietPurposeCd,
@@ -90,6 +98,9 @@ const onHandlePress = (
   dispatch(
     saveUserInfo({
       bmr: bmrMod,
+      sportsSeqCd: frequencyCd.toString(),
+      sportsTimeCd: durationCd.toString(),
+      sportsStrengthCd: intensityCd.toString(),
     }),
   );
   dispatch(
@@ -106,14 +117,16 @@ const onHandlePress = (
 };
 
 const SecondInput = () => {
+  const workoutPurposeCode = useWorkoutPurposeCode('SP008');
+  const workoutFrequencyCode = useWorkoutFrequencyCode('SP009');
+  const workoutIntensityCode = useWorkoutIntensityCode('SP010');
   // navigation
   const {navigate} = useNavigation();
-  const [frequencyIdx, setFrequencyIdx] = useState(0);
-  const [durationIdx, setDurationIdx] = useState(0);
-  const [intensityIdx, setIntensityIdx] = useState(0);
+  const [frequency, setFrequency] = useState({index: 0, cd: ''});
+  const [duration, setDuration] = useState({index: 0, cd: ''});
+  const [intensity, setIntensity] = useState({index: 0, cd: ''});
   const {userInfo} = useSelector((state: RootState) => state.userInfo);
-  const {data, isLoading} = useGetBaseLine();
-
+  const {data: baseData, isLoading} = useGetBaseLine();
   // redux
   const dispatch = useDispatch();
 
@@ -129,34 +142,60 @@ const SecondInput = () => {
     },
   });
   const bmrKnownValue = useWatch({control, name: 'bmrKnown'});
+
+  const purposeValue = workoutPurposeCode?.data?.map((item, index) => {
+    return {cdNm: item.cdNm, cd: item.cd, index: index};
+  });
+  const frequencyValue = workoutFrequencyCode?.data?.map((item, index) => {
+    return {cdNm: item.cdNm, cd: item.cd, index: index};
+  });
+  const intensityValue = workoutIntensityCode?.data?.map((item, index) => {
+    return {cdNm: item.cdNm, cd: item.cd, index: index};
+  });
+
   //useEffect
   useEffect(() => {
     handleSubmit(() => {})();
-  }, []);
-  const exerciseBtnRange = [
+    baseData?.sportsSeqCd &&
+      setFrequency({
+        cd: baseData?.sportsSeqCd,
+        index: purposeValue?.findIndex(
+          item => item.cd === baseData?.sportsSeqCd,
+        ),
+      });
+    baseData?.sportsTimeCd &&
+      setDuration({
+        cd: baseData?.sportsTimeCd,
+        index: frequencyValue?.findIndex(
+          item => item.cd === baseData?.sportsTimeCd,
+        ),
+      });
+    baseData?.sportsStrengthCd &&
+      setIntensity({
+        cd: baseData?.sportsStrengthCd,
+        index: intensityValue?.findIndex(
+          item => item.cd === baseData?.sportsStrengthCd,
+        ),
+      });
+  }, [workoutPurposeCode.isSuccess]);
+
+  const workoutButtonRange = [
     {
       label: '주간 운동 횟수',
-      value: ['안함', '1회', '2회', '3회', '4회', '5회', '6회', '헬창'],
+      value: purposeValue,
     },
   ];
-  const exerciseTimeBtnRange = [
+  const workoutFrequencyButtonRange = [
     {
       label: '회당 운동 시간(분)',
-      value: ['~30', '30~60', '60~90', '90~120', '120~'],
+      value: frequencyValue,
     },
   ];
-  const intensityBtn = [
-    '이정도면 잠들기도 가능',
-    '적당한 산책 느낌',
-    '숨이 가쁘지만 버틸 만한 정도',
-    '중간중간 쉬지 않으면 못버틴다',
-    '유언장이 준비되어 있다 ',
-  ];
-
+  const workoutIntensityButtonRange = intensityValue;
   const exerciseRangeTT =
-    frequencyIdx === 0
+    frequency.index === 0
       ? '두비는 주 3회 이상 운동을 권장합니다'
-      : frequencyIdx === 7
+      : frequency.index === 7
       ? '그래도 두비는 헬창을 응원합니다'
       : '';
 
@@ -167,18 +206,20 @@ const SecondInput = () => {
         <SubText>입력된 정보로 목표 칼로리를 계산해드려요</SubText>
 
         <ButtonContainer>
-          {exerciseBtnRange.map((nutr, nutrIdx) => (
+          {workoutButtonRange?.map((nutr, nutrIdx) => (
             <Col key={nutrIdx}>
               <Nutr>{nutr.label}</Nutr>
               <BtnContainer>
-                {nutr.value.map((btn, btnIdx) => (
+                {nutr?.value?.map((btn, btnIdx) => (
                   <Btn
                     key={btnIdx}
-                    isActivated={frequencyIdx === btnIdx ? true : false}
-                    onPress={() => setFrequencyIdx(btnIdx)}>
+                    isActivated={frequency.index === btnIdx ? true : false}
+                    onPress={() => {
+                      setFrequency({cd: btn.cd, index: btn.index});
+                    }}>
                     <BtnText
-                      isActivated={frequencyIdx === btnIdx ? true : false}>
-                      {btn}
+                      isActivated={frequency.index === btnIdx ? true : false}>
+                      {btn.cdNm}
                     </BtnText>
                   </Btn>
                 ))}
@@ -188,30 +229,34 @@ const SecondInput = () => {
         </ButtonContainer>
         <Col>
           <DTooltip
-            tooltipShow={frequencyIdx === 0 || frequencyIdx === 7}
+            tooltipShow={frequency.index === 0 || frequency.index === 7}
             boxTop={8}
             boxLeft={0}
             triangle={false}
             text={exerciseRangeTT}
           />
         </Col>
-        {frequencyIdx === 0 ? (
+        {frequency.index === 0 ? (
           <></>
         ) : (
           <AcivateContainer>
             <ButtonContainer>
-              {exerciseTimeBtnRange.map((nutr, nutrIdx) => (
+              {workoutFrequencyButtonRange.map((nutr, nutrIdx) => (
                 <Col key={nutrIdx}>
                   <Nutr>{nutr.label}</Nutr>
                   <BtnContainer>
-                    {nutr.value.map((btn, btnIdx) => (
+                    {nutr?.value?.map((btn, btnIdx) => (
                       <Btn
                         key={btnIdx}
-                        isActivated={durationIdx === btnIdx ? true : false}
-                        onPress={() => setDurationIdx(btnIdx)}>
+                        isActivated={duration.index === btnIdx ? true : false}
+                        onPress={() => {
+                          setDuration({cd: btn.cd, index: btnIdx});
+                        }}>
                         <BtnText
-                          isActivated={durationIdx === btnIdx ? true : false}>
-                          {btn}
+                          isActivated={
+                            duration.index === btnIdx ? true : false
+                          }>
+                          {btn.cdNm}
                         </BtnText>
                       </Btn>
                     ))}
@@ -222,13 +267,15 @@ const SecondInput = () => {
             <ExerciseIntensityText>
               운동 강도(누가 뭐래도 내 느낌)
             </ExerciseIntensityText>
-            {intensityBtn.map((e, index) => (
+            {workoutIntensityButtonRange?.map((e, index) => (
               <ExerciseIntenSityButton
                 key={index}
-                isActivated={intensityIdx === index ? true : false}
-                onPress={() => setIntensityIdx(index)}>
-                <BtnText isActivated={intensityIdx === index ? true : false}>
-                  {e}
+                isActivated={intensity.index === index ? true : false}
+                onPress={() => {
+                  setIntensity({cd: e.cd, index: index});
+                }}>
+                <BtnText isActivated={intensity.index === index ? true : false}>
+                  {e.cdNm}
                 </BtnText>
               </ExerciseIntenSityButton>
             ))}
@@ -255,9 +302,12 @@ const SecondInput = () => {
             navigate,
             userInfo,
             bmrKnownValue,
-            frequencyIdx,
-            durationIdx,
-            intensityIdx,
+            frequency.index,
+            frequency.cd,
+            duration.index,
+            duration.cd,
+            intensity.index,
+            intensity.cd,
           )
         }>
         <BtnCTAText>다음</BtnCTAText>
