@@ -118,6 +118,8 @@ interface INutr {
   protein: number;
   fat: number;
 }
+
+/** 현재 영양과 목표영양을 비교해서  */
 export const compareNutrToTarget = (
   currentNutr: INutr | undefined,
   targetNutr: INutr | undefined,
@@ -136,7 +138,7 @@ export const compareNutrToTarget = (
   let exceedNumber = 0;
   const indexToNutr = ['calorie', 'carb', 'protein', 'fat'];
   for (let i = 0; i < current.length; i++) {
-    if (current[i] >= target[i] + NUTR_ERROR_RANGE[indexToNutr[i]][1])
+    if (current[i] > target[i] + NUTR_ERROR_RANGE[indexToNutr[i]][0])
       exceedNumber += 1;
   }
 
