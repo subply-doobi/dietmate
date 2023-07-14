@@ -26,7 +26,8 @@ import {useListCategory} from '../../query/queries/category';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {IDietDetailData} from '../../query/types/diet';
 import {IProductData} from '../../query/types/product';
-import {useCreateDietDetail} from '../../query/queries/diet';
+import {useCreateDietDetail, useListDietDetail} from '../../query/queries/diet';
+import {makeAutoMenu2} from '../../util/cart/autoMenu2';
 
 interface IAutoDietModal {
   modalVisible: boolean;
@@ -45,10 +46,10 @@ const AutoDietModal = ({
   // redux
   const dispatch = useDispatch();
   const {totalFoodList} = useSelector((state: RootState) => state.cart);
+
   // react-query
   const {data: baseLineData} = useGetBaseLine();
   const {data: categoryData} = useListCategory();
-  // const autoMenuMutation = useCreateProductAuto();
   const createDietDetailMutation = useCreateDietDetail();
 
   // useState
@@ -100,15 +101,14 @@ const AutoDietModal = ({
     reload,
   } = useAsync<{
     recommendedFoods: IProductData[];
-    sumNutr: number[];
-    sumPrice: number;
+    sum: number[];
   }>({
     asyncFunction: async () => {
-      const data = await makeAutoMenu({
+      const data = await makeAutoMenu2({
         totalFoodList,
-        dietDetail: dietDetailData,
+        initialMenu: dietDetailData, // !!!!!!!!!!!!! 바뀜 !!!!!!!!!!
         baseLine: baseLineData,
-        selectedCategory: selectedCategoryIdx,
+        selectedCategoryIdx,
         priceTarget: sliderValue,
       }).then(res => res);
       return data;
@@ -132,7 +132,13 @@ const AutoDietModal = ({
   const renderIsSuccessContent = () => {
     const onAddAutoMenu = async () => {
       setModalVisible(false);
+      if (autoMenu?.recommendedFoods.length === 0) {
+        console.log('상품없음');
+        return;
+      }
       if (!autoMenu) return;
+
+      // TODO | 이미 들어가있는 것 제외하고 data를 받아와야함
       const addAutoMenuMutation = autoMenu?.recommendedFoods.map(food =>
         createDietDetailMutation.mutateAsync({
           dietNo,
@@ -151,11 +157,11 @@ const AutoDietModal = ({
       <AutoMenuStatusContainer>
         <AutoMenuStatusText>{`끼니 구성이 완료되었어요`}</AutoMenuStatusText>
         <NutrInfoText>
-          칼로리<NutrInfoValue>{`${autoMenu?.sumNutr[0]}kcal `}</NutrInfoValue>
+          칼로리<NutrInfoValue>{`${autoMenu?.sum[0]}kcal `}</NutrInfoValue>
           탄수화물
-          <NutrInfoValue>{`${autoMenu?.sumNutr[1]}g `}</NutrInfoValue>단백질
-          <NutrInfoValue>{`${autoMenu?.sumNutr[2]}g `}</NutrInfoValue>지방
-          <NutrInfoValue>{`${autoMenu?.sumNutr[3]}g `}</NutrInfoValue>
+          <NutrInfoValue>{`${autoMenu?.sum[1]}g `}</NutrInfoValue>단백질
+          <NutrInfoValue>{`${autoMenu?.sum[2]}g `}</NutrInfoValue>지방
+          <NutrInfoValue>{`${autoMenu?.sum[3]}g `}</NutrInfoValue>
         </NutrInfoText>
         <Row style={{width: '100%', marginTop: 24, flexDirection: 'row'}}>
           <ConfirmBtn onPress={onAddAutoMenu}>

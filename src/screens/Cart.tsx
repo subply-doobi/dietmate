@@ -64,9 +64,6 @@ const Cart = () => {
   // const {navigate} = navigation;
   const isFocused = useIsFocused();
 
-  // 추가된 식품 하나도 없으면 주문버튼 비활성
-  const isEmpty = dietDetailAllData ? dietDetailAllData.length === 0 : false;
-
   // 끼니 추가할 수 있는지 여부
   const addAlertStatus = getDietAddStatus(dietData, dietEmptyData);
 
@@ -145,6 +142,10 @@ const Cart = () => {
     };
   }, [dietTotalData]);
 
+  // 추가된 식품 하나도 없으면 주문버튼 비활성
+  const isEmpty = dietDetailAllData ? dietDetailAllData.length === 0 : false;
+  const priceUnder_30000 = priceTotal < 30000;
+
   // Fn
   const updateSections = (activeSections: number[]) => {
     dispatch(setMenuActiveSection(activeSections));
@@ -222,16 +223,22 @@ const Cart = () => {
 
       {/* 주문 버튼 */}
       <BtnBottomCTA
-        btnStyle={isEmpty ? 'inactivated' : 'activated'}
+        btnStyle={priceUnder_30000 ? 'inactivated' : 'activated'}
         width={SCREENWIDTH - 16}
-        disabled={isEmpty}
+        disabled={priceUnder_30000}
         onPress={() => {
           dispatch(setFoodToOrder(dietTotal));
           navigate('OrderNav', {
             screen: 'Order',
           });
         }}>
-        <BtnText>주문하기 ({commaToNum(priceTotal)}원)</BtnText>
+        {priceUnder_30000 ? (
+          <BtnText>
+            30,000원 이상 주문 가능 (현재 : {commaToNum(priceTotal)}원)
+          </BtnText>
+        ) : (
+          <BtnText>주문하기 ({commaToNum(priceTotal)}원)</BtnText>
+        )}
       </BtnBottomCTA>
 
       {/* CreateDiet 알럿 */}
