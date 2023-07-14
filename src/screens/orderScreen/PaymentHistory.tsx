@@ -112,40 +112,48 @@ const PaymentHistory = () => {
               </DetailBtn>
             </Row>
             <HorizontalLine />
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}>
-              {productData[i].map(
-                (element: any, productDataIndex: number, array) => {
-                  return (
-                    <Col key={i + productDataIndex}>
-                      <MakeVertical>
-                        <CaloriesText>
-                          {i === 0
-                            ? totalCalorie(productDataIndex)
-                            : totalCalorie(
-                                productDataIndex + productData[i - 1]?.length,
-                              )}
-                          kcal
-                        </CaloriesText>
-                        <Row>
-                          {element.map((ele: any, eleIndex: number) => {
-                            return (
-                              <Col key={eleIndex}>
-                                <ThumbnailImage
-                                  source={{uri: `${BASE_URL}${ele.mainAttUrl}`}}
-                                />
-                              </Col>
-                            );
-                          })}
-                          <VerticalLine style={{margin: 20}} />
-                        </Row>
-                      </MakeVertical>
-                    </Col>
-                  );
-                },
-              )}
-            </ScrollView>
+            <Row>
+              <ArrowImage source={icons.arrowLeft_20} />
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {productData[i].map(
+                  (element: any, productDataIndex: number, array) => {
+                    return (
+                      <Col key={i + productDataIndex}>
+                        <MakeVertical>
+                          <CaloriesText>
+                            {i === 0
+                              ? totalCalorie(productDataIndex)
+                              : totalCalorie(
+                                  productDataIndex + productData[i - 1]?.length,
+                                )}
+                            kcal
+                          </CaloriesText>
+                          <Row>
+                            {element.map((ele: any, eleIndex: number) => {
+                              return (
+                                <Col key={eleIndex}>
+                                  <ThumbnailImage
+                                    source={{
+                                      uri: `${BASE_URL}${ele.mainAttUrl}`,
+                                    }}
+                                  />
+                                </Col>
+                              );
+                            })}
+                            <VerticalLine
+                              style={{margin: 8, backgroundColor: colors.line}}
+                            />
+                          </Row>
+                        </MakeVertical>
+                      </Col>
+                    );
+                  },
+                )}
+              </ScrollView>
+              <ArrowImage source={icons.arrowRight_20} />
+            </Row>
             <HorizontalLine style={{marginTop: 8}} />
             <TotalPrice>{commaToNum(totalPrice(i))}원</TotalPrice>
           </Col>
@@ -186,12 +194,6 @@ const CaloriesText = styled(TextMain)`
   font-size: 14px;
 `;
 
-const Arrow = styled.Image`
-  margin-top: 32px;
-  width: 20px;
-  height: 20px;
-`;
-
 const ThumbnailImage = styled.Image`
   background-color: ${colors.backgroundLight};
   width: 56px;
@@ -200,7 +202,11 @@ const ThumbnailImage = styled.Image`
   margin-top: 8px;
   margin-right: 8px;
 `;
-
+const ArrowImage = styled.Image`
+  margin-top: 28px;
+  width: 20px;
+  height: 20px;
+`;
 const TotalPrice = styled(TextMain)`
   margin-top: 8px;
   margin-bottom: 24px;
