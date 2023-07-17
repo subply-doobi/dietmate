@@ -11,4 +11,7 @@ export interface IBaseLine {
   height: string;
   weight: string;
   dietPurposeCd: string;
+  sportsSeqCd: string;
+  sportsTimeCd: string;
+  sportsStrengthCd: string;
 }
