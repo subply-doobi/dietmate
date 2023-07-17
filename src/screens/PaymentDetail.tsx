@@ -223,12 +223,13 @@ const PaymentDetail = props => {
           <SummaryMainText>결제금액</SummaryMainText>
           {groupByPlatformNmArray.map((item, index) => (
             <Col key={index}>
-              <SummarySubText>{item[0].platformNm}</SummarySubText>
-              {getPriceFromPlatformNm[index] && (
-                <SummarySubText>
-                  식품: {commaToNum(getPriceFromPlatformNm[index])}원
-                </SummarySubText>
-              )}
+              <SummarySubText>
+                {item[0].platformNm} :{' '}
+                {commaToNum(getPriceFromPlatformNm[index])}원
+              </SummarySubText>
+              {/* {getPriceFromPlatformNm[index] && (
+                <SummarySubText>식품</SummarySubText>
+              )} */}
             </Col>
           ))}
           <SummaryMainText style={{alignSelf: 'flex-end'}}>
@@ -259,6 +260,7 @@ const SummaryContainer = styled.View`
   flex: 1;
   background-color: ${colors.white};
   margin-top: 16px;
+  padding-bottom: 8px;
 `;
 const ProgressBox = styled.View`
   background-color: ${colors.white};
@@ -291,7 +293,8 @@ const SummaryMainText = styled(TextMain)`
 `;
 const SummarySubText = styled(TextMain)`
   font-size: 14px;
-  margin: 8px;
+  margin-top: 8px;
+  margin-left: 8px;
 `;
 const MenuNutrContainer = styled(Row)`
   margin: 30px
