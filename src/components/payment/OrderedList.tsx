@@ -1,57 +1,10 @@
-import {View, Text} from 'react-native';
 import React from 'react';
+import {View, Text} from 'react-native';
 import styled from 'styled-components/native';
-import {Col, Row, TextMain, TextSub} from '../../styles/styledConsts';
+
+import {icons} from '../../assets/icons/iconSource';
+import {Col, Row, TextMain, TextSub} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
-
-const ThumbnailImage = styled.Image`
-  width: 72px;
-  height: 72px;
-  background-color: ${colors.highlight};
-`;
-
-const Seller = styled(TextMain)`
-  font-size: 14px;
-  font-weight: bold;
-`;
-
-const BtnPlusNCancel = styled.TouchableOpacity`
-  width: 24px;
-  height: 24px;
-`;
-const BtnImage = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const ProductName = styled(TextMain)`
-  margin-top: 6px;
-  font-size: 14px;
-`;
-
-const NutrBox = styled.View`
-  margin-top: 4px;
-`;
-
-const NutrText = styled(TextSub)`
-  font-size: 12px;
-`;
-
-const NutrValue = styled(TextMain)`
-  font-size: 12px;
-`;
-
-const PriceNQuantity = styled(TextMain)`
-  margin-top: 12px;
-  font-size: 16px;
-  font-weight: bold;
-`;
-
-const QuantityBox = styled.View`
-  width: 82px;
-  justify-content: center;
-  align-items: center;
-`;
 
 const OrderedList = ({food}: {food: Array<number>}) => {
   return (
@@ -63,9 +16,7 @@ const OrderedList = ({food}: {food: Array<number>}) => {
             존맛존맛
           </Seller>
           <BtnPlusNCancel>
-            <BtnImage
-              source={require('../../assets/icons/24_plus_round_small.png')}
-            />
+            <BtnImage source={icons.plusRoundSmall_24} />
           </BtnPlusNCancel>
         </Row>
         <ProductName numberOfLines={1} ellipsizeMode="tail">
@@ -92,3 +43,48 @@ const OrderedList = ({food}: {food: Array<number>}) => {
 };
 
 export default OrderedList;
+
+const ThumbnailImage = styled.Image`
+  width: 72px;
+  height: 72px;
+  background-color: ${colors.highlight};
+`;
+
+const Seller = styled(TextMain)`
+  font-size: 14px;
+  font-weight: bold;
+`;
+
+const BtnPlusNCancel = styled.TouchableOpacity`
+  width: 24px;
+  height: 24px;
+`;
+const BtnImage = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const ProductName = styled(TextMain)`
+  margin-top: 6px;
+  font-size: 14px;
+`;
+
+const NutrText = styled(TextSub)`
+  font-size: 12px;
+`;
+
+const NutrValue = styled(TextMain)`
+  font-size: 12px;
+`;
+
+const PriceNQuantity = styled(TextMain)`
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const QuantityBox = styled.View`
+  width: 82px;
+  justify-content: center;
+  align-items: center;
+`;

@@ -1,17 +1,10 @@
-import {useNavigation} from '@react-navigation/native';
+// react, RN, 3rd
 import {SetStateAction, useState} from 'react';
-import {ActivityIndicator, Text} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 import styled from 'styled-components/native';
-import {
-  useDeleteDietDetail,
-  useListDiet,
-  useListDietDetail,
-  useListDietDetailAll,
-  useUpdateDietDetail,
-} from '../../query/queries/diet';
-import {BASE_URL} from '../../query/queries/urls';
-import {RootState} from '../../stores/store';
+
+// doobi util, redux, etc
+import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {
   Col,
@@ -19,76 +12,66 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
-import {
-  commaToNum,
-  makePriceObjBySeller,
-  reGroupBySeller,
-} from '../../util/sumUp';
+} from '../../styles/StyledConsts';
+import {commaToNum} from '../../util/sumUp';
+
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
-import DBottomSheet from '../common/DBottomSheet';
-import NumberPickerContent from './NumberPickerContent';
-import QuantityControl from './QuantityControl';
+
+import {BASE_URL} from '../../query/queries/urls';
+import {
+  useDeleteDietDetail,
+  useListDiet,
+  useListDietDetail,
+} from '../../query/queries/diet';
+
+interface ICartFoodList {
+  selectedFoods: {[key: string]: string[]};
+  setSelectedFoods: React.Dispatch<SetStateAction<{[key: string]: string[]}>>;
+  dietNo: string;
+}
 
 const CartFoodList = ({
   selectedFoods,
   setSelectedFoods,
-}: {
-  selectedFoods: {[key: string]: string[]};
-  setSelectedFoods: React.Dispatch<SetStateAction<{[key: string]: string[]}>>;
-}) => {
+  dietNo,
+}: ICartFoodList) => {
   // navigation
   const navigation = useNavigation();
 
-  // redux
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
-
   // react-query
   const {data: dietData} = useListDiet();
-  const {data: dietDetailData} = useListDietDetail(currentDietNo);
+  const {data: dietDetailData} = useListDietDetail(dietNo);
   const deleteMutation = useDeleteDietDetail();
 
   // state
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
   const [productNoToDelete, setProductNoToDelete] = useState('');
-  const [numberPickerShow, setNumberPickerShow] = useState(false);
-  const [numberPickerInfo, setNumberPickerInfo] = useState({
-    platformNm: '',
-    productNo: '',
-    productNm: '',
-    price: '',
-    minQty: '',
-    freeShippingPrice: '',
-    shippingPrice: '',
-  });
 
   // etc
   const onDelete = () => {
     dietData &&
       deleteMutation.mutate({
-        dietNo: currentDietNo,
+        dietNo: dietNo,
         productNo: productNoToDelete,
       });
     setDeleteAlertShow(false);
   };
 
   const addToSelected = (productNo: string) => {
-    const newArr = selectedFoods[currentDietNo]
-      ? [...selectedFoods[currentDietNo], productNo]
+    const newArr = selectedFoods[dietNo]
+      ? [...selectedFoods[dietNo], productNo]
       : [productNo];
     const newObj = {
       ...selectedFoods,
-      [currentDietNo]: newArr,
+      [dietNo]: newArr,
     };
     setSelectedFoods(newObj);
   };
   const deleteFromSelected = (productNo: string) => {
     const newObj = {
       ...selectedFoods,
-      [currentDietNo]: [
-        ...selectedFoods[currentDietNo]?.filter(v => v !== productNo),
-      ],
+      [dietNo]: [...selectedFoods[dietNo]?.filter(v => v !== productNo)],
     };
     setSelectedFoods(newObj);
   };
@@ -99,7 +82,9 @@ const CartFoodList = ({
         <FoodBox
           key={idx}
           onPress={() => {
-            navigation.navigate('FoodDetail', {item: food});
+            navigation.navigate('FoodDetail', {
+              productNo: food.productNo,
+            });
           }}>
           <Row
             style={{
@@ -110,23 +95,19 @@ const CartFoodList = ({
               source={{uri: `${BASE_URL}${food.mainAttUrl}`}}
               resizeMode="center"
             />
-            {selectedFoods[currentDietNo]?.includes(food.productNo) ? (
+            {selectedFoods[dietNo]?.includes(food.productNo) ? (
               <SelectedBtn
                 onPress={() => {
                   deleteFromSelected(food.productNo);
                 }}>
-                <SelectedCheckImage
-                  source={require('../../assets/icons/24_checkbox_selected.png')}
-                />
+                <SelectedCheckImage source={icons.checkboxCheckedGreen_24} />
               </SelectedBtn>
             ) : (
               <SelectedBtn
                 onPress={() => {
                   addToSelected(food.productNo);
                 }}>
-                <SelectedCheckImage
-                  source={require('../../assets/icons/24_checkbox.png')}
-                />
+                <SelectedCheckImage source={icons.checkbox_24} />
               </SelectedBtn>
             )}
             <Col style={{marginLeft: 8, flex: 1}}>
@@ -137,9 +118,7 @@ const CartFoodList = ({
                     setProductNoToDelete(food.productNo);
                     setDeleteAlertShow(true);
                   }}>
-                  <DeleteImage
-                    source={require('../../assets/icons/24_cancel_round.png')}
-                  />
+                  <DeleteImage source={icons.cancelRound_24} />
                 </DeleteBtn>
               </Row>
               <ProductNmText numberOfLines={1} ellipsizeMode="tail">
@@ -154,11 +133,6 @@ const CartFoodList = ({
               </NutrientText>
               <Row style={{marginTop: 12, justifyContent: 'space-between'}}>
                 <ProductPrice>{commaToNum(food.price)}원</ProductPrice>
-                <QuantityControl
-                  food={food}
-                  setNumberPickerShow={setNumberPickerShow}
-                  setNumberPickerInfo={setNumberPickerInfo}
-                />
               </Row>
             </Col>
           </Row>
@@ -172,24 +146,7 @@ const CartFoodList = ({
         onCancel={() => {
           setDeleteAlertShow(false);
         }}
-        renderContent={() => <DeleteAlertContent dietSeq={'해당식품을'} />}
-      />
-      <DBottomSheet
-        alertShow={numberPickerShow}
-        setAlertShow={setNumberPickerShow}
-        renderContent={() => (
-          <NumberPickerContent
-            setNumberPickerShow={setNumberPickerShow}
-            platformNm={numberPickerInfo.platformNm}
-            productNo={numberPickerInfo.productNo}
-            productNm={numberPickerInfo.productNm}
-            price={numberPickerInfo.price}
-            minQty={numberPickerInfo.minQty}
-            freeShippingPrice={numberPickerInfo.freeShippingPrice}
-            shippingPrice={numberPickerInfo.shippingPrice}
-          />
-        )}
-        onCancel={() => setNumberPickerShow(false)}
+        renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
       />
     </Container>
   );
@@ -231,8 +188,13 @@ const SellerText = styled(TextMain)`
 `;
 
 const DeleteBtn = styled.TouchableOpacity`
-  width: 24px;
-  height: 24px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  align-items: flex-end;
+  width: 36px;
+  height: 36px;
+  /* background-color: ${colors.highlight}; */
 `;
 
 const DeleteImage = styled.Image`

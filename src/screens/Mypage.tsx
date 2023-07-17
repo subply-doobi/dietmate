@@ -1,5 +1,14 @@
-import {View, Text, ScrollView, FlatList} from 'react-native';
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
+import {Text, FlatList} from 'react-native';
+import {useSelector} from 'react-redux';
+import styled from 'styled-components/native';
+import {useForm, useWatch} from 'react-hook-form';
+import {useNavigation} from '@react-navigation/native';
+
+import {RootState} from '../stores/store';
+import {icons} from '../assets/icons/iconSource';
+import {myPageBtns} from '../constants/constants';
+import colors from '../styles/colors';
 import {
   Col,
   HorizontalLine,
@@ -8,51 +17,43 @@ import {
   TextMain,
   TextSub,
   VerticalLine,
-} from '../styles/styledConsts';
-import styled from 'styled-components/native';
-import colors from '../styles/colors';
+} from '../styles/StyledConsts';
+
 import DAlert from '../components/common/alert/DAlert';
-import {myPageBtns, NavigationProps} from '../constants/constants';
-import NutrTarget from '../components/common/NutrientTarget';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../stores/store';
+import NutrTarget from '../components/common/nutrient/NutrientTarget';
 import CalChangeAlert from '../components/myPage/CalorieChangeAlert';
 import NutrChangeAlert from '../components/myPage/NutrientChangeAlert';
-import {
-  calculateBMR,
-  calculateNutrTarget,
-  nutrConvert,
-} from '../util/targetCalculation';
-import {useForm, useWatch} from 'react-hook-form';
 import WeightChangeAlert from '../components/myPage/WeightChangeAlert';
-import {updateUserInfo} from '../stores/slices/userInfoSlice';
-import {changeNutrByWeight} from '../util/alertActions';
-import {useGetBaseLine, useUpdateBaseLine} from '../query/queries/baseLine';
 
+import {useGetBaseLine, useUpdateBaseLine} from '../query/queries/baseLine';
+import {
+  useCreateOrder,
+  useUpdateOrder,
+  useGetOrder,
+} from '../query/queries/order';
+import {convertNutr, convertNutrByWeight} from '../util/targetCalculation';
+import {useListDiet, useUpdateDiet} from '../query/queries/diet';
 interface INavigateByBtnId {
   [key: string]: (btnId: string, navigate: Function) => void;
 }
 
 // TBD | order -> 원래는 OrderHistory로 바꿔야함! 지금은 Order페이지 테스트
 const navigateByBtnId: INavigateByBtnId = {
-  History: (btnId, navigate) => navigate('HistoryNav', {screen: btnId}),
   Likes: (btnId, navigate) => navigate('BottomTabNav', {screen: btnId}),
-  Order: (btnId, navigate) => navigate('OrderNav', {screen: btnId}),
   PaymentHistory: (btnId, navigate) =>
     navigate('PaymentHistoryNav', {screen: btnId}),
+  Account: (btnId, navigate) => navigate(btnId),
 };
 
-const Mypage = ({navigation: {navigate}}: NavigationProps) => {
-  // redux
-  const {userTarget, userInfo} = useSelector(
-    (state: RootState) => state.userInfo,
-  );
-  const dispatch = useDispatch();
-  const {data} = useGetBaseLine();
+const Mypage = () => {
+  // navigation
+  const {navigate} = useNavigation();
+
+  // react-query
+  const {data: baseLineData} = useGetBaseLine();
   const updateMutation = useUpdateBaseLine();
-
-  // console.log('mypage/data:', data);
-
+  const {data: orderData, isLoading} = useGetOrder();
+  console.log('orderData', orderData);
   // FlatList Data
   type INutrTargetData = Array<{
     nutrient: string;
@@ -60,32 +61,36 @@ const Mypage = ({navigation: {navigate}}: NavigationProps) => {
     color: string;
     alertType: 'calorie' | 'carb' | 'protein' | 'fat' | 'weight';
   }>;
-  const nutrTargetData: INutrTargetData = [
-    {
-      nutrient: '칼로리',
-      value: parseFloat(data.calorie),
-      color: colors.main,
-      alertType: 'calorie',
-    },
-    {
-      nutrient: '탄수화물',
-      value: parseFloat(data.carb),
-      color: colors.blue,
-      alertType: 'carb',
-    },
-    {
-      nutrient: '단백질',
-      value: parseFloat(data.protein),
-      color: colors.green,
-      alertType: 'protein',
-    },
-    {
-      nutrient: '지방',
-      value: parseFloat(data.fat),
-      color: colors.orange,
-      alertType: 'fat',
-    },
-  ];
+
+  const nutrTargetData: INutrTargetData = useMemo(
+    () => [
+      {
+        nutrient: '칼로리',
+        value: parseFloat(baseLineData?.calorie || '0'),
+        color: colors.main,
+        alertType: 'calorie',
+      },
+      {
+        nutrient: '탄수화물',
+        value: parseFloat(baseLineData?.carb || '0'),
+        color: colors.blue,
+        alertType: 'carb',
+      },
+      {
+        nutrient: '단백질',
+        value: parseFloat(baseLineData?.protein || '0'),
+        color: colors.green,
+        alertType: 'protein',
+      },
+      {
+        nutrient: '지방',
+        value: parseFloat(baseLineData?.fat || '0'),
+        color: colors.orange,
+        alertType: 'fat',
+      },
+    ],
+    [baseLineData],
+  );
 
   // react-hook-form
   interface IFormData {
@@ -101,12 +106,12 @@ const Mypage = ({navigation: {navigate}}: NavigationProps) => {
     setValue,
     formState: {errors, isValid},
   } = useForm<IFormData>({
-    defaultValues: {
-      calorie: userTarget.calorie,
-      carb: userTarget.carb,
-      protein: userTarget.protein,
-      fat: userTarget.fat,
-      weight: userInfo.weight,
+    defaultValues: baseLineData && {
+      calorie: String(parseInt(baseLineData.calorie)),
+      carb: String(parseInt(baseLineData.carb)),
+      protein: String(parseInt(baseLineData.protein)),
+      fat: String(parseInt(baseLineData.fat)),
+      weight: String(parseInt(baseLineData.weight)),
     },
   });
   const calorieValue = useWatch({control, name: 'calorie'});
@@ -177,10 +182,55 @@ const Mypage = ({navigation: {navigate}}: NavigationProps) => {
   };
   const typeValue = typeData[alertType];
   const onAlertConfirm = () => {
-    updateMutation.mutate({
-      ...data,
-      [alertType]: typeValue,
-    });
+    if (!baseLineData) {
+      setAlertShow(false);
+      return;
+    }
+    const {calorie, carb, protein, fat} =
+      alertType !== 'weight'
+        ? convertNutr[alertType](baseLineData.calorie, typeValue)
+        : autoCalculate
+        ? convertNutrByWeight(weightValue, baseLineData)
+        : {
+            calorie: baseLineData.calorie,
+            carb: baseLineData.carb,
+            protein: baseLineData.protein,
+            fat: baseLineData.fat,
+          };
+
+    if (alertType !== 'weight') {
+      setValue('calorie', calorie);
+      setValue('carb', carb);
+      setValue('protein', protein);
+      setValue('fat', fat);
+      updateMutation.mutate({
+        ...baseLineData,
+        calorie,
+        carb,
+        protein,
+        fat,
+      });
+    } else if (autoCalculate) {
+      setValue('calorie', calorie);
+      setValue('carb', carb);
+      setValue('protein', protein);
+      setValue('fat', fat);
+      setValue('weight', typeValue);
+      updateMutation.mutate({
+        ...baseLineData,
+        weight: typeValue,
+        calorie,
+        carb,
+        protein,
+        fat,
+      });
+    } else {
+      setValue('weight', typeValue);
+      updateMutation.mutate({
+        ...baseLineData,
+        weight: typeValue,
+      });
+    }
     setAlertShow(false);
   };
   const onAlertCancel = () => {
@@ -193,7 +243,7 @@ const Mypage = ({navigation: {navigate}}: NavigationProps) => {
         <ProfileContainer>
           <ProfileTextContainer>
             <NickName>
-              섭섭 <Text style={{fontWeight: '100'}}>님</Text>
+              {baseLineData?.nickNm} <Text style={{fontWeight: '100'}}>님</Text>
             </NickName>
             <Hello>두비가 즐거운 식단실천을 응원합니다</Hello>
           </ProfileTextContainer>
@@ -202,7 +252,7 @@ const Mypage = ({navigation: {navigate}}: NavigationProps) => {
               navigate('InputNav', {screen: 'FirstInput'});
             }}>
             <UserInfoBtnText>정보변경</UserInfoBtnText>
-            <RightArrow source={require('../assets/icons/20_rightArrow.png')} />
+            <RightArrow source={icons.arrowRight_20} />
           </UserInfoBtnContainer>
         </ProfileContainer>
         <RecommendationContainer>
@@ -217,7 +267,7 @@ const Mypage = ({navigation: {navigate}}: NavigationProps) => {
             renderItem={({item}) => (
               <NutrTarget
                 nutrient={item.nutrient}
-                value={item.value}
+                value={String(item.value)}
                 color={item.color}
                 onPress={() => {
                   setAlertType(item.alertType);
@@ -245,9 +295,7 @@ const Mypage = ({navigation: {navigate}}: NavigationProps) => {
               }}>
               <Row style={{justifyContent: 'space-between'}}>
                 <PageBtnText>{item.title}</PageBtnText>
-                <RightArrow
-                  source={require('../assets/icons/20_rightArrow.png')}
-                />
+                <RightArrow source={icons.arrowRight_20} />
               </Row>
             </PageBtn>
             {myPageBtns.length - 1 !== index && <HorizontalLine />}

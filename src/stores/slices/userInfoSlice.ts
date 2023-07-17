@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
+
 import {
   aerobicTrainingCategrory,
   purposeCategory,
@@ -7,15 +8,16 @@ import {
 } from '../../constants/constants';
 
 export interface IUserInfo {
-  nickname: string;
+  nickNm: string;
   gender: string;
   age: string;
   height: string;
   weight: string;
   dietPurposeCd: string;
+  sportsSeqCd: string;
+  sportsTimeCd: string;
+  sportsStrengthCd: string;
   bmr: string;
-  weightTimeCd: string;
-  aerobicTimeCd: string;
 }
 
 export interface IUserTarget {
@@ -41,8 +43,9 @@ const initialState: userInfoState = {
     weight: '',
     dietPurposeCd: purposeCategory[0].value,
     bmr: '',
-    weightTimeCd: weightTrainingCategrory[0].value,
-    aerobicTimeCd: aerobicTrainingCategrory[0].value,
+    sportsSeqCd: '',
+    sportsTimeCd: '',
+    sportsStrengthCd: '',
   },
   userTarget: {
     tmr: '',
@@ -65,9 +68,10 @@ export const userInfoSlice = createSlice({
         height?: string;
         weight?: string;
         dietPurposeCd?: string;
+        sportsSeqCd?: string;
+        sportsTimeCd?: string;
+        sportsStrengthCd?: string;
         bmr?: string;
-        weightTimeCd?: string;
-        aerobicTimeCd?: string;
       }>,
     ) => {
       state.userInfo = {...state.userInfo, ...action.payload};

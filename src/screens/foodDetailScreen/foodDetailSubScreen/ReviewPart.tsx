@@ -1,7 +1,9 @@
-import {Text, SafeAreaView, StyleSheet} from 'react-native';
 import React from 'react';
-import {HorizontalSpace} from '../../../styles/styledConsts';
+import {Text, SafeAreaView, StyleSheet} from 'react-native';
+
+import {HorizontalSpace} from '../../../styles/StyledConsts';
 import colors from '../../../styles/colors';
+
 const ReviewPart = () => {
   return (
     <SafeAreaView style={styles.container}>

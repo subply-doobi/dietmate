@@ -1,6 +1,8 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
+
 import {IProduct} from '../../constants/constants';
+import {IDietDetailData} from '../../query/types/diet';
 
 interface IFoodToOrder {
   product: IProduct;
@@ -15,7 +17,7 @@ interface IAddress {
 interface IOrderState {
   // 제조사별 식품리스트
   orderInfo: {
-    foodToOrder: Array<Array<IFoodToOrder>>;
+    foodToOrder: IDietDetailData[];
     orderer: string;
     ordererContact: string;
     address: Array<IAddress>;
@@ -55,8 +57,10 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    // TBD | 로그인 할 때 foodToOrder, foodPrice, shippigngFee빼고는
-    // 서버에서 받아와야 함
+    // foodToOrder
+    setFoodToOrder: (state, action: PayloadAction<IDietDetailData[]>) => {
+      state.orderInfo.foodToOrder = action.payload;
+    },
 
     // orderer
     setOrderer: (
@@ -129,6 +133,7 @@ export const orderSlice = createSlice({
 });
 
 export const {
+  setFoodToOrder,
   setOrderer,
   addAddress,
   updateAddress,

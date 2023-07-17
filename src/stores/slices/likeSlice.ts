@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
+
 import {IProduct} from '../../constants/constants';
 import {getProductIndex, hasProduct} from '../../util/reduxUtil';
 

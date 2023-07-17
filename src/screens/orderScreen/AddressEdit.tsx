@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Pressable,
@@ -6,8 +7,19 @@ import {
   Alert,
   SafeAreaView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {Controller, useForm, useWatch} from 'react-hook-form';
+import Postcode from '@actbase/react-daum-postcode';
+
+import {RootState} from '../../stores/store';
+import {
+  addAddress,
+  deleteAddress,
+  setSelectedAddressId,
+  updateAddress,
+} from '../../stores/slices/orderSlice';
+import {icons} from '../../assets/icons/iconSource';
 import {
   IFormField,
   NavigationProps,
@@ -26,72 +38,19 @@ import {
   TextMain,
   TextSub,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
-import {Controller, useForm, useWatch} from 'react-hook-form';
-import Postcode from '@actbase/react-daum-postcode';
+} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
-import {
-  addAddress,
-  deleteAddress,
-  setSelectedAddressId,
-  updateAddress,
-} from '../../stores/slices/orderSlice';
+
 import DAlert from '../../components/common/alert/DAlert';
-
-const PostalCode = styled(TextSub)`
-  font-size: 16px;
-`;
-
-const AddressDeleteBtn = styled.TouchableOpacity`
-  width: 24px;
-  height: 24px;
-`;
-
-const AddressDeleteIcon = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const BackBtn = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const AddressBase = styled(TextMain)`
-  font-size: 20px;
-  margin-top: 16px;
-`;
-
-const InputHeader = styled(InputHeaderText)`
-  margin-top: 24px;
-`;
-const Input = styled(UserInfoTextInput)``;
-
-const AddressEditBtn = styled(BtnCTA)`
-  height: 48px;
-`;
-const AddressConfirmBtn = styled(BtnCTA)`
-  margin-top: 8px;
-  margin-bottom: 8px;
-`;
-
-const AlertText = styled(TextMain)`
-  font-size: 16px;
-  align-self: center;
-`;
-const ModalBackground = styled.View`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #000000a6;
-`;
-
-const ShippingListContainer = styled.View`
-  width: 100%;
-`;
+import {useCreateAddress} from '../../query/queries/address';
+import {
+  useListAddress,
+  useGetAddress,
+  useDeleteAddress,
+  IAddress,
+  useUpdateAddress,
+} from '../../query/queries/address';
+import {dateTimestampInSeconds} from '@sentry/utils';
 
 const renderDeleteAlertContent = () => (
   <AlertContentContainer>
@@ -104,10 +63,18 @@ const AddressEdit = ({
   navigation: {navigate, setOptions},
   route,
 }: NavigationProps) => {
+  const deleteAddressMutation = useDeleteAddress();
+  const updateAddressMutation = useUpdateAddress();
+  const addressNo = route.params?.addressNo;
+  const addr1 = route.params?.addr1;
+  const addr2 = route.params?.addr2;
+  const zipCode = route.params?.zipCode;
+
   const currentAddressId =
     route.params?.currentAddressId ?? route.params?.currentAddressId;
   const isCreate = currentAddressId === undefined ? true : false;
-
+  //react-query
+  const createAddressMutation = useCreateAddress();
   // redux
   const dispatch = useDispatch();
   const {
@@ -128,10 +95,20 @@ const AddressEdit = ({
     formState: {errors, isValid},
   } = useForm<{addressDetail: string}>({
     defaultValues: {
-      addressDetail: isCreate ? '' : address[currentAddressId]?.detail,
+      addressDetail: isCreate ? '' : addr2,
     },
   });
   const addressDetailValue = useWatch({control, name: 'addressDetail'});
+  //update address할때 전달하는 requestBody
+  const requestBody: IAddress = {
+    addrNo: addressNo,
+    zipCode: postalCode,
+    addr1: addressBase,
+    addr2: addressDetailValue,
+    companyCd: 'string',
+    userId: 'string',
+    useYn: 'string',
+  };
   const renderDetailInput = ({field: {onChange, value}}: IFormField) => {
     return (
       <>
@@ -182,8 +159,8 @@ const AddressEdit = ({
     setOptions({
       headerTitle: isCreate ? '배송지 추가' : '배송지 변경',
     });
-    setPostalCode(isCreate ? '' : address[currentAddressId]?.postalCode);
-    setAddressBase(isCreate ? '' : address[currentAddressId]?.base);
+    setPostalCode(isCreate ? '' : zipCode);
+    setAddressBase(isCreate ? '' : addr1);
     setAddressDetailValue(
       'addressDetail',
       isCreate ? '' : address[currentAddressId]?.detail,
@@ -203,9 +180,7 @@ const AddressEdit = ({
                     onPress={() => {
                       setAddressDeleteAlertShow(true);
                     }}>
-                    <AddressDeleteIcon
-                      source={require('../../assets/icons/24_icon=close.png')}
-                    />
+                    <AddressDeleteIcon source={icons.cancelRound_24} />
                   </AddressDeleteBtn>
                 </Row>
                 <AddressBase>{addressBase}</AddressBase>
@@ -238,10 +213,11 @@ const AddressEdit = ({
                     flexDirection: 'row',
                     justifyContent: 'flex-start',
                   }}>
-                  <Pressable onPress={() => setPostModalVisible(false)}>
-                    <BackBtn
-                      source={require('../../assets/icons/24_back.png')}
-                    />
+                  <Pressable
+                    onPress={() => {
+                      setPostModalVisible(false);
+                    }}>
+                    <BackBtn source={icons.back_24} />
                   </Pressable>
                 </View>
                 <Postcode
@@ -252,6 +228,7 @@ const AddressEdit = ({
                     setPostalCode(String(data.zonecode));
                     setShowDetails(true);
                     setPostModalVisible(false);
+                    setAddressDetailValue('addressDetail', '');
                   }}
                   onError={() => console.error('오류')}
                 />
@@ -270,6 +247,7 @@ const AddressEdit = ({
                   ),
                 );
                 navigate('Order');
+                deleteAddressMutation.mutate({addressNo});
               }}
               renderContent={renderDeleteAlertContent}
               confirmLabel={'삭제'}
@@ -288,7 +266,20 @@ const AddressEdit = ({
           </AddressEditBtn>
           <AddressConfirmBtn
             btnStyle="activated"
-            onPress={() => handlePressConfirmBtn()}>
+            onPress={() => {
+              handlePressConfirmBtn();
+              isCreate
+                ? createAddressMutation.mutate({
+                    addrNo: 'string',
+                    zipCode: postalCode,
+                    addr1: addressBase,
+                    addr2: addressDetailValue,
+                    companyCd: 'string',
+                    userId: 'string',
+                    useYn: 'string',
+                  })
+                : updateAddressMutation.mutate(requestBody);
+            }}>
             <BtnText>확인</BtnText>
           </AddressConfirmBtn>
         </StickyFooter>
@@ -298,3 +289,52 @@ const AddressEdit = ({
 };
 
 export default AddressEdit;
+
+const PostalCode = styled(TextSub)`
+  font-size: 16px;
+`;
+
+const AddressDeleteBtn = styled.TouchableOpacity`
+  width: 24px;
+  height: 24px;
+`;
+
+const AddressDeleteIcon = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const BackBtn = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const AddressBase = styled(TextMain)`
+  font-size: 20px;
+  margin-top: 16px;
+`;
+
+const InputHeader = styled(InputHeaderText)`
+  margin-top: 24px;
+`;
+const Input = styled(UserInfoTextInput)``;
+
+const AddressEditBtn = styled(BtnCTA)`
+  height: 48px;
+`;
+const AddressConfirmBtn = styled(BtnCTA)`
+  margin-top: 8px;
+  margin-bottom: 8px;
+`;
+
+const AlertText = styled(TextMain)`
+  font-size: 16px;
+  align-self: center;
+`;
+const ModalBackground = styled.View`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000a6;
+`;

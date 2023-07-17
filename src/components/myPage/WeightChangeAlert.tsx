@@ -1,7 +1,8 @@
-import {View, Text} from 'react-native';
 import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 import {Controller} from 'react-hook-form';
+
+import {icons} from '../../assets/icons/iconSource';
 import {IFormField, validationRules} from '../../constants/constants';
 import {
   Col,
@@ -12,32 +13,9 @@ import {
   TextMain,
   TextSub,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+} from '../../styles/StyledConsts';
 
-const Container = styled.View`
-  padding: 0px 16px 24px 16px;
-`;
-
-const InputHeader = styled(InputHeaderText)`
-  margin-top: 24px;
-`;
-const Input = styled(UserInfoTextInput)``;
-
-const CheckboxContainer = styled.TouchableOpacity``;
-const Checkbox = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-const CheckboxText = styled(TextMain)`
-  font-size: 16px;
-`;
-
-const GuideText = styled(TextSub)`
-  font-size: 12px;
-  margin-top: 4px;
-`;
-
-const renderWeightInput = ({field: {onChange, onBlur, value}}: IFormField) => {
+const renderWeightInput = ({field: {onChange, value}}: IFormField) => {
   return (
     <>
       <InputHeader isActivated={value ? true : false}>몸무게 (kg)</InputHeader>
@@ -87,11 +65,9 @@ const WeightChangeAlert = ({
       <Row style={{marginTop: 24, alignItems: 'flex-start'}}>
         <CheckboxContainer onPress={() => setAutoCalculate(check => !check)}>
           {autoCalculate ? (
-            <Checkbox
-              source={require('../../assets/icons/24_checkbox_selected.png')}
-            />
+            <Checkbox source={icons.checkboxCheckedPurple_24} />
           ) : (
-            <Checkbox source={require('../../assets/icons/24_checkbox.png')} />
+            <Checkbox source={icons.checkbox_24} />
           )}
         </CheckboxContainer>
         <Col style={{marginLeft: 10}}>
@@ -104,3 +80,26 @@ const WeightChangeAlert = ({
 };
 
 export default WeightChangeAlert;
+
+const Container = styled.View`
+  padding: 0px 16px 24px 16px;
+`;
+
+const InputHeader = styled(InputHeaderText)`
+  margin-top: 24px;
+`;
+const Input = styled(UserInfoTextInput)``;
+
+const CheckboxContainer = styled.TouchableOpacity``;
+const Checkbox = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+const CheckboxText = styled(TextMain)`
+  font-size: 16px;
+`;
+
+const GuideText = styled(TextSub)`
+  font-size: 12px;
+  margin-top: 4px;
+`;

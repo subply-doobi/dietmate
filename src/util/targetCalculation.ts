@@ -1,9 +1,9 @@
 import {
-  IProduct,
   purposeCdToValue,
   ratioCdToValue,
   timeCdToMinutes,
 } from '../constants/constants';
+import {IBaseLine} from '../query/types/baseLine';
 
 /** gender, age, height, weight  => BMR */
 export const calculateBMR = (
@@ -12,8 +12,6 @@ export const calculateBMR = (
   height: string,
   weight: string,
 ) => {
-  console.log('calculateBMR');
-
   if (gender === 'M') {
     return String(
       (
@@ -40,15 +38,19 @@ export const calculateBMR = (
 /** bmr, weightTimeCd, aerobicTimeCd => TMR */
 export const calculateNutrTarget = (
   weight: string,
-  weightTimeCd: string,
-  aerobicTimeCd: string,
+  frequency: number,
+  mets: number,
+  duration: number,
   dietPurposecd: string,
   BMR: string,
 ) => {
-  console.log(weight);
-  const wcal = 0.0175 * 6 * parseFloat(weight) * timeCdToMinutes[weightTimeCd];
-  const acal = 0.0175 * 7 * parseFloat(weight) * timeCdToMinutes[aerobicTimeCd];
-  const AMR = wcal + acal + parseFloat(BMR) * 0.2;
+  // const wcal = 0.0175 * 6 * parseFloat(weight) * timeCdToMinutes[weightTimeCd];
+  // const acal = 0.0175 * 7 * parseFloat(weight) * timeCdToMinutes[aerobicTimeCd];
+  // 하루 평균 운동시간
+  const avgDuration = (duration * frequency) / 7;
+  // 하루 평균 활동 칼로리
+  const aCal = 0.0175 * mets * parseFloat(weight) * avgDuration;
+  const AMR = aCal + parseFloat(BMR) * 0.2;
   const TMR = parseFloat(BMR) + AMR;
   const calorieTarget =
     (TMR + parseInt(purposeCdToValue[dietPurposecd].additionalCalorie)) / 3;
@@ -103,34 +105,13 @@ export const calculateManualCalorie = (
   const fatRatio =
     totalCalorie == 0 ? '    ' : Math.round(((f * 9) / totalCalorie) * 100);
 
-  console.log(c, p, f, totalCalorie, carbRatio, proteinRatio, fatRatio);
+  // console.log(c, p, f, totalCalorie, carbRatio, proteinRatio, fatRatio);
 
   return {
     totalCalorie: String(totalCalorie),
     carbRatio: String(carbRatio),
     proteinRatio: String(proteinRatio),
     fatRatio: String(fatRatio),
-  };
-};
-
-export const calculateCartNutr = (menu: Array<IProduct>) => {
-  let calorie = 0;
-  let carb = 0;
-  let protein = 0;
-  let fat = 0;
-  if (menu) {
-    menu.forEach(product => {
-      calorie += parseInt(product?.calorie);
-      carb += parseInt(product?.carb);
-      protein += parseInt(product?.protein);
-      fat += parseInt(product?.fat);
-    });
-  }
-  return {
-    calorie,
-    carb,
-    protein,
-    fat,
   };
 };
 
@@ -200,7 +181,7 @@ const convertByFat = (targetCalorie: string, fatForMod: string) => {
   };
 };
 
-export const nutrConvert: {
+export const convertNutr: {
   [key: string]: (
     targetCalorie: string,
     input: string,
@@ -210,4 +191,25 @@ export const nutrConvert: {
   carb: (targetCalorie, nutr) => convertByCarb(targetCalorie, nutr),
   protein: (targetCalorie, nutr) => convertByProtein(targetCalorie, nutr),
   fat: (targetCalorie, nutr) => convertByFat(targetCalorie, nutr),
+};
+
+export const convertNutrByWeight = (
+  weight: string,
+  baseLine: IBaseLine,
+): {calorie: string; carb: string; protein: string; fat: string} => {
+  const bmr = calculateBMR(
+    baseLine.gender,
+    baseLine.age,
+    baseLine.height,
+    weight,
+  );
+  const {tmr, calorie, carb, protein, fat} = calculateNutrTarget(
+    weight,
+    3,
+    2.3,
+    45,
+    baseLine.dietPurposeCd,
+    bmr,
+  );
+  return {calorie, carb, protein, fat};
 };

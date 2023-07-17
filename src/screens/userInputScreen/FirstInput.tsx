@@ -1,6 +1,17 @@
+// Description: 첫번째 유저 정보 입력 화면
+//RN, 3rd
+import React, {useRef} from 'react';
 import {View, Text, ScrollView} from 'react-native';
-import React, {useEffect, useRef, useState, useCallback} from 'react';
 import styled from 'styled-components/native';
+import {Controller, useForm, useWatch} from 'react-hook-form';
+import {useDispatch, useSelector} from 'react-redux';
+//doobi util, redux, etc
+import {RootState} from '../../stores/store';
+import {saveUserInfo} from '../../stores/slices/userInfoSlice';
+import {NavigationProps, validationRules} from '../../constants/constants';
+import colors from '../../styles/colors';
+import {calculateBMR} from '../../util/targetCalculation';
+//doobi Component
 import {
   BtnBottomCTA,
   BtnText,
@@ -13,23 +24,14 @@ import {
   TextMain,
   UserInfoTextInput,
   VerticalSpace,
-} from '../../styles/styledConsts';
-import {
-  NavigationProps,
-  purposeCategory,
-  validationRules,
-} from '../../constants/constants';
-import colors from '../../styles/colors';
+} from '../../styles/StyledConsts';
+
 import Dropdown from '../../components/userInput/Dropdown';
-import {Controller, useForm, useWatch} from 'react-hook-form';
-import {calculateBMR} from '../../util/targetCalculation';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
-import {saveUserInfo} from '../../stores/slices/userInfoSlice';
+//react-query
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {useDietPurposeCode} from '../../query/queries/code';
-import {COMMON_CODE} from '../../query/queries/urls';
-import axios from 'axios';
+import {useNavigation} from '@react-navigation/native';
+
 interface IFormData {
   gender: string;
   age: string;
@@ -38,6 +40,7 @@ interface IFormData {
   dietPurposeCd: string;
 }
 
+//나이 Input
 const renderAgeInput = (
   {field: {onChange, value}}: any,
   userInfo1Refs?: React.MutableRefObject<any[]>,
@@ -62,10 +65,11 @@ const renderAgeInput = (
     </>
   );
 };
+//신장 Input
 const renderHeightInput = (
   {field: {onChange, onBlur, value}}: any,
   userInfo1Refs?: React.MutableRefObject<any[]>,
-  scrollRef?: any, // TBD | scrollView ref type?!
+  scrollRef?: any,
 ) => {
   return (
     <>
@@ -90,6 +94,7 @@ const renderHeightInput = (
     </>
   );
 };
+//몸무게 Input
 const renderWeightInput = (
   {field: {onChange, onBlur, value}}: any,
   userInfo1Refs?: React.MutableRefObject<any[]>,
@@ -162,6 +167,8 @@ const FirstInput = ({navigation: {navigate}}: NavigationProps) => {
   const heightValue = useWatch({control, name: 'height'});
   const weightValue = useWatch({control, name: 'weight'});
   const dietPurposeValue = useWatch({control, name: 'dietPurposeCd'});
+
+  console.log('firstInput:', data);
 
   return (
     <Container>

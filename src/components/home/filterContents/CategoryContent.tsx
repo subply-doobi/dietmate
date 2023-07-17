@@ -1,86 +1,66 @@
-import React, {useState} from 'react';
+// 필터 버튼을 누르면 나오는 컨텐츠
+// RN, 3rd
 import styled from 'styled-components/native';
-import {
-  Row,
-  HorizontalLine,
-  BtnCTA,
-  BtnBottomCTA,
-  TextMain,
-} from '../../../styles/styledConsts';
-import {useWeightPurposeCode, useFilterCode} from '../../query/queries/code';
-import {useListProduct} from '../../../query/queries/product';
-import {
-  useListCategory,
-  useCountCategory,
-} from '../../../query/queries/category';
-import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
-import DSlider from '../common/slider/DSlider';
+import {useSelector} from 'react-redux';
+import {View} from 'react-native';
 
-interface CategoryItem {
-  categoryCd: string;
-  CategoryCdNm: string;
-  productCnt: number;
+import {HorizontalLine} from '../../../styles/StyledConsts';
+import colors from '../../../styles/colors';
+
+import {useCountCategory} from '../../../query/queries/category';
+
+interface IProps {
+  setCategoryParam: React.Dispatch<React.SetStateAction<string>>;
+  categoryParam: string;
 }
-const CategoryContent = () => {
-  // const filter = useFilterCode('Protein');
-  // console.log('filterTest:', filter);
-  // const list = useListProduct();
-  // console.log('filterModal/listproduct:', list);
+const CategoryContent = (props: IProps) => {
+  const {setCategoryParam, categoryParam} = props;
+  // redux
+  const {totalFoodList} = useSelector((state: RootState) => state.cart);
+  // react-query 제품 갯수 확인
   const count = useCountCategory();
-  const onPress = arg => {
-    console.log('pressed', arg);
+  const Contents = () => {
+    return (
+      <View style={{marginTop: 16}}>
+        <CategoryButton
+          onPress={() => {
+            setCategoryParam('');
+          }}>
+          <CategoryText id={''} clicked={categoryParam}>
+            전체 ({totalFoodList.length})
+          </CategoryText>
+        </CategoryButton>
+        {count.data?.map((e, i) => (
+          <View key={e.categoryCd}>
+            <HorizontalLine />
+            <CategoryButton
+              onPress={() => {
+                setCategoryParam(e.categoryCd);
+              }}>
+              <CategoryText id={e.categoryCd} clicked={categoryParam}>
+                {e.categoryCdNm}( {e.productCnt})
+              </CategoryText>
+            </CategoryButton>
+          </View>
+        ))}
+      </View>
+    );
   };
-
   return (
     <>
-      {count.data?.map((e, i) => (
-        <>
-          <CategoryButton
-            key={e.categoryCd}
-            onPress={() => onPress(e.categoryCd)}>
-            <CategoryText>
-              {e.categoryCdNm}( {e.productCnt})
-            </CategoryText>
-            <HorizontalLine />
-          </CategoryButton>
-        </>
-      ))}
+      <Contents />
     </>
   );
 };
 
 export default CategoryContent;
-const Text = styled.Text`
-  font-size: 18px;
-  margin: 15px;
-`;
+
 const CategoryText = styled.Text`
   font-size: 16px;
-  margin: 15px;
+  color: ${({id, clicked}) => (id === clicked ? colors.main : colors.textSub)};
   text-align: center;
 `;
-const CategoryButton = styled.TouchableOpacity``;
-
-const BottomText = styled.Text`
-  font-size: 16px;
-`;
-const Button = styled.TouchableOpacity``;
-const Image = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-const FilterRow = styled(Row)`
+const CategoryButton = styled.TouchableOpacity`
+  height: 58px;
   justify-content: center;
 `;
-const BottomRow = styled.View`
-  flex-direction: row;
-  justify-content: center;
-`;
-const SliderTitle = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 40px;
-`;
-const MODAL_WIDTH = 328;
-const MODAL_INNER_WIDTH = MODAL_WIDTH - 32;
-const SLIDER_WIDTH = MODAL_INNER_WIDTH - 32;

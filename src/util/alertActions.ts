@@ -1,4 +1,3 @@
-import React from 'react';
 import {IUserInfo} from '../stores/slices/userInfoSlice';
 import {calculateBMR, calculateNutrTarget} from './targetCalculation';
 
@@ -16,7 +15,7 @@ export const changeNutrByWeight = (
     weightValue,
     userInfo.weightTimeCd,
     userInfo.aerobicTimeCd,
-    userInfo.dietPurposecd,
+    userInfo.dietPurposeCd,
     bmr,
   );
   return res;

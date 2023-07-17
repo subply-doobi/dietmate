@@ -1,21 +1,8 @@
-import {View, Text, FlatList, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {View, Text, FlatList, Alert} from 'react-native';
 import styled from 'styled-components/native';
-import {NavigationProps, SCREENWIDTH} from '../constants/constants';
-import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-import {RootState} from '../stores/store';
-import colors from '../styles/colors';
-import NutrTarget from '../components/common/NutrientTarget';
-import {
-  HorizontalLine,
-  TextMain,
-  TextSub,
-  VerticalLine,
-  VerticalSpace,
-} from '../styles/styledConsts';
-import DAlert from '../components/common/alert/DAlert';
-import DBottomSheet from '../components/common/DBottomSheet';
+import {useNavigation} from '@react-navigation/native';
 import {
   Asset,
   ImagePickerResponse,
@@ -23,120 +10,23 @@ import {
   launchImageLibrary,
 } from 'react-native-image-picker';
 import axios from 'axios';
+
+import {RootState} from '../stores/store';
+import {icons} from '../assets/icons/iconSource';
+import {NavigationProps, SCREENWIDTH} from '../constants/constants';
+import colors from '../styles/colors';
 import {useChangeHeaderRight, useChangeHeaderTitle} from '../util/customHooks';
+import {
+  HorizontalLine,
+  TextMain,
+  TextSub,
+  VerticalLine,
+  VerticalSpace,
+} from '../styles/StyledConsts';
 
-const Container = styled.View`
-  flex: 1;
-  background-color: ${colors.white};
-`;
-
-const Card = styled.View`
-  margin-top: 16px;
-  padding: 0px 16px 16px 16px;
-`;
-
-const ListTitle = styled(TextMain)`
-  font-size: 16px;
-  margin-top: 16px;
-`;
-
-const TargetNutrContainer = styled.View`
-  width: 100%;
-  margin-top: 16px;
-`;
-
-const WeightBox = styled.View`
-  margin-top: 16px;
-  width: 210px;
-  border-left-width: 1px;
-  border-right-width: 1px;
-  border-color: ${colors.inactivated};
-  align-items: center;
-  align-self: center;
-`;
-
-const WeightDate = styled(TextSub)`
-  font-size: 12px;
-`;
-const WeightBold = styled(TextMain)`
-  font-size: 20px;
-  font-weight: bold;
-`;
-const Weight = styled(TextMain)`
-  font-size: 20px;
-`;
-
-const HistoryImageRow = styled.View`
-  flex-direction: row;
-  margin-top: 16px;
-  height: 192px;
-`;
-
-const ImageBox = styled.TouchableOpacity`
-  width: 192px;
-  height: 192px;
-  border-radius: 10px;
-`;
-
-const HistoryImage = styled.Image`
-  flex: 1;
-  border-radius: 10px;
-  background-color: ${colors.highlight};
-`;
-
-const ImageDeleteBtn = styled.TouchableOpacity`
-  width: 24px;
-  height: 24px;
-  position: absolute;
-  top: 8px;
-  right: 8px;
-`;
-const DeleteImage = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const ImageAddBtn = styled.TouchableOpacity`
-  width: ${({isFirst}: {isFirst?: boolean}) => (isFirst ? '192px' : '96px')};
-  height: 192px;
-  margin-left: 8px;
-  border-radius: 10px;
-  border-width: 1px;
-  border-color: ${colors.inactivated};
-  justify-content: center;
-  align-items: center;
-`;
-
-const AddImage = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const DeleteAlertContainer = styled.View`
-  padding: 28px 16px 28px 16px;
-  justify-content: center;
-  align-items: center;
-`;
-
-const AlertText = styled.Text`
-  font-size: 16px;
-`;
-
-const AddAlertContainer = styled.View`
-  margin-top: 16px;
-`;
-
-const AddOptionBtn = styled.TouchableOpacity`
-  width: 100%;
-  height: 58px;
-  align-items: center;
-  justify-content: center;
-`;
-
-const AddOptionBtnText = styled(TextMain)`
-  font-size: 16px;
-  font-weight: 600;
-`;
+import NutrTarget from '../components/common/nutrient/NutrientTarget';
+import DAlert from '../components/common/alert/DAlert';
+import DBottomSheet from '../components/common/DBottomSheet';
 
 const HistoryDetail = ({
   navigation,
@@ -190,7 +80,7 @@ const HistoryDetail = ({
         onPress={() => {
           console.log('delete!');
         }}>
-        <DeleteImage source={require('../assets/icons/24_icon=close.png')} />
+        <DeleteImage source={icons.cancelRound_24} />
       </ImageDeleteBtn>
     </ImageBox>
   );
@@ -304,7 +194,7 @@ const HistoryDetail = ({
             onPress={() => {
               setImageAddAlertShow(true);
             }}>
-            <AddImage source={require('../assets/icons/24_autoMenu.png')} />
+            <AddImage source={icons.plusSquare_24} />
           </ImageAddBtn>
         </HistoryImageRow>
       </Card>
@@ -328,3 +218,116 @@ const HistoryDetail = ({
 };
 
 export default HistoryDetail;
+
+const Container = styled.View`
+  flex: 1;
+  background-color: ${colors.white};
+`;
+
+const Card = styled.View`
+  margin-top: 16px;
+  padding: 0px 16px 16px 16px;
+`;
+
+const ListTitle = styled(TextMain)`
+  font-size: 16px;
+  margin-top: 16px;
+`;
+
+const TargetNutrContainer = styled.View`
+  width: 100%;
+  margin-top: 16px;
+`;
+
+const WeightBox = styled.View`
+  margin-top: 16px;
+  width: 210px;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-color: ${colors.inactivated};
+  align-items: center;
+  align-self: center;
+`;
+
+const WeightDate = styled(TextSub)`
+  font-size: 12px;
+`;
+const WeightBold = styled(TextMain)`
+  font-size: 20px;
+  font-weight: bold;
+`;
+const Weight = styled(TextMain)`
+  font-size: 20px;
+`;
+
+const HistoryImageRow = styled.View`
+  flex-direction: row;
+  margin-top: 16px;
+  height: 192px;
+`;
+
+const ImageBox = styled.TouchableOpacity`
+  width: 192px;
+  height: 192px;
+  border-radius: 10px;
+`;
+
+const HistoryImage = styled.Image`
+  flex: 1;
+  border-radius: 10px;
+  background-color: ${colors.highlight};
+`;
+
+const ImageDeleteBtn = styled.TouchableOpacity`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+`;
+const DeleteImage = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const ImageAddBtn = styled.TouchableOpacity`
+  width: ${({isFirst}: {isFirst?: boolean}) => (isFirst ? '192px' : '96px')};
+  height: 192px;
+  margin-left: 8px;
+  border-radius: 10px;
+  border-width: 1px;
+  border-color: ${colors.inactivated};
+  justify-content: center;
+  align-items: center;
+`;
+
+const AddImage = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const DeleteAlertContainer = styled.View`
+  padding: 28px 16px 28px 16px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const AlertText = styled.Text`
+  font-size: 16px;
+`;
+
+const AddAlertContainer = styled.View`
+  margin-top: 16px;
+`;
+
+const AddOptionBtn = styled.TouchableOpacity`
+  width: 100%;
+  height: 58px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const AddOptionBtnText = styled(TextMain)`
+  font-size: 16px;
+  font-weight: 600;
+`;

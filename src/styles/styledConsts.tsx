@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+
 import colors from './colors';
 import {SCREENWIDTH} from '../constants/constants';
 
@@ -10,8 +11,78 @@ export interface StyledProps {
   backgroundColor?: string;
   lineColor?: string;
   thumbIdx?: number;
-  filterHeight: boolean;
+  filterHeight?: number;
+  willExceed?: boolean;
 }
+export const NotoSansLight = styled.Text`
+  font-family: 'NotoSansKRLight';
+  color: ${colors.textMain};
+  include-font-padding: false;
+`;
+export const NotoSansRegular = styled.Text`
+  font-family: 'NotoSansKR';
+  color: ${colors.textMain};
+  include-font-padding: false;
+`;
+export const NotoSansMedium = styled.Text`
+  font-family: 'NotoSansKRMedium';
+  color: ${colors.textMain};
+  include-font-padding: false;
+`;
+export const NotoSansBold = styled.Text`
+  font-family: 'NotoSansKRBold';
+  color: ${colors.textMain};
+  include-font-padding: false;
+`;
+export const NotoSansBlack = styled.Text`
+  font-family: 'NotoSansKRBlack';
+  color: ${colors.textMain};
+  include-font-padding: false;
+`;
+export const NotoSansThin = styled.Text`
+  font-family: 'NotoSansKRThin';
+  color: ${colors.textMain};
+  include-font-padding: false;
+`;
+export const NotoSansLight_Sub = styled.Text`
+  font-family: 'NotoSansKRLight';
+  color: ${colors.textSub};
+  include-font-padding: false;
+`;
+export const NotoSansRegular_Sub = styled.Text`
+  font-family: 'NotoSansKR';
+  color: ${colors.textSub};
+  include-font-padding: false;
+`;
+export const NotoSansMedium_Sub = styled.Text`
+  font-family: 'NotoSansKRMedium';
+  color: ${colors.textSub};
+  include-font-padding: false;
+`;
+export const NotoSansBold_Sub = styled.Text`
+  font-family: 'NotoSansKRBold';
+  color: ${colors.textSub};
+  include-font-padding: false;
+`;
+export const NotoSansBlack_Sub = styled.Text`
+  font-family: 'NotoSansKRBlack';
+  color: ${colors.textSub};
+  include-font-padding: false;
+`;
+export const NotoSansThin_Sub = styled.Text`
+  font-family: 'NotoSansKRThin';
+  color: ${colors.textSub};
+  include-font-padding: false;
+`;
+
+export const TextMain = styled.Text`
+  color: ${colors.textMain};
+`;
+
+export const TextSub = styled.Text`
+  color: ${colors.textSub};
+  font-weight: 300;
+`;
 
 export const Container = styled.View`
   flex: 1;
@@ -25,16 +96,14 @@ export const AlertContentContainer = styled.View`
 
 export const InputHeaderText = styled.Text`
   font-size: 14px;
-  font-weight: normal;
   color: ${({isActivated}: StyledProps) =>
     isActivated ? colors.main : colors.white};
 `;
 export const UserInfoTextInput = styled.TextInput`
   justify-content: center;
   align-items: flex-start;
-  font-weight: normal;
+  height: 40px;
   font-size: 16px;
-  padding-bottom: 10px;
   border-bottom-width: 1px;
   border-color: ${({isActivated}: StyledProps) =>
     isActivated ? colors.main : colors.inactivated};
@@ -75,15 +144,6 @@ export const InputContainer = styled.View`
   width: 100%;
   height: 58px;
   padding-top: 24px;
-`;
-
-export const TextMain = styled.Text`
-  color: ${colors.textMain};
-`;
-
-export const TextSub = styled.Text`
-  color: ${colors.textSub};
-  font-weight: 300;
 `;
 
 export const Row = styled.View`
@@ -171,7 +231,7 @@ export const BtnSmallText = styled.Text`
 
 export const VerticalLine = styled.View`
   height: ${({height}: StyledProps) => (height ? `${height}px` : '100%')};
-  width: 1px;
+  width: ${({width}: StyledProps) => (width ? `${width}px` : `1px`)};
   background-color: ${colors.inactivated};
 `;
 export const HorizontalLine = styled.View`

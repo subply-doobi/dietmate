@@ -1,20 +1,14 @@
-import {View, Text} from 'react-native';
-import React, {useEffect} from 'react';
+import styled from 'styled-components/native';
+import {Controller} from 'react-hook-form';
+
 import {
   AccordionContentContainer,
   ErrorBox,
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
-import {Controller} from 'react-hook-form';
+} from '../../styles/StyledConsts';
 import {IFormField, validationRules} from '../../constants/constants';
-import styled from 'styled-components/native';
-
-const InputHeader = styled(InputHeaderText)`
-  margin-top: 24px;
-`;
-const Input = styled(UserInfoTextInput)``;
 
 interface IAddress {
   control: any;
@@ -85,3 +79,8 @@ const Orderer = ({control, handleSubmit, errors}: IAddress) => {
 };
 
 export default Orderer;
+
+const InputHeader = styled(InputHeaderText)`
+  margin-top: 24px;
+`;
+const Input = styled(UserInfoTextInput)``;

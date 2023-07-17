@@ -1,55 +1,73 @@
-import React, {useState} from 'react';
+// RN, 3rd
+import React, {useState, useEffect} from 'react';
+import {ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
-import {Row, TextMain} from '../../../styles/styledConsts';
 
-import {ProgressBarAndroidComponent, ScrollView} from 'react-native';
+import {Col, TextMain} from '../../../styles/StyledConsts';
 import DSlider from '../../common/slider/DSlider';
+// react-query
+import {useFilterRange} from '../../../query/queries/product';
+import {IFilterParams} from '../../../query/types/product';
 
-const PriceContent = () => {
-  const [sliderValue, setSliderValue] = useState<number[]>([4000, 12000]);
+interface Props {
+  setPriceParam: (param: any) => void;
+  priceParam: number[];
+  filterParams: IFilterParams;
+}
+
+const PriceContent = (props: Props) => {
+  const {setPriceParam, priceParam, filterParams} = props;
+  //price range
+  const priceRange = useFilterRange('price');
+  const {data, isLoading} = priceRange;
+  //price min, max
+  const minState = !data?.minData ? 0 : Number(data.minData);
+  const maxState = !data?.maxData ? 25000 : Number(data.maxData);
+
+  const [priceValue, setPriceValue] = useState<number[]>([]);
+
+  useEffect(() => {
+    const initialState =
+      filterParams.priceParam.length === 0
+        ? [0, maxState]
+        : filterParams.priceParam;
+    setPriceValue(initialState);
+  }, [data]);
+
+  useEffect(() => {
+    priceParam.length === 0 && setPriceValue([0, maxState]);
+  }, [priceParam]);
 
   return (
-    <ScrollView>
+    <Col style={{marginTop: 120}}>
       <SliderTitle>가격</SliderTitle>
-      <DSlider
-        sliderValue={sliderValue}
-        setSliderValue={setSliderValue}
-        minimumValue={4000}
-        maximumValue={12000}
-        step={1000}
-        sliderWidth={SLIDER_WIDTH}
-      />
-    </ScrollView>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        priceValue.length === 2 && (
+          <DSlider
+            sliderValue={priceValue}
+            setSliderValue={setPriceValue}
+            minimumValue={0}
+            maximumValue={maxState}
+            step={1000}
+            text={'원'}
+            sliderWidth={SLIDER_WIDTH}
+            onSlidingComplete={() => setPriceParam(priceValue)}
+          />
+        )
+      )}
+    </Col>
   );
 };
 
 export default PriceContent;
 
-const Text = styled.Text`
-  font-size: 18px;
-  margin: 15px;
-`;
-
-const BottomText = styled.Text`
-  font-size: 16px;
-`;
-const Button = styled.TouchableOpacity``;
-const Image = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-const FilterRow = styled(Row)`
-  justify-content: center;
-`;
-const BottomRow = styled.View`
-  flex-direction: row;
-  justify-content: center;
-`;
 const SliderTitle = styled(TextMain)`
   font-size: 16px;
   font-weight: bold;
   margin-top: 40px;
 `;
 const MODAL_WIDTH = 328;
-const MODAL_INNER_WIDTH = MODAL_WIDTH - 32;
-const SLIDER_WIDTH = MODAL_INNER_WIDTH - 32;
+const MODAL_INNER_WIDTH = MODAL_WIDTH;
+const SLIDER_WIDTH = MODAL_INNER_WIDTH;

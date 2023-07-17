@@ -1,27 +1,29 @@
-import {View, Text} from 'react-native';
-import React from 'react';
+//RN, 3rd
 import styled from 'styled-components/native';
+import {Controller} from 'react-hook-form';
+//doobi util, redux, etc
 import colors from '../../styles/colors';
+import {nutrRatioCategory, validationRules} from '../../constants/constants';
+import {calculateCaloriesToNutr} from '../../util/targetCalculation';
+//Doobi components
 import {
   ErrorBox,
   ErrorText,
   InputHeaderText,
-  TextMain,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
-import {Controller, useForm, useWatch} from 'react-hook-form';
-import {
-  IDropdownField,
-  nutrRatioCategory,
-  validationRules,
-} from '../../constants/constants';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
-import Dropdown from './Dropdown';
-import {calculateCaloriesToNutr} from '../../util/targetCalculation';
+} from '../../styles/StyledConsts';
 
+import Dropdown from './Dropdown';
+
+interface IField {
+  field: {
+    onChange: Function;
+    onBlur: Function;
+    value: string;
+  };
+}
 const renderCaloriePerMealInput = (
-  {field: {onChange, onBlur, value}}: IDropdownField,
+  {field: {onChange, onBlur, value}}: IField,
   handleSubmit: Function,
   calorieRecommended?: string,
 ) => {
@@ -31,7 +33,7 @@ const renderCaloriePerMealInput = (
         한 끼 칼로리 (kcal)
       </InputHeader>
       <Input
-        placeholder={`한 끼 칼로리 입력 (추천: ${calorieRecommended})`}
+        placeholder={`한 끼 칼로리 입력 (권장: ${calorieRecommended})`}
         value={value}
         onChangeText={onChange}
         onFocus={() => handleSubmit()}
@@ -117,8 +119,6 @@ const InputHeader = styled(InputHeaderText)`
 `;
 const Input = styled(UserInfoTextInput)``;
 
-// TBD | CalculateByRatio.tsx, Auto.tsx, Manual.tsx 모두
-// ContentsContainer or SummaryContainer 겹침
 const SummaryContainer = styled.View`
   margin-top: 12px;
   border-width: 1px;

@@ -1,15 +1,18 @@
+//RN, 3rd
 import React, {useRef, useState} from 'react';
-import {useForm, useWatch} from 'react-hook-form';
 import {ScrollView, Text, TouchableOpacity} from 'react-native';
-import Accordion from 'react-native-collapsible/Accordion';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
-import Auto from '../../components/userInput/Auto';
-import CalculateByRatio from '../../components/userInput/CalculateByRatio';
-import Manual from '../../components/userInput/Manual';
-import {NavigationProps, nutrRatioCategory} from '../../constants/constants';
+import {useForm, useWatch} from 'react-hook-form';
+import Accordion from 'react-native-collapsible/Accordion';
+import {useNavigation} from '@react-navigation/native';
+//doobi util, redux, etc
 import {RootState} from '../../stores/store';
+import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
+import {nutrRatioCategory} from '../../constants/constants';
+import {convertDataByMethod} from '../../util/userInfoSubmit';
+//doobi Component
 import {
   BtnBottomCTA,
   BtnText,
@@ -17,8 +20,12 @@ import {
   HorizontalSpace,
   StyledProps,
   TextMain,
-} from '../../styles/styledConsts';
-import {convertDataByMethod} from '../../util/userInfoSubmit';
+} from '../../styles/StyledConsts';
+
+import Auto from '../../components/userInput/Auto';
+import CalculateByRatio from '../../components/userInput/CalculateByRatio';
+import Manual from '../../components/userInput/Manual';
+
 import {
   useCreateBaseLine,
   useGetBaseLine,
@@ -33,21 +40,45 @@ interface IFormData {
   proteinManual: string;
   fatManual: string;
 }
+interface IRequestBody {
+  calorie: string;
+  carb: string;
+  protein: string;
+  fat: string;
+  companyCd: string;
+  userId: string;
+  nickNm: string;
+  gender: string;
+  age: string;
+  height: string;
+  weight: string;
+  dietPurposeCd: string;
+  sportsSeqCd: string;
+  sportsTimeCd: string;
+  sportsStrengthCd: string;
+  dietPurposeNm: string;
+  sportsSeqNm: string;
+  sportsTimeNm: string;
+  sportsStrengthNm: string;
+}
 
-const ThirdInput = ({navigation}: NavigationProps) => {
+const ThirdInput = () => {
+  // navigation
+  const navigation = useNavigation();
+  const {navigate} = navigation;
+
   // react-query
   const {data} = useGetBaseLine();
+  // console.log('thirdInput/baseLine', data);
   const updateMutation = useUpdateBaseLine();
   const createMutation = useCreateBaseLine();
   const {data: dietData} = useListDiet();
   const createDietMutation = useCreateDiet();
-
   // redux
   const {userInfo, userTarget} = useSelector(
     (state: RootState) => state.userInfo,
   );
-  // console.log('userInfo3: userInfo:', userInfo);
-  // console.log('userInfo3: userTarget:', userTarget);
+  const totalBaseLine: IRequestBody = {...userInfo, ...userTarget};
   // ref
   const scrollRef = useRef<ScrollView>(null);
 
@@ -59,7 +90,6 @@ const ThirdInput = ({navigation}: NavigationProps) => {
     setValue,
     formState: {errors, isValid},
   } = useForm<IFormData>({
-    // 나중에 사용자 정보 있으면 초기값으로 넣어줘야함.
     defaultValues: {
       ratioType: nutrRatioCategory[0].value,
       caloriePerMeal: '',
@@ -68,6 +98,7 @@ const ThirdInput = ({navigation}: NavigationProps) => {
       fatManual: '',
     },
   });
+  //check validation
   const ratioType = useWatch({control, name: 'ratioType'});
   const caloriePerMeal = useWatch({control, name: 'caloriePerMeal'});
   const carbManual = useWatch({control, name: 'carbManual'});
@@ -116,13 +147,18 @@ const ThirdInput = ({navigation}: NavigationProps) => {
     // return section.title;
     return (
       <AccordionHeader isActivated={isActive}>
+        {isActive ? (
+          <CheckIcon source={icons.checkboxCheckedPurple_24} />
+        ) : (
+          <CheckIcon source={icons.checkboxCheckedGrey_24} />
+        )}
         <AccordionHeaderTitle isActivated={isActive}>
           {section.title}
         </AccordionHeaderTitle>
         {isActive ? (
-          <ArrowIcon source={require('../../assets/icons/20_up.png')} />
+          <ArrowIcon source={icons.arrowUpPurple_20} />
         ) : (
-          <ArrowIcon source={require('../../assets/icons/20_down.png')} />
+          <ArrowIcon source={icons.arrowDown_20} />
         )}
       </AccordionHeader>
     );
@@ -133,7 +169,6 @@ const ThirdInput = ({navigation}: NavigationProps) => {
   const updateSections = (actives: Array<number>) => {
     setActiveSections(actives);
   };
-  console.log('userInfo3: errors: ', errors);
 
   const btnIsActive =
     activeSections[0] === 0 ||
@@ -158,16 +193,28 @@ const ThirdInput = ({navigation}: NavigationProps) => {
       proteinManual,
       fatManual,
     };
-    const requestBody = convertDataByMethod[calculationMethod](dataToConvert);
-    // console.log('ThirdInput/requestBody:', requestBody);
+    const requestBody: IRequestBody =
+      convertDataByMethod[calculationMethod](dataToConvert);
+    console.log('requestBody', requestBody);
     if (!dietData) return;
     if (dietData.length === 0) {
       createDietMutation.mutate();
       createMutation.mutate(requestBody);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
+      });
     } else {
       updateMutation.mutate(requestBody);
+      navigation.reset({
+        index: 1,
+        routes: [
+          // {name: 'BottomTabNav', params: {screen: 'Home'}},
+          {name: 'BottomTabNav', params: {screen: 'Mypage'}},
+        ],
+      });
     }
-    navigation.navigate('BottomTabNav', {screen: 'Home'});
+    // navigate('BottomTabNav', {screen: 'Home'});
   };
   // TBD | 스크롤뷰 ref를 Manual에 넘겨서 단백질입력 활성화시 스크롤 내려주기
   return (
@@ -238,6 +285,14 @@ const AccordionHeaderTitle = styled.Text`
   font-size: 16px;
   color: ${({isActivated}: StyledProps) =>
     isActivated ? colors.main : colors.textSub};
+`;
+
+const CheckIcon = styled.Image`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  align-self: flex-start;
+  left: 8px;
 `;
 
 const ArrowIcon = styled.Image`

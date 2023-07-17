@@ -1,52 +1,54 @@
-import {useSelector} from 'react-redux';
+// Description: 장바구니 페이지에서 총 끼니 수, 상품 수, 금액을 보여주는 컴포넌트
+//RN, 3rd
 import styled from 'styled-components/native';
-import {useListDiet, useListDietDetailAll} from '../../query/queries/diet';
-import {IProductData} from '../../query/types/product';
-import {RootState} from '../../stores/store';
-import {TextMain, TextSub} from '../../styles/styledConsts';
-import {commaToNum, reGroupBySeller, sumUpPrice} from '../../util/sumUp';
-import {View} from 'react-native';
+//doobi util, redux, etc
+import colors from '../../styles/colors';
+//doobi Component
+import {
+  HorizontalLine,
+  Row,
+  TextMain,
+  TextSub,
+} from '../../styles/StyledConsts';
+import {
+  commaToNum,
+  reGroupByDietNo,
+  sumUpDietTotal,
+  sumUpPrice,
+} from '../../util/sumUp';
+
+import {
+  useListDiet,
+  useListDietDetailAll,
+  useListDietTotal,
+} from '../../query/queries/diet';
 
 const CartSummary = () => {
   // react-query
-  const {data: dietData} = useListDiet();
-  const {data: dietAllData} = useListDietDetailAll();
+  const {data: dietDetailAllData} = useListDietDetailAll();
 
-  // 끼니1+끼니2+.... 텍스트
-  const menuTotalText = dietData?.reduce(
-    (acc, cur, idx) =>
-      (acc += idx === 0 ? `${cur.dietSeq}` : `+${cur.dietSeq}`),
-    '',
-  );
+  // 총 끼니 수, 상품 수, 금액 계산
+  const dietTotalData = reGroupByDietNo(dietDetailAllData);
+  const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
 
-  const reGroupedProducts = dietAllData && reGroupBySeller(dietAllData);
   return (
     <TotalSummaryContainer>
-      <MenuTotalText>{menuTotalText}</MenuTotalText>
-      {reGroupedProducts?.map((seller, idx) => {
-        const sellerProductPrice = sumUpPrice(seller);
-        const sellerFreeShippingPrice = 30000;
-        // TBD | 아직 freeShippingPrice 서버에서 값 못받아서 수기로
-        // const sellerFreeShippingPrice = seller[0].freeShippingPrice
-        // const sellershippingPrice =
-        //   sellerProductPrice < seller[0].freeShippingPrice
-        //     ? seller[0].shippingPrice
-        //     : 0;
-        const sellershippingPrice =
-          sellerProductPrice < sellerFreeShippingPrice ? 3000 : 0;
-        return (
-          <View key={idx}>
-            <SellerText>{seller[0]?.platformNm}</SellerText>
-            <SellerProductPrice>
-              식품: {commaToNum(sellerProductPrice)} 원
-            </SellerProductPrice>
-            <SellerShippingPrice>
-              배송비: {commaToNum(sellershippingPrice)}원 (
-              {commaToNum(sellerFreeShippingPrice)}원 이상 무료배송)
-            </SellerShippingPrice>
-          </View>
-        );
-      })}
+      <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
+        <SummaryText>총 끼니 ({menuNum} 개)</SummaryText>
+        <SummaryValue>
+          끼니 당{' '}
+          {menuNum === 0 ? 0 : commaToNum(Math.floor(priceTotal / menuNum))} 원
+        </SummaryValue>
+      </Row>
+      <HorizontalLine style={{marginTop: 8}} />
+      <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
+        <SummaryText>상품 가격 (총 {productNum} 개)</SummaryText>
+        <SummaryValue>{commaToNum(priceTotal)} 원</SummaryValue>
+      </Row>
+      <Row style={{marginTop: 8, justifyContent: 'space-between'}}>
+        <SummaryText>배송비 </SummaryText>
+        <SummaryValue>{'4,000원'}</SummaryValue>
+      </Row>
     </TotalSummaryContainer>
   );
 };
@@ -54,26 +56,15 @@ const CartSummary = () => {
 export default CartSummary;
 
 const TotalSummaryContainer = styled.View`
-  padding: 0px 8px 0px 8px;
+  padding: 0px 16px 24px 16px;
+  background-color: ${colors.white};
 `;
 
-const MenuTotalText = styled(TextMain)`
-  align-self: center;
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 16px;
-`;
-
-const SellerText = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 16px;
-`;
-
-const SellerProductPrice = styled(TextMain)`
+const SummaryText = styled(TextMain)`
   font-size: 14px;
-  margin-top: 4px;
 `;
-const SellerShippingPrice = styled(TextSub)`
+
+const SummaryValue = styled(TextMain)`
   font-size: 14px;
+  font-weight: bold;
 `;

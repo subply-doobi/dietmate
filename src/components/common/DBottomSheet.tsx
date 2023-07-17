@@ -1,16 +1,16 @@
-import {View, Text, Modal, ScrollView} from 'react-native';
 import React from 'react';
+import {Modal} from 'react-native';
 import styled from 'styled-components/native';
-import {StyledProps} from '../../styles/styledConsts';
-import {SCREENWIDTH} from '../../constants/constants';
+
+import {StyledProps} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
 
 interface IDBottomSheet {
   alertShow: boolean;
   setAlertShow: React.Dispatch<React.SetStateAction<boolean>>;
   renderContent: () => React.ReactElement;
-  onCancel: Function;
-  filterHeight: boolean;
+  onCancel?: Function;
+  filterHeight?: number;
 }
 const DBottomSheet = ({
   alertShow,
@@ -50,7 +50,8 @@ const ModalBackGround = styled.TouchableOpacity`
 
 const PopUpContainer = styled.TouchableOpacity`
   width: 100%;
-  height: ${({filterHeight}) => (filterHeight ? '530px' : 'auto')}
+  height: ${({filterHeight}: StyledProps) =>
+    filterHeight ? `${filterHeight}px` : 'auto'};
   padding: 0px 16px 16px 16px;
   align-items: center;
   background-color: ${({backgroundColor}: StyledProps) =>
@@ -64,7 +65,7 @@ const PopupIndicator = styled.View`
   width: 64px;
   height: 4px;
   background-color: ${colors.black};
-  border-radius: 5px;
+  border-radius: 2px;
 `;
 
 const ContentContainer = styled.View`

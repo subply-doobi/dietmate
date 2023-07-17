@@ -1,11 +1,12 @@
-import {View, Text, TouchableOpacity} from 'react-native';
-import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+import colors from '../styles/colors';
+import {NavigationProps} from '../constants/constants';
+
 import PaymentDetail from '../screens/PaymentDetail';
 import PaymentHistory from '../screens/orderScreen/PaymentHistory';
+import PaymentHistoryDetail from '../screens/orderScreen/PaymentHistoryDetail';
 import BackArrow from '../components/common/BackArrow';
-import {NavigationProps} from '../constants/constants';
-import colors from '../styles/colors';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,7 +37,7 @@ const PaymentHistoryNav = ({navigation: {navigate}}: NavigationProps) => {
         component={PaymentDetail}
         options={{
           headerTitleAlign: 'center',
-          headerTitle: '',
+          headerTitle: 'ssss',
           headerTitleStyle: {
             fontSize: 18,
             fontWeight: 'bold',

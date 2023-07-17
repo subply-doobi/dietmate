@@ -1,30 +1,26 @@
-import {View, Text} from 'react-native';
 import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
+import {Controller} from 'react-hook-form';
+
 import {
   Col,
   ErrorBox,
   ErrorText,
   InputHeaderText,
   TextMain,
+  TextSub,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
-import {useSelector} from 'react-redux';
-import {Controller, useForm, useWatch} from 'react-hook-form';
+} from '../../styles/StyledConsts';
 import {validationRules} from '../../constants/constants';
 import {IFormField} from '../../constants/constants';
-import {useGetBaseLine} from '../../query/queries/baseLine';
 
-// TBD | renderInput 이것도 겹치는 것 꽤 많은 듯. (useRef같은 것 쓰는건 컴포넌트로 못빼겠지..?!)
 const renderNutrInput = (
-  {field: {onChange, onBlur, value}}: IFormField,
-  nutrText: number,
+  {field: {onChange, value}}: IFormField,
+  nutrText: string,
 ) => {
   return (
     <>
-      <InputHeader isActivated={value ? true : false}>
-        {nutrText} (g)
-      </InputHeader>
+      <InputHeader isActivated={value ? true : false}>{nutrText}</InputHeader>
       <Input
         placeholder={nutrText}
         value={value}
@@ -49,28 +45,36 @@ const NutrChangeAlert = ({
   errors: any;
 }) => {
   useEffect(() => {
-    handleSubmit(() => console.log('handleSubmit!'))();
+    handleSubmit(() => {})();
   }, []);
-  const {data} = useGetBaseLine();
   const nutrTextByNutr: {[key: string]: string} = {
-    carb: data.carb,
-    protein: data.protein,
-    fat: data.fat,
+    carb: '탄수화물 (g)',
+    protein: '단백질 (g)',
+    fat: '지방 (g)',
   };
   const nutrText = nutrTextByNutr[type];
   return (
     <Container>
       <Col style={{marginTop: 24}}>
-        <GuideText>다른 영양소는 칼로리에 맞게</GuideText>
-        <GuideText>자동으로 조절됩니다</GuideText>
+        <GuideText>
+          다른 영양소는{' '}
+          <GuideText style={{fontWeight: 'bold'}}>목표 칼로리</GuideText>에 맞춰
+        </GuideText>
+        <GuideText>
+          <GuideText style={{fontWeight: 'bold'}}>자동으로 조절</GuideText>
+          됩니다
+        </GuideText>
       </Col>
       <Col style={{marginTop: 16}}>
-        <GuideText>모든 영양소를 조정하고 싶은 경우는</GuideText>
-        <GuideText>고객정보변경을 이용해주세요</GuideText>
+        <GuideTextSub>모든 영양소를 수정하고 싶은 경우는</GuideTextSub>
+        <GuideTextSub>
+          <GuideTextSub style={{fontWeight: 'bold'}}>고객정보변경</GuideTextSub>
+          을 이용해주세요
+        </GuideTextSub>
       </Col>
       <Controller
         control={control}
-        rules={validationRules[type]}
+        rules={validationRules[type + 'Manual']} // validationRules가 "calManual" 이렇게 정리되어있음
         render={field => renderNutrInput(field, nutrText)}
         name={type}
       />
@@ -86,10 +90,13 @@ const NutrChangeAlert = ({
 export default NutrChangeAlert;
 
 const Container = styled.View`
-  padding: 0px 16px 24px 16px;
+  padding: 0px 16px 32px 16px;
 `;
 
 const GuideText = styled(TextMain)`
+  font-size: 16px;
+`;
+const GuideTextSub = styled(TextSub)`
   font-size: 16px;
 `;
 

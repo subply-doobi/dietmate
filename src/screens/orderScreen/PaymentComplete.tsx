@@ -1,12 +1,16 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import styled from 'styled-components/native';
+import {useNavigation} from '@react-navigation/native';
+
 import {NavigationProps} from '../../constants/constants';
 import colors from '../../styles/colors';
-import styled from 'styled-components/native';
 import {SCREENWIDTH} from '../../constants/constants';
 
 // 결제 완료, 구매완료 페이지
-const PaymentComplete = ({navigation, route}: NavigationProps) => {
+const PaymentComplete = () => {
+  const navigation = useNavigation();
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.mainText}>구매 완료!</Text>
