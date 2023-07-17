@@ -24,7 +24,7 @@ import {SCREENWIDTH} from '../../constants/constants';
 import {filterAvailableFoods} from '../../util/home/filterUtils';
 import colors from '../../styles/colors';
 import {icons} from '../../assets/icons/iconSource';
-import {checkTooltipShow, updateNotShowAgain} from '../../util/asyncStorage';
+import {checkNotShowAgain, updateNotShowAgain} from '../../util/asyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // doobi Component

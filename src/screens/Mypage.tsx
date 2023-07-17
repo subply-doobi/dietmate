@@ -301,6 +301,12 @@ const Mypage = () => {
             {myPageBtns.length - 1 !== index && <HorizontalLine />}
           </Col>
         ))}
+        <TempBtn
+          onPress={() => {
+            navigate('Guide');
+          }}>
+          <TempText>가이드</TempText>
+        </TempBtn>
       </Card>
       <DAlert
         alertShow={alertShow}
@@ -314,6 +320,19 @@ const Mypage = () => {
 };
 
 export default Mypage;
+
+// 임시
+const TempBtn = styled.TouchableOpacity`
+  width: 100%;
+  height: 58px;
+  background-color: ${colors.inactivated};
+  align-items: center;
+  justify-content: center;
+`;
+const TempText = styled(TextMain)`
+  font-size: 14px;
+`;
+// 임시
 
 const Container = styled.View`
   flex: 1;
