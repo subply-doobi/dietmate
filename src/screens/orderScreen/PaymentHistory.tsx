@@ -52,7 +52,7 @@ const PaymentHistory = () => {
       acc[cur.dietNo] = [cur];
     }
     return acc;
-  }, {});
+  }, {});``
   //orderDataGroupedByDietNo key제거
   const orderDataGroupedByDietNoWithoutKey = Object.values(
     orderDataGroupedByDietNo,
