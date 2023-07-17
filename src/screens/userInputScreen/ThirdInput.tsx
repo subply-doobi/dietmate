@@ -195,7 +195,7 @@ const ThirdInput = () => {
     };
     const requestBody: IRequestBody =
       convertDataByMethod[calculationMethod](dataToConvert);
-    // console.log('requestBody', requestBody);
+    console.log('requestBody', requestBody);
     if (!dietData) return;
     if (dietData.length === 0) {
       createDietMutation.mutate();

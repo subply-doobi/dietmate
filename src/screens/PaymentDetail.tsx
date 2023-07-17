@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, ScrollView} from 'react-native';
+import {ActivityIndicator, FlatList, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 
@@ -28,9 +28,10 @@ import {
 } from '../query/queries/diet';
 import {useListProduct} from '../query/queries/product';
 import {IProductData} from '../query/types/product';
+import {useGetOrderDetail} from '../query/queries/order';
 
 const PaymentDetail = props => {
-  const {productData, totalPrice} = props?.route?.params;
+  const {productData, totalPrice, orderNo, qty} = props?.route?.params;
   const addMutation = useCreateDietDetail();
   const deleteMutation = useDeleteDietDetail();
   const nutrientType = ['calorie', 'carb', 'protein', 'fat'];
@@ -42,6 +43,9 @@ const PaymentDetail = props => {
   const {data: useListProductData} = useListProduct({
     dietNo: currentDietNo,
   });
+  console.log(productData);
+  const {data: orderDetailData, isLoading}: IProductData =
+    useGetOrderDetail(orderNo);
   const isAdded = useListProductData?.filter(
     item => item.productChoiceYn === 'Y',
   );
@@ -111,16 +115,19 @@ const PaymentDetail = props => {
       return acc + parseInt(cur.price);
     }, 0);
   });
-  console.log(getPriceFromPlatformNm);
 
-  return (
+  return isLoading ? (
+    <ActivityIndicator />
+  ) : (
     <Container>
       <MenuSection />
       <ScrollView>
         <ContentContainer>
           {productData.map((product: IProductData, productIndex: number) => (
             <Card key={productIndex}>
-              <CardTitle>끼니 {productIndex + 1}</CardTitle>
+              <CardTitle>
+                끼니 {productIndex + 1} (x{productData[productIndex][0]?.qty}개)
+              </CardTitle>
               <MenuNutrContainer>
                 {nutrientType.map((nutrient, index) => (
                   <Col key={index}>
@@ -179,7 +186,7 @@ const PaymentDetail = props => {
                           onPress={() => {
                             onAdd(item);
                           }}>
-                          <PlusImage source={icons.plusRound_24} />
+                          <PlusImage source={icons.plusRoundSmall_24} />
                         </PlusBtn>
                       )}
                     </Col>
@@ -196,7 +203,17 @@ const PaymentDetail = props => {
         </ContentContainer>
         <SummaryContainer>
           <SummaryMainText>배송지</SummaryMainText>
-          <SummarySubText>서울시 강남구 테헤란로 427</SummarySubText>
+          <Row>
+            <SummarySubText>
+              {orderDetailData?.buyerName}
+              <VerticalLine />
+              {orderDetailData?.buyerTel}
+            </SummarySubText>
+          </Row>
+          <Row>
+            {/* <SummarySubText>{orderDetailData?.buyerZipCode}</SummarySubText> */}
+            <SummarySubText>{orderDetailData?.buyerAddr}</SummarySubText>
+          </Row>
         </SummaryContainer>
         <SummaryContainer>
           <SummaryMainText>결제수단</SummaryMainText>

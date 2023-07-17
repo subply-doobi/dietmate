@@ -6,14 +6,23 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-
-import {useListDiet, useUpdateDiet} from '../../query/queries/diet';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  setCurrentDiet,
+  setMenuActiveSection,
+} from '../../stores/slices/cartSlice';
+import {
+  useListDiet,
+  useUpdateDiet,
+  useCreateDiet,
+} from '../../query/queries/diet';
 import {
   useCreateOrder,
   useUpdateOrder,
   useGetOrder,
   useDeleteOrder,
 } from '../../query/queries/order';
+
 interface IIamportPayment {
   pg: string; //kakaopay, html5_inicis 등등
   pay_method: string; //결제수단: kakaopay의 경우 'card'하나만 존재
@@ -34,11 +43,18 @@ interface IIamportPayment {
 const KakaoPay = () => {
   const route = useRoute();
   const {navigate} = useNavigation();
+  const dispatch = useDispatch();
+
   const {customerData, modifiedDietTotal, priceTotal, orderNumber} =
     route.params;
   const updateDietMutation = useUpdateDiet();
   const updateOrderMutation = useUpdateOrder();
   const deleteOrderMutation = useDeleteOrder();
+  const createDietMutation = useCreateDiet({
+    onSuccess: data => {
+      dispatch(setCurrentDiet(data.dietNo));
+    },
+  });
   // console.log('priceTotal:', priceTotal);
   // console.log('customerData:', customerData);
   console.log('kakaopay params orderNumber:', orderNumber.orderNo);
@@ -77,7 +93,9 @@ const KakaoPay = () => {
             updateOrderMutation.mutate({
               statusCd: 'SP006005',
               orderNo: orderNumber.orderNo,
-            }))
+            }),
+            navigate('PaymentComplete'),
+            createDietMutation.mutate())
           : console.log('결제실패');
 
         response.error_msg === '[결제포기] 사용자가 결제를 취소하셨습니다'

@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../stores/store';
 import {setOrderSummary} from '../../stores/slices/orderSlice';
 import {kakaoAppAdminKey} from '../../constants/constants';
-import {DIET, ORDER, DIET_DETAIL, DIET_DETAIL_ALL} from '../keys';
+import {DIET, ORDER, DIET_DETAIL, DIET_DETAIL_ALL, ORDER_DETAIL} from '../keys';
 import {queryClient} from '../store';
 
 //기존 testKakaoPay
@@ -14,6 +14,7 @@ import {
   CREATE_ORDER,
   UPDATE_ORDER,
   LIST_ORDER,
+  LIST_ORDER_DETAIL,
   DELETE_ORDER,
   UPDATE_DIET,
 } from './urls';
@@ -157,6 +158,12 @@ export const useGetOrder = () => {
   return useQuery({
     queryKey: [ORDER],
     queryFn: () => queryFn(`${LIST_ORDER}`),
+  });
+};
+export const useGetOrderDetail = orderNo => {
+  return useQuery({
+    queryKey: [ORDER_DETAIL],
+    queryFn: () => queryFn(`${LIST_ORDER_DETAIL}/${orderNo}`),
   });
 };
 

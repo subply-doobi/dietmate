@@ -74,15 +74,14 @@ const NumberPickerContent = ({
             {dietSeq} ({commaToNum(menuPrice)}원)
           </DietSeq>
           <Col style={{marginTop: 16}}>
-            {FREE_SHIPPING_PRICE <= totalPrice ? (
+            {/* {FREE_SHIPPING_PRICE <= totalPrice ? (
               <FreeShippingNotice>배송비 무료!</FreeShippingNotice>
             ) : (
               <FreeShippingPriceText>
                 {commaToNum(FREE_SHIPPING_PRICE)} 이상 무료배송 (배송비:{' '}
                 {commaToNum(SHIPPING_PRICE)}원)
               </FreeShippingPriceText>
-            )}
-            <HorizontalSpace height={4} />
+            )} */}
             <FreeShippingPriceText>
               (전체끼니 합계:{' '}
               {commaToNum(totalPrice + menuPrice * (number - initialQty))}원)

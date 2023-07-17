@@ -47,7 +47,7 @@ const FlatlistHeaderComponent = ({
   setFilterParams,
   setFilterIndex,
   categoryName,
-}: FLATLIST_TYPE) => {
+}: IFlatlistHeaderComponent) => {
   //state
   const [sortModalShow, setSortModalShow] = useState(false);
   const [searchBarFocus, setSearchBarFocus] = useState(false);

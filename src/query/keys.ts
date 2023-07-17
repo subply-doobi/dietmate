@@ -23,3 +23,4 @@ export const PRODUCT = 'PRODUCT';
 export const MARK = 'MARK';
 //order
 export const ORDER = 'ORDER';
+export const ORDER_DETAIL = 'ORDER_DETAIL';
