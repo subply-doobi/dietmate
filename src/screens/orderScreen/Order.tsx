@@ -35,7 +35,7 @@ import PaymentMethod from '../../components/order/PaymentMethod';
 import PaymentWebView from '../../components/order/PaymentWebView';
 import KakaoPay from '../../components/payment/KakaoPay';
 
-import {useKakaoPayReady} from '../../query/queries/order';
+import {useKakaoPayReady, useCreateOrder} from '../../query/queries/order';
 import {sumUpDietTotal} from '../../util/sumUp';
 import {useListAddress, useGetAddress} from '../../query/queries/address';
 
@@ -58,6 +58,7 @@ const Order = () => {
   const {priceTotal, menuNum, productNum} = sumUpDietTotal(
     orderInfo.foodToOrder,
   );
+  const createOrderMutation = useCreateOrder();
 
   // 주문자 정보가 orderInfo에 저장되어있음
 
@@ -74,7 +75,6 @@ const Order = () => {
   };
   // state
   const [customerData, setCustomerData] = useState(initialCustomerData);
-
   // etc
   let totalAmount = 2200;
   //totalAmount는 잠시 이렇게
@@ -234,6 +234,7 @@ const Order = () => {
   // useEffect(() => {
   //   handleSubmit(() => {})();
   // }, []);
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView
@@ -254,13 +255,16 @@ const Order = () => {
       <BtnBottomCTA
         style={{width: SCREENWIDTH - 32}}
         btnStyle={isValid ? 'activated' : 'inactivated'}
-        onPress={() => {
-          isValid
-            ? navigate('KakaoPayNav', {
-                priceTotal,
-                customerData,
-              })
-            : console.log('정보를 모두 입력해주세요');
+        onPress={async () => {
+          if (!isValid) {
+            return;
+          }
+          const orderNumber = await createOrderMutation.mutateAsync({});
+          navigate('KakaoPayNav', {
+            priceTotal,
+            customerData,
+            orderNumber,
+          });
         }}>
         <BtnText>
           {isValid

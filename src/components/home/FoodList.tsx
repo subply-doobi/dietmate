@@ -59,7 +59,6 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
   // etc
   // 장바구니에 해당 상품이 들어있는지
   const isAdded = item.productChoiceYn === 'Y';
-
   // 남은 영양 계산
   const {calExceed, carbExceed, proteinExceed, fatExceed} = useMemo(() => {
     if (!dietDetailData || !baseLineData) {

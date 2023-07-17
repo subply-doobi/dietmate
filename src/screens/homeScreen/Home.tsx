@@ -168,8 +168,7 @@ const Home = () => {
     initializeDietNo();
     //tooltip 관련
     const initializeTooltip = async () => {
-      const shouldShowTooltip = !(await checkNotShowAgain('HOME_TOOLTIP'));
-      console.log('home: showlus', shouldShowTooltip);
+      const shouldShowTooltip = await checkTooltipShow('HOME_TOOLTIP');
       setTooltipShow(!!shouldShowTooltip);
     };
     initializeTooltip();

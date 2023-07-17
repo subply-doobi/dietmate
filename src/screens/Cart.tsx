@@ -60,8 +60,8 @@ const Cart = () => {
   const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
 
   // navigation
-  const navigation = useNavigation();
-  const {navigate} = navigation;
+  const {navigate} = useNavigation();
+  // const {navigate} = navigation;
   const isFocused = useIsFocused();
 
   // 끼니 추가할 수 있는지 여부

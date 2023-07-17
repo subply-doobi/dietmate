@@ -5,11 +5,8 @@ import {RootState} from '../../stores/store';
 import {errorActionByCode} from '../../util/handleError';
 import DAlert from './alert/DAlert';
 import RequestAlertContent from './alert/RequestAlertContent';
-import {
-  useQueryErrorResetBoundary,
-  QueryClientProvider,
-} from '@tanstack/react-query';
-const ErrorAlert = () => {
+import {useQueryErrorResetBoundary} from '@tanstack/react-query';
+const ErrorAlert = props => {
   // navigation
   const {navigate} = useNavigation();
   const {errorCode} = useSelector((state: RootState) => state.commonAlert);

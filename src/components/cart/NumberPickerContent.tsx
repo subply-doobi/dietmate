@@ -54,7 +54,6 @@ const NumberPickerContent = ({
   const {dietSeq} = findDietSeq(dietData, dietNoToNumControl);
   const menuPrice = sumUpPrice(dietDetailData);
   const totalPrice = sumUpPrice(dietDetailAllData, true);
-  console.log('numberPickerContent.tsx: totalPrice: ', menuPrice, totalPrice);
   const saveQty = () => {
     updateDietDetailMutation.mutate({
       dietNo: dietNoToNumControl,
