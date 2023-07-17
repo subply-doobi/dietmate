@@ -155,7 +155,7 @@ const FoodDetail = () => {
     if (!productData) return;
     isIncludedInLike
       ? deleteProductMarkMutation.mutate(productData.productNo)
-      : createProductMarkMutation.mutate(123);
+      : createProductMarkMutation.mutate(productData.productNo);
   };
 
   const handlePressAddCartBtn = () => {
@@ -226,7 +226,6 @@ const FoodDetail = () => {
             <ProductName>{productData.productNm}</ProductName>
             <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
               <Col>
-                <ShippingText>20000원 이상 무료배송 </ShippingText>
                 <Row>
                   <ShippingText>최소주문수량: </ShippingText>
                   <ShippingText style={{color: '#ff6060'}}>2개</ShippingText>
