@@ -1,5 +1,5 @@
 // react, RN, 3rd
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Lottie from 'lottie-react-native';
@@ -11,7 +11,7 @@ import {SCREENWIDTH} from '../constants/constants';
 
 // doobi Component
 import {BtnCTA, Container, Row, Col, StyledProps} from '../styles/StyledConsts';
-import {updateNotShowAgain} from '../util/asyncStorage';
+import {checkNotShowAgain, updateNotShowAgain} from '../util/asyncStorage';
 
 // react-query
 
@@ -44,7 +44,13 @@ const Guide = () => {
   const [step, setStep] = useState(1);
 
   // etc
-
+  useEffect(() => {
+    const initializeGuide = async () => {
+      const notShowAgain = await checkNotShowAgain('ONBOARDING');
+      notShowAgain && navigate('Login');
+    };
+    initializeGuide();
+  }, []);
   const guidePageArray: IGuidePage[] = [
     {
       step: 1,
