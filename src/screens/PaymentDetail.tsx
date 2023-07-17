@@ -29,9 +29,11 @@ import {
 import {useListProduct} from '../query/queries/product';
 import {IProductData} from '../query/types/product';
 import {useGetOrderDetail} from '../query/queries/order';
+import {useNavigation} from '@react-navigation/native';
 
 const PaymentDetail = props => {
-  const {productData, totalPrice, orderNo, qty} = props?.route?.params;
+  const navigation = useNavigation();
+  const {productData, totalPrice, orderNo, buyDate} = props?.route?.params;
   const addMutation = useCreateDietDetail();
   const deleteMutation = useDeleteDietDetail();
   const nutrientType = ['calorie', 'carb', 'protein', 'fat'];
@@ -43,12 +45,19 @@ const PaymentDetail = props => {
   const {data: useListProductData} = useListProduct({
     dietNo: currentDietNo,
   });
-  console.log(productData);
-  const {data: orderDetailData, isLoading}: IProductData =
-    useGetOrderDetail(orderNo);
+  const {data: orderDetailData, isLoading}: IProductData = useGetOrderDetail(
+    orderNo,
+    navigation.setOptions,
+  );
   const isAdded = useListProductData?.filter(
     item => item.productChoiceYn === 'Y',
   );
+  console.log(buyDate);
+  useEffect(() => {
+    navigation.setOptions({
+      title: buyDate,
+    });
+  }, []);
   const getNutrient = (arg: any, type: any) => {
     let nutrient = [];
     for (let i = 0; i < productData.length; i++) {
@@ -223,12 +232,13 @@ const PaymentDetail = props => {
           <SummaryMainText>결제금액</SummaryMainText>
           {groupByPlatformNmArray.map((item, index) => (
             <Col key={index}>
-              <SummarySubText>{item[0].platformNm}</SummarySubText>
-              {getPriceFromPlatformNm[index] && (
-                <SummarySubText>
-                  식품: {commaToNum(getPriceFromPlatformNm[index])}원
-                </SummarySubText>
-              )}
+              <SummarySubText>
+                {item[0].platformNm} :{' '}
+                {commaToNum(getPriceFromPlatformNm[index])}원
+              </SummarySubText>
+              {/* {getPriceFromPlatformNm[index] && (
+                <SummarySubText>식품</SummarySubText>
+              )} */}
             </Col>
           ))}
           <SummaryMainText style={{alignSelf: 'flex-end'}}>
@@ -259,6 +269,7 @@ const SummaryContainer = styled.View`
   flex: 1;
   background-color: ${colors.white};
   margin-top: 16px;
+  padding-bottom: 8px;
 `;
 const ProgressBox = styled.View`
   background-color: ${colors.white};
@@ -291,7 +302,8 @@ const SummaryMainText = styled(TextMain)`
 `;
 const SummarySubText = styled(TextMain)`
   font-size: 14px;
-  margin: 8px;
+  margin-top: 8px;
+  margin-left: 8px;
 `;
 const MenuNutrContainer = styled(Row)`
   margin: 30px
