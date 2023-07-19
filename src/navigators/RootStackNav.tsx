@@ -54,11 +54,11 @@ const RootStackNav = () => {
   const {goBack, navigate} = useNavigation();
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      {/* <Stack.Screen
+      <Stack.Screen
         name="Guide"
         component={Guide}
         options={{headerShown: false}}
-      /> */}
+      />
       <Stack.Screen
         name="Login"
         component={Login}

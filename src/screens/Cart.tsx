@@ -227,6 +227,11 @@ const Cart = () => {
         width={SCREENWIDTH - 16}
         disabled={priceUnder_30000}
         onPress={() => {
+          if (addAlertStatus === 'empty') {
+            // 비어있을 때 끼니 추가 안되는 것 방지하는 코드랑 중복
+            setCreateAlertShow(true);
+            return;
+          }
           dispatch(setFoodToOrder(dietTotal));
           navigate('OrderNav', {
             screen: 'Order',

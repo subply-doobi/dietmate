@@ -24,17 +24,18 @@ export const removeToken = async () => {
   }
 };
 
-export const checkTooltipShow = async (value: string) => {
+// 현재  [Hometooltip, onboarding]
+export const checkNotShowAgain = async (value: string) => {
   try {
     const notShowAgain = await AsyncStorage.getItem('NOT_SHOW_AGAIN');
     if (notShowAgain === null) {
-      return true;
+      return false;
     } else {
       const notShowAgainList = JSON.parse(notShowAgain);
       if (notShowAgainList.includes(value)) {
-        return false;
-      } else {
         return true;
+      } else {
+        return false;
       }
     }
   } catch (error) {

@@ -119,6 +119,7 @@ const onHandlePress = (
 const SecondInput = () => {
   const workoutPurposeCode = useWorkoutPurposeCode('SP008');
   const workoutFrequencyCode = useWorkoutFrequencyCode('SP009');
+  console.log('workoutFrequencyCode', workoutFrequencyCode.isLoading);
   const workoutIntensityCode = useWorkoutIntensityCode('SP010');
   // navigation
   const {navigate} = useNavigation();
@@ -155,6 +156,11 @@ const SecondInput = () => {
 
   //useEffect
   useEffect(() => {
+    async function waitIsLoading() {
+      await workoutFrequencyCode;
+      await workoutIntensityCode;
+    }
+    waitIsLoading();
     handleSubmit(() => {})();
     baseData?.sportsSeqCd &&
       setFrequency({

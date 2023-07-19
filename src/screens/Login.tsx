@@ -15,10 +15,7 @@ import * as Sentry from '@sentry/react-native';
 
 const navigateByBaseLine = (data: IBaseLine | any, navigation) => {
   // check user 회원가입 여부
-  const hasBaseLine =
-    data?.constructor === Object && Object.keys(data).length === 0
-      ? false
-      : true;
+  const hasBaseLine = Object.keys(data).length === 0 ? false : true;
   if (hasBaseLine) {
     navigation.reset({
       index: 0,
@@ -35,6 +32,7 @@ const Login = () => {
 
   // react-query
   const {data, refetch} = useGetBaseLine({enabled: false});
+  console.log('data', data);
   const signInWithKakao = async (): Promise<void> => {
     await kakaoLogin();
     const refetchedData = await refetch();
