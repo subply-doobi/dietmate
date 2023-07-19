@@ -43,7 +43,7 @@ interface IProductData {
 }
 const PaymentHistory = () => {
   const {data: orderData, isLoading} = useGetOrder();
-  console.log('orderData', orderData);
+  console.log('orderData', orderData[0]);
   const {navigate} = useNavigation();
   //dietNo별로 새로 만든 배열
   const orderDataGroupedByDietNo = orderData?.reduce((acc, cur) => {
@@ -133,7 +133,11 @@ const PaymentHistory = () => {
                                 )}
                             kcal
                           </CaloriesText>
-                          <Row>
+                          <Row
+                            style={{
+                              marginTop: 8,
+                              columnGap: 8,
+                            }}>
                             {element.map((ele: any, eleIndex: number) => {
                               return (
                                 <Col key={eleIndex}>
@@ -146,7 +150,10 @@ const PaymentHistory = () => {
                               );
                             })}
                             <VerticalLine
-                              style={{margin: 8, backgroundColor: colors.line}}
+                              style={{
+                                backgroundColor: colors.line,
+                                marginRight: 8,
+                              }}
                             />
                           </Row>
                         </MakeVertical>
@@ -202,8 +209,6 @@ const ThumbnailImage = styled.Image`
   width: 56px;
   height: 56px;
   border-radius: 2px;
-  margin-top: 8px;
-  margin-right: 8px;
 `;
 const ArrowImage = styled.Image`
   margin-top: 28px;

@@ -8,7 +8,6 @@ import {useListDietDetail} from '../../query/queries/diet';
 import {useSelector} from 'react-redux';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {IFilterParams, IProductsData} from '../../query/types/product';
-import {filterAvailableFoods} from '../../util/home/filterUtils';
 import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
 import {icons} from '../../assets/icons/iconSource';

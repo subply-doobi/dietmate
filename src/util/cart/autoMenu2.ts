@@ -339,8 +339,8 @@ const excludeInitialMenu = (
   const filteredRecommendedFoods = recommendedFoods.filter(
     food => !initialMenu.some(iMenu => iMenu.productNo === food.productNo),
   );
-  console.log('--------------- ⬇️ filteredRecommendedFoods ⬇️ ---------------');
-  printMenu(filteredRecommendedFoods);
+  // console.log('--------------- ⬇️ filteredRecommendedFoods ⬇️ ---------------');
+  // printMenu(filteredRecommendedFoods);
   return filteredRecommendedFoods;
 };
 
@@ -489,17 +489,17 @@ export const makeAutoMenu2 = ({
         if (validMenu[i].isInErrRange) menuInErrRange.push(validMenu[i]);
         else menuExceedErrRange.push(validMenu[i]);
       }
-      console.log('--------------- ⬇️ menuInErrRange ⬇️ ---------------');
-      printValidMenuWithErr(menuInErrRange);
-      console.log('--------------- ⬇️ menuExceedErrRange ⬇️ ---------------');
-      printValidMenuWithErr(menuExceedErrRange);
-      console.log('------------------------------------------------------');
+      // console.log('--------------- ⬇️ menuInErrRange ⬇️ ---------------');
+      // printValidMenuWithErr(menuInErrRange);
+      // console.log('--------------- ⬇️ menuExceedErrRange ⬇️ ---------------');
+      // printValidMenuWithErr(menuExceedErrRange);
+      // console.log('------------------------------------------------------');
 
       // 오차범위 내 메뉴 있으면 그 중 하나 랜덤 선택
       if (menuInErrRange.length > 0) {
         const recommendedFoods = getRandomMenu(menuInErrRange.map(m => m.menu));
-        console.log('오차범위 내 메뉴 있음');
-        printMenu(recommendedFoods);
+        // console.log('오차범위 내 메뉴 있음');
+        // printMenu(recommendedFoods);
         const filteredRecommendedFoods = excludeInitialMenu(
           initialMenu,
           recommendedFoods,
@@ -511,10 +511,10 @@ export const makeAutoMenu2 = ({
       }
 
       // 오차범위 내 식품 없으면 오차점수 최소인 메뉴 선택
-      console.log('오차범위 내 메뉴 없음');
+      // console.log('오차범위 내 메뉴 없음');
       const recommendedFoods = getErrorMinMenu(menuExceedErrRange);
       if (!recommendedFoods) return reject('no recommendedFoods!');
-      printMenu(recommendedFoods);
+      // printMenu(recommendedFoods);
       const filteredRecommendedFoods = excludeInitialMenu(
         initialMenu,
         recommendedFoods,

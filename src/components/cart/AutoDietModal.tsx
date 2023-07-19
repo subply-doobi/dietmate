@@ -9,7 +9,6 @@ import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {useAsync} from '../../util/cart/cartCustomHooks';
 import {setCurrentDiet} from '../../stores/slices/cartSlice';
-import {makeAutoMenu} from '../../util/cart/autoMenu';
 // doobi Component
 import {
   BtnCTA,
@@ -133,7 +132,6 @@ const AutoDietModal = ({
     const onAddAutoMenu = async () => {
       setModalVisible(false);
       if (autoMenu?.recommendedFoods.length === 0) {
-        console.log('상품없음');
         return;
       }
       if (!autoMenu) return;
