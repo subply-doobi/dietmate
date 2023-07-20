@@ -6,6 +6,7 @@ export const icons = {
   guide4_32: require(`./32_number_box4.png`),
   guide5_32: require(`./32_number_box5.png`),
   guide6_32: require(`./32_number_box6.png`),
+  guide7_32: require(`./32_number_box7.png`),
   arrowDown_20: require(`./20_arrow_down.png`),
   arrowLeft_20: require(`./20_arrow_left.png`),
   arrowRight_20: require(`./20_arrow_right.png`),

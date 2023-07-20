@@ -168,7 +168,6 @@ const Address = ({
           <AddressBox>
             <SelectContainer
               onPress={() => {
-                console.log('onPress: index: ', index);
                 dispatch(setSelectedAddressId(index));
               }}>
               <CheckIcon

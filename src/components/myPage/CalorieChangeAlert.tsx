@@ -76,7 +76,7 @@ const CalChangeAlert = ({
       </Col>
       <Col style={{marginTop: 16, justifyContent: 'center'}}>
         <Col>
-          <GuideText>계획과 다르다면 기존보다 </GuideText>
+          <GuideText>계획과 다르게 진행된다면 기존보다 </GuideText>
           <GuideText>
             <GuideText style={{fontWeight: 'bold'}}>50 kcal 정도씩 </GuideText>
             높이거나 낮춰보세요

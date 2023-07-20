@@ -180,12 +180,13 @@ const Menu = ({
 
 export default Menu;
 
-const Container = styled.View``;
+const Container = styled.View`
+  z-index: -1;
+`;
 
 const SelectedDeleteRow = styled(Row)`
   height: 52px;
   justify-content: space-between;
-  z-index: -1;
 `;
 
 const SelectAllBox = styled(Row)``;

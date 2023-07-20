@@ -21,13 +21,10 @@ const FoodPart = ({productData}: IFoodPart) => {
   const imgUrl = `${BASE_URL}${productData.subAttUrl}`;
 
   useEffect(() => {
-    console.log('useEffect!!');
     Image.getSize(imgUrl, (width, height) => {
-      console.log('width, height: ', width, height);
       const swWithPadding = SCREENWIDTH - 32;
       const newWidth = swWithPadding;
       const newHeight = height * (newWidth / width);
-      console.log('newDim: ', newWidth, newHeight);
       setImgDimension({
         width: newWidth,
         height: newHeight,

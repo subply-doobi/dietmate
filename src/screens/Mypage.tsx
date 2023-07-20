@@ -5,7 +5,6 @@ import styled from 'styled-components/native';
 import {useForm, useWatch} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
 
-import {RootState} from '../stores/store';
 import {icons} from '../assets/icons/iconSource';
 import {myPageBtns} from '../constants/constants';
 import colors from '../styles/colors';
@@ -37,7 +36,6 @@ interface INavigateByBtnId {
   [key: string]: (btnId: string, navigate: Function) => void;
 }
 
-// TBD | order -> 원래는 OrderHistory로 바꿔야함! 지금은 Order페이지 테스트
 const navigateByBtnId: INavigateByBtnId = {
   Likes: (btnId, navigate) => navigate('BottomTabNav', {screen: btnId}),
   PaymentHistory: (btnId, navigate) =>
@@ -53,7 +51,7 @@ const Mypage = () => {
   const {data: baseLineData} = useGetBaseLine();
   const updateMutation = useUpdateBaseLine();
   const {data: orderData, isLoading} = useGetOrder();
-  console.log('orderData', orderData);
+
   // FlatList Data
   type INutrTargetData = Array<{
     nutrient: string;
@@ -257,7 +255,7 @@ const Mypage = () => {
         </ProfileContainer>
         <RecommendationContainer>
           <Recommendation style={{fontWeight: '400'}}>
-            계획보다 부족하면 아래 목표영양을 수정해보세요
+            계획과 다르게 진행된다면 아래 목표를 수정해보세요
           </Recommendation>
         </RecommendationContainer>
         <TargetNutrContainer>

@@ -11,6 +11,7 @@ import {saveUserInfo} from '../../stores/slices/userInfoSlice';
 import {NavigationProps, validationRules} from '../../constants/constants';
 import colors from '../../styles/colors';
 import {calculateBMR} from '../../util/targetCalculation';
+
 //doobi Component
 import {
   BtnBottomCTA,
