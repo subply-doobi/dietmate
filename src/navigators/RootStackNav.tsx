@@ -55,13 +55,13 @@ const RootStackNav = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen
-        name="Guide"
-        component={Guide}
+        name="Login"
+        component={Login}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Login"
-        component={Login}
+        name="Guide"
+        component={Guide}
         options={{headerShown: false}}
       />
       <Stack.Screen name="InputNav" component={InputNav} />

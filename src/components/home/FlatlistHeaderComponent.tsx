@@ -131,9 +131,7 @@ const FlatlistHeaderComponent = ({
             sortParam={sortParam}
           />
         )}
-        onCancel={() => {
-          console.log('oncancel');
-        }}
+        onCancel={() => {}}
       />
       <HorizontalLine style={{marginTop: 8}} />
       <HorizontalSpace height={8} />

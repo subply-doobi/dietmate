@@ -37,20 +37,12 @@ const renderGuideContents = (step: number, guidePageArray: IGuidePage[]) => {
 
 const Guide = () => {
   // navigation
-  const {navigate} = useNavigation();
-  const route = useRoute();
+  const {navigate, reset} = useNavigation();
 
   // useState
   const [step, setStep] = useState(1);
 
   // etc
-  useEffect(() => {
-    const initializeGuide = async () => {
-      const notShowAgain = await checkNotShowAgain('ONBOARDING');
-      notShowAgain && navigate('Login');
-    };
-    initializeGuide();
-  }, []);
   const guidePageArray: IGuidePage[] = [
     {
       step: 1,
@@ -226,11 +218,13 @@ const Guide = () => {
           }}
           btnStyle={'border'}
           onPress={() => {
-            console.log('건너뛰기');
             updateNotShowAgain('ONBOARDING');
             // step 1로 초기화 후 로그인 페이지 or 원래 보던 페이지로 이동
             setStep(1);
-            navigate('Login');
+            reset({
+              index: 0,
+              routes: [{name: 'Login'}],
+            });
           }}>
           <BottomText style={{color: colors.textSub}}>건너뛰기</BottomText>
         </BtnCTA>
@@ -244,7 +238,10 @@ const Guide = () => {
             if (step === guidePageArray.length) {
               setStep(1);
               updateNotShowAgain('ONBOARDING');
-              navigate('Login');
+              reset({
+                index: 0,
+                routes: [{name: 'Login'}],
+              });
               return;
             }
             setStep(step + 1);
