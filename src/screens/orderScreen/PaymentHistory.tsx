@@ -96,6 +96,7 @@ const PaymentHistory = () => {
   ) : (
     <Container>
       <ScrollView>
+
         {/* 주문날짜 별로 반복*/}
         {productData.map((order, orderIdx) => {
           return (

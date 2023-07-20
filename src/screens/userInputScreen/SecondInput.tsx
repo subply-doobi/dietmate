@@ -119,7 +119,6 @@ const onHandlePress = (
 const SecondInput = () => {
   const workoutPurposeCode = useWorkoutPurposeCode('SP008');
   const workoutFrequencyCode = useWorkoutFrequencyCode('SP009');
-  console.log('workoutFrequencyCode', workoutFrequencyCode.isLoading);
   const workoutIntensityCode = useWorkoutIntensityCode('SP010');
   // navigation
   const {navigate} = useNavigation();
@@ -127,7 +126,7 @@ const SecondInput = () => {
   const [duration, setDuration] = useState({index: 0, cd: ''});
   const [intensity, setIntensity] = useState({index: 0, cd: ''});
   const {userInfo} = useSelector((state: RootState) => state.userInfo);
-  const {data: baseData, isLoading} = useGetBaseLine();
+  const {data: baseData, refetch} = useGetBaseLine();
   // redux
   const dispatch = useDispatch();
 
@@ -153,15 +152,9 @@ const SecondInput = () => {
   const intensityValue = workoutIntensityCode?.data?.map((item, index) => {
     return {cdNm: item.cdNm, cd: item.cd, index: index};
   });
-
-  //useEffect
-  useEffect(() => {
-    async function waitIsLoading() {
-      await workoutFrequencyCode;
-      await workoutIntensityCode;
-    }
-    waitIsLoading();
-    handleSubmit(() => {})();
+  //기본값 자동으로 설정하는 함수
+  const setDefaultValue = async () => {
+    await refetch();
     baseData?.sportsSeqCd &&
       setFrequency({
         cd: baseData?.sportsSeqCd,
@@ -183,6 +176,11 @@ const SecondInput = () => {
           item => item.cd === baseData?.sportsStrengthCd,
         ),
       });
+  };
+  //useEffect
+  useEffect(() => {
+    handleSubmit(() => {})();
+    setDefaultValue();
   }, [workoutPurposeCode.isSuccess]);
 
   const workoutButtonRange = [
