@@ -37,7 +37,6 @@ const PaymentHistoryNav = ({navigation: {navigate}}: NavigationProps) => {
         component={PaymentDetail}
         options={{
           headerTitleAlign: 'center',
-          headerTitle: 'ssss',
           headerTitleStyle: {
             fontSize: 18,
             fontWeight: 'bold',

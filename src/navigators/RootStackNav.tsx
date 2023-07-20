@@ -14,6 +14,7 @@ import OrderHeaderTab from './OrderNav';
 import PaymentHistoryNav from './PaymentHistoryNav';
 import HistoryNav from './HistoryNav';
 import ErrorAlert from '../components/common/ErrorAlert';
+import PayMethodGuidePage from '../screens/orderScreen/PaymethodGuidePage';
 
 import Guide from '../screens/Guide';
 import Login from '../screens/Login';
@@ -55,13 +56,13 @@ const RootStackNav = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen
-        name="Guide"
-        component={Guide}
+        name="Login"
+        component={Login}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="Login"
-        component={Login}
+        name="Guide"
+        component={Guide}
         options={{headerShown: false}}
       />
       <Stack.Screen name="InputNav" component={InputNav} />
@@ -106,7 +107,7 @@ const RootStackNav = () => {
           headerLeft: () => <BackArrow goBackFn={goBack} />,
           headerRight: () => {
             return (
-              <Pressable onPress={() => console.log('툴팁설명?')}>
+              <Pressable onPress={() => navigate('PayMethodGuidePageNav')}>
                 <Image
                   source={icons.question_24}
                   style={{width: 24, height: 24}}
@@ -157,6 +158,22 @@ const RootStackNav = () => {
           },
           headerShadowVisible: false,
           headerLeft: () => <BackArrow goBackFn={goBack} />,
+        }}
+      />
+      <Stack.Screen
+        name="PayMethodGuidePageNav"
+        component={PayMethodGuidePage}
+        options={{
+          headerShown: true,
+          headerLeft: () => <BackArrow goBackFn={goBack} />,
+          headerTitle: '주문 방법',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: colors.textMain,
+          },
+          headerShadowVisible: false,
         }}
       />
       <Stack.Screen

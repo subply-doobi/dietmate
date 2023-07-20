@@ -6,10 +6,16 @@ import {useNavigation} from '@react-navigation/native';
 import colors from '../styles/colors';
 import {kakaoLogin, validateToken} from '../query/queries/token';
 import {IBaseLine} from '../query/types/baseLine';
+
+// doobi util, redux, etc
+import {checkNotShowAgain} from '../util/asyncStorage';
+
 //react-query
 import {useGetBaseLine} from '../query/queries/baseLine';
+
 //doobi Component
 import {BtnCTA, BtnText} from '../styles/StyledConsts';
+
 //sentry
 import * as Sentry from '@sentry/react-native';
 
@@ -32,7 +38,6 @@ const Login = () => {
 
   // react-query
   const {data, refetch} = useGetBaseLine({enabled: false});
-  console.log('data', data);
   const signInWithKakao = async (): Promise<void> => {
     await kakaoLogin();
     const refetchedData = await refetch();
@@ -47,6 +52,11 @@ const Login = () => {
   }
   // etc
   useEffect(() => {
+    // 가이드 보여줄지 결정
+    const initializeGuide = async () => {
+      const notShowAgain = await checkNotShowAgain('ONBOARDING');
+      notShowAgain || navigation.navigate('Guide');
+    };
     const useCheckUser = async () => {
       const {isValidated} = await validateToken();
       if (!isValidated) return;
@@ -54,6 +64,7 @@ const Login = () => {
       refetchedData && navigateByBaseLine(refetchedData, navigation);
     };
 
+    initializeGuide();
     useCheckUser();
   }, []);
 

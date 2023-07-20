@@ -21,7 +21,6 @@ import {
   IProductsData,
 } from '../../query/types/product';
 import {SCREENWIDTH} from '../../constants/constants';
-import {filterAvailableFoods} from '../../util/home/filterUtils';
 import colors from '../../styles/colors';
 import {icons} from '../../assets/icons/iconSource';
 import {checkNotShowAgain, updateNotShowAgain} from '../../util/asyncStorage';

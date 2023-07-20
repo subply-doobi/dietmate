@@ -26,7 +26,6 @@ export const useCreateProductMark = () => {
     mutationFn: (productNo: string) =>
       mutationFn(`${CREATE_PRODUCT_MARK}/${productNo}`, 'put'),
     onSuccess: data => {
-      console.log('like!');
       queryClient.invalidateQueries({queryKey: [MARK]});
       queryClient.invalidateQueries({queryKey: [PRODUCT]});
     },
@@ -51,7 +50,6 @@ export const useCreateProductAuto = () => {
       );
     },
     onSuccess: data => {
-      console.log(data);
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
     },
   });
@@ -142,7 +140,6 @@ export const useListProductMark = (options?: IQueryOptions) => {
     queryFn: () => queryFn(`${LIST_PRODUCT_MARK}`),
     onSuccess: data => {
       options?.onSuccess && options?.onSuccess(data);
-      console.log('listProductMark: ', data);
     },
     enabled,
   });

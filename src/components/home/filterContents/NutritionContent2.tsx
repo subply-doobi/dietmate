@@ -44,7 +44,7 @@ const NutritionContent2 = ({
 
   // useEffect
   useEffect(() => {
-    console.log('NutritionContent2: useEffect: filterParams', filterParams);
+    // console.log('NutritionContent2: useEffect: filterParams', filterParams);
     setInitialIdx(filterParams, setNutrIdxRange);
   }, [filterParams]);
   useEffect(() => {
@@ -83,8 +83,6 @@ const NutritionContent2 = ({
 
     // 버튼 하나 "눌려있을" 때
     if (nutrIdxRange[nutrIdxToName[nutrIdx]].length === 1) {
-      console.log('btnOnPress: nutritionParam', nutritionParam);
-
       // 버튼 누른 것이 기존 것과 같을 때
       if (btnIdx === nutrIdxRange[nutrIdxToName[nutrIdx]][0]) {
         setNutrIdxRange(prev => {
@@ -108,7 +106,6 @@ const NutritionContent2 = ({
 
         // 버튼 누른 것이 기존 것과 다를 때
       } else {
-        console.log('btnOnPress: nutritionParam', nutritionParam);
         const newNutrIdxRange =
           btnIdx < nutrIdxRange[nutrIdxToName[nutrIdx]][0]
             ? [btnIdx, nutrIdxRange[nutrIdxToName[nutrIdx]][0]]
@@ -139,7 +136,6 @@ const NutritionContent2 = ({
 
       // 버튼 둘 이상 or 하나도 안 "눌려있을" 때
     } else {
-      console.log('btnOnPress: nutritionParam', nutritionParam);
       setNutrIdxRange(prev => {
         return {
           ...prev,
@@ -151,8 +147,6 @@ const NutritionContent2 = ({
         };
       });
       setNutritionParam(prev => {
-        console.log(prev);
-        console.log(nutrIdx, btnIdx, filterBtnRange[nutrIdx].value[btnIdx]);
         return {
           ...prev,
           calorieParam: [...prev.calorieParam],
