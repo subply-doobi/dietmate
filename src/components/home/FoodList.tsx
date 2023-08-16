@@ -222,7 +222,7 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
             </NutrSummaryBtn>
           </Col>
           <Row style={{justifyContent: 'space-between'}}>
-            <Price>{commaToNum(item?.price)}원</Price>
+            {!!item.price && <Price>{commaToNum(item.price)}원</Price>}
             {screen === 'LikeScreen' && (
               <DeleteLikeFoodBtn onPress={onLikeDelete}>
                 <LikeImg source={icons.likeSmall_20} />
