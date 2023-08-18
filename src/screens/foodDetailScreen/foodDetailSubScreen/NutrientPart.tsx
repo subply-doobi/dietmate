@@ -2,16 +2,18 @@ import {Text, StyleSheet, View} from 'react-native';
 
 import colors from '../../../styles/colors';
 import {Dot} from '../../../styles/StyledConsts';
-import {useUserProfile} from '../../../query/queries/member';
+import {useGetProfile} from '../../../query/queries/member';
 import {TableItem} from '../FoodDetail';
 
 interface Props {
   table: TableItem[];
 }
 const NutrientPart = ({table}: Props) => {
-  const userProfileQuery = useUserProfile();
+  const userProfileQuery = useGetProfile();
   const {isLoading, data, isError, error} = userProfileQuery;
+  //userPriofileQuery 데이터별로 분기처리
 
+  console.log('');
   if (isLoading) {
     return <Text>Loading</Text>;
   }

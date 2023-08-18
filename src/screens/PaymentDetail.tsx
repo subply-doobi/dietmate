@@ -34,6 +34,7 @@ import {useNavigation} from '@react-navigation/native';
 const PaymentDetail = props => {
   const navigation = useNavigation();
   const {productData, totalPrice, orderNo, buyDate} = props?.route?.params;
+  console.log(props?.route?.params);
   const addMutation = useCreateDietDetail();
   const deleteMutation = useDeleteDietDetail();
   const nutrientType = ['calorie', 'carb', 'protein', 'fat'];
@@ -52,7 +53,6 @@ const PaymentDetail = props => {
   const isAdded = useListProductData?.filter(
     item => item.productChoiceYn === 'Y',
   );
-  console.log(buyDate);
   useEffect(() => {
     navigation.setOptions({
       title: buyDate,

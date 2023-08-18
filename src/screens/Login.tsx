@@ -44,6 +44,7 @@ const Login = () => {
     refetchedData && navigateByBaseLine(refetchedData, navigation);
     navigation.navigate('BottomTabNav', {screen: 'Home'});
   };
+
   // capture errors
   try {
     signInWithKakao();
@@ -57,6 +58,7 @@ const Login = () => {
       const notShowAgain = await checkNotShowAgain('ONBOARDING');
       notShowAgain || navigation.navigate('Guide');
     };
+
     const useCheckUser = async () => {
       const {isValidated} = await validateToken();
       if (!isValidated) return;

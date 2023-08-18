@@ -26,20 +26,10 @@ import {ActivityIndicator} from 'react-native';
 import {BASE_URL} from '../../query/queries/urls';
 import {commaToNum, sumUpNutrients, sumUpPrice} from '../../util/sumUp';
 import {isSearchBarAvailableForCurrentPlatform} from 'react-native-screens';
-interface IOrderData {
+import {IProductData} from '../../query/types/product';
+interface IOrderData extends IProductData {
   buyDate: string;
-  calorie: string;
-}
-interface IOrderDataGroupedByBuyDate {
-  [key: string]: IOrderData[];
-}
-interface IProductData {
-  buyDate: string;
-  calorie: string;
-  crb: string;
-  mainAttUrl: string;
-  price: string;
-  dietNo: string;
+  statusNm: string;
 }
 
 const PaymentHistory = () => {
@@ -61,7 +51,7 @@ const PaymentHistory = () => {
   );
 
   //날짜별로 구매내역
-  const orderDataGroupedByBuyDate: IOrderDataGroupedByBuyDate =
+  const orderDataGroupedByBuyDate: IOrderDataGroupedByBuyDatearray =
     orderDataGroupedByDietNoWithoutKey?.reduce((acc: any, cur: any) => {
       if (acc[cur[0].buyDate]) {
         acc[cur[0].buyDate].push(cur);
@@ -96,9 +86,9 @@ const PaymentHistory = () => {
   ) : (
     <Container>
       <ScrollView>
-
         {/* 주문날짜 별로 반복*/}
         {productData.map((order, orderIdx) => {
+          console.log('order', order);
           return (
             <OrderBox key={orderIdx}>
               <Row style={{justifyContent: 'space-between'}}>
@@ -109,7 +99,7 @@ const PaymentHistory = () => {
                       screen: 'PaymentDetail',
                       params: {
                         productData: order,
-                        buyDate: order[0][0].buydate,
+                        buyDate: order[0][0]?.buyDate,
                         totalPrice: totalPrice(orderIdx),
                         orderNo: order[0][0].orderNo,
                         qty: order[0][0].qty,
