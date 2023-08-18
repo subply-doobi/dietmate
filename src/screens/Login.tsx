@@ -19,16 +19,26 @@ import {BtnCTA, BtnText} from '../styles/StyledConsts';
 //sentry
 import * as Sentry from '@sentry/react-native';
 
-const navigateByBaseLine = (data: IBaseLine | any, navigation) => {
+const navigateByBaseLine = (
+  data: IBaseLine | any,
+  notShowAgain: Boolean | undefined,
+  navigation,
+) => {
   // check user 회원가입 여부
   const hasBaseLine = Object.keys(data).length === 0 ? false : true;
-  if (hasBaseLine) {
+  if (hasBaseLine && notShowAgain) {
     navigation.reset({
       index: 0,
       routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
     });
-  } else {
+  } else if (hasBaseLine && !notShowAgain) {
+    navigation.navigate('Guide');
+  } else if (!hasBaseLine && notShowAgain) {
     navigation.navigate('InputNav', {screen: 'FirstInput'});
+  } else if (!hasBaseLine && !notShowAgain) {
+    navigation.navigate('Guide');
+  } else {
+    navigation.navigate('Guide');
   }
 };
 
@@ -40,34 +50,24 @@ const Login = () => {
   const {data, refetch} = useGetBaseLine({enabled: false});
   const signInWithKakao = async (): Promise<void> => {
     await kakaoLogin();
-    const refetchedData = await refetch();
-    refetchedData && navigateByBaseLine(refetchedData, navigation);
-    navigation.navigate('BottomTabNav', {screen: 'Home'});
+    const refetchedData = await refetch().then(res => res.data);
+    const notShowAgain = await checkNotShowAgain('ONBOARDING');
+    refetchedData &&
+      navigateByBaseLine(refetchedData, notShowAgain, navigation);
   };
-
-  // capture errors
-  try {
-    signInWithKakao();
-  } catch (err) {
-    Sentry.captureException(err);
-  }
   // etc
   useEffect(() => {
     // 가이드 보여줄지 결정
-    const initializeGuide = async () => {
-      const notShowAgain = await checkNotShowAgain('ONBOARDING');
-      notShowAgain || navigation.navigate('Guide');
-    };
-
-    const useCheckUser = async () => {
+    const checkUser = async () => {
       const {isValidated} = await validateToken();
       if (!isValidated) return;
       const refetchedData = await refetch().then(res => res.data);
-      refetchedData && navigateByBaseLine(refetchedData, navigation);
+      const notShowAgain = await checkNotShowAgain('ONBOARDING');
+      refetchedData &&
+        navigateByBaseLine(refetchedData, notShowAgain, navigation);
     };
 
-    initializeGuide();
-    useCheckUser();
+    checkUser();
   }, []);
 
   return (

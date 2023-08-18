@@ -18,6 +18,7 @@ import {
   DELETE_ORDER,
   UPDATE_DIET,
 } from './urls';
+import {IOrderData} from '../types/order';
 
 export const useKakaoPayReady = () => {
   const dispatch = useDispatch();
@@ -155,7 +156,7 @@ export const useUpdateOrder = () => {
 };
 
 export const useGetOrder = () => {
-  return useQuery({
+  return useQuery<IOrderData>({
     queryKey: [ORDER],
     queryFn: () => queryFn(`${LIST_ORDER}`),
   });

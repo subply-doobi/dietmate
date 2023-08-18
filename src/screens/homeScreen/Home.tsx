@@ -168,7 +168,6 @@ const Home = () => {
     //tooltip 관련
     const initializeTooltip = async () => {
       const notShowAgain = await checkNotShowAgain('HOME_TOOLTIP');
-      console.log('notShowAgain:', notShowAgain);
       setTooltipShow(!notShowAgain);
     };
     initializeTooltip();

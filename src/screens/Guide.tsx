@@ -1,5 +1,5 @@
 // react, RN, 3rd
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import styled from 'styled-components/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Lottie from 'lottie-react-native';
@@ -219,11 +219,11 @@ const Guide = () => {
           btnStyle={'border'}
           onPress={() => {
             updateNotShowAgain('ONBOARDING');
-            // step 1로 초기화 후 로그인 페이지 or 원래 보던 페이지로 이동
+            // step 1로 초기화 후 홈페이지 or 원래 보던 페이지로 이동
             setStep(1);
             reset({
               index: 0,
-              routes: [{name: 'Login'}],
+              routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
             });
           }}>
           <BottomText style={{color: colors.textSub}}>건너뛰기</BottomText>
@@ -240,7 +240,7 @@ const Guide = () => {
               updateNotShowAgain('ONBOARDING');
               reset({
                 index: 0,
-                routes: [{name: 'Login'}],
+                routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
               });
               return;
             }

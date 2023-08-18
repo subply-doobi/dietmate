@@ -24,12 +24,22 @@ import {useGetOrder, useUpdateOrder} from '../../query/queries/order';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ActivityIndicator} from 'react-native';
 import {BASE_URL} from '../../query/queries/urls';
-import {commaToNum, sumUpNutrients, sumUpPrice} from '../../util/sumUp';
+import {commaToNum, sumUpNutrients} from '../../util/sumUp';
 import {isSearchBarAvailableForCurrentPlatform} from 'react-native-screens';
-import {IProductData} from '../../query/types/product';
-interface IOrderData extends IProductData {
+interface IOrderData {
   buyDate: string;
-  statusNm: string;
+  calorie: string;
+}
+interface IOrderDataGroupedByBuyDate {
+  [key: string]: IOrderData[];
+}
+interface IProductData {
+  buyDate: string;
+  calorie: string;
+  crb: string;
+  mainAttUrl: string;
+  price: string;
+  dietNo: string;
 }
 
 const PaymentHistory = () => {
@@ -49,9 +59,9 @@ const PaymentHistory = () => {
   const orderDataGroupedByDietNoWithoutKey = Object.values(
     orderDataGroupedByDietNo,
   );
-
+  console.log('orderDataGroupedByDietNo', orderDataGroupedByDietNo);
   //날짜별로 구매내역
-  const orderDataGroupedByBuyDate: IOrderDataGroupedByBuyDatearray =
+  const orderDataGroupedByBuyDate: IOrderDataGroupedByBuyDate =
     orderDataGroupedByDietNoWithoutKey?.reduce((acc: any, cur: any) => {
       if (acc[cur[0].buyDate]) {
         acc[cur[0].buyDate].push(cur);
@@ -60,7 +70,7 @@ const PaymentHistory = () => {
       }
       return acc;
     }, {});
-  const buyDate = Object.keys(orderDataGroupedByBuyDate);
+
   const productData = Object.values(orderDataGroupedByBuyDate);
 
   //dietNo별로 칼로리 총합
@@ -99,7 +109,7 @@ const PaymentHistory = () => {
                       screen: 'PaymentDetail',
                       params: {
                         productData: order,
-                        buyDate: order[0][0]?.buyDate,
+                        buyDate: order[0][0].buydate,
                         totalPrice: totalPrice(orderIdx),
                         orderNo: order[0][0].orderNo,
                         qty: order[0][0].qty,
@@ -164,9 +174,6 @@ const OrderBox = styled.View``;
 const OrderDate = styled(TextSub)`
   font-size: 12px;
 `;
-const OrderDateContainer = styled.View`
-  justify-content: space-between;
-`;
 const DetailBtn = styled.TouchableOpacity`
   width: 64px;
   height: 24px;
@@ -178,9 +185,7 @@ const DetailBtn = styled.TouchableOpacity`
   margin-bottom: 8px;
   margin-left: 8px;
 `;
-const MakeVertical = styled.View`
-  flex-direction: column;
-`;
+
 const DetailBtnText = styled(TextMain)`
   font-size: 14px;
 `;
