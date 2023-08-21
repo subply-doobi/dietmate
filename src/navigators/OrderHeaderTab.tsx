@@ -29,7 +29,7 @@ const OrderHeaderTab = () => {
       }}>
       <Tab.Screen
         name="DoobiOrder"
-        component={OrderNav}
+        component={Order}
         options={{
           tabBarLabel: '두비가 도와줘',
           tabBarLabelStyle: {fontSize: 15},
@@ -65,21 +65,6 @@ const OrderNav = () => {
             color: colors.textMain,
           },
           headerLeft: () => <BackArrow goBackFn={goBack} />,
-        }}
-      />
-
-      <Stack.Screen
-        name="PaymentComplete"
-        component={PaymentComplete}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="PaymentHistory"
-        component={PaymentHistory}
-        options={{
-          headerShown: true,
         }}
       />
     </Stack.Navigator>

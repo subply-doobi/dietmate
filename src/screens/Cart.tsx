@@ -239,7 +239,7 @@ const Cart = () => {
             return;
           }
           dispatch(setFoodToOrder(dietTotal));
-          navigate('OrderNav', {
+          navigate('OrderHeaderTab', {
             screen: 'Order',
           });
         }}>

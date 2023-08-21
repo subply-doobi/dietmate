@@ -8,9 +8,8 @@ import {useHandleError} from '../util/handleError';
 
 import InputNav from './InputNav';
 import BottomTabNav from './BottomTabNav';
-import OrderNav from './OrderNav';
 import AddressEdit from '../screens/orderScreen/AddressEdit';
-import OrderHeaderTab from './OrderNav';
+import OrderHeaderTab from './OrderHeaderTab';
 import PaymentHistoryNav from './PaymentHistoryNav';
 import HistoryNav from './HistoryNav';
 import ErrorAlert from '../components/common/ErrorAlert';
@@ -26,6 +25,7 @@ import {useDispatch} from 'react-redux';
 import {setNutrTooltipText} from '../stores/slices/cartSlice';
 import Account from '../screens/Account';
 import KakaoPay from '../components/payment/KakaoPay';
+import PaymentComplete from '../screens/orderScreen/PaymentComplete';
 import CustomErrorBoundary from '../components/common/CustomErrorBoundary';
 
 const Stack = createNativeStackNavigator();
@@ -92,7 +92,7 @@ const RootStackNav = () => {
         }}
       />
       <Stack.Screen
-        name="OrderNav"
+        name="OrderHeaderTab"
         component={OrderHeaderTab}
         options={{
           headerShown: true,
@@ -132,7 +132,7 @@ const RootStackNav = () => {
           headerLeft: () => (
             <BackArrow
               goBackFn={() =>
-                navigate('OrderNav', {
+                navigate('OrderHeaderTab', {
                   screen: 'Order',
                   params: {from: 'AddressEdit'},
                 })
@@ -144,6 +144,7 @@ const RootStackNav = () => {
       <Stack.Screen name="KakaoPayNav" component={KakaoPay} />
       <Stack.Screen name="HistoryNav" component={HistoryNav} />
       <Stack.Screen name="PaymentHistoryNav" component={PaymentHistoryNav} />
+      <Stack.Screen name="PaymentComplete" component={PaymentComplete} />
       <Stack.Screen
         name="Account"
         component={Account}
@@ -185,19 +186,3 @@ const RootStackNav = () => {
 };
 
 export default RootStackNav;
-
-const Badge = styled.View`
-  width: 16px;
-  height: 16px;
-  border-radius: 8px;
-  background-color: ${colors.main};
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  justify-content: center;
-  align-items: center;
-`;
-const BadgeText = styled.Text`
-  color: ${colors.white};
-  font-size: 10px;
-`;
