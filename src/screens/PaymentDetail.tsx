@@ -45,6 +45,7 @@ const PaymentDetail = props => {
   const {data: useListProductData} = useListProduct({
     dietNo: currentDietNo,
   });
+
   const {data: orderDetailData, isLoading}: IProductData =
     useGetOrderDetail(orderNo);
   const isAdded = useListProductData?.filter(

@@ -45,8 +45,7 @@ const KakaoPay = () => {
   const {navigate} = useNavigation();
   const dispatch = useDispatch();
 
-  const {customerData, modifiedDietTotal, priceTotal, orderNumber} =
-    route.params;
+  const {customerData, priceTotal, orderNumber} = route.params;
   const updateDietMutation = useUpdateDiet();
   const updateOrderMutation = useUpdateOrder();
   const deleteOrderMutation = useDeleteOrder();
@@ -55,16 +54,12 @@ const KakaoPay = () => {
       dispatch(setCurrentDiet(data.dietNo));
     },
   });
-  // console.log('priceTotal:', priceTotal);
-  // console.log('customerData:', customerData);
-  console.log('kakaopay params orderNumber:', orderNumber.orderNo);
   const kakaopayData: IIamportPayment = {
     pg: 'kakaopay',
     escrow: false,
     pay_method: 'card',
     name: '결제명',
     custom_data: {
-      productData: modifiedDietTotal,
       customerData,
       // transactionData : response값으로
     },
@@ -93,6 +88,20 @@ const KakaoPay = () => {
             updateOrderMutation.mutate({
               statusCd: 'SP006005',
               orderNo: orderNumber.orderNo,
+              price: kakaopayData.amount,
+              buyerName: kakaopayData.buyer_name,
+              buyerTel: kakaopayData.buyer_tel,
+              buyerEmail: kakaopayData.buyer_email,
+              buyerAddr: kakaopayData.buyer_addr,
+              buyerZipCode: kakaopayData.buyer_postcode,
+              customData: 'string',
+              appScheme: 'string',
+              escrow: 'string',
+              customerUid: 'string',
+              orderPrice: kakaopayData.amount,
+              buyDate: 'string',
+              productShippingPrice: 'string',
+              statusNm: 'string',
             }),
             navigate('PaymentComplete'),
             createDietMutation.mutate())

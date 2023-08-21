@@ -22,13 +22,18 @@ const PaymentComplete = () => {
       <View style={styles.buttons}>
         <StyledButton
           onPress={() => {
-            navigation.navigate('PaymentHistory');
+            navigation.navigate('PaymentHistoryNav', {
+              screen: 'PaymentHistory',
+            });
           }}>
           <ButtonText>결제내역 바로가기</ButtonText>
         </StyledButton>
         <StyledButton
           onPress={() => {
-            navigation.navigate('Order');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
+            });
           }}>
           <ButtonText>두비랑 식단구성 더 해보기</ButtonText>
         </StyledButton>

@@ -1,5 +1,10 @@
 import React, {useState} from 'react';
-import {TouchableOpacity, ScrollView, SafeAreaView} from 'react-native';
+import {
+  TouchableOpacity,
+  ScrollView,
+  SafeAreaView,
+  ActivityIndicator,
+} from 'react-native';
 import styled from 'styled-components/native';
 import Accordion from 'react-native-collapsible/Accordion';
 import {useForm, useWatch, Controller} from 'react-hook-form';
@@ -42,11 +47,13 @@ import {useListAddress, useGetAddress} from '../../query/queries/address';
 const Order = () => {
   // const {data: listAddressData} = useListAddress();
   // console.log('listAddressData:', listAddressData);
-  // const {data: getAddressData} = useGetAddress();
+  const {data: getAddressData} = useGetAddress();
+  const {data: listAddressData, isLoading: listAddressDataLoading} =
+    useListAddress();
+  console.log('listAddressData:', listAddressData);
   // console.log('getAddressData:', getAddressData);
   //navigation
   const {navigate} = useNavigation();
-
   //cart에 있는 제품들을 주문하기 위해 paymentProduct로 변환
   //modifiedDietTotal을 서버에 저장
 
@@ -54,6 +61,7 @@ const Order = () => {
   const {orderInfo, selectedAddressId, orderSummary} = useSelector(
     (state: RootState) => state.order,
   );
+  console.log(selectedAddressId);
   const {foodToOrder} = orderInfo;
   const {priceTotal, menuNum, productNum} = sumUpDietTotal(
     orderInfo.foodToOrder,
@@ -90,6 +98,7 @@ const Order = () => {
     handleSubmit,
     setValue,
     formState: {errors, isValid},
+    register,
   } = useForm<IFormData>({
     defaultValues: {
       orderer: orderInfo.orderer ? orderInfo.orderer : '',
@@ -102,7 +111,6 @@ const Order = () => {
       paymentMethod: '카카오페이',
     },
   });
-  // console.log('유효성검사:', useForm());
   const ordererValue = useWatch({control, name: 'orderer'});
   const ordererContactValue = useWatch({control, name: 'ordererContact'});
   const addressDetailValue = useWatch({control, name: 'addressDetail'});
@@ -112,7 +120,6 @@ const Order = () => {
   // accordion
   // activeSections[0] == 1 : 두비가 알아서 / 탄단지 비율 / 영양성분 직접 입력
   const [activeSections, setActiveSections] = useState<number[]>([]);
-
   const CONTENT = [
     {
       title: '주문식품',
@@ -144,8 +151,21 @@ const Order = () => {
       title: '배송지',
       subTitle: (
         <HeaderSubTitle numberOfLines={1} ellipsizeMode={'tail'}>
-          {receiverValue} | {orderInfo.address[selectedAddressId]?.base} |{' '}
-          {orderInfo.address[selectedAddressId]?.detail}
+          {selectedAddressId !== 0 ? (
+            <HeaderSubTitle>
+              {' '}
+              {receiverValue} | {orderInfo.address[selectedAddressId]?.base} |{' '}
+              {orderInfo.address[selectedAddressId]?.detail}
+            </HeaderSubTitle>
+          ) : listAddressData?.length === 0 ? (
+            <HeaderSubTitle>입력해주세요</HeaderSubTitle>
+          ) : listAddressDataLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <HeaderSubTitle>
+              | {listAddressData[0]?.addr1} | {listAddressData[0]?.addr2}
+            </HeaderSubTitle>
+          )}
         </HeaderSubTitle>
       ),
       content: (
@@ -235,7 +255,9 @@ const Order = () => {
   //   handleSubmit(() => {})();
   // }, []);
 
-  return (
+  return listAddressDataLoading ? (
+    <ActivityIndicator />
+  ) : (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
