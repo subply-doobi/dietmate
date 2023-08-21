@@ -6,7 +6,6 @@ import {useForm, useWatch} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
 
 import {icons} from '../assets/icons/iconSource';
-import {myPageBtns} from '../constants/constants';
 import colors from '../styles/colors';
 import {
   Col,
@@ -32,6 +31,15 @@ import {
 } from '../query/queries/order';
 import {convertNutr, convertNutrByWeight} from '../util/targetCalculation';
 import {useListDiet, useUpdateDiet} from '../query/queries/diet';
+
+// consts for screens
+export const myPageBtns = [
+  {title: '몸무게변경', btnId: 'ChangeWeight'},
+  {title: '찜한식품', btnId: 'Likes'},
+  {title: '주문내역', btnId: 'PaymentHistory'},
+  {title: '이용가이드', btnId: 'Guide'},
+  {title: '계정설정', btnId: 'Account'},
+];
 interface INavigateByBtnId {
   [key: string]: (btnId: string, navigate: Function) => void;
 }
@@ -41,6 +49,7 @@ const navigateByBtnId: INavigateByBtnId = {
   PaymentHistory: (btnId, navigate) =>
     navigate('PaymentHistoryNav', {screen: btnId}),
   Account: (btnId, navigate) => navigate(btnId),
+  Guide: (btnId, navigate) => navigate(btnId),
 };
 
 const Mypage = () => {

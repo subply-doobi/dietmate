@@ -1,4 +1,4 @@
-import {IDietData} from '../query/types/diet';
+import {IDietData, IDietDetailData} from '../query/types/diet';
 
 export const findDietSeq = (
   dietData: IDietData | undefined,
@@ -17,4 +17,17 @@ export const findDietSeq = (
     }
   }
   return {dietSeq, idx};
+};
+
+export const findEmptyDietSeq = (dietTotal: IDietDetailData[] | undefined) => {
+  if (!dietTotal) return '';
+  let emptyDietList = [];
+  for (let i = 0; i < dietTotal.length; i++) {
+    if (dietTotal[i].length === 0) emptyDietList.push(`끼니 ${i + 1}`);
+  }
+
+  if (emptyDietList.length === 0) return '';
+
+  const emptyDietSeq = emptyDietList.join(', ');
+  return emptyDietSeq;
 };
