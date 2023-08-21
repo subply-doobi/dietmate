@@ -5,7 +5,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../stores/store';
 import {setOrderSummary} from '../../stores/slices/orderSlice';
 import {kakaoAppAdminKey} from '../../constants/constants';
-import {DIET, ORDER, DIET_DETAIL, DIET_DETAIL_ALL, ORDER_DETAIL} from '../keys';
+import {
+  DIET,
+  ORDER,
+  DIET_DETAIL,
+  DIET_DETAIL_ALL,
+  ORDER_DETAIL,
+  PRODUCTS,
+} from '../keys';
 import {queryClient} from '../store';
 
 //기존 testKakaoPay
@@ -150,6 +157,10 @@ export const useUpdateOrder = () => {
     onSuccess: data => {
       console.log('updateOrder success: ', data);
       queryClient.invalidateQueries({queryKey: [ORDER]});
+      queryClient.invalidateQueries({queryKey: [DIET]});
+      queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
+      queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
+      queryClient.invalidateQueries({queryKey: [PRODUCTS]});
     },
   });
   return mutation;

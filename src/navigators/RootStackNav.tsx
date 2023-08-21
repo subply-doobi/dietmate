@@ -9,10 +9,8 @@ import {useHandleError} from '../util/handleError';
 import InputNav from './InputNav';
 import BottomTabNav from './BottomTabNav';
 import AddressEdit from '../screens/orderScreen/AddressEdit';
-import OrderHeaderTab from './OrderHeaderTab';
 import PaymentHistoryNav from './PaymentHistoryNav';
 import HistoryNav from './HistoryNav';
-import ErrorAlert from '../components/common/ErrorAlert';
 import PayMethodGuidePage from '../screens/orderScreen/PaymethodGuidePage';
 
 import Guide from '../screens/Guide';
@@ -22,11 +20,11 @@ import BackArrow from '../components/common/BackArrow';
 import {Pressable, Image} from 'react-native';
 import {icons} from '../assets/icons/iconSource';
 import {useDispatch} from 'react-redux';
-import {setNutrTooltipText} from '../stores/slices/cartSlice';
 import Account from '../screens/Account';
 import KakaoPay from '../components/payment/KakaoPay';
 import PaymentComplete from '../screens/orderScreen/PaymentComplete';
 import CustomErrorBoundary from '../components/common/CustomErrorBoundary';
+import OrderHeaderTabNav from './OrderHeaderTabNav';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,16 +53,8 @@ const RootStackNav = () => {
   const {goBack, navigate} = useNavigation();
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Guide"
-        component={Guide}
-        options={{headerShown: false}}
-      />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Guide" component={Guide} />
       <Stack.Screen name="InputNav" component={InputNav} />
       <Stack.Screen name="BottomTabNav" component={BottomTabNav} />
       <Stack.Screen
@@ -92,11 +82,11 @@ const RootStackNav = () => {
         }}
       />
       <Stack.Screen
-        name="OrderHeaderTab"
-        component={OrderHeaderTab}
+        name="OrderHeaderTabNav"
+        component={OrderHeaderTabNav}
         options={{
           headerShown: true,
-          headerTitle: '주문/결제',
+          headerTitle: '주문 / 결제',
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontSize: 18,

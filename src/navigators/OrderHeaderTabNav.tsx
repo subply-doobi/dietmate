@@ -17,7 +17,7 @@ import {notifyManager} from 'react-query';
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
 
-const OrderHeaderTab = () => {
+const OrderHeaderTabNav = () => {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -28,7 +28,7 @@ const OrderHeaderTab = () => {
         tabBarPressColor: colors.white,
       }}>
       <Tab.Screen
-        name="DoobiOrder"
+        name="Order"
         component={Order}
         options={{
           tabBarLabel: '두비가 도와줘',
@@ -47,28 +47,4 @@ const OrderHeaderTab = () => {
   );
 };
 
-const OrderNav = () => {
-  const navigation = useNavigation();
-  const {goBack, navigate} = navigation;
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Order"
-        component={Order}
-        options={{
-          headerShown: false,
-          headerTitle: '주문 / 결제',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontSize: 18,
-            fontWeight: 'bold',
-            color: colors.textMain,
-          },
-          headerLeft: () => <BackArrow goBackFn={goBack} />,
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
-
-export default OrderHeaderTab;
+export default OrderHeaderTabNav;

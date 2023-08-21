@@ -50,8 +50,6 @@ const Order = () => {
   const {data: getAddressData} = useGetAddress();
   const {data: listAddressData, isLoading: listAddressDataLoading} =
     useListAddress();
-  console.log(' listAddressData?.length:', listAddressData?.length !== 0);
-  // console.log('getAddressData:', getAddressData);
   //navigation
   const {navigate} = useNavigation();
   //cart에 있는 제품들을 주문하기 위해 paymentProduct로 변환
@@ -61,7 +59,6 @@ const Order = () => {
   const {orderInfo, selectedAddressId, orderSummary} = useSelector(
     (state: RootState) => state.order,
   );
-  console.log(selectedAddressId);
   const {foodToOrder} = orderInfo;
   const {priceTotal, menuNum, productNum} = sumUpDietTotal(
     orderInfo.foodToOrder,
