@@ -59,7 +59,6 @@ const PaymentHistory = () => {
   const orderDataGroupedByDietNoWithoutKey = Object.values(
     orderDataGroupedByDietNo,
   );
-  console.log('orderDataGroupedByDietNo', orderDataGroupedByDietNo);
   //날짜별로 구매내역
   const orderDataGroupedByBuyDate: IOrderDataGroupedByBuyDate =
     orderDataGroupedByDietNoWithoutKey?.reduce((acc: any, cur: any) => {
@@ -78,7 +77,6 @@ const PaymentHistory = () => {
     orderDataGroupedByDietNoWithoutKey[arg]?.reduce((acc: any, cur: any) => {
       return acc + parseInt(cur.calorie);
     }, 0);
-
   //주문별 총합
   const totalPrice = (productDataIdx: number) =>
     productData[productDataIdx]?.reduce((acc: any, cur: any) => {
