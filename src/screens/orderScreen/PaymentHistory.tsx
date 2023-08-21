@@ -1,31 +1,25 @@
-import React from 'react';
-import {FlatList, SafeAreaView} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
-import {useSelector} from 'react-redux';
-
-import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
 import {
   Col,
   HorizontalLine,
-  HorizontalSpace,
   Row,
   TextMain,
   TextSub,
   VerticalLine,
-  VerticalSpace,
   Container,
 } from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
-import {NavigationProps} from '../../constants/constants';
 import {useNavigation} from '@react-navigation/native';
-import {useUpdateDiet} from '../../query/queries/diet';
 import {useGetOrder, useUpdateOrder} from '../../query/queries/order';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ActivityIndicator} from 'react-native';
 import {BASE_URL} from '../../query/queries/urls';
 import {commaToNum, sumUpNutrients} from '../../util/sumUp';
 import {isSearchBarAvailableForCurrentPlatform} from 'react-native-screens';
+import DAlert from '../../components/common/alert/DAlert';
+import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 interface IOrderData {
   buyDate: string;
   calorie: string;
@@ -43,8 +37,13 @@ interface IProductData {
 }
 
 const PaymentHistory = () => {
+  // navigation
   const {data: orderData, isLoading} = useGetOrder();
   const {navigate} = useNavigation();
+
+  // useState
+  const [emptyAlertShow, setEmptyAlertShow] = useState(false);
+
   //dietNo별로 새로 만든 배열
   const orderDataGroupedByDietNo = orderData?.reduce((acc, cur) => {
     if (acc[cur.dietNo]) {
@@ -90,6 +89,12 @@ const PaymentHistory = () => {
         }, 0)
       );
     }, 0);
+
+  // useEffect
+  // 주문정보 비어있는지 확인
+  useEffect(() => {
+    orderData?.length === 0 && setEmptyAlertShow(true);
+  }, [orderData]);
 
   return isLoading ? (
     <ActivityIndicator />
@@ -163,6 +168,15 @@ const PaymentHistory = () => {
           );
         })}
       </ScrollView>
+      <DAlert
+        alertShow={emptyAlertShow}
+        NoOfBtn={1}
+        onConfirm={() => setEmptyAlertShow(false)}
+        onCancel={() => setEmptyAlertShow(false)}
+        renderContent={() => (
+          <CommonAlertContent text="아직 주문내역이 없어요" />
+        )}
+      />
     </Container>
   );
 };

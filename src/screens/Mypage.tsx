@@ -254,7 +254,10 @@ const Mypage = () => {
           </UserInfoBtnContainer>
         </ProfileContainer>
         <RecommendationContainer>
-          <Recommendation style={{fontWeight: '400'}}>
+          <Recommendation
+            numberOfLines={1}
+            ellipsizeMode="clip"
+            style={{fontWeight: '400'}}>
             계획과 다르게 진행된다면 아래 목표를 수정해보세요
           </Recommendation>
         </RecommendationContainer>

@@ -4,6 +4,11 @@ import {useNavigation} from '@react-navigation/native';
 
 import {TextMain} from '../styles/StyledConsts';
 
+// login navigator
+/** 로그인 할 때마다 baseline 과 onBoarding 정보를 확인해서
+ *  Home | Guide | firstInput 중 하나로 이동
+ */
+
 export const useChangeHeaderTitle = (title: string) => {
   const navigation = useNavigation();
   useEffect(() => {

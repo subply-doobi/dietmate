@@ -2,7 +2,7 @@
 //RN, 3rd
 import React, {useEffect, useCallback} from 'react';
 import styled from 'styled-components/native';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import colors from '../styles/colors';
 import {kakaoLogin, validateToken} from '../query/queries/token';
 import {IBaseLine} from '../query/types/baseLine';
@@ -19,27 +19,25 @@ import {BtnCTA, BtnText} from '../styles/StyledConsts';
 //sentry
 import * as Sentry from '@sentry/react-native';
 
-const navigateByBaseLine = (
+const navigateByUserInfo = async (
   data: IBaseLine | any,
-  notShowAgain: Boolean | undefined,
-  navigation,
+  navigation: NavigationProp<ReactNavigation.RootParamList>,
 ) => {
-  // check user 회원가입 여부
   const hasBaseLine = Object.keys(data).length === 0 ? false : true;
-  if (hasBaseLine && notShowAgain) {
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
-    });
-  } else if (hasBaseLine && !notShowAgain) {
+  const canSkipOnboarding = await checkNotShowAgain('ONBOARDING');
+
+  if (!canSkipOnboarding) {
+    // canSkipOnboarding 아니면 가이드로
     navigation.navigate('Guide');
-  } else if (!hasBaseLine && notShowAgain) {
-    navigation.navigate('InputNav', {screen: 'FirstInput'});
-  } else if (!hasBaseLine && !notShowAgain) {
-    navigation.navigate('Guide');
-  } else {
-    navigation.navigate('Guide');
+    return;
   }
+  if (!hasBaseLine) {
+    // canSkipOnboarding 있는데 baseline 없으면 FirstInput으로
+    navigation.navigate('InputNav', {screen: 'FirstInput'});
+  }
+
+  // baseline 있으면 홈으로
+  navigation.navigate('BottomTabNav', {screen: 'Home'});
 };
 
 const Login = () => {
@@ -51,20 +49,15 @@ const Login = () => {
   const signInWithKakao = async (): Promise<void> => {
     await kakaoLogin();
     const refetchedData = await refetch().then(res => res.data);
-    const notShowAgain = await checkNotShowAgain('ONBOARDING');
-    refetchedData &&
-      navigateByBaseLine(refetchedData, notShowAgain, navigation);
+    refetchedData && navigateByUserInfo(refetchedData, navigation);
   };
   // etc
   useEffect(() => {
-    // 가이드 보여줄지 결정
     const checkUser = async () => {
       const {isValidated} = await validateToken();
       if (!isValidated) return;
       const refetchedData = await refetch().then(res => res.data);
-      const notShowAgain = await checkNotShowAgain('ONBOARDING');
-      refetchedData &&
-        navigateByBaseLine(refetchedData, notShowAgain, navigation);
+      refetchedData && navigateByUserInfo(refetchedData, navigation);
     };
 
     checkUser();
