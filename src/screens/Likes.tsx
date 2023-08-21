@@ -53,8 +53,8 @@ const Likes = () => {
       <MenuSection />
       <LikeContainer>
         <Row style={{marginTop: 32}}>
-          <ListTitle>찜한 상품</ListTitle>
-          <NoOfFoods>{` ${likeData?.length}개`}</NoOfFoods>
+          <ListTitle>찜한 상품 </ListTitle>
+          <NoOfFoods>{!!likeData ? ` ${likeData.length}개` : ``}</NoOfFoods>
         </Row>
         <HorizontalLine style={{marginTop: 8}} />
         <FlatList
