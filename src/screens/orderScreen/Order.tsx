@@ -285,7 +285,13 @@ const Order = () => {
             : 'inactivated'
         }
         onPress={async () => {
-          if (!isValid) {
+          if (
+            !(
+              isValid &&
+              listAddressData?.length !== 0 &&
+              getAddressData?.length !== 0
+            )
+          ) {
             return;
           }
           const orderNumber = await createOrderMutation.mutateAsync({});

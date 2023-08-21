@@ -75,13 +75,6 @@ const OrderNav = () => {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="PaymentHistory"
-        component={PaymentHistory}
-        options={{
-          headerShown: true,
-        }}
-      />
     </Stack.Navigator>
   );
 };
