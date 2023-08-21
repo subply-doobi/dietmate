@@ -50,7 +50,7 @@ const Order = () => {
   const {data: getAddressData} = useGetAddress();
   const {data: listAddressData, isLoading: listAddressDataLoading} =
     useListAddress();
-  console.log('listAddressData:', listAddressData);
+  console.log(' listAddressData?.length:', listAddressData?.length !== 0);
   // console.log('getAddressData:', getAddressData);
   //navigation
   const {navigate} = useNavigation();
@@ -111,6 +111,7 @@ const Order = () => {
       paymentMethod: '카카오페이',
     },
   });
+
   const ordererValue = useWatch({control, name: 'orderer'});
   const ordererContactValue = useWatch({control, name: 'ordererContact'});
   const addressDetailValue = useWatch({control, name: 'addressDetail'});
@@ -276,7 +277,13 @@ const Order = () => {
       </ScrollView>
       <BtnBottomCTA
         style={{width: SCREENWIDTH - 32}}
-        btnStyle={isValid ? 'activated' : 'inactivated'}
+        btnStyle={
+          isValid &&
+          listAddressData?.length !== 0 &&
+          getAddressData?.length !== 0
+            ? 'activated'
+            : 'inactivated'
+        }
         onPress={async () => {
           if (!isValid) {
             return;
@@ -289,7 +296,9 @@ const Order = () => {
           });
         }}>
         <BtnText>
-          {isValid
+          {isValid &&
+          listAddressData?.length !== 0 &&
+          getAddressData?.length !== 0
             ? `총 ${commaToNum(priceTotal)}원 결제하기`
             : '정보를 모두 입력해주세요'}
         </BtnText>

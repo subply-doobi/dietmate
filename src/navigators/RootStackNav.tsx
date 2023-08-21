@@ -185,19 +185,3 @@ const RootStackNav = () => {
 };
 
 export default RootStackNav;
-
-const Badge = styled.View`
-  width: 16px;
-  height: 16px;
-  border-radius: 8px;
-  background-color: ${colors.main};
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  justify-content: center;
-  align-items: center;
-`;
-const BadgeText = styled.Text`
-  color: ${colors.white};
-  font-size: 10px;
-`;
