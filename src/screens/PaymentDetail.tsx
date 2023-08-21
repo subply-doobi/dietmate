@@ -34,7 +34,6 @@ import {useNavigation} from '@react-navigation/native';
 const PaymentDetail = props => {
   const navigation = useNavigation();
   const {productData, totalPrice, orderNo, buyDate} = props?.route?.params;
-  console.log(props?.route?.params);
   const addMutation = useCreateDietDetail();
   const deleteMutation = useDeleteDietDetail();
   const nutrientType = ['calorie', 'carb', 'protein', 'fat'];
@@ -46,7 +45,7 @@ const PaymentDetail = props => {
   const {data: useListProductData} = useListProduct({
     dietNo: currentDietNo,
   });
-  console.log('productData:', productData);
+
   const {data: orderDetailData, isLoading}: IProductData =
     useGetOrderDetail(orderNo);
   const isAdded = useListProductData?.filter(
@@ -118,12 +117,15 @@ const PaymentDetail = props => {
   const groupByPlatformNmArray = Object.keys(groupByPlatformNm).map(key => {
     return groupByPlatformNm[key];
   });
+
   //groupByPlatformNmArray에서 같은 platformNm별로 총 price 구하기
   const getPriceFromPlatformNm = groupByPlatformNmArray.map(item => {
     return item.reduce((acc, cur) => {
       return acc + parseInt(cur.price);
     }, 0);
   });
+
+  console.log('dddddddd', getPriceFromPlatformNm);
 
   return isLoading ? (
     <ActivityIndicator />
@@ -224,10 +226,12 @@ const PaymentDetail = props => {
             <SummarySubText>{orderDetailData?.buyerAddr}</SummarySubText>
           </Row>
         </SummaryContainer>
+
         <SummaryContainer>
           <SummaryMainText>결제수단</SummaryMainText>
           <SummarySubText>카카오페이</SummarySubText>
         </SummaryContainer>
+        {/* xx */}
         <SummaryContainer style={{marginBottom: 100}}>
           <SummaryMainText>결제금액</SummaryMainText>
           {groupByPlatformNmArray.map((item, index) => (
@@ -303,7 +307,7 @@ const SummarySubText = styled(TextMain)`
   margin: 8px;
 `;
 const MenuNutrContainer = styled(Row)`
-  margin: 30px
+  margin: 30px;
   width: 100%;
   align-items: center;
 `;
