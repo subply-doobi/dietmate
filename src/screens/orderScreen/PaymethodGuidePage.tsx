@@ -7,7 +7,7 @@ import colors from '../../styles/colors';
 
 import Order from './Order';
 import SelfOrder from './SelfOrder';
-import OrderNav from '../../navigators/OrderNav';
+import OrderNav from '../../navigators/OrderHeaderTab';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
