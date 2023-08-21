@@ -46,16 +46,22 @@ export const checkNotShowAgain = async (value: string) => {
 export const updateNotShowAgain = async (value: string) => {
   try {
     const notShowAgain = await AsyncStorage.getItem('NOT_SHOW_AGAIN');
+    // 해당 key에 처음 저장하는 경우
     if (notShowAgain === null) {
       await AsyncStorage.setItem('NOT_SHOW_AGAIN', JSON.stringify([value]));
-    } else {
-      const notShowAgainList = JSON.parse(notShowAgain);
-      notShowAgainList.push(value);
-      await AsyncStorage.setItem(
-        'NOT_SHOW_AGAIN',
-        JSON.stringify(notShowAgainList),
-      );
+      return;
     }
+    const notShowAgainList = JSON.parse(notShowAgain);
+
+    // 해당 key에 이미 value 값이 저장되어 있는 경우
+    if (notShowAgainList.includes(value)) return;
+
+    // 해당 key에 value값이 없는 경우
+    notShowAgainList.push(value);
+    await AsyncStorage.setItem(
+      'NOT_SHOW_AGAIN',
+      JSON.stringify(notShowAgainList),
+    );
   } catch (error) {
     console.error(error);
   }

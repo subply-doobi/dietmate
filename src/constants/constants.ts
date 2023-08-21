@@ -78,13 +78,6 @@ export const nutrRatioCategory = [
   {label: '20 : 20: 60(저탄고지 식단)', value: 'SP005002'},
   {label: '40 : 40 : 20(벌크업용)', value: 'SP005003'},
 ];
-// consts for screens
-export const myPageBtns = [
-  {title: '몸무게변경', btnId: 'ChangeWeight'},
-  {title: '찜한식품', btnId: 'Likes'},
-  {title: '주문내역', btnId: 'PaymentHistory'},
-  {title: '계정설정', btnId: 'Account'},
-];
 
 export const categoryCode: {[key: string]: string} = {
   도시락: 'CG001',

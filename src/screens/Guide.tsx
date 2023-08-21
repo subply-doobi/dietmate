@@ -60,7 +60,7 @@ const Guide = () => {
       step: 2,
       text: (
         <GuideHeaderText>
-          간편식 <GuideHeaderTextBold>기본 정보를 입력해</GuideHeaderTextBold>
+          <GuideHeaderTextBold>기본 정보를 입력해</GuideHeaderTextBold>
           {'\n'}목표섭취량을 구해요
         </GuideHeaderText>
       ),

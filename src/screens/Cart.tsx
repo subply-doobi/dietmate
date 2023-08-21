@@ -35,7 +35,7 @@ import {
   useListDietDetailAll,
   useListDietTotal,
 } from '../query/queries/diet';
-import {findDietSeq} from '../util/findDietSeq';
+import {findDietSeq, findEmptyDietSeq} from '../util/findDietSeq';
 import {setFoodToOrder} from '../stores/slices/orderSlice';
 
 const Cart = () => {
@@ -75,7 +75,9 @@ const Cart = () => {
     productNum,
     priceTotal,
     ACCORDION_CONTENT,
+    emptyDietSeq,
   } = useMemo(() => {
+    console.log('usememo실행!');
     const totalStatus =
       dietTotalData &&
       dietTotalData.map(menu => menu.isInitialLoading).includes(true)
@@ -89,6 +91,9 @@ const Cart = () => {
 
     // 끼니수량, 상품수량, 총 가격
     const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotal);
+
+    // 비어있는 끼니 확인
+    const emptyDietSeq = findEmptyDietSeq(dietTotal);
 
     // accordion
     const ACCORDION_CONTENT =
@@ -139,6 +144,7 @@ const Cart = () => {
       productNum,
       priceTotal,
       ACCORDION_CONTENT,
+      emptyDietSeq,
     };
   }, [dietTotalData]);
 
@@ -254,7 +260,7 @@ const Cart = () => {
             <CreateLimitAlertContent />
           ) : addAlertStatus === 'empty' ? (
             <CommonAlertContent
-              text={`비어있는 끼니를\n먼저 구성하고 이용해보세요`}
+              text={`비어있는 끼니를\n먼저 구성하고 이용해보세요\n(${emptyDietSeq})`}
             />
           ) : (
             <></>
