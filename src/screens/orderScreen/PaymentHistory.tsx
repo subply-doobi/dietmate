@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import styled from 'styled-components/native';
 import {icons} from '../../assets/icons/iconSource';
 import {
@@ -45,40 +45,39 @@ const PaymentHistory = () => {
   const [emptyAlertShow, setEmptyAlertShow] = useState(false);
 
   //dietNo별로 새로 만든 배열
-  const orderDataGroupedByDietNo = orderData?.reduce((acc, cur) => {
-    if (acc[cur.dietNo]) {
-      acc[cur.dietNo].push(cur);
-    } else {
-      acc[cur.dietNo] = [cur];
-    }
-    return acc;
-  }, {});
-
-  //orderDataGroupedByDietNo key제거
-  const orderDataGroupedByDietNoWithoutKey = Object.values(
-    orderDataGroupedByDietNo,
-  );
-  //날짜별로 구매내역
-  const orderDataGroupedByBuyDate: IOrderDataGroupedByBuyDate =
-    orderDataGroupedByDietNoWithoutKey?.reduce((acc: any, cur: any) => {
-      if (acc[cur[0].buyDate]) {
-        acc[cur[0].buyDate].push(cur);
+  const regroupedData = useMemo(() => {
+    if (!orderData) return;
+    const orderDataGroupedByDietNo = orderData?.reduce((acc, cur) => {
+      if (acc[cur.dietNo]) {
+        acc[cur.dietNo].push(cur);
       } else {
-        acc[cur[0].buyDate] = [cur];
+        acc[cur.dietNo] = [cur];
       }
       return acc;
     }, {});
+    //orderDataGroupedByDietNo key제거
+    const orderDataGroupedByDietNoWithoutKey = Object.values(
+      orderDataGroupedByDietNo,
+    );
+    //날짜별로 구매내역
+    const orderDataGroupedByBuyDate: IOrderDataGroupedByBuyDate =
+      orderDataGroupedByDietNoWithoutKey?.reduce((acc: any, cur: any) => {
+        if (acc[cur[0].buyDate]) {
+          acc[cur[0].buyDate].push(cur);
+        } else {
+          acc[cur[0].buyDate] = [cur];
+        }
+        return acc;
+      }, {});
 
-  const productData = Object.values(orderDataGroupedByBuyDate);
+    const productData = Object.values(orderDataGroupedByBuyDate);
+    return productData;
+  }, [orderData]);
 
-  //dietNo별로 칼로리 총합
-  const totalCalorie = (arg: number) =>
-    orderDataGroupedByDietNoWithoutKey[arg]?.reduce((acc: any, cur: any) => {
-      return acc + parseInt(cur.calorie);
-    }, 0);
   //주문별 총합
   const totalPrice = (productDataIdx: number) =>
-    productData[productDataIdx]?.reduce((acc: any, cur: any) => {
+    regroupedData &&
+    regroupedData[productDataIdx]?.reduce((acc: any, cur: any) => {
       if (cur[0]?.price === undefined) return acc;
       return (
         acc +
@@ -100,7 +99,7 @@ const PaymentHistory = () => {
     <Container>
       <ScrollView>
         {/* 주문날짜 별로 반복*/}
-        {productData.map((order, orderIdx) => {
+        {regroupedData?.map((order, orderIdx) => {
           console.log('order', order);
           return (
             <OrderBox key={orderIdx}>
@@ -112,7 +111,7 @@ const PaymentHistory = () => {
                       screen: 'PaymentDetail',
                       params: {
                         productData: order,
-                        buyDate: order[0][0].buydate,
+                        buyDate: order[0][0].buyDate,
                         totalPrice: totalPrice(orderIdx),
                         orderNo: order[0][0].orderNo,
                         qty: order[0][0].qty,

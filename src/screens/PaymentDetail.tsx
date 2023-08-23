@@ -53,6 +53,7 @@ const PaymentDetail = props => {
   );
 
   useEffect(() => {
+    console.log('kafnrkwlfenwnlef', props?.route?.params);
     navigation.setOptions({
       title: buyDate,
     });
