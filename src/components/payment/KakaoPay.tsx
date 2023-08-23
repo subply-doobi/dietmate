@@ -105,7 +105,10 @@ const KakaoPay = () => {
             }),
             reset({
               index: 0,
-              routes: [{name: 'PaymentComplete'}],
+              routes: [
+                {name: 'BottomTabNav', params: {screen: 'Home'}},
+                {name: 'PaymentComplete'},
+              ],
             }),
             createDietMutation.mutate())
           : console.log('결제실패');
