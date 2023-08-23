@@ -50,8 +50,6 @@ const Order = () => {
   const {data: getAddressData} = useGetAddress();
   const {data: listAddressData, isLoading: listAddressDataLoading} =
     useListAddress();
-  console.log('listAddressData:', listAddressData);
-  // console.log('getAddressData:', getAddressData);
   //navigation
   const {navigate} = useNavigation();
   //cart에 있는 제품들을 주문하기 위해 paymentProduct로 변환
@@ -61,7 +59,6 @@ const Order = () => {
   const {orderInfo, selectedAddressId, orderSummary} = useSelector(
     (state: RootState) => state.order,
   );
-  console.log(selectedAddressId);
   const {foodToOrder} = orderInfo;
   const {priceTotal, menuNum, productNum} = sumUpDietTotal(
     orderInfo.foodToOrder,
@@ -111,6 +108,7 @@ const Order = () => {
       paymentMethod: '카카오페이',
     },
   });
+
   const ordererValue = useWatch({control, name: 'orderer'});
   const ordererContactValue = useWatch({control, name: 'ordererContact'});
   const addressDetailValue = useWatch({control, name: 'addressDetail'});
@@ -134,10 +132,12 @@ const Order = () => {
     },
     {
       title: '주문자',
-      subTitle: (
+      subTitle: ordererValue ? (
         <HeaderSubTitle>
           {ordererValue} | {ordererContactValue}
         </HeaderSubTitle>
+      ) : (
+        <HeaderSubTitle>입력해주세요</HeaderSubTitle>
       ),
       content: (
         <Orderer
@@ -276,9 +276,21 @@ const Order = () => {
       </ScrollView>
       <BtnBottomCTA
         style={{width: SCREENWIDTH - 32}}
-        btnStyle={isValid ? 'activated' : 'inactivated'}
+        btnStyle={
+          isValid &&
+          listAddressData?.length !== 0 &&
+          getAddressData?.length !== 0
+            ? 'activated'
+            : 'inactivated'
+        }
         onPress={async () => {
-          if (!isValid) {
+          if (
+            !(
+              isValid &&
+              listAddressData?.length !== 0 &&
+              getAddressData?.length !== 0
+            )
+          ) {
             return;
           }
           const orderNumber = await createOrderMutation.mutateAsync({});
@@ -289,7 +301,9 @@ const Order = () => {
           });
         }}>
         <BtnText>
-          {isValid
+          {isValid &&
+          listAddressData?.length !== 0 &&
+          getAddressData?.length !== 0
             ? `총 ${commaToNum(priceTotal)}원 결제하기`
             : '정보를 모두 입력해주세요'}
         </BtnText>
