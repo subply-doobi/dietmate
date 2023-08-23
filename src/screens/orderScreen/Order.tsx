@@ -132,10 +132,12 @@ const Order = () => {
     },
     {
       title: '주문자',
-      subTitle: (
+      subTitle: ordererValue ? (
         <HeaderSubTitle>
           {ordererValue} | {ordererContactValue}
         </HeaderSubTitle>
+      ) : (
+        <HeaderSubTitle>입력해주세요</HeaderSubTitle>
       ),
       content: (
         <Orderer
