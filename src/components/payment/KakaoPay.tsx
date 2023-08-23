@@ -1,27 +1,10 @@
 import React from 'react';
 import IMP from 'iamport-react-native';
-import axios from 'axios';
-import {
-  NavigationContainer,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
-import {
-  setCurrentDiet,
-  setMenuActiveSection,
-} from '../../stores/slices/cartSlice';
-import {
-  useListDiet,
-  useUpdateDiet,
-  useCreateDiet,
-} from '../../query/queries/diet';
-import {
-  useCreateOrder,
-  useUpdateOrder,
-  useGetOrder,
-  useDeleteOrder,
-} from '../../query/queries/order';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {setCurrentDiet} from '../../stores/slices/cartSlice';
+import {useUpdateDiet, useCreateDiet} from '../../query/queries/diet';
+import {useUpdateOrder, useDeleteOrder} from '../../query/queries/order';
 
 interface IIamportPayment {
   pg: string; //kakaopay, html5_inicis 등등
@@ -49,11 +32,7 @@ const KakaoPay = () => {
   const updateDietMutation = useUpdateDiet();
   const updateOrderMutation = useUpdateOrder();
   const deleteOrderMutation = useDeleteOrder();
-  const createDietMutation = useCreateDiet({
-    onSuccess: data => {
-      dispatch(setCurrentDiet(data.dietNo));
-    },
-  });
+  const createDietMutation = useCreateDiet({});
   const kakaopayData: IIamportPayment = {
     pg: 'kakaopay',
     escrow: false,
