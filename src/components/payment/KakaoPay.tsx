@@ -111,7 +111,7 @@ const KakaoPay = () => {
           : console.log('결제실패');
 
         response.error_msg === '[결제포기] 사용자가 결제를 취소하셨습니다'
-          ? (navigate('Order'),
+          ? (navigate('DoobiOrder'),
             updateDietMutation.mutate({
               statusCd: 'SP006001',
               orderNo: orderNumber.orderNo,
