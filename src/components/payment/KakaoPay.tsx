@@ -42,7 +42,7 @@ interface IIamportPayment {
 
 const KakaoPay = () => {
   const route = useRoute();
-  const {navigate} = useNavigation();
+  const {navigate, reset} = useNavigation();
   const dispatch = useDispatch();
 
   const {customerData, priceTotal, orderNumber} = route.params;
@@ -103,7 +103,10 @@ const KakaoPay = () => {
               productShippingPrice: 'string',
               statusNm: 'string',
             }),
-            navigate('PaymentComplete'),
+            reset({
+              index: 0,
+              routes: [{name: 'PaymentComplete'}],
+            }),
             createDietMutation.mutate())
           : console.log('결제실패');
 
