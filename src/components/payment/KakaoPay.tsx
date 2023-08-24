@@ -84,13 +84,16 @@ const KakaoPay = () => {
             }),
             reset({
               index: 0,
-              routes: [{name: 'PaymentComplete'}],
+              routes: [
+                {name: 'BottomTabNav', params: {screen: 'Home'}},
+                {name: 'PaymentComplete'},
+              ],
             }),
             createDietMutation.mutate())
           : console.log('결제실패');
 
         response.error_msg === '[결제포기] 사용자가 결제를 취소하셨습니다'
-          ? (navigate('DoobiOrder'),
+          ? (navigate('Order'),
             updateDietMutation.mutate({
               statusCd: 'SP006001',
               orderNo: orderNumber.orderNo,

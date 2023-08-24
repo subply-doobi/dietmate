@@ -135,7 +135,7 @@ const AddressEdit = ({
           }),
         );
         dispatch(setSelectedAddressId(address.length));
-        navigate('DoobiOrder');
+        navigate('Order');
       } else {
         Alert.alert('정보를 모두 입력해주세요');
       }
@@ -150,7 +150,7 @@ const AddressEdit = ({
           currentAddressId,
         }),
       );
-      navigate('DoobiOrder');
+      navigate('Order');
     }
   };
 
@@ -246,7 +246,7 @@ const AddressEdit = ({
                     currentAddressId === 0 ? 0 : currentAddressId - 1,
                   ),
                 );
-                navigate('DoobiOrder');
+                navigate('Order');
                 deleteAddressMutation.mutate({addressNo});
               }}
               renderContent={renderDeleteAlertContent}

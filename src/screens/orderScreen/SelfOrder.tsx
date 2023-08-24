@@ -115,7 +115,7 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
                       }}
                       resizeMode="center"
                     />
-                    <Col>
+                    <Col style={{flex: 1}}>
                       <ProductName>{el.productNm}</ProductName>
                       <PriceAndQuantity>
                         {commaToNum(el.price)}원
@@ -164,11 +164,6 @@ const ProductName = styled(TextMain)`
   font-size: 12px;
 `;
 
-const QuantityBox = styled.View`
-  width: 80px;
-  height: 24px;
-`;
-
 const PriceAndQuantity = styled(TextMain)`
   margin-top: 4px;
   font-size: 16px;
@@ -180,9 +175,8 @@ const LinkText = styled(TextMain)`
 `;
 
 const LinkButton = styled.TouchableOpacity`
-  position: absolute;
-  left: 230px;
-  top: 45px;
+  width: 100%;
+  align-items: flex-end;
 `;
 
 const HomeLinkButton = styled.TouchableOpacity``;

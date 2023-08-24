@@ -77,7 +77,6 @@ const Cart = () => {
     ACCORDION_CONTENT,
     emptyDietSeq,
   } = useMemo(() => {
-    console.log('usememo실행!');
     const totalStatus =
       dietTotalData &&
       dietTotalData.map(menu => menu.isInitialLoading).includes(true)
@@ -239,7 +238,7 @@ const Cart = () => {
             return;
           }
           dispatch(setFoodToOrder(dietTotal));
-          navigate('OrderHeaderTab', {
+          navigate('OrderHeaderTabNav', {
             screen: 'Order',
           });
         }}>

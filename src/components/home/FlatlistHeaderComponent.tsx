@@ -79,8 +79,11 @@ const FlatlistHeaderComponent = ({
           alignItems: 'flex-end',
         }}>
         <Row style={{alignItems: 'flex-end', flex: 1}}>
-          <ListTitle>검색된 결과</ListTitle>
-          <NoOfFoods> {productData?.length}개</NoOfFoods>
+          <ListTitle>검색된 결과 </ListTitle>
+
+          <NoOfFoods>
+            {!!productData ? `${productData?.length}개` : ``}
+          </NoOfFoods>
 
           {searchBarFocus ? (
             <SearchBox style={{flex: 1, marginRight: 8}}>

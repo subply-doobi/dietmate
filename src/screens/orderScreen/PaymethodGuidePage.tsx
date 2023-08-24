@@ -7,7 +7,7 @@ import colors from '../../styles/colors';
 
 import Order from './Order';
 import SelfOrder from './SelfOrder';
-import OrderNav from '../../navigators/OrderHeaderTab';
+import OrderNav from '../../navigators/OrderHeaderTabNav';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -30,7 +30,7 @@ const OrderHeaderTab = () => {
         tabBarPressColor: colors.white,
       }}>
       <Tab.Screen
-        name="DoobiOrder"
+        name="Order"
         component={Test}
         options={{
           tabBarLabel: '두비가 도와줘',
