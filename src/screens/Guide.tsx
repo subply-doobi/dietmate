@@ -223,7 +223,7 @@ const Guide = () => {
             setStep(1);
             reset({
               index: 0,
-              routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
+              routes: [{name: 'Login'}],
             });
           }}>
           <BottomText style={{color: colors.textSub}}>건너뛰기</BottomText>
@@ -240,7 +240,7 @@ const Guide = () => {
               updateNotShowAgain('ONBOARDING');
               reset({
                 index: 0,
-                routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
+                routes: [{name: 'Login'}],
               });
               return;
             }
