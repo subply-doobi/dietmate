@@ -249,6 +249,7 @@ const FirstInput = ({navigation: {navigate}}: NavigationProps) => {
       </ScrollView>
       <BtnBottomCTA
         btnStyle={
+          genderValue &&
           ageValue &&
           heightValue &&
           weightValue &&
@@ -257,6 +258,7 @@ const FirstInput = ({navigation: {navigate}}: NavigationProps) => {
             : 'inactivated'
         }
         disabled={
+          genderValue &&
           ageValue &&
           heightValue &&
           weightValue &&

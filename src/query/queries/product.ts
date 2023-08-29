@@ -2,7 +2,7 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 
 import {queryClient} from '../store';
 import {mutationFn, queryFn} from './requestFn';
-import {DIET_DETAIL, PRODUCTS, PRODUCT, MARK} from '../keys';
+import {DIET_DETAIL, PRODUCTS, PRODUCT, MARK, PRODUCT_DETIAL} from '../keys';
 import {IQueryOptions} from '../types/common';
 
 import {
@@ -13,10 +13,12 @@ import {
   FILTER,
   GET_PRODUCT,
   LIST_PRODUCT_MARK,
+  LIST_PRODUCT_DETAIL,
 } from './urls';
 import {
   IListProductParams,
   IProductData,
+  IProductDetailData,
   IProductsData,
 } from '../types/product';
 
@@ -120,6 +122,21 @@ export const useListProduct = (
     onSuccess: data => {
       options?.onSuccess && options?.onSuccess(data);
     },
+  });
+};
+
+export const useListProductDetail = (
+  productNo?: string,
+  options?: IQueryOptions,
+) => {
+  const enabled = options?.enabled || !!productNo ? true : false;
+  return useQuery<IProductDetailData[]>({
+    queryKey: [PRODUCT_DETIAL, productNo],
+    queryFn: () => queryFn(`${LIST_PRODUCT_DETAIL}/${productNo}`),
+    onSuccess: data => {
+      options?.onSuccess && options?.onSuccess(data);
+    },
+    enabled,
   });
 };
 

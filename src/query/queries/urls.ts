@@ -25,6 +25,7 @@ export const GET_DIET_DETAIL_EMPTY_YN = `${BASE_URL}/api/member/diet/get-diet-de
 // product-controller
 export const GET_PRODUCT = `${BASE_URL}/api/member/product/get-product`;
 export const LIST_PRODUCT = `${BASE_URL}/api/member/product/list-product`;
+export const LIST_PRODUCT_DETAIL = `${BASE_URL}/api/member/product/list-product-detail`;
 export const CREATE_PRODUCT_AUTO = `${BASE_URL}/api/member/product/create-product-auto`;
 export const CREATE_PRODUCT_MARK = `${BASE_URL}/api/member/product/create-product-mark`;
 export const DELETE_PRODUCT_MARK = `${BASE_URL}/api/member/product/delete-product-mark`;

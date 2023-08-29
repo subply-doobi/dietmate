@@ -49,6 +49,7 @@ import {
 } from '../../query/queries/product';
 import {makeTableData} from '../../util/foodDetail/makeNutrTable';
 import {ActivityIndicator} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export interface TableItem {
   name: string;
@@ -186,7 +187,8 @@ const FoodDetail = () => {
           )}
         </InnerContainer>
         <ScrollView
-          style={{marginBottom: 20, flex: 1, zIndex: -1}}
+          style={{flex: 1, zIndex: -1}}
+          contentContainerStyle={{paddingBottom: 64}}
           showsVerticalScrollIndicator={false}>
           <View>
             <FoodImageContainer
@@ -256,16 +258,22 @@ const FoodDetail = () => {
         </ScrollView>
       </Container>
       <View>
-        <StickyFooter style={{flexDirection: 'row'}}>
-          <Pressable
-            style={{marginRight: 8, width: 52, height: 52}}
+        <StickyFooter>
+          <TouchableOpacity
+            style={{
+              marginRight: 4,
+              width: 52,
+              height: 52,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
             onPress={handlePressLikeBtn}>
             <Image
               // 조건에 따라서 서로 다른 좋아요 버튼 갖게 할 것
               style={{width: 52, height: 52}}
               source={isIncludedInLike ? icons.likeActivated_48 : icons.like_48}
             />
-          </Pressable>
+          </TouchableOpacity>
           <BtnCTA
             btnStyle={'activated'}
             style={{flex: 1}}
