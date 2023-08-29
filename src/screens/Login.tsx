@@ -27,7 +27,6 @@ const navigateByUserInfo = async (
 ) => {
   const hasBaseLine = Object.keys(data).length === 0 ? false : true;
   const canSkipOnboarding = await checkNotShowAgain('ONBOARDING');
-  console.log('LOGIN/hasBaseLine', hasBaseLine);
   if (!canSkipOnboarding) {
     // canSkipOnboarding 아니면 가이드로
     navigation.navigate('Guide');
