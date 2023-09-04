@@ -47,7 +47,7 @@ const Login = () => {
   const navigation = useNavigation();
   // react-query
   const {data, refetch} = useGetBaseLine({enabled: false});
-  console.log('LOGIN/useGetBaseLine', data);
+  // console.log('LOGIN/useGetBaseLine', data);
   const signInWithKakao = async (): Promise<void> => {
     await kakaoLogin();
     const refetchedData = await refetch().then(res => res.data);

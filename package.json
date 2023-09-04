@@ -16,7 +16,7 @@
     "@react-native-community/checkbox": "^0.5.14",
     "@react-native-firebase/app": "^17.4.3",
     "@react-native-firebase/crashlytics": "^17.4.3",
-    "@react-native-seoul/kakao-login": "^5.2.6",
+    "@react-native-seoul/kakao-login": "^5.3.0",
     "@react-navigation/bottom-tabs": "^6.5.4",
     "@react-navigation/devtools": "^6.0.18",
     "@react-navigation/material-top-tabs": "^6.5.3",

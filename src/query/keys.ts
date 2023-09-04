@@ -20,7 +20,9 @@ export const CATEGORY = `CATEGORY`;
 export const PRODUCT_AUTO = 'PRODUCT_AUTO';
 export const PRODUCTS = 'PRODUCTS';
 export const PRODUCT = 'PRODUCT';
+export const PRODUCT_DETIAL = 'PRODUCT_DETIAL';
 export const MARK = 'MARK';
+
 //order
 export const ORDER = 'ORDER';
 export const ORDER_DETAIL = 'ORDER_DETAIL';

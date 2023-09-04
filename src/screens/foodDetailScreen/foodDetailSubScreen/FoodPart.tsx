@@ -4,10 +4,9 @@ import FastImage from 'react-native-fast-image';
 import Pinchable from 'react-native-pinchable';
 
 // react-query
-import {useGetProduct} from '../../../query/queries/product';
+import {useListProductDetail} from '../../../query/queries/product';
 import {IProductData} from '../../../query/types/product';
-import {BASE_URL} from '../../../query/queries/urls';
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {SCREENWIDTH} from '../../../constants/constants';
 import {ActivityIndicator} from 'react-native';
 
@@ -15,34 +14,62 @@ interface IFoodPart {
   productData: IProductData;
 }
 const FoodPart = ({productData}: IFoodPart) => {
+  // react-query
+  const {data: productDetailData} = useListProductDetail(
+    productData?.productNo,
+  );
+
   // useState
-  const [imgDimension, setImgDimension] = useState({width: 0, height: 0});
+  const [imageData, setImageData] = useState<
+    {imageLink: string; width: number; height: number}[]
+  >([]);
   const [imgLoading, setImgLoading] = useState(true);
-  const imgUrl = `${BASE_URL}${productData.subAttUrl}`;
 
+  // useEffect
   useEffect(() => {
-    Image.getSize(imgUrl, (width, height) => {
-      const swWithPadding = SCREENWIDTH - 32;
-      const newWidth = swWithPadding;
-      const newHeight = height * (newWidth / width);
-      setImgDimension({
-        width: newWidth,
-        height: newHeight,
+    const getImageData = async () => {
+      const imgData = productDetailData?.map(async item => {
+        const imageLink = item.imageLink;
+        let orgWidth = 0;
+        let orgHeight = 0;
+        await Image.getSize(imageLink, (width, height) => {
+          const modWidth = SCREENWIDTH - 32;
+          const modHeight = height * (modWidth / width);
+          orgWidth = modWidth;
+          orgHeight = modHeight;
+        });
+        return {
+          imageLink,
+          width: orgWidth,
+          height: orgHeight,
+        };
       });
-    });
-  }, [productData]);
+      if (!imgData) return;
+      const result = await Promise.all<
+        Promise<{imageLink: string; width: number; height: number}>[]
+      >(imgData);
+      setImageData(result);
+    };
+    getImageData();
+  }, [productDetailData]);
 
-  console.log(imgDimension, imgLoading);
   return (
     <Pinchable minimumZoomScale={1} maximumZoomScale={2}>
       {imgLoading && <ActivityIndicator />}
-      <FastImage
-        style={{...imgDimension}}
-        source={{uri: imgUrl}}
-        onError={() => console.log('error')}
-        onLoad={() => setImgLoading(false)}
-        resizeMode={FastImage.resizeMode.contain}
-      />
+      {imageData?.map((item, index) => (
+        <FastImage
+          key={index}
+          style={{width: item.width, height: item.height}}
+          source={{uri: item.imageLink}}
+          onError={() => console.log('error')}
+          onLoad={() => {
+            if (index === imageData.length - 1) {
+              setImgLoading(false);
+            }
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+      ))}
     </Pinchable>
   );
 };

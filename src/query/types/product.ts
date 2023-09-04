@@ -61,3 +61,9 @@ export interface IProductData {
 }
 
 export type IProductsData = IProductData[];
+
+export interface IProductDetailData {
+  imageLink: string;
+  productNo: string;
+  seq: string;
+}
