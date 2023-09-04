@@ -13,7 +13,6 @@ const NutrientPart = ({table}: Props) => {
   const {isLoading, data, isError, error} = userProfileQuery;
   //userPriofileQuery 데이터별로 분기처리
 
-  console.log('');
   if (isLoading) {
     return <Text>Loading</Text>;
   }

@@ -125,7 +125,7 @@ export const makeTableData = (
     {
       name: 'manufacturerNm',
       column1: '제조사',
-      column2: `${food.manufacturerNm}`,
+      column2: `${food.manufacturerNm ? food.manufacturerNm : '-'}`,
     },
   ];
   return table;

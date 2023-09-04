@@ -40,7 +40,10 @@ const navigateByUserInfo = async (
   }
 
   // baseline 있으면 홈으로
-  navigation.navigate('BottomTabNav', {screen: 'Home'});
+  navigation.reset({
+    index: 0,
+    routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
+  });
 };
 
 const Login = () => {

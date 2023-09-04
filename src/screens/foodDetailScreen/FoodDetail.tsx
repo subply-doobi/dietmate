@@ -49,7 +49,6 @@ import {
 } from '../../query/queries/product';
 import {makeTableData} from '../../util/foodDetail/makeNutrTable';
 import {ActivityIndicator} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export interface TableItem {
   name: string;
@@ -91,13 +90,10 @@ const FoodDetail = () => {
     data: productData,
     refetch: refetchProduct,
     isFetching,
-  } = useGetProduct(
-    {
-      dietNo: currentDietNo,
-      productNo: route?.params?.productNo,
-    },
-    {enabled: false},
-  );
+  } = useGetProduct({
+    dietNo: currentDietNo,
+    productNo: route?.params?.productNo,
+  });
   const {data: likeData} = useListProductMark();
   const {data: baseLineData} = useGetBaseLine();
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {
@@ -176,7 +172,7 @@ const FoodDetail = () => {
     return makeTableData(productData, baseLineData);
   }, [baseLineData, productData]);
 
-  return isFetching || !productData || !baseLineData ? (
+  return !productData || !baseLineData ? (
     <ActivityIndicator />
   ) : (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
@@ -195,7 +191,7 @@ const FoodDetail = () => {
               source={{
                 uri: `${BASE_URL}${productData.mainAttUrl}`,
               }}
-              // style={{resizeMode: 'stretch'}}
+              style={{resizeMode: 'contain'}}
             />
             <NutritionInImage>
               {table.slice(0, 4).map(el => {
@@ -259,7 +255,7 @@ const FoodDetail = () => {
       </Container>
       <View>
         <StickyFooter>
-          <TouchableOpacity
+          <Pressable
             style={{
               marginRight: 4,
               width: 52,
@@ -273,7 +269,7 @@ const FoodDetail = () => {
               style={{width: 52, height: 52}}
               source={isIncludedInLike ? icons.likeActivated_48 : icons.like_48}
             />
-          </TouchableOpacity>
+          </Pressable>
           <BtnCTA
             btnStyle={'activated'}
             style={{flex: 1}}
