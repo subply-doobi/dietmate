@@ -53,7 +53,6 @@ const MenuSection = () => {
     dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
     setDeleteAlertShow(false);
   };
-
   return (
     <Container>
       <HeaderRow>

@@ -191,7 +191,6 @@ const Home = () => {
     currentDietNo && refetchProduct();
     scrollTop();
   }, [sortParam, filterParams]);
-
   return (
     <Container>
       {/* 끼니선택, progressBar section */}
