@@ -18,6 +18,8 @@ import {BtnCTA, BtnText} from '../styles/StyledConsts';
 
 //sentry
 import * as Sentry from '@sentry/react-native';
+import {has} from 'immer/dist/internal';
+import {hasValidBreakpointFormat} from 'native-base/lib/typescript/theme/tools';
 
 const navigateByUserInfo = async (
   data: IBaseLine | any,
@@ -25,7 +27,7 @@ const navigateByUserInfo = async (
 ) => {
   const hasBaseLine = Object.keys(data).length === 0 ? false : true;
   const canSkipOnboarding = await checkNotShowAgain('ONBOARDING');
-
+  console.log('LOGIN/hasBaseLine', hasBaseLine);
   if (!canSkipOnboarding) {
     // canSkipOnboarding 아니면 가이드로
     navigation.navigate('Guide');
@@ -34,6 +36,7 @@ const navigateByUserInfo = async (
   if (!hasBaseLine) {
     // canSkipOnboarding 있는데 baseline 없으면 FirstInput으로
     navigation.navigate('InputNav', {screen: 'FirstInput'});
+    return;
   }
 
   // baseline 있으면 홈으로
@@ -43,9 +46,9 @@ const navigateByUserInfo = async (
 const Login = () => {
   // navigation
   const navigation = useNavigation();
-
   // react-query
   const {data, refetch} = useGetBaseLine({enabled: false});
+  // console.log('LOGIN/useGetBaseLine', data);
   const signInWithKakao = async (): Promise<void> => {
     await kakaoLogin();
     const refetchedData = await refetch().then(res => res.data);

@@ -68,7 +68,7 @@ const ThirdInput = () => {
   const {navigate} = navigation;
 
   // react-query
-  const {data} = useGetBaseLine();
+  const {data: baseLineData} = useGetBaseLine();
   // console.log('thirdInput/baseLine', data);
   const updateMutation = useUpdateBaseLine();
   const createMutation = useCreateBaseLine();
@@ -195,9 +195,13 @@ const ThirdInput = () => {
     };
     const requestBody: IRequestBody =
       convertDataByMethod[calculationMethod](dataToConvert);
-    console.log('requestBody', requestBody);
-    if (!dietData) return;
-    if (dietData.length === 0) {
+    console.log('THIRDINPUT/requestBody', requestBody);
+    if (!baseLineData) return;
+    console.log(
+      'THIRDINPUT/baseLineData',
+      Object.keys(baseLineData).length === 0,
+    );
+    if (Object.keys(baseLineData).length === 0) {
       createDietMutation.mutate();
       createMutation.mutate(requestBody);
       navigation.reset({

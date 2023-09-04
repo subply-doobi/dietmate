@@ -30,7 +30,7 @@ const OrderHeaderTab = () => {
         tabBarPressColor: colors.white,
       }}>
       <Tab.Screen
-        name="DoobiOrder"
+        name="Order"
         component={Test}
         options={{
           tabBarLabel: '두비가 도와줘',

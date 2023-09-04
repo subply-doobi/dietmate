@@ -195,13 +195,15 @@ export const BtnBottomCTA = styled(BtnCTA)`
 `;
 
 export const StickyFooter = styled.View`
-  display: flex;
+  flex-direction: row;
   position: absolute;
   bottom: 20px;
   left: 0;
   right: 0;
   margin-left: 16px;
   margin-right: 16px;
+  align-items: center;
+  padding: 0px 8px 0px 8px;
 `;
 
 /** props1. isActivated -> boolean */
