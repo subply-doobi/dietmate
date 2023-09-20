@@ -91,13 +91,10 @@ const FoodDetail = () => {
     data: productData,
     refetch: refetchProduct,
     isFetching,
-  } = useGetProduct(
-    {
-      dietNo: currentDietNo,
-      productNo: route?.params?.productNo,
-    },
-    {enabled: false},
-  );
+  } = useGetProduct({
+    dietNo: currentDietNo,
+    productNo: route?.params?.productNo,
+  });
   const {data: likeData} = useListProductMark();
   const {data: baseLineData} = useGetBaseLine();
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {
@@ -116,7 +113,6 @@ const FoodDetail = () => {
   const isIncludedInLike =
     productData &&
     likeData?.map(food => food.productNo).includes(productData?.productNo);
-
   // 식품마다 headerTitle바꾸기
   // TBD : route.params.item 타입 관련 해결 및 만약 null값일 시 에러처리
   useEffect(() => {

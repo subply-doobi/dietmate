@@ -28,11 +28,7 @@ const MenuSelectCard = () => {
   // react-query
   const {data: dietData} = useListDiet();
   const {data: dietEmptyData} = useGetDietDetailEmptyYn();
-  const createDietMutation = useCreateDiet({
-    onSuccess: data => {
-      dispatch(setCurrentDiet(data.dietNo));
-    },
-  });
+  const createDietMutation = useCreateDiet();
 
   // state
   const [createAlertShow, setCreateAlertShow] = useState(false);

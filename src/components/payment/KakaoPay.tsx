@@ -32,7 +32,7 @@ const KakaoPay = () => {
   const updateDietMutation = useUpdateDiet();
   const updateOrderMutation = useUpdateOrder();
   const deleteOrderMutation = useDeleteOrder();
-  const createDietMutation = useCreateDiet({});
+  const createDietMutation = useCreateDiet();
   const kakaopayData: IIamportPayment = {
     pg: 'kakaopay',
     escrow: false,

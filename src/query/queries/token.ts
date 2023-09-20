@@ -22,9 +22,9 @@ export const kakaoLogin = async () => {
   console.log('kakaoLogin start');
   try {
     const kakaoToken: KakaoOAuthToken = await login();
-    const {accessToken, refreshToken} = await getDoobiToken(
-      kakaoToken?.accessToken,
-    );
+    const kakaoAccessToken = kakaoToken?.accessToken;
+    console.log('kakaoToken: ', kakaoAccessToken);
+    const {accessToken, refreshToken} = await getDoobiToken(kakaoAccessToken);
     if (accessToken && refreshToken)
       await storeToken(accessToken, refreshToken);
     return accessToken;

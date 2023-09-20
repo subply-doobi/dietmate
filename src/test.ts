@@ -1,21 +1,11 @@
-const arr1 = {
-  orderNo: '1234567876',
-  menu: [
-    ['식품1', '식품2', '식품3'],
-    ['식품3', '식품4'],
-  ],
-};
-const arr2 = {
-  orderNo: '1234567876',
-  menu: [
-    ['식품1', '식품2', '식품3'],
-    ['식품3', '식품4'],
-  ],
-};
-const arr3 = {
-  orderNo: '1234567876',
-  menu: [
-    ['식품1', '식품2', '식품3'],
-    ['식품3', '식품4'],
-  ],
-};
+import axios from 'axios';
+import {GET_TOKEN} from './query/queries/urls';
+
+axios
+  .get(`${GET_TOKEN}/JpVqKAcILJS7ai3utZZYQK0vyzMcuCCJFf8rh8WtCinJXgAAAYpPT54G`)
+  .then(res => {
+    console.log('getDoobiToken: ', res?.data);
+  })
+  .catch(e => {
+    console.log('getDoobiToken: ', e);
+  });
