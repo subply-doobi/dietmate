@@ -13,6 +13,7 @@ import {
   DIET_DETAIL,
   DIET_DETAIL_ALL,
   DIET_DETAIL_EMPTY_YN,
+  PRODUCT,
   PRODUCTS,
 } from '../keys';
 import {IMutationOptions, IQueryOptions} from '../types/common';
@@ -107,7 +108,8 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
       await queryClient.cancelQueries({queryKey: [DIET_DETAIL, dietNo]});
 
       // 2. Snapshot the previous value
-      const prevProductData = queryClient.getQueryData<IProductData[]>([
+      const prevProductData = queryClient.getQueryData<IProductData>([PRODUCT]);
+      const prevProductsData = queryClient.getQueryData<IProductData[]>([
         PRODUCTS,
         dietNo,
       ]);
@@ -115,13 +117,19 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
         DIET_DETAIL,
         dietNo,
       ]);
+
+      // new value
       const newDietDetailData: IDietDetailData = prevDietDetailData
         ? [...prevDietDetailData, {...food, qty: 1, dietNo}]
         : [food];
 
-      const newProductData: IProductData[] | undefined =
-        prevProductData &&
-        prevProductData.map(prevFood =>
+      const newProductData: IProductData | undefined = prevProductData
+        ? {...prevProductData, productChoiceYn: 'Y'}
+        : undefined;
+
+      const newProductsData: IProductData[] | undefined =
+        prevProductsData &&
+        prevProductsData.map(prevFood =>
           prevFood.productNo === food.productNo
             ? {...food, productChoiceYn: 'Y'}
             : prevFood,
@@ -129,8 +137,11 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
 
       // 3. Optimistically update to the new value
       // (실패할 경우 onError에서 이전 데이터로 돌려주기 -> 5번)
-      queryClient.setQueryData([PRODUCTS, dietNo], () => {
+      queryClient.setQueryData([PRODUCT], () => {
         return newProductData;
+      });
+      queryClient.setQueryData([PRODUCTS, dietNo], () => {
+        return newProductsData;
       });
       queryClient.setQueryData([DIET_DETAIL, dietNo], () => {
         return newDietDetailData;
@@ -139,6 +150,8 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
       return {
         prevProductData,
         newProductData,
+        prevProductsData,
+        newProductsData,
         prevDietDetailData,
         newDietDetailData,
       };
@@ -154,11 +167,12 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
     onError: (e, {dietNo, food}, context) => {
       // optimistic update
       // 5. Rollback to the previous value
-      queryClient.setQueryData([PRODUCTS, dietNo], context?.prevProductData);
+      queryClient.setQueryData([PRODUCTS, dietNo], context?.prevProductsData);
       queryClient.setQueryData(
         [DIET_DETAIL, dietNo],
         context?.prevDietDetailData,
       );
+      queryClient.setQueryData([PRODUCT], context?.prevProductData);
       handleError(e);
       console.log('useCreateDietDetail error: ', e);
     },
@@ -327,8 +341,10 @@ export const useDeleteDietDetail = (options?: IMutationOptions) => {
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries({queryKey: [PRODUCTS, dietNo]});
+
       // Snapshot the previous value
-      const prevProductData = queryClient.getQueryData<IProductData[]>([
+      const prevProductData = queryClient.getQueryData<IProductData>([PRODUCT]);
+      const prevProductsData = queryClient.getQueryData<IProductData[]>([
         PRODUCTS,
         dietNo,
       ]);
@@ -337,27 +353,37 @@ export const useDeleteDietDetail = (options?: IMutationOptions) => {
         dietNo,
       ]);
 
+      // new value
       const newDietDetailData = prevDietDetailData?.filter(
         food => food.productNo !== productNo,
       );
 
-      const newProductData: IProductData[] | undefined =
-        prevProductData &&
-        prevProductData.map(food => {
+      const newProductData: IProductData | undefined = prevProductData
+        ? {...prevProductData, productChoiceYn: 'N'}
+        : undefined;
+
+      const newProductsData: IProductData[] | undefined =
+        prevProductsData &&
+        prevProductsData.map(food => {
           return food.productNo === productNo
             ? {...food, productChoiceYn: 'N'}
             : food;
         });
 
       // Optimistically update to the new value
-      queryClient.setQueryData([PRODUCTS, dietNo], () => {
+      queryClient.setQueryData([PRODUCT], () => {
         return newProductData;
+      });
+      queryClient.setQueryData([PRODUCTS, dietNo], () => {
+        return newProductsData;
       });
       queryClient.setQueryData([DIET_DETAIL, dietNo], () => {
         return newDietDetailData;
       });
       // Return a context with the previous and new todo
       return {
+        prevProductsData,
+        newProductsData,
         prevProductData,
         newProductData,
         prevDietDetailData,
@@ -373,11 +399,12 @@ export const useDeleteDietDetail = (options?: IMutationOptions) => {
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL_EMPTY_YN]});
     },
     onError: (e, {dietNo, productNo}, context) => {
-      queryClient.setQueryData([PRODUCTS, dietNo], context?.prevProductData);
+      queryClient.setQueryData([PRODUCTS, dietNo], context?.prevProductsData);
       queryClient.setQueryData(
         [DIET_DETAIL, dietNo],
         context?.prevDietDetailData,
       );
+      queryClient.setQueryData([PRODUCT], context?.prevProductData);
       handleError(e);
     },
     // onSettled: (data, err, {dietNo, productNo}) => {

@@ -8,8 +8,6 @@ import {useListDietDetail} from '../../query/queries/diet';
 import {useSelector} from 'react-redux';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {IFilterParams, IProductsData} from '../../query/types/product';
-import DAlert from '../common/alert/DAlert';
-import CommonAlertContent from '../common/alert/CommonAlertContent';
 import {icons} from '../../assets/icons/iconSource';
 import {sumUpNutrients} from '../../util/sumUp';
 import {NUTR_ERROR_RANGE} from '../../constants/constants';
@@ -58,12 +56,16 @@ const FilterHeader = (props: IFilterHeader) => {
 
   const onPressRemainNutrProduct = () => {
     const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
-    const calRemain = baseLineData ? parseInt(baseLineData?.calorie) - cal : 0;
-    const carbRemain = baseLineData ? parseInt(baseLineData?.carb) - carb : 0;
-    const proteinRemain = baseLineData
-      ? parseInt(baseLineData?.protein) - protein
+    const calRemain = baseLineData
+      ? parseInt(baseLineData?.calorie, 10) - cal
       : 0;
-    const fatRemain = baseLineData ? parseInt(baseLineData?.fat) - fat : 0;
+    const carbRemain = baseLineData
+      ? parseInt(baseLineData?.carb, 10) - carb
+      : 0;
+    const proteinRemain = baseLineData
+      ? parseInt(baseLineData?.protein, 10) - protein
+      : 0;
+    const fatRemain = baseLineData ? parseInt(baseLineData?.fat, 10) - fat : 0;
     setFilterParams(prev => ({
       ...prev,
       categoryParam: prev.categoryParam,
@@ -76,6 +78,15 @@ const FilterHeader = (props: IFilterHeader) => {
       },
     }));
   };
+  const nutritionParams = filterParams.nutritionParam;
+  const paramsToCheck = [
+    nutritionParams.calorieParam,
+    nutritionParams.carbParam,
+    nutritionParams.proteinParam,
+    nutritionParams.fatParam,
+  ];
+
+  const hasLengthTwo = paramsToCheck.some(param => param.length === 2);
 
   return (
     <>
@@ -102,23 +113,8 @@ const FilterHeader = (props: IFilterHeader) => {
               onPress();
               setFilterIndex(1);
             }}
-            isActivated={
-              filterParams.nutritionParam.calorieParam.length === 2 ||
-              filterParams.nutritionParam.carbParam.length === 2 ||
-              filterParams.nutritionParam.proteinParam.length === 2 ||
-              filterParams.nutritionParam.fatParam.length === 2
-                ? true
-                : false
-            }>
-            <FilterBtnText
-              isActivated={
-                filterParams.nutritionParam.calorieParam.length === 2 ||
-                filterParams.nutritionParam.carbParam.length === 2 ||
-                filterParams.nutritionParam.proteinParam.length === 2 ||
-                filterParams.nutritionParam.fatParam.length === 2
-                  ? true
-                  : false
-              }>
+            isActivated={hasLengthTwo ? true : false}>
+            <FilterBtnText isActivated={hasLengthTwo ? true : false}>
               영양성분
             </FilterBtnText>
           </FilterBtn>

@@ -10,8 +10,8 @@ import Order from '../screens/orderScreen/Order';
 import SelfOrder from '../screens/orderScreen/SelfOrder';
 import AddressEdit from '../screens/orderScreen/AddressEdit';
 import BackArrow from '../components/common/BackArrow';
-import PaymentComplete from '../screens/orderScreen/PaymentComplete';
-import PaymentHistory from '../screens/orderScreen/PaymentHistory';
+import PaymentComplete from '../screens/orderScreen/OrderComplete';
+import PaymentHistory from '../screens/myPageScreen/orderHistory/OrderHistory';
 import {notifyManager} from 'react-query';
 
 const Stack = createNativeStackNavigator();

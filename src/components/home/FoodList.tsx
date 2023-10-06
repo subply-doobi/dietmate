@@ -225,8 +225,8 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
             {!!item.price && <Price>{commaToNum(item.price)}원</Price>}
             {screen === 'LikeScreen' && (
               <DeleteLikeFoodBtn onPress={onLikeDelete}>
-                <LikeImg source={icons.likeSmall_20} />
-                <DeleteLikeFoodBtnText>취소</DeleteLikeFoodBtnText>
+                {/* <LikeImg source={icons.likeSmall_20} /> */}
+                <DeleteLikeFoodBtnText>찜 취소</DeleteLikeFoodBtnText>
               </DeleteLikeFoodBtn>
             )}
           </Row>

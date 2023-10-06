@@ -3,8 +3,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import colors from '../styles/colors';
 import {NavigationProps} from '../constants/constants';
 
-import History from '../screens/History';
-import HistoryDetail from '../screens/HistoryDetail';
+import History from '../screens/myPageScreen/history/History';
+import HistoryDetail from '../screens/myPageScreen/history/HistoryDetail';
 import BackArrow from '../components/common/BackArrow';
 
 const Stack = createNativeStackNavigator();

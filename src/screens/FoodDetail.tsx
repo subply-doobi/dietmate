@@ -11,8 +11,8 @@ import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 
-import {RootState} from '../../stores/store';
-import {icons} from '../../assets/icons/iconSource';
+import {RootState} from '../stores/store';
+import {icons} from '../assets/icons/iconSource';
 import {
   BtnCTA,
   BtnText,
@@ -22,34 +22,33 @@ import {
   TextSub,
   StickyFooter,
   Dot,
-} from '../../styles/StyledConsts';
-import colors from '../../styles/colors';
-import {IProductData} from '../../query/types/product';
+} from '../styles/StyledConsts';
+import colors from '../styles/colors';
+import {IProductData} from '../query/types/product';
 
-import NutrientsProgress from '../../components/common/nutrient/NutrientsProgress';
-import NutrientPart from './foodDetailSubScreen/NutrientPart';
-import ShippingPart from './foodDetailSubScreen/ShippingPart';
-import FoodPart from './foodDetailSubScreen/FoodPart';
-import ReviewPart from './foodDetailSubScreen/ReviewPart';
+import NutrientsProgress from '../components/common/nutrient/NutrientsProgress';
+import NutrientPart from '../components/foodDetail/NutrientPart';
+import ShippingPart from '../components/foodDetail/ShippingPart';
+import FoodPart from '../components/foodDetail/FoodPart';
+import ReviewPart from '../components/foodDetail/ReviewPart';
 
-import {BASE_URL} from '../../query/queries/urls';
+import {BASE_URL} from '../query/queries/urls';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
   useListDietDetail,
-} from '../../query/queries/diet';
-import {SCREENWIDTH} from '../../constants/constants';
-import {useGetBaseLine} from '../../query/queries/baseLine';
-import {commaToNum} from '../../util/sumUp';
+} from '../query/queries/diet';
+import {SCREENWIDTH} from '../constants/constants';
+import {useGetBaseLine} from '../query/queries/baseLine';
+import {commaToNum} from '../util/sumUp';
 import {
   useCreateProductMark,
   useDeleteProductMark,
   useGetProduct,
   useListProductMark,
-} from '../../query/queries/product';
-import {makeTableData} from '../../util/foodDetail/makeNutrTable';
+} from '../query/queries/product';
+import {makeTableData} from '../util/foodDetail/makeNutrTable';
 import {ActivityIndicator} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export interface TableItem {
   name: string;
@@ -172,7 +171,7 @@ const FoodDetail = () => {
     return makeTableData(productData, baseLineData);
   }, [baseLineData, productData]);
 
-  return isFetching || !productData || !baseLineData ? (
+  return !productData || !baseLineData ? (
     <ActivityIndicator />
   ) : (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
@@ -191,7 +190,7 @@ const FoodDetail = () => {
               source={{
                 uri: `${BASE_URL}${productData.mainAttUrl}`,
               }}
-              // style={{resizeMode: 'stretch'}}
+              style={{resizeMode: 'contain'}}
             />
             <NutritionInImage>
               {table.slice(0, 4).map(el => {
@@ -255,7 +254,7 @@ const FoodDetail = () => {
       </Container>
       <View>
         <StickyFooter>
-          <TouchableOpacity
+          <Pressable
             style={{
               marginRight: 4,
               width: 52,
@@ -269,7 +268,7 @@ const FoodDetail = () => {
               style={{width: 52, height: 52}}
               source={isIncludedInLike ? icons.likeActivated_48 : icons.like_48}
             />
-          </TouchableOpacity>
+          </Pressable>
           <BtnCTA
             btnStyle={'activated'}
             style={{flex: 1}}

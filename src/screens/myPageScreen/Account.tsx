@@ -1,12 +1,12 @@
 import {logout} from '@react-native-seoul/kakao-login';
 import styled from 'styled-components/native';
 
-import {HorizontalLine, TextMain} from '../styles/StyledConsts';
+import {HorizontalLine, TextMain} from '../../styles/StyledConsts';
 
-import colors from '../styles/colors';
-import {icons} from '../assets/icons/iconSource';
+import colors from '../../styles/colors';
+import {icons} from '../../assets/icons/iconSource';
 import {useNavigation} from '@react-navigation/native';
-import {removeToken} from '../util/asyncStorage';
+import {removeToken} from '../../util/asyncStorage';
 
 const Account = () => {
   // navigation

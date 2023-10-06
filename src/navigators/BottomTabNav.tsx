@@ -5,8 +5,8 @@ import {useNavigation} from '@react-navigation/native';
 import {icons} from '../assets/icons/iconSource';
 import colors from '../styles/colors';
 
-import Home from '../screens/homeScreen/Home';
-import Mypage from '../screens/Mypage';
+import Home from '../screens/Home';
+import Mypage from '../screens/myPageScreen/Mypage';
 import Likes from '../screens/Likes';
 import Cart from '../screens/Cart';
 import BackArrow from '../components/common/BackArrow';

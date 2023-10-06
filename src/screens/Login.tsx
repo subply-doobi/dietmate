@@ -16,14 +16,9 @@ import {useGetBaseLine} from '../query/queries/baseLine';
 //doobi Component
 import {BtnCTA, BtnText} from '../styles/StyledConsts';
 
-//sentry
-import * as Sentry from '@sentry/react-native';
-import {has} from 'immer/dist/internal';
-import {hasValidBreakpointFormat} from 'native-base/lib/typescript/theme/tools';
-
 const navigateByUserInfo = async (
   data: IBaseLine | any,
-  navigation: NavigationProp<ReactNavigation.RootParamList>,
+  navigation: NavigationProp<any>,
 ) => {
   const hasBaseLine = Object.keys(data).length === 0 ? false : true;
   const canSkipOnboarding = await checkNotShowAgain('ONBOARDING');
@@ -39,14 +34,17 @@ const navigateByUserInfo = async (
   }
 
   // baseline 있으면 홈으로
-  navigation.navigate('BottomTabNav', {screen: 'Home'});
+  navigation.reset({
+    index: 0,
+    routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
+  });
 };
 
 const Login = () => {
   // navigation
   const navigation = useNavigation();
   // react-query
-  const {data, refetch} = useGetBaseLine({enabled: false});
+  const {refetch} = useGetBaseLine({enabled: false});
   // console.log('LOGIN/useGetBaseLine', data);
   const signInWithKakao = async (): Promise<void> => {
     await kakaoLogin();
