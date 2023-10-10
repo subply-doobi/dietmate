@@ -25,10 +25,11 @@ const NutrTarget = ({nutrient, value, color, onPress}: INutrTarget) => {
 export default NutrTarget;
 
 const Container = styled.TouchableOpacity`
-  justify-content: center;
-  align-items: center;
   height: 50px;
   width: ${(SCREENWIDTH - 36) / 4}px;
+
+  justify-content: center;
+  align-items: center;
 `;
 const NutrValue = styled(TextMain)`
   font-size: 14px;
