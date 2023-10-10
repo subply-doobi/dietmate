@@ -120,16 +120,20 @@ export const ErrorText = styled.Text`
 `;
 export const ErrorBox = styled.View`
   position: relative;
+  align-self: flex-end;
+  z-index: 1;
+
   width: auto;
   height: 24px;
+  background-color: ${colors.warning};
+  opacity: 0.9;
+
+  border-radius: 3px;
+
   margin-top: 4px;
   margin-bottom: -28px;
+
   padding: 0px 10px 0px 10px;
-  background-color: ${colors.warning};
-  border-radius: 3px;
-  align-self: flex-end;
-  opacity: 0.9;
-  z-index: 1;
 `;
 
 export const AccordionContentContainer = styled.View`
