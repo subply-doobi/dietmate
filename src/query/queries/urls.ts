@@ -4,6 +4,7 @@ export const GET_TOKEN = `${BASE_URL}/api/every/token/get-token`; //토큰 조�
 export const GET_AUTH = `${BASE_URL}/api/member/auth/get-auth`; //인증 여부 조회
 export const RE_ISSUE_TOKEN = `${BASE_URL}/api/every/token/re-issue-token`;
 export const GET_USER = `${BASE_URL}/api/member/user/get-user`; //사용자 정보 조회
+export const DELETE_USER = `${BASE_URL}/api/member/user/delete-user`; //사용자 정보 삭제
 
 // base-line-controller
 export const CREATE_BASE_LINE = `${BASE_URL}/api/member/baseline/create-base-line`;
@@ -52,3 +53,6 @@ export const UPDATE_ADDRESS = `${BASE_URL}/api/member/address/update-address`;
 export const LIST_ADDRESS = `${BASE_URL}/api/member/address/list-address`;
 export const GET_ADDRESS = `${BASE_URL}/api/member/address/get-address`;
 export const DELETE_ADDRESS = `${BASE_URL}/api/member/address/delete-address`;
+
+// api-member-gusest-login
+export const GET_GUEST = `${BASE_URL}/api/every/token/get-token-guest`;

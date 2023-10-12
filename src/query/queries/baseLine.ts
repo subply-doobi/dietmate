@@ -6,7 +6,12 @@ import {BASE_LINE} from '../keys';
 import {IQueryOptions} from '../types/common';
 import {queryFn, mutationFn} from './requestFn';
 
-import {CREATE_BASE_LINE, GET_BASE_LINE, UPDATE_BASE_LINE} from './urls';
+import {
+  CREATE_BASE_LINE,
+  GET_BASE_LINE,
+  GET_GUEST,
+  UPDATE_BASE_LINE,
+} from './urls';
 
 // PUT
 export const useCreateBaseLine = () => {
@@ -35,6 +40,14 @@ export const useGetBaseLine = (options?: IQueryOptions) => {
   });
 };
 
+export const useGetGuestLogin = (options?: IQueryOptions) => {
+  const enabled = options?.enabled ?? true;
+  return useQuery<IBaseLine>({
+    queryKey: [BASE_LINE],
+    queryFn: () => queryFn(GET_GUEST),
+    enabled,
+  });
+};
 // POST
 export const useUpdateBaseLine = () => {
   const mutation = useMutation({

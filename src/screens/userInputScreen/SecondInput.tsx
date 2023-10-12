@@ -44,6 +44,8 @@ interface IFormField {
     value: string;
   };
 }
+
+//입력된 정보로 목표 칼로리를 계산해드려요
 const renderBmrKnownInput = (
   {field: {onChange, value}}: IFormField,
   handleSubmit: Function,
