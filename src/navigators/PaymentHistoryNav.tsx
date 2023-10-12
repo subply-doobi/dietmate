@@ -3,9 +3,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import colors from '../styles/colors';
 import {NavigationProps} from '../constants/constants';
 
-import PaymentDetail from '../screens/PaymentDetail';
-import PaymentHistory from '../screens/orderScreen/PaymentHistory';
-import PaymentHistoryDetail from '../screens/orderScreen/PaymentHistoryDetail';
+import OrderHistoryDetail from '../screens/myPageScreen/orderHistory/OrderHistoryDetail';
+import OrderHistory from '../screens/myPageScreen/orderHistory/OrderHistory';
+import PaymentHistoryDetail from '../screens/myPageScreen/PaymentHistoryDetail';
 import BackArrow from '../components/common/BackArrow';
 
 const Stack = createNativeStackNavigator();
@@ -14,8 +14,8 @@ const PaymentHistoryNav = ({navigation: {navigate}}: NavigationProps) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="PaymentHistory"
-        component={PaymentHistory}
+        name="OrderHistory"
+        component={OrderHistory}
         options={{
           headerTitleAlign: 'center',
           headerTitle: '구매내역',
@@ -33,8 +33,8 @@ const PaymentHistoryNav = ({navigation: {navigate}}: NavigationProps) => {
         }}
       />
       <Stack.Screen
-        name="PaymentDetail"
-        component={PaymentDetail}
+        name="OrderHistoryDetail"
+        component={OrderHistoryDetail}
         options={{
           headerTitleAlign: 'center',
           headerTitleStyle: {
@@ -44,7 +44,7 @@ const PaymentHistoryNav = ({navigation: {navigate}}: NavigationProps) => {
           },
           headerShadowVisible: false,
           headerLeft: () => (
-            <BackArrow goBackFn={() => navigate('PaymentHistory')} />
+            <BackArrow goBackFn={() => navigate('OrderHistory')} />
           ),
         }}
       />

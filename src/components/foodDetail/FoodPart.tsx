@@ -4,10 +4,10 @@ import FastImage from 'react-native-fast-image';
 import Pinchable from 'react-native-pinchable';
 
 // react-query
-import {useListProductDetail} from '../../../query/queries/product';
-import {IProductData} from '../../../query/types/product';
+import {useListProductDetail} from '../../query/queries/product';
+import {IProductData} from '../../query/types/product';
 import {useEffect, useMemo, useState} from 'react';
-import {SCREENWIDTH} from '../../../constants/constants';
+import {SCREENWIDTH} from '../../constants/constants';
 import {ActivityIndicator} from 'react-native';
 
 interface IFoodPart {

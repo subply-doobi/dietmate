@@ -11,8 +11,8 @@ import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 
-import {RootState} from '../../stores/store';
-import {icons} from '../../assets/icons/iconSource';
+import {RootState} from '../stores/store';
+import {icons} from '../assets/icons/iconSource';
 import {
   BtnCTA,
   BtnText,
@@ -22,32 +22,32 @@ import {
   TextSub,
   StickyFooter,
   Dot,
-} from '../../styles/StyledConsts';
-import colors from '../../styles/colors';
-import {IProductData} from '../../query/types/product';
+} from '../styles/StyledConsts';
+import colors from '../styles/colors';
+import {IProductData} from '../query/types/product';
 
-import NutrientsProgress from '../../components/common/nutrient/NutrientsProgress';
-import NutrientPart from './foodDetailSubScreen/NutrientPart';
-import ShippingPart from './foodDetailSubScreen/ShippingPart';
-import FoodPart from './foodDetailSubScreen/FoodPart';
-import ReviewPart from './foodDetailSubScreen/ReviewPart';
+import NutrientsProgress from '../components/common/nutrient/NutrientsProgress';
+import NutrientPart from '../components/foodDetail/NutrientPart';
+import ShippingPart from '../components/foodDetail/ShippingPart';
+import FoodPart from '../components/foodDetail/FoodPart';
+import ReviewPart from '../components/foodDetail/ReviewPart';
 
-import {BASE_URL} from '../../query/queries/urls';
+import {BASE_URL} from '../query/queries/urls';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
   useListDietDetail,
-} from '../../query/queries/diet';
-import {SCREENWIDTH} from '../../constants/constants';
-import {useGetBaseLine} from '../../query/queries/baseLine';
-import {commaToNum} from '../../util/sumUp';
+} from '../query/queries/diet';
+import {SCREENWIDTH} from '../constants/constants';
+import {useGetBaseLine} from '../query/queries/baseLine';
+import {commaToNum} from '../util/sumUp';
 import {
   useCreateProductMark,
   useDeleteProductMark,
   useGetProduct,
   useListProductMark,
-} from '../../query/queries/product';
-import {makeTableData} from '../../util/foodDetail/makeNutrTable';
+} from '../query/queries/product';
+import {makeTableData} from '../util/foodDetail/makeNutrTable';
 import {ActivityIndicator} from 'react-native';
 
 export interface TableItem {
@@ -112,7 +112,6 @@ const FoodDetail = () => {
   const isIncludedInLike =
     productData &&
     likeData?.map(food => food.productNo).includes(productData?.productNo);
-
   // 식품마다 headerTitle바꾸기
   // TBD : route.params.item 타입 관련 해결 및 만약 null값일 시 에러처리
   useEffect(() => {

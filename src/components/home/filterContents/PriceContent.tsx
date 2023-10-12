@@ -25,7 +25,7 @@ const PriceContent = (props: Props) => {
   const maxState = !data?.maxData ? 25000 : Number(data.maxData);
 
   const [priceValue, setPriceValue] = useState<number[]>([]);
-
+  console.log('priceValue', priceValue);
   useEffect(() => {
     const initialState =
       filterParams.priceParam.length === 0

@@ -5,4 +5,4 @@
                 android:gravity="center"
                 android:src="@drawable/splash_t_purple_bg_hr" />
     </item>
-</layer-list>
+</layer-list>   

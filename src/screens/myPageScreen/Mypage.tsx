@@ -5,8 +5,8 @@ import styled from 'styled-components/native';
 import {useForm, useWatch} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
 
-import {icons} from '../assets/icons/iconSource';
-import colors from '../styles/colors';
+import {icons} from '../../assets/icons/iconSource';
+import colors from '../../styles/colors';
 import {
   Col,
   HorizontalLine,
@@ -15,22 +15,22 @@ import {
   TextMain,
   TextSub,
   VerticalLine,
-} from '../styles/StyledConsts';
+} from '../../styles/StyledConsts';
 
-import DAlert from '../components/common/alert/DAlert';
-import NutrTarget from '../components/common/nutrient/NutrientTarget';
-import CalChangeAlert from '../components/myPage/CalorieChangeAlert';
-import NutrChangeAlert from '../components/myPage/NutrientChangeAlert';
-import WeightChangeAlert from '../components/myPage/WeightChangeAlert';
+import DAlert from '../../components/common/alert/DAlert';
+import NutrTarget from '../../components/common/nutrient/NutrientTarget';
+import CalChangeAlert from '../../components/myPage/CalorieChangeAlert';
+import NutrChangeAlert from '../../components/myPage/NutrientChangeAlert';
+import WeightChangeAlert from '../../components/myPage/WeightChangeAlert';
 
-import {useGetBaseLine, useUpdateBaseLine} from '../query/queries/baseLine';
+import {useGetBaseLine, useUpdateBaseLine} from '../../query/queries/baseLine';
 import {
   useCreateOrder,
   useUpdateOrder,
   useGetOrder,
-} from '../query/queries/order';
-import {convertNutr, convertNutrByWeight} from '../util/targetCalculation';
-import {useListDiet, useUpdateDiet} from '../query/queries/diet';
+} from '../../query/queries/order';
+import {convertNutr, convertNutrByWeight} from '../../util/targetCalculation';
+import {useListDiet, useUpdateDiet} from '../../query/queries/diet';
 
 // consts for screens
 export const myPageBtns = [

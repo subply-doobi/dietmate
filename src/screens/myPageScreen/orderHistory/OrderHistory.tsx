@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import styled from 'styled-components/native';
-import {icons} from '../../assets/icons/iconSource';
+import {icons} from '../../../assets/icons/iconSource';
 import {
   Col,
   HorizontalLine,
@@ -9,17 +9,17 @@ import {
   TextSub,
   VerticalLine,
   Container,
-} from '../../styles/StyledConsts';
-import colors from '../../styles/colors';
+} from '../../../styles/StyledConsts';
+import colors from '../../../styles/colors';
 import {useNavigation} from '@react-navigation/native';
-import {useGetOrder, useUpdateOrder} from '../../query/queries/order';
+import {useGetOrder, useUpdateOrder} from '../../../query/queries/order';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ActivityIndicator} from 'react-native';
-import {BASE_URL} from '../../query/queries/urls';
-import {commaToNum, sumUpNutrients} from '../../util/sumUp';
+import {BASE_URL} from '../../../query/queries/urls';
+import {commaToNum, sumUpNutrients} from '../../../util/sumUp';
 import {isSearchBarAvailableForCurrentPlatform} from 'react-native-screens';
-import DAlert from '../../components/common/alert/DAlert';
-import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
+import DAlert from '../../../components/common/alert/DAlert';
+import CommonAlertContent from '../../../components/common/alert/CommonAlertContent';
 interface IOrderData {
   buyDate: string;
   calorie: string;
@@ -36,7 +36,7 @@ interface IProductData {
   dietNo: string;
 }
 
-const PaymentHistory = () => {
+const OrderHistory = () => {
   // navigation
   const {data: orderData, isLoading} = useGetOrder();
   const {navigate} = useNavigation();
@@ -108,7 +108,7 @@ const PaymentHistory = () => {
                 <DetailBtn
                   onPress={() =>
                     navigate('PaymentHistoryNav', {
-                      screen: 'PaymentDetail',
+                      screen: 'OrderHistoryDetail',
                       params: {
                         productData: order,
                         buyDate: order[0][0].buyDate,
@@ -178,7 +178,7 @@ const PaymentHistory = () => {
   );
 };
 
-export default PaymentHistory;
+export default OrderHistory;
 
 const OrderBox = styled.View``;
 

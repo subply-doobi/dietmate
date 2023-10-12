@@ -4,15 +4,15 @@ import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useForm, useWatch} from 'react-hook-form';
 
-import {RootState} from '../stores/store';
-import {updateUserInfo} from '../stores/slices/userInfoSlice';
-import colors from '../styles/colors';
-import {NavigationProps, SCREENWIDTH} from '../constants/constants';
-import {changeNutrByWeight} from '../util/alertActions';
-import {BtnBottomCTA, BtnText} from '../styles/StyledConsts';
+import {RootState} from '../../../stores/store';
+import {updateUserInfo} from '../../../stores/slices/userInfoSlice';
+import colors from '../../../styles/colors';
+import {NavigationProps, SCREENWIDTH} from '../../../constants/constants';
+import {changeNutrByWeight} from '../../../util/alertActions';
+import {BtnBottomCTA, BtnText} from '../../../styles/StyledConsts';
 
-import DAlert from '../components/common/alert/DAlert';
-import WeightChangeAlert from '../components/myPage/WeightChangeAlert';
+import DAlert from '../../../components/common/alert/DAlert';
+import WeightChangeAlert from '../../../components/myPage/WeightChangeAlert';
 
 const History = ({navigation: {navigate}}: NavigationProps) => {
   const {userInfo} = useSelector((state: RootState) => state.userInfo);

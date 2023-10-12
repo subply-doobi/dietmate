@@ -3,13 +3,13 @@ import {ActivityIndicator, FlatList, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 
-import {RootState} from '../stores/store';
-import colors from '../styles/colors';
-import {commaToNum} from '../util/sumUp';
-import DeleteAlertContent from '../components/common/alert/DeleteAlertContent';
-import DAlert from '../components/common/alert/DAlert';
+import {RootState} from '../../../stores/store';
+import colors from '../../../styles/colors';
+import {commaToNum} from '../../../util/sumUp';
+import DeleteAlertContent from '../../../components/common/alert/DeleteAlertContent';
+import DAlert from '../../../components/common/alert/DAlert';
 
-import {NavigationProps} from '../constants/constants';
+import {NavigationProps} from '../../../constants/constants';
 import {
   TextMain,
   VerticalLine,
@@ -17,21 +17,21 @@ import {
   HorizontalLine,
   Row,
   TextSub,
-} from '../styles/StyledConsts';
-import {BASE_URL} from '../query/queries/urls';
-import MenuSection from '../components/common/menuSection/MenuSection';
-import {icons} from '../assets/icons/iconSource';
+} from '../../../styles/StyledConsts';
+import {BASE_URL} from '../../../query/queries/urls';
+import MenuSection from '../../../components/common/menuSection/MenuSection';
+import {icons} from '../../../assets/icons/iconSource';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
   useListDietDetail,
-} from '../query/queries/diet';
-import {useListProduct} from '../query/queries/product';
-import {IProductData} from '../query/types/product';
-import {useGetOrderDetail} from '../query/queries/order';
+} from '../../../query/queries/diet';
+import {useListProduct} from '../../../query/queries/product';
+import {IProductData} from '../../../query/types/product';
+import {useGetOrderDetail} from '../../../query/queries/order';
 import {useNavigation} from '@react-navigation/native';
 
-const PaymentDetail = props => {
+const PaymentHistoryDetail = props => {
   const navigation = useNavigation();
   const {productData, totalPrice, orderNo, buyDate} = props?.route?.params;
   const addMutation = useCreateDietDetail();
@@ -263,7 +263,7 @@ const PaymentDetail = props => {
   );
 };
 
-export default PaymentDetail;
+export default PaymentHistoryDetail;
 
 const Container = styled.View`
   flex: 1;

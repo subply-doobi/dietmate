@@ -6,44 +6,44 @@ import {useNavigation} from '@react-navigation/native';
 
 // doobi util, redux, etc
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
-import {setCurrentDiet, setTotalFoodList} from '../../stores/slices/cartSlice';
-import {setListTitle} from '../../stores/slices/filterSlice';
+import {RootState} from '../stores/store';
+import {setCurrentDiet, setTotalFoodList} from '../stores/slices/cartSlice';
+import {setListTitle} from '../stores/slices/filterSlice';
 import {
   FOOD_LIST_ITEM_HEIGHT,
   HOME_FILTER_HEADER_HEIGHT,
   categoryCode,
-} from '../../constants/constants';
-import {queryFn} from '../../query/queries/requestFn';
+} from '../constants/constants';
+import {queryFn} from '../query/queries/requestFn';
 import {
   IFilterParams,
   IProductData,
   IProductsData,
-} from '../../query/types/product';
-import {SCREENWIDTH} from '../../constants/constants';
-import colors from '../../styles/colors';
-import {icons} from '../../assets/icons/iconSource';
-import {checkNotShowAgain, updateNotShowAgain} from '../../util/asyncStorage';
+} from '../query/types/product';
+import {SCREENWIDTH} from '../constants/constants';
+import colors from '../styles/colors';
+import {icons} from '../assets/icons/iconSource';
+import {checkNotShowAgain, updateNotShowAgain} from '../util/asyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // doobi Component
-import FoodList from '../../components/home/FoodList';
-import DBottomSheet from '../../components/common/DBottomSheet';
-import FilterModalContent from '../../components/home/FilterModalContent';
-import DTooltip from '../../components/common/DTooltip';
-import MenuSection from '../../components/common/menuSection/MenuSection';
-import FlatlistHeaderComponent from '../../components/home/FlatlistHeaderComponent';
+import FoodList from '../components/home/FoodList';
+import DBottomSheet from '../components/common/DBottomSheet';
+import FilterModalContent from '../components/home/FilterModalContent';
+import DTooltip from '../components/common/DTooltip';
+import MenuSection from '../components/common/menuSection/MenuSection';
+import FlatlistHeaderComponent from '../components/home/FlatlistHeaderComponent';
 
 // react-query
-import {LIST_DIET} from '../../query/queries/urls';
-import {useListDietDetail, useListDiet} from '../../query/queries/diet';
-import {useListProduct} from '../../query/queries/product';
-import {IDietData} from '../../query/types/diet';
-import {useGetBaseLine} from '../../query/queries/baseLine';
-import DAlert from '../../components/common/alert/DAlert';
-import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
+import {LIST_DIET} from '../query/queries/urls';
+import {useListDietDetail, useListDiet} from '../query/queries/diet';
+import {useListProduct} from '../query/queries/product';
+import {IDietData} from '../query/types/diet';
+import {useGetBaseLine} from '../query/queries/baseLine';
+import DAlert from '../components/common/alert/DAlert';
+import CommonAlertContent from '../components/common/alert/CommonAlertContent';
 
-import {useHandleError} from '../../util/handleError';
+import {useHandleError} from '../util/handleError';
 import {firebase} from '@react-native-firebase/crashlytics';
 
 const Home = () => {
@@ -75,7 +75,7 @@ const Home = () => {
     },
     priceParam: [],
   });
-
+  console.log('filterParams:', filterParams);
   // react-query
   const {data: baseLineData} = useGetBaseLine(); // 미리 캐싱
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {
@@ -127,7 +127,7 @@ const Home = () => {
   const renderFoodList = useCallback(
     ({item}: {item: IProductData}) =>
       dietDetailData ? <FoodList item={item} screen="HomeScreen" /> : <></>,
-    [productData],
+    [dietDetailData],
   );
   const extractListKey = useCallback(
     (item: IProductData) => item.productNo,
@@ -191,7 +191,6 @@ const Home = () => {
     currentDietNo && refetchProduct();
     scrollTop();
   }, [sortParam, filterParams]);
-
   return (
     <Container>
       {/* 끼니선택, progressBar section */}

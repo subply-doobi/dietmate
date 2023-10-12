@@ -11,22 +11,25 @@ import {
 } from 'react-native-image-picker';
 import axios from 'axios';
 
-import {RootState} from '../stores/store';
-import {icons} from '../assets/icons/iconSource';
-import {NavigationProps, SCREENWIDTH} from '../constants/constants';
-import colors from '../styles/colors';
-import {useChangeHeaderRight, useChangeHeaderTitle} from '../util/customHooks';
+import {RootState} from '../../../stores/store';
+import {icons} from '../../../assets/icons/iconSource';
+import {NavigationProps, SCREENWIDTH} from '../../../constants/constants';
+import colors from '../../../styles/colors';
+import {
+  useChangeHeaderRight,
+  useChangeHeaderTitle,
+} from '../../../util/customHooks';
 import {
   HorizontalLine,
   TextMain,
   TextSub,
   VerticalLine,
   VerticalSpace,
-} from '../styles/StyledConsts';
+} from '../../../styles/StyledConsts';
 
-import NutrTarget from '../components/common/nutrient/NutrientTarget';
-import DAlert from '../components/common/alert/DAlert';
-import DBottomSheet from '../components/common/DBottomSheet';
+import NutrTarget from '../../../components/common/nutrient/NutrientTarget';
+import DAlert from '../../../components/common/alert/DAlert';
+import DBottomSheet from '../../../components/common/DBottomSheet';
 
 const HistoryDetail = ({
   navigation,

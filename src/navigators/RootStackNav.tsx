@@ -15,14 +15,14 @@ import PayMethodGuidePage from '../screens/orderScreen/PaymethodGuidePage';
 
 import Guide from '../screens/Guide';
 import Login from '../screens/Login';
-import FoodDetail from '../screens/foodDetailScreen/FoodDetail';
+import FoodDetail from '../screens/FoodDetail';
 import BackArrow from '../components/common/BackArrow';
 import {Pressable, Image} from 'react-native';
 import {icons} from '../assets/icons/iconSource';
 import {useDispatch} from 'react-redux';
-import Account from '../screens/Account';
+import Account from '../screens/myPageScreen/Account';
 import KakaoPay from '../components/payment/KakaoPay';
-import PaymentComplete from '../screens/orderScreen/PaymentComplete';
+import PaymentComplete from '../screens/orderScreen/OrderComplete';
 import CustomErrorBoundary from '../components/common/CustomErrorBoundary';
 import OrderHeaderTabNav from './OrderHeaderTabNav';
 

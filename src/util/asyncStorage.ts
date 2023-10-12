@@ -19,8 +19,9 @@ export const removeToken = async () => {
   try {
     await AsyncStorage.removeItem('ACCESS_TOKEN');
     await AsyncStorage.removeItem('REFRESH_TOKEN');
+    console.log('removeToken: ', 'success');
   } catch (e) {
-    console.log('wipeDoobiToken: ', e);
+    console.log('wipeDoobiTokenFail: ', e);
   }
 };
 

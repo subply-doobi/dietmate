@@ -6,7 +6,7 @@ import {IGetAuthData} from '../types/member';
 import {IReIssueTokenData} from '../types/token';
 import {queryFn} from './requestFn';
 
-import {GET_TOKEN, GET_AUTH, RE_ISSUE_TOKEN} from './urls';
+import {GET_TOKEN, GET_AUTH, RE_ISSUE_TOKEN, GET_GUEST} from './urls';
 
 export const getDoobiToken = async (kakaoAccessToken: string | null) => {
   try {
@@ -17,7 +17,15 @@ export const getDoobiToken = async (kakaoAccessToken: string | null) => {
     console.log('getDoobiToken: ', e);
   }
 };
-
+export const getGuestToken = async () => {
+  try {
+    const result = await axios.get(`${GET_GUEST}`);
+    console.log('getGuestToken: ', result?.data);
+    return result?.status === 200 ? result.data : undefined;
+  } catch (e) {
+    console.log('getGuestToken error: ', e);
+  }
+};
 export const kakaoLogin = async () => {
   console.log('kakaoLogin start');
   try {
@@ -29,7 +37,18 @@ export const kakaoLogin = async () => {
       await storeToken(accessToken, refreshToken);
     return accessToken;
   } catch (e) {
-    console.log('kakaoLogin: ', e);
+    console.log('kakaoLoginError: ', e);
+  }
+};
+export const guestLogin = async () => {
+  console.log('guestLogin start');
+  try {
+    const {accessToken, refreshToken} = await getGuestToken();
+    if (accessToken && refreshToken)
+      await storeToken(accessToken, refreshToken);
+    return accessToken;
+  } catch (e) {
+    console.log('guestLogin error: ', e);
   }
 };
 

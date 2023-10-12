@@ -4,30 +4,22 @@ import React, {useEffect, useCallback} from 'react';
 import styled from 'styled-components/native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import colors from '../styles/colors';
-import {kakaoLogin, validateToken} from '../query/queries/token';
+import {kakaoLogin, validateToken, guestLogin} from '../query/queries/token';
 import {IBaseLine} from '../query/types/baseLine';
 
 // doobi util, redux, etc
 import {checkNotShowAgain} from '../util/asyncStorage';
 
 //react-query
-import {useGetBaseLine} from '../query/queries/baseLine';
-
+import {useGetBaseLine, useGetGuestLogin} from '../query/queries/baseLine';
 //doobi Component
 import {BtnCTA, BtnText} from '../styles/StyledConsts';
-
-//sentry
-import * as Sentry from '@sentry/react-native';
-import {has} from 'immer/dist/internal';
-import {hasValidBreakpointFormat} from 'native-base/lib/typescript/theme/tools';
-
 const navigateByUserInfo = async (
   data: IBaseLine | any,
-  navigation: NavigationProp<ReactNavigation.RootParamList>,
+  navigation: NavigationProp<any>,
 ) => {
   const hasBaseLine = Object.keys(data).length === 0 ? false : true;
   const canSkipOnboarding = await checkNotShowAgain('ONBOARDING');
-  console.log('LOGIN/hasBaseLine', hasBaseLine);
   if (!canSkipOnboarding) {
     // canSkipOnboarding 아니면 가이드로
     navigation.navigate('Guide');
@@ -50,24 +42,30 @@ const Login = () => {
   // navigation
   const navigation = useNavigation();
   // react-query
-  const {data, refetch} = useGetBaseLine({enabled: false});
+  const {refetch} = useGetBaseLine({enabled: false});
   // console.log('LOGIN/useGetBaseLine', data);
   const signInWithKakao = async (): Promise<void> => {
-    await kakaoLogin();
+    const data = await kakaoLogin();
+    if (data === undefined) return;
     const refetchedData = await refetch().then(res => res.data);
     refetchedData && navigateByUserInfo(refetchedData, navigation);
   };
-  // etc
-  useEffect(() => {
-    const checkUser = async () => {
-      const {isValidated} = await validateToken();
-      if (!isValidated) return;
-      const refetchedData = await refetch().then(res => res.data);
-      refetchedData && navigateByUserInfo(refetchedData, navigation);
-    };
+  // etc guestLogin 때문에 자동 로그인 정지
+  // useEffect(() => {
+  //   const checkUser = async () => {
+  //     const {isValidated} = await validateToken();
+  //     if (!isValidated) return;
+  //     const refetchedData = await refetch().then(res => res.data);
+  //     refetchedData && navigateByUserInfo(refetchedData, navigation);
+  //   };
 
-    checkUser();
-  }, []);
+  //   checkUser();
+  // }, []);
+  //guest login
+  const signInWithGuest = async (): Promise<void> => {
+    await guestLogin();
+    navigateByUserInfo('', navigation);
+  };
 
   return (
     <Container>
@@ -76,6 +74,9 @@ const Login = () => {
         <BtnKakaoLogin btnStyle="kakao" onPress={signInWithKakao}>
           <BtnTextKakao>카카오 로그인</BtnTextKakao>
         </BtnKakaoLogin>
+        <BtnGuestLogin onPress={signInWithGuest}>
+          <BtnTextGuest>GUEST LOGIN</BtnTextGuest>
+        </BtnGuestLogin>
       </Box>
     </Container>
   );
@@ -108,7 +109,14 @@ const TitleText = styled.Text`
 const BtnKakaoLogin = styled(BtnCTA)`
   align-self: center;
 `;
+const BtnGuestLogin = styled(BtnCTA)`
+  align-self: center;
+  margin-top: 20px;
+`;
 
 const BtnTextKakao = styled(BtnText)`
+  color: ${colors.textMain};
+`;
+const BtnTextGuest = styled(BtnText)`
   color: ${colors.textMain};
 `;
