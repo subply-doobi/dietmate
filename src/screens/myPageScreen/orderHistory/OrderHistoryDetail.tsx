@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, ScrollView} from 'react-native';
+import {ActivityIndicator, FlatList, ScrollView, Text} from 'react-native';
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 
@@ -80,7 +80,7 @@ const PaymentHistoryDetail = props => {
     }
     return dietTotalPrice;
   };
-  const nutrientTypeToKorean = (arg: String[]) => {
+  const nutrientTypeToKorean = (arg: String) => {
     switch (arg) {
       case 'calorie':
         return '칼로리';
@@ -138,49 +138,54 @@ const PaymentHistoryDetail = props => {
           {productData.map((product: IProductData, productIndex: number) => (
             <Card key={productIndex}>
               <CardTitle>
-                끼니 {productIndex + 1} (x{productData[productIndex][0]?.qty}개)
+                끼니 {productIndex + 1}{' '}
+                <CardTitle style={{color: colors.textSub}}>
+                  (x{productData[productIndex][0]?.qty}개)
+                </CardTitle>
               </CardTitle>
               <MenuNutrContainer>
                 {nutrientType.map((nutrient, index) => (
-                  <Col key={index}>
-                    <Row>
-                      <MakeVertical>
-                        <MenuNutr>{nutrientTypeToKorean(nutrient)}</MenuNutr>
-                        <MenuNutrValue>
-                          {getNutrient(productData, nutrient)[productIndex]}
-                          {nutrient === '칼로리' ? 'kcal' : 'g'}
-                        </MenuNutrValue>
-                      </MakeVertical>
-                      <VerticalLine style={{margin: 20}} />
-                    </Row>
-                  </Col>
+                  <Row key={index} style={{flex: 1, height: '100%'}}>
+                    <Col style={{flex: 1, alignItems: 'center'}}>
+                      <MenuNutr>{nutrientTypeToKorean(nutrient)}</MenuNutr>
+                      <MenuNutrValue>
+                        {getNutrient(productData, nutrient)[productIndex]}
+                        {nutrient === 'calorie' ? ' kcal' : ' g'}
+                      </MenuNutrValue>
+                    </Col>
+                    {nutrientType.length - 1 !== index && <VerticalLine />}
+                  </Row>
                 ))}
               </MenuNutrContainer>
               {product.map((item: IProductData, thumbnailIndex: number) => (
-                <Col key={thumbnailIndex}>
-                  <Row>
+                <Col key={thumbnailIndex} style={{marginTop: 24}}>
+                  <Row style={{alignItems: 'flex-start'}}>
                     <ThumbnailImage
                       source={{uri: `${BASE_URL}${item?.mainAttUrl}`}}
                     />
-                    <Col style={{marginLeft: 8, flex: 1}}>
+                    <Col
+                      style={{
+                        marginLeft: 8,
+                        flex: 1,
+                      }}>
                       <MakeVertical>
                         <SellerText>{item.platformNm}</SellerText>
                         <ProductNmText numberOfLines={1} ellipsizeMode="tail">
                           {item.productNm}
                         </ProductNmText>
-                        <NutrientText>
-                          칼로리{' '}
+                        <NutrientText numberOfLines={1} ellipsizeMode="tail">
+                          칼{' '}
                           <NutrientValue>
-                            {parseInt(item.calorie)}kcal{' '}
+                            {parseInt(item.calorie)}kcal
                           </NutrientValue>
-                          탄수화물{' '}
-                          <NutrientValue>{parseInt(item.carb)}g </NutrientValue>
-                          단백질{' '}
+                          {'    '}탄{' '}
+                          <NutrientValue>{parseInt(item.carb)}g</NutrientValue>
+                          {'    '}단{' '}
                           <NutrientValue>
-                            {parseInt(item.protein)}g{' '}
+                            {parseInt(item.protein)}g
                           </NutrientValue>
-                          지방{' '}
-                          <NutrientValue>{parseInt(item.fat)}g </NutrientValue>
+                          {'    '}지{' '}
+                          <NutrientValue>{parseInt(item.fat)}g</NutrientValue>
                         </NutrientText>
                       </MakeVertical>
                       {isAdded?.find(
@@ -208,7 +213,7 @@ const PaymentHistoryDetail = props => {
                 </Col>
               ))}
               <TotalPrice>
-                {getTotalPrice(productData)[productIndex]}원
+                {commaToNum(getTotalPrice(productData)[productIndex])}원
               </TotalPrice>
             </Card>
           ))}
@@ -308,20 +313,17 @@ const SummarySubText = styled(TextMain)`
   margin: 8px;
 `;
 const MenuNutrContainer = styled(Row)`
-  margin: 30px;
-  width: 100%;
-  align-items: center;
+  height: 40px;
+  flex: 1;
+  margin-top: 24px;
 `;
 
 const MenuNutr = styled(TextMain)`
   font-size: 12px;
-  margin-right: 8px;
-  align-self: center;
 `;
 
 const MenuNutrValue = styled(TextMain)`
   font-size: 14px;
-  align-self: center;
 `;
 
 const MakeVertical = styled.View`

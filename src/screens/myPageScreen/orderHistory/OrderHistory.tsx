@@ -97,7 +97,7 @@ const OrderHistory = () => {
     <ActivityIndicator />
   ) : (
     <Container>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {/* 주문날짜 별로 반복*/}
         {regroupedData?.map((order, orderIdx) => {
           console.log('order', order);

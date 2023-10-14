@@ -58,7 +58,7 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
   function getDietSeq(dietArr, dietNo) {
     for (let i = 0; i < dietArr.length; i++) {
       if (dietArr[i].dietNo === dietNo) {
-        return dietArr[i]?.dietSeq + `  (${foodToOrder[i][0]?.qty}개)`;
+        return dietArr[i]?.dietSeq + `  (x${foodToOrder[i][0]?.qty}개)`;
       }
     }
     return null; // 만약 해당하는 dietNo를 찾을 수 없을 경우 null 반환

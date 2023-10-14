@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Text, View} from 'react-native';
+import {ActivityIndicator, Text, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 
@@ -97,12 +97,10 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
       ) : null}
       {sellerList?.map((e, i) => {
         return (
-          <View key={i}>
+          <Col key={i}>
             <HomeLinkButton>
-              <Row style={{marginTop: 24}}>
-                <SellerText>{e[0]?.platformNm}</SellerText>
-                <LinkImage source={icons.mainPurpleLine_20} />
-              </Row>
+              <SellerText>{e[0]?.platformNm}</SellerText>
+              <LinkImage source={icons.mainPurpleLine_20} />
             </HomeLinkButton>
 
             {e.map((el: IProductData, index: number) => {
@@ -115,7 +113,7 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
                       }}
                       resizeMode="center"
                     />
-                    <Col style={{flex: 1}}>
+                    <Col>
                       <ProductName>{el.productNm}</ProductName>
                       <PriceAndQuantity>
                         {commaToNum(el.price)}원
@@ -128,7 +126,7 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
                 </View>
               );
             })}
-          </View>
+          </Col>
         );
       })}
     </CardSection>
@@ -175,11 +173,14 @@ const LinkText = styled(TextMain)`
 `;
 
 const LinkButton = styled.TouchableOpacity`
-  width: 100%;
   align-items: flex-end;
 `;
 
-const HomeLinkButton = styled.TouchableOpacity``;
+const HomeLinkButton = styled.TouchableOpacity`
+  flex-direction: row;
+  margin-top: 24px;
+  background-color: red;
+`;
 
 const CardSection = styled.View`
   margin-top: 24px;

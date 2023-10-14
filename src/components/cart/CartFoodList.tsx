@@ -124,12 +124,13 @@ const CartFoodList = ({
               <ProductNmText numberOfLines={1} ellipsizeMode="tail">
                 {food.productNm}
               </ProductNmText>
-              <NutrientText>
-                칼로리{' '}
-                <NutrientValue>{parseInt(food.calorie)}kcal </NutrientValue>
-                탄수화물 <NutrientValue>{parseInt(food.carb)}g </NutrientValue>
-                단백질 <NutrientValue>{parseInt(food.protein)}g </NutrientValue>
-                지방 <NutrientValue>{parseInt(food.fat)}g </NutrientValue>
+              <NutrientText numberOfLines={1} ellipsizeMode="tail">
+                칼 <NutrientValue>{parseInt(food.calorie)}kcal </NutrientValue>
+                {'    '}탄{' '}
+                <NutrientValue>{parseInt(food.carb)}g </NutrientValue>
+                {'    '}단{' '}
+                <NutrientValue>{parseInt(food.protein)}g </NutrientValue>
+                {'    '}지 <NutrientValue>{parseInt(food.fat)}g </NutrientValue>
               </NutrientText>
               <Row style={{marginTop: 12, justifyContent: 'space-between'}}>
                 <ProductPrice>{commaToNum(food.price)}원</ProductPrice>
