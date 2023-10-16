@@ -84,7 +84,7 @@ const MenuSection = () => {
         onCancel={() => setDeleteAlertShow(false)}
       />
 
-      {/* progressBar */}
+      {/* progressBar !!!!!!!!!! */}
       <ProgressContainer onPress={() => setMenuShow(v => !v)}>
         {dietDetailData && (
           <NutrientsProgress dietDetailData={dietDetailData} />

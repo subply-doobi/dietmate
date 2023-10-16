@@ -43,7 +43,13 @@ export const checkNotShowAgain = async (value: string) => {
     console.error(error);
   }
 };
-
+export const resetGuide = async () => {
+  try {
+    await AsyncStorage.removeItem('NOT_SHOW_AGAIN');
+  } catch (error) {
+    console.error(error);
+  }
+};
 export const updateNotShowAgain = async (value: string) => {
   try {
     const notShowAgain = await AsyncStorage.getItem('NOT_SHOW_AGAIN');

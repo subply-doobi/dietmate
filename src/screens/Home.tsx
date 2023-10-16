@@ -1,6 +1,6 @@
 // react, RN, 3rd
 import {useCallback, useEffect, useState, useRef} from 'react';
-import {FlatList, Animated} from 'react-native';
+import {FlatList, Animated, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -75,16 +75,19 @@ const Home = () => {
     },
     priceParam: [],
   });
-  console.log('filterParams:', filterParams);
   // react-query
-  const {data: baseLineData} = useGetBaseLine(); // 미리 캐싱
-  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
-    enabled: currentDietNo ? true : false,
-  });
+  const {data: baseLineData, isLoading: baseLineLoading} = useGetBaseLine(); // 미리 캐싱
+  const {data: dietDetailData, isLoading: listDietLoading} = useListDietDetail(
+    currentDietNo,
+    {
+      enabled: currentDietNo ? true : false,
+    },
+  );
   const {
     data: productData,
     refetch: refetchProduct,
     isFetching: productIsFetching,
+    isLoading: productIsLoading,
   } = useListProduct(
     {
       dietNo: currentDietNo,
@@ -159,6 +162,7 @@ const Home = () => {
 
   // useEffect
   // 앱 시작할 때 내가 어떤 끼니를 보고 있는지 redux에 저장해놓기 위해 필요함
+
   useEffect(() => {
     const initializeDietNo = async () => {
       const initialDietNo = (await queryFn<IDietData>(LIST_DIET))[0].dietNo;
@@ -194,7 +198,15 @@ const Home = () => {
   return (
     <Container>
       {/* 끼니선택, progressBar section */}
-      <MenuSection />
+
+      {baseLineLoading === false &&
+      listDietLoading === false &&
+      productIsLoading === false ? (
+        <MenuSection />
+      ) : (
+        <ActivityIndicator />
+      )}
+
       <HomeContainer>
         {/* 검색결과 수 및 정렬 필터 */}
         <FlatlistHeaderComponent

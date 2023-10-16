@@ -17,12 +17,17 @@ import {BtnCTA, BtnText} from '../styles/StyledConsts';
 const navigateByUserInfo = async (
   data: IBaseLine | any,
   navigation: NavigationProp<any>,
+  isGuestLogin: boolean,
 ) => {
   const hasBaseLine = Object.keys(data).length === 0 ? false : true;
   const canSkipOnboarding = await checkNotShowAgain('ONBOARDING');
+  console.log('canSksdkfls:', canSkipOnboarding);
+  if (isGuestLogin) {
+    return navigation.navigate('Guide', {isGuestLogin: isGuestLogin});
+  }
   if (!canSkipOnboarding) {
     // canSkipOnboarding 아니면 가이드로
-    navigation.navigate('Guide');
+    navigation.navigate('Guide', {isGuestLogin: isGuestLogin});
     return;
   }
   if (!hasBaseLine) {
@@ -43,12 +48,12 @@ const Login = () => {
   const navigation = useNavigation();
   // react-query
   const {refetch} = useGetBaseLine({enabled: false});
-  // console.log('LOGIN/useGetBaseLine', data);
+  // console.log('LOGIN/useGetBaseLine', useGetBaseLine({enabled: false}));
   const signInWithKakao = async (): Promise<void> => {
     const data = await kakaoLogin();
     if (data === undefined) return;
     const refetchedData = await refetch().then(res => res.data);
-    refetchedData && navigateByUserInfo(refetchedData, navigation);
+    refetchedData && navigateByUserInfo(refetchedData, navigation, false);
   };
   // etc guestLogin 때문에 자동 로그인 정지
   // useEffect(() => {
@@ -56,7 +61,7 @@ const Login = () => {
   //     const {isValidated} = await validateToken();
   //     if (!isValidated) return;
   //     const refetchedData = await refetch().then(res => res.data);
-  //     refetchedData && navigateByUserInfo(refetchedData, navigation);
+  //     refetchedData && navigateByUserInfo(refetchedData, navigation, false);
   //   };
 
   //   checkUser();
@@ -64,7 +69,7 @@ const Login = () => {
   //guest login
   const signInWithGuest = async (): Promise<void> => {
     await guestLogin();
-    navigateByUserInfo('', navigation);
+    navigateByUserInfo('', navigation, true);
   };
 
   return (

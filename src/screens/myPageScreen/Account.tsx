@@ -3,15 +3,18 @@ import styled from 'styled-components/native';
 import {Linking} from 'react-native';
 import {useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {HorizontalLine, TextMain, Col} from '../../styles/StyledConsts';
 import {removeToken} from '../../util/asyncStorage';
 import {useDeleteProfile} from '../../query/queries/member';
+import {resetUserInfo} from '../../stores/slices/userInfoSlice';
 
 import colors from '../../styles/colors';
 import {icons} from '../../assets/icons/iconSource';
 import {useNavigation} from '@react-navigation/native';
 import DAlert from '../../components/common/alert/DAlert';
+import {queryClient} from '../../query/store';
 
 const WithdrawalContent = ({deleteText}: {deleteText: string}) => {
   return (
@@ -34,6 +37,8 @@ const Account = () => {
   const link = () => {
     Linking.openURL(PRIVACY_URL);
   };
+  // redux
+  const dispatch = useDispatch();
   // logout Fn
   const onLogout = async () => {
     try {
@@ -64,6 +69,11 @@ const Account = () => {
         )}
         onConfirm={() => {
           deleteUser.mutate();
+          // dispatch(resetUserInfo());
+          reset({
+            index: 0,
+            routes: [{name: 'Login'}],
+          });
         }}
         onCancel={() => {
           setIsAlert(false);
