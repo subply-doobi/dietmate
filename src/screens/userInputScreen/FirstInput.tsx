@@ -122,8 +122,15 @@ const renderWeightInput = (
   );
 };
 
-const FirstInput = ({navigation: {navigate}}: NavigationProps) => {
+const FirstInput = props => {
   const {data, isLoading} = useGetBaseLine();
+  const navigation = useNavigation();
+  let checkGuestLogin = false;
+  // const {isGuestLogin} = props?.route?.params;
+  // console.log('userInfo1: props: ', props.route.params);
+  props.route.params === undefined
+    ? (checkGuestLogin = false)
+    : (checkGuestLogin = true);
   const dietPurposeCd = useDietPurposeCode('SP002');
   const dietPurposeCdCategory = dietPurposeCd.data;
   const newDietPurposeCdCategory = dietPurposeCdCategory?.map(item => {
@@ -155,12 +162,17 @@ const FirstInput = ({navigation: {navigate}}: NavigationProps) => {
     formState: {errors, isValid},
   } = useForm<IFormData>({
     // 나중에 사용자 정보 있으면 초기값으로 넣어줘야함.
+
     defaultValues: {
-      gender: data?.gender ? data?.gender : '',
-      age: data?.age ? data?.age : '',
-      height: data?.height ? data?.height : '',
-      weight: data?.weight ? data?.weight : '',
-      dietPurposeCd: data?.dietPurposeCd ? data?.dietPurposeCd : 'SP002001',
+      gender: checkGuestLogin ? '' : data?.gender ? data?.gender : '',
+      age: checkGuestLogin ? '' : data?.age ? data?.age : '',
+      height: checkGuestLogin ? '' : data?.height ? data?.height : '',
+      weight: checkGuestLogin ? '' : data?.weight ? data?.weight : '',
+      dietPurposeCd: checkGuestLogin
+        ? 'SP002001'
+        : data?.dietPurposeCd
+        ? data?.dietPurposeCd
+        : 'SP002001',
     },
   });
   const genderValue = useWatch({control, name: 'gender'});
@@ -168,9 +180,6 @@ const FirstInput = ({navigation: {navigate}}: NavigationProps) => {
   const heightValue = useWatch({control, name: 'height'});
   const weightValue = useWatch({control, name: 'weight'});
   const dietPurposeValue = useWatch({control, name: 'dietPurposeCd'});
-
-  console.log('firstInput:', data);
-
   return (
     <Container>
       <ScrollView
@@ -284,7 +293,7 @@ const FirstInput = ({navigation: {navigate}}: NavigationProps) => {
               bmr: BMR,
             }),
           );
-          navigate('InputNav', {screen: 'SecondInput', params: BMR});
+          navigation.navigate('InputNav', {screen: 'SecondInput', params: BMR});
         }}>
         <BtnText>다음</BtnText>
       </BtnBottomCTA>

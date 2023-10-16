@@ -149,9 +149,13 @@ export const userInfoSlice = createSlice({
         };
       }
     },
+    resetUserInfo: state => {
+      state.userInfo = initialState.userInfo;
+      state.userTarget = initialState.userTarget;
+    },
   },
 });
 
-export const {saveUserInfo, saveUserTarget, updateUserInfo} =
+export const {saveUserInfo, saveUserTarget, updateUserInfo, resetUserInfo} =
   userInfoSlice.actions;
 export default userInfoSlice.reducer;

@@ -31,7 +31,11 @@ import {
   useGetBaseLine,
   useUpdateBaseLine,
 } from '../../query/queries/baseLine';
-import {useCreateDiet, useListDiet} from '../../query/queries/diet';
+import {
+  useCreateDiet,
+  useListDiet,
+  useListDietDetail,
+} from '../../query/queries/diet';
 
 interface IFormData {
   ratioType: string;
@@ -69,15 +73,25 @@ const ThirdInput = () => {
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
-  // console.log('thirdInput/baseLine', data);
   const updateMutation = useUpdateBaseLine();
   const createMutation = useCreateBaseLine();
   const {data: dietData} = useListDiet();
+  console.log('ThirdInput/dietData', dietData?.length);
   const createDietMutation = useCreateDiet();
+  const {data: dietDetailData, isLoading: listDietLoading} = useListDietDetail(
+    currentDietNo,
+    {
+      enabled: currentDietNo ? true : false,
+    },
+  );
   // redux
   const {userInfo, userTarget} = useSelector(
     (state: RootState) => state.userInfo,
   );
+  const {currentDietNo, totalFoodListIsLoaded} = useSelector(
+    (state: RootState) => state.cart,
+  );
+  console.log('ThirdInput/currentDietNo', currentDietNo);
   const totalBaseLine: IRequestBody = {...userInfo, ...userTarget};
   // ref
   const scrollRef = useRef<ScrollView>(null);
@@ -195,14 +209,15 @@ const ThirdInput = () => {
     };
     const requestBody: IRequestBody =
       convertDataByMethod[calculationMethod](dataToConvert);
-    console.log('THIRDINPUT/requestBody', requestBody);
     if (!baseLineData) return;
-    console.log(
-      'THIRDINPUT/baseLineData',
-      Object.keys(baseLineData).length === 0,
-    );
-    if (Object.keys(baseLineData).length === 0) {
+    if (Object.keys(baseLineData).length === 0 && dietData?.length === 0) {
       createDietMutation.mutate();
+      createMutation.mutate(requestBody);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
+      });
+    } else if (Object.keys(baseLineData).length === 0 && dietData?.length > 0) {
       createMutation.mutate(requestBody);
       navigation.reset({
         index: 0,

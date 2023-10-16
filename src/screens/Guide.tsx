@@ -1,7 +1,11 @@
 // react, RN, 3rd
 import {useState} from 'react';
 import styled from 'styled-components/native';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import Lottie from 'lottie-react-native';
 
 // doobi util, redux, etc
@@ -12,6 +16,7 @@ import {SCREENWIDTH} from '../constants/constants';
 // doobi Component
 import {BtnCTA, Container, Row, Col, StyledProps} from '../styles/StyledConsts';
 import {checkNotShowAgain, updateNotShowAgain} from '../util/asyncStorage';
+import {join} from '@sentry/utils';
 
 // react-query
 
@@ -22,6 +27,7 @@ interface IGuidePage {
   onboardingSource?: any;
   stepImage: any;
   onboardingSourceType: 'none' | 'img' | 'lottie';
+  isGuestLogin?: boolean;
 }
 const renderGuideContents = (step: number, guidePageArray: IGuidePage[]) => {
   return (
@@ -35,7 +41,10 @@ const renderGuideContents = (step: number, guidePageArray: IGuidePage[]) => {
   );
 };
 
-const Guide = () => {
+const Guide = param => {
+  //params
+  const {isGuestLogin} = param?.route?.params;
+  console.log('Guide/isGuestLogin', isGuestLogin);
   // navigation
   const {navigate, reset} = useNavigation();
 
@@ -184,6 +193,10 @@ const Guide = () => {
       onboardingSource: require('../assets/onboardingLottie/remainNutrFilter.json'),
     },
   ];
+  //건너뛰기 누르면 다시는 안보여줌
+  //다음 다 눌러도 다시는 안보여줌
+  //유일하게 myPage에서 다시보기 가능한데 다보면 myPage로 이동
+  // FIRSTINPUT, HOME, MYPAGE
   return (
     <Container>
       <Row style={{columnGap: 4}}>
@@ -221,10 +234,15 @@ const Guide = () => {
             updateNotShowAgain('ONBOARDING');
             // step 1로 초기화 후 홈페이지 or 원래 보던 페이지로 이동
             setStep(1);
-            reset({
-              index: 0,
-              routes: [{name: 'Login'}],
-            });
+            isGuestLogin
+              ? navigate('InputNav', {
+                  screen: 'FirstInput',
+                  params: {isGuestLogin: true},
+                })
+              : reset({
+                  index: 0,
+                  routes: [{name: 'Login'}],
+                });
           }}>
           <BottomText style={{color: colors.textSub}}>건너뛰기</BottomText>
         </BtnCTA>
@@ -238,10 +256,15 @@ const Guide = () => {
             if (step === guidePageArray.length) {
               setStep(1);
               updateNotShowAgain('ONBOARDING');
-              reset({
-                index: 0,
-                routes: [{name: 'Login'}],
-              });
+              isGuestLogin
+                ? navigate('InputNav', {
+                    screen: 'FirstInput',
+                    params: {isGuestLogin: true},
+                  })
+                : reset({
+                    index: 0,
+                    routes: [{name: 'Login'}],
+                  });
               return;
             }
             setStep(step + 1);

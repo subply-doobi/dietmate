@@ -81,7 +81,8 @@ const NutrientsProgress = ({
   const dispatch = useDispatch();
 
   // react-query
-  const {data: baseLineData, isInitialLoading} = useGetBaseLine();
+  const {data: baseLineData, isInitialLoading, isLoading} = useGetBaseLine();
+  console.log('NutrientsProgress: baseLineData', baseLineData);
 
   // etc
   const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
@@ -133,7 +134,7 @@ const NutrientsProgress = ({
           dispatch(setNutrTooltipText(''));
         }}
       />
-      {isInitialLoading ? (
+      {isLoading ? (
         <ActivityIndicator />
       ) : (
         baseLineData && (
