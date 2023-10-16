@@ -1,7 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Text, View} from 'react-native';
+import {ActivityIndicator, Linking} from 'react-native';
 import styled from 'styled-components/native';
-import {useSelector} from 'react-redux';
 
 import {
   BtnBottomCTA,
@@ -10,154 +8,189 @@ import {
   Col,
   Row,
   HorizontalLine,
+  HorizontalSpace,
 } from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
-import IProductData from '../../query/types/product';
-import {commaToNum} from '../../util/sumUp';
+import {IProductData} from '../../query/types/product';
+import {commaToNum, reGroupBySeller} from '../../util/sumUp';
 import {icons} from '../../assets/icons/iconSource';
 import {SCREENWIDTH} from '../../constants/constants';
 
 import {BASE_URL} from '../../query/queries/urls';
-import {
-  useListDiet,
-  useListDietDetail,
-  useListDietDetailAll,
-  useListDietTotal,
-} from '../../query/queries/diet';
+import {useListDiet, useListDietDetail} from '../../query/queries/diet';
 import {ScrollView} from 'react-native-gesture-handler';
+
+//판매사별로 묶어주기 => util sumUp regroupBySeller 함수에 reduce적용해보기
+// const groupBySeller = (arg: any) => {
+//   const group = arg.reduce((acc, cur) => {
+//     acc[cur.platformNm] = [...(acc[cur.platformNm] || []), cur];
+//     return acc;
+//   }, {});
+//   return group;
+// };
+
+interface IProductInfo {
+  group: IProductData[];
+}
+const ProductInfo = ({group}: IProductInfo) => {
+  return (
+    <Col>
+      {group.map((product, index: number) => (
+        <Row key={product.productNo} style={{marginTop: 16}}>
+          <FoodThumbnail source={{uri: `${BASE_URL}${product?.mainAttUrl}`}} />
+          <ProductInfoBox>
+            <ProductName>{product?.productNm}</ProductName>
+            <PriceAndQuantity>{commaToNum(product?.price)}원</PriceAndQuantity>
+            <Row style={{alignSelf: 'flex-end'}}>
+              <LinkButton onPress={() => Linking.openURL('https://naver.com')}>
+                <LinkText>구매링크</LinkText>
+              </LinkButton>
+            </Row>
+          </ProductInfoBox>
+        </Row>
+      ))}
+    </Col>
+  );
+};
+
+interface IMenuCard {
+  dietNo: string;
+  dietSeq: string;
+}
+
+const MenuCard = ({dietNo, dietSeq}: IMenuCard) => {
+  const {data: dietDetailData, isLoading: isListDietDetailLoading} =
+    useListDietDetail(dietNo);
+  console.log('MenuCard: listDietDetail: ', dietDetailData);
+  const reGroupedDataBySeller =
+    dietDetailData && reGroupBySeller(dietDetailData);
+  console.log('MenuCard: dietDetailGroupedBySeller: ', reGroupedDataBySeller);
+
+  if (isListDietDetailLoading) {
+    return <ActivityIndicator />;
+  }
+  return (
+    <Card>
+      <CardTitle>
+        {dietSeq}{' '}
+        <CardTitle style={{color: colors.textSub}}>
+          (x {dietDetailData && dietDetailData[0].qty}개)
+        </CardTitle>{' '}
+      </CardTitle>
+      <HorizontalSpace height={16} />
+      <HorizontalLine style={{backgroundColor: colors.black}} />
+
+      <MenuBox>
+        {reGroupedDataBySeller?.map((group, index: number) => (
+          // 판매자별 구매상품 묶음
+          <SellerGroupBox>
+            <Row style={{marginTop: 24}}>
+              <HomeLinkButton
+                onPress={() => Linking.openURL('https://naver.com')}>
+                <SellerText>{group[0].platformNm}</SellerText>
+                <HomeLinkImage source={icons.mainPurpleLine_20} />
+              </HomeLinkButton>
+            </Row>
+
+            {/* 각 상품 정보 */}
+            <ProductInfo group={group} />
+
+            <HorizontalLine style={{marginTop: 24}} />
+          </SellerGroupBox>
+        ))}
+      </MenuBox>
+    </Card>
+  );
+};
+
+const SelfOrder = () => {
+  const {data: listDiet, isLoading: isListDietLoading} = useListDiet();
+  if (isListDietLoading) {
+    return <ActivityIndicator />;
+  }
+  return (
+    <Container>
+      <HorizontalSpace height={4} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 80}}>
+        {listDiet?.map(diet => (
+          <MenuCard
+            key={diet.dietNo}
+            dietNo={diet.dietNo}
+            dietSeq={diet.dietSeq}
+          />
+        ))}
+      </ScrollView>
+
+      {/* 주문내역 저장하기 버튼 */}
+      <BtnBottomCTA
+        width={SCREENWIDTH - 16}
+        btnStyle={'activated'}
+        onPress={() => console.log('주문내역에 저장')}>
+        <BtnText>주문내역에 저장하기</BtnText>
+      </BtnBottomCTA>
+    </Container>
+  );
+};
 
 interface FoodInOneDietProps {
   dietNo: string;
 }
 
-type ISellerList = Array<IProductData>;
-const SelfOrder = () => {
-  const {data: listDiet} = useListDiet();
-  const {data: listDietDetailAll, isLoading: isListDietDetailLoading} =
-    useListDietDetailAll();
-  if (isListDietDetailLoading) {
-    return <ActivityIndicator />;
-  }
-  return (
-    <>
-      <ScrollView>
-        <SelfOrderContainer>
-          {listDiet?.map((diet, index) => {
-            return (
-              <Col key={`${diet.dietNo}-${index}`}>
-                <FoodsInOneDiet dietNo={diet.dietNo} />
-              </Col>
-            );
-          })}
-        </SelfOrderContainer>
-      </ScrollView>
-      <BtnBottomCTA
-        style={{width: SCREENWIDTH - 32, marginTop: -20}}
-        btnStyle={'activated'}
-        onPress={() => console.log('주문내역에 저장')}>
-        <BtnText>주문내역에 저장하기</BtnText>
-      </BtnBottomCTA>
-    </>
-  );
-};
-const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
-  const {data: listDietDetail, isLoading} = useListDietDetail(dietNo);
-  const {data: listDiet} = useListDiet();
-  const dietSeq = getDietSeq(listDiet, dietNo);
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
-  function getDietSeq(dietArr, dietNo) {
-    for (let i = 0; i < dietArr.length; i++) {
-      if (dietArr[i].dietNo === dietNo) {
-        return dietArr[i].dietSeq;
-      }
-    }
-    return null; // 만약 해당하는 dietNo를 찾을 수 없을 경우 null 반환
-  }
-  //판매사별로 묶어주기
-  const groupBySeller = (arg: any) => {
-    const group = arg.reduce((r, a) => {
-      r[a.platformNm] = [...(r[a.platformNm] || []), a];
-      return r;
-    }, {});
-    return group;
-  };
-  const groupedDietDetail = groupBySeller(listDietDetail);
-  const sellerList: ISellerList = Object.values(groupedDietDetail);
-  return (
-    <CardSection>
-      {listDietDetail?.length ? (
-        <View>
-          <MenuTitle>{dietSeq}</MenuTitle>
-          <HorizontalLine
-            style={{marginTop: 16, backgroundColor: colors.black, height: 2}}
-          />
-        </View>
-      ) : null}
-      {sellerList?.map((e, i) => {
-        return (
-          <View key={i}>
-            <HomeLinkButton>
-              <Row style={{marginTop: 24}}>
-                <SellerText>{e[0]?.platformNm}</SellerText>
-                <LinkImage source={icons.mainPurpleLine_20} />
-              </Row>
-            </HomeLinkButton>
-
-            {e.map((el: IProductData, index: number) => {
-              return (
-                <View key={el.mainAttUrl}>
-                  <Row>
-                    <FoodThumbnail
-                      source={{
-                        uri: `${BASE_URL}${el.mainAttUrl}`,
-                      }}
-                      resizeMode="center"
-                    />
-                    <Col style={{flex: 1}}>
-                      <ProductName>{el.productNm}</ProductName>
-                      <PriceAndQuantity>
-                        {commaToNum(el.price)}원
-                      </PriceAndQuantity>
-                      <LinkButton>
-                        <LinkText>구매링크</LinkText>
-                      </LinkButton>
-                    </Col>
-                  </Row>
-                </View>
-              );
-            })}
-          </View>
-        );
-      })}
-    </CardSection>
-  );
-};
-
 export default SelfOrder;
 
-const MenuTitle = styled(TextMain)`
+const Container = styled.View`
+  flex: 1;
+`;
+
+const Card = styled.View`
+  background-color: ${colors.white};
+
+  border-radius: 5px;
+
+  margin: 20px 8px 0px 8px;
+  padding: 0px 8px 16px 8px;
+`;
+
+const CardTitle = styled(TextMain)`
   margin-top: 24px;
   font-size: 16px;
   font-weight: bold;
 `;
 
+const MenuBox = styled.View`
+  padding: 0px 8px 0px 8px;
+`;
+
+const SellerGroupBox = styled.View``;
+
+const HomeLinkButton = styled.TouchableOpacity`
+  flex-direction: row;
+`;
+
+const SellerText = styled(TextMain)`
+  font-size: 14px;
+`;
+
+const HomeLinkImage = styled.Image`
+  width: 20px;
+  height: 20px;
+`;
+
 const FoodThumbnail = styled.Image`
-  margin-top: 16px;
-  margin-right: 8px;
   width: 64px;
   height: 64px;
   border-radius: 5px;
 `;
 
-const LinkImage = styled.Image`
-  width: 20px;
-  height: 20px;
-`;
+const ProductInfoBox = styled.View`
+  margin-left: 8px;
 
-const SellerText = styled(TextMain)`
-  font-size: 14px;
+  flex: 1;
+
+  height: 64px;
+  padding: 2px 0px 2px 0px;
 `;
 
 const ProductName = styled(TextMain)`
@@ -169,25 +202,9 @@ const PriceAndQuantity = styled(TextMain)`
   font-size: 16px;
   font-weight: bold;
 `;
+const LinkButton = styled.TouchableOpacity``;
+
 const LinkText = styled(TextMain)`
   font-size: 12px;
   color: ${colors.main};
-`;
-
-const LinkButton = styled.TouchableOpacity`
-  width: 100%;
-  align-items: flex-end;
-`;
-
-const HomeLinkButton = styled.TouchableOpacity``;
-
-const CardSection = styled.View`
-  margin-top: 24px;
-  padding: 0px 8px 16px 8px;
-  border-radius: 5px;
-  background-color: ${colors.white};
-`;
-
-const SelfOrderContainer = styled.View`
-  padding: 0px 16px 32px 16px;
 `;

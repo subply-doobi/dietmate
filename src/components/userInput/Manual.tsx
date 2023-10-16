@@ -11,7 +11,7 @@ import {
   InputHeaderText,
   UserInfoTextInput,
 } from '../../styles/StyledConsts';
-import {IDropdownField, validationRules} from '../../constants/constants';
+import {validationRules} from '../../constants/constants';
 import {calculateManualCalorie} from '../../util/targetCalculation';
 import colors from '../../styles/colors';
 
@@ -64,7 +64,11 @@ const Manual = ({
         </InputHeader>
         <Input
           placeholder={`한 끼 탄수화물 입력 (추천: ${carbRecommended})`}
-          onFocus={() => scrollRef?.current.scrollTo({y: 40, animated: true})}
+          onFocus={() =>
+            setTimeout(() => {
+              scrollRef?.current.scrollToEnd({animated: true});
+            }, 50)
+          }
           value={value}
           onChangeText={onChange}
           isActivated={value ? true : false}
@@ -92,7 +96,11 @@ const Manual = ({
         </InputHeader>
         <Input
           placeholder={`한 끼 단백질 입력 (추천: ${proteinRecommended})`}
-          onFocus={() => scrollRef?.current.scrollTo({y: 40, animated: true})}
+          onFocus={() =>
+            setTimeout(() => {
+              scrollRef?.current.scrollToEnd({animated: true});
+            }, 50)
+          }
           value={value}
           onChangeText={onChange}
           isActivated={value ? true : false}
@@ -120,7 +128,11 @@ const Manual = ({
         </InputHeader>
         <Input
           placeholder={`한 끼 지방 입력 (추천: ${fatRecommended})`}
-          onFocus={() => scrollRef?.current.scrollTo({y: 40, animated: true})}
+          onFocus={() =>
+            setTimeout(() => {
+              scrollRef?.current.scrollToEnd({animated: true});
+            }, 50)
+          }
           value={value}
           onChangeText={onChange}
           isActivated={value ? true : false}
