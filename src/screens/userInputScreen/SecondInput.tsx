@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -50,6 +50,7 @@ const renderBmrKnownInput = (
   {field: {onChange, value}}: IFormField,
   handleSubmit: Function,
   userInfo1Refs?: React.MutableRefObject<any[]>,
+  scrollRef?: any,
 ) => {
   return (
     <>
@@ -63,6 +64,12 @@ const renderBmrKnownInput = (
         isActivated={value ? true : false}
         keyboardType="numeric"
         maxLength={4}
+        onFocus={() => {
+          console.log('scrollToEnd!!');
+          setTimeout(() => {
+            scrollRef.current.scrollToEnd({animated: true});
+          }, 50);
+        }}
       />
     </>
   );
@@ -131,6 +138,9 @@ const SecondInput = () => {
   const {data: baseData, refetch} = useGetBaseLine();
   // redux
   const dispatch = useDispatch();
+
+  // ref
+  const scrollRef = useRef<ScrollView>(null);
 
   // react-hook-form
   const {
@@ -207,7 +217,7 @@ const SecondInput = () => {
 
   return (
     <Container>
-      <ScrollView contentContainerStyle={{paddingBottom: 80}}>
+      <ScrollView contentContainerStyle={{paddingBottom: 80}} ref={scrollRef}>
         <Title>{'선택 정보를\n입력해주세요'}</Title>
         <SubText>입력된 정보로 목표 칼로리를 계산해드려요</SubText>
 
@@ -290,7 +300,9 @@ const SecondInput = () => {
         <Controller
           control={control}
           rules={validationRules.bmrKnown}
-          render={field => renderBmrKnownInput(field, handleSubmit)}
+          render={field =>
+            renderBmrKnownInput(field, handleSubmit, undefined, scrollRef)
+          }
           name="bmrKnown"
         />
         {errors.bmrKnown && (

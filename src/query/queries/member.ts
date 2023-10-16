@@ -11,7 +11,7 @@ export const useGetProfile = () => {
   });
 };
 
-export const useDeleteProfile = token => {
+export const useDeleteProfile = () => {
   const mutation = useMutation({
     mutationKey: [DELETE_USER],
     mutationFn: () => mutationFn(`${DELETE_USER}`, 'delete'),
