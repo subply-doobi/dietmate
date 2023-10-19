@@ -36,7 +36,7 @@ import {useListDiet, useUpdateDiet} from '../../query/queries/diet';
 export const myPageBtns = [
   {title: '몸무게변경', btnId: 'ChangeWeight'},
   {title: '찜한식품', btnId: 'Likes'},
-  {title: '주문내역', btnId: 'PaymentHistory'},
+  {title: '주문내역', btnId: 'OrderHistory'},
   {title: '이용가이드', btnId: 'Guide'},
   {title: '계정설정', btnId: 'Account'},
 ];
@@ -46,8 +46,8 @@ interface INavigateByBtnId {
 
 const navigateByBtnId: INavigateByBtnId = {
   Likes: (btnId, navigate) => navigate('BottomTabNav', {screen: btnId}),
-  PaymentHistory: (btnId, navigate) =>
-    navigate('PaymentHistoryNav', {screen: btnId}),
+  OrderHistory: (btnId, navigate) =>
+    navigate('OrderHistoryNav', {screen: btnId}),
   Account: (btnId, navigate) => navigate(btnId),
   Guide: (btnId, navigate) => navigate(btnId),
 };

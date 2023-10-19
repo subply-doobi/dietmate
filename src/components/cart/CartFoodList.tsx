@@ -179,7 +179,6 @@ const SelectedCheckImage = styled.Image`
 const ThumbnailImage = styled.Image`
   width: 72px;
   height: 72px;
-  background-color: ${colors.highlight};
   border-radius: 3px;
 `;
 
@@ -195,7 +194,6 @@ const DeleteBtn = styled.TouchableOpacity`
   align-items: flex-end;
   width: 36px;
   height: 36px;
-  /* background-color: ${colors.highlight}; */
 `;
 
 const DeleteImage = styled.Image`

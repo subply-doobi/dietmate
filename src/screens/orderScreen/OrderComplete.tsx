@@ -1,88 +1,134 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
+import styled from 'styled-components/native';
 
-import {NavigationProps} from '../../constants/constants';
+import {
+  BtnCTA,
+  Col,
+  Container,
+  TextMain,
+  TextSub,
+} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
-import {SCREENWIDTH} from '../../constants/constants';
+
+const getDeliveryDate = () => {
+  // 현재 시간 가져오기
+  const now = new Date();
+  const day = now.getDay();
+  const dayList = ['일', '월', '화', '수', '목', '금', '토'];
+  // 목금토일 => 다음주 목요일배송 | 월화수 => 토요일 배송
+  // 일 -> +4 월 -> +5 | 화 -> +4 | 수 -> +3 목 -> +7 | 금 -> +6 | 토 -> +5 |
+  const targetDayNum = [4, 5, 4, 3, 7, 6, 5];
+
+  const targetDate = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + targetDayNum[day],
+  );
+
+  const targetMonth = targetDate.getMonth() + 1;
+  const targetDay = targetDate.getDate();
+  const targetDayName = dayList[targetDate.getDay()];
+
+  return `${targetMonth}/${targetDay} (${targetDayName})`;
+};
 
 // 결제 완료, 구매완료 페이지
-const PaymentComplete = () => {
+const OrderComplete = () => {
   const navigation = useNavigation();
 
+  const goToOrderHistory = () => {
+    navigation.navigate('OrderHistoryNav', {
+      screen: 'OrderHistory',
+    });
+  };
+  const goToHome = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
+    });
+  };
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.mainText}>구매 완료!</Text>
-
-      <Text style={styles.subText}>[두비]는 현재 테스트 버전입니다.</Text>
-      <Text style={styles.explain}>
-        아직 부족한점이 많지만 두비가 열심히 보완할게요
-      </Text>
-      <View style={styles.buttons}>
-        <StyledButton
-          onPress={() => {
-            navigation.navigate('PaymentHistoryNav', {
-              screen: 'PaymentHistory',
-            });
-          }}>
-          <ButtonText>결제내역 바로가기</ButtonText>
-        </StyledButton>
-        <StyledButton
-          onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
-            });
-          }}>
-          <ButtonText>두비랑 식단구성 더 해보기</ButtonText>
-        </StyledButton>
-      </View>
-    </SafeAreaView>
+    <Container>
+      <CompleteText>구매 완료!</CompleteText>
+      <Desc style={{marginTop: 80}}>
+        [다이어트메이트]{'\n'}
+        1차 테스트에 참여해주셔서 감사합니다
+      </Desc>
+      <Desc>
+        스스로 구매하실 분들도{'\n'}
+        <Desc style={{fontWeight: 'bold'}}>주문내역</Desc>에서 식단을 확인할 수
+        있어요
+      </Desc>
+      <Desc>
+        초기 서비스라 불편한 점이 많지만{'\n'}
+        빠른 시일 내에 서비스를 개선할게요
+      </Desc>
+      <Box>
+        <BoxTitle>식단 예상 도착일</BoxTitle>
+        <DateText>{getDeliveryDate()}</DateText>
+      </Box>
+      <BtnBox>
+        <BtnCTA btnStyle="border" onPress={goToOrderHistory}>
+          <BtnText style={{color: colors.textSub}}>주문내역 바로가기</BtnText>
+        </BtnCTA>
+        <BtnCTA btnStyle="activated" style={{marginTop: 16}} onPress={goToHome}>
+          <BtnText>두비랑 식단구성 더 해보기</BtnText>
+        </BtnCTA>
+      </BtnBox>
+    </Container>
   );
 };
 
-export default PaymentComplete;
+export default OrderComplete;
 
-const StyledButton = styled.TouchableOpacity`
-  align-items: center;
-  flex: 1;
-  height: 50px;
-  padding: 15px;
-  border-width: 1px;
-  border-radius: 4px;
-  margin: 5px;
-  border-color: ${colors.inactivated};
+const CompleteText = styled(TextMain)`
+  font-size: 36px;
+  font-weight: 900;
+
+  margin-top: 48px;
 `;
-const ButtonText = styled.Text`
-  color: ${colors.textSub};
+
+const Desc = styled(TextSub)`
   font-size: 16px;
+  font-weight: normal;
+
+  margin-top: 24px;
 `;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: 16,
-    marginVertical: 0,
-  },
-  mainText: {
-    marginTop: 100,
-    fontSize: 40,
-    fontWeight: 'bold',
-  },
-  subText: {
-    fontSize: 20,
-    color: colors.textSub,
-    marginTop: 40,
-  },
-  explain: {
-    marginTop: 10,
-    width: 200,
-    fontSize: 24,
-  },
-  buttons: {
-    position: 'absolute',
-    bottom: 60,
-    width: SCREENWIDTH * 0.9,
-  },
-});
+const Box = styled.View`
+  width: 100%;
+  height: 128px;
+
+  border-width: 2px;
+  border-color: ${colors.highlight};
+
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 48px;
+`;
+const BoxTitle = styled(TextSub)`
+  position: absolute;
+  font-size: 14px;
+
+  top: 8px;
+  left: 8px;
+`;
+const DateText = styled(TextMain)`
+  align-self: center;
+
+  font-size: 24px;
+  font-weight: bold;
+`;
+
+const BtnBox = styled.View`
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  align-self: center;
+`;
+
+const BtnText = styled(TextMain)`
+  font-size: 16px;
+  color: ${colors.white};
+`;

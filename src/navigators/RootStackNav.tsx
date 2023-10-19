@@ -9,22 +9,22 @@ import {useHandleError} from '../util/handleError';
 import InputNav from './InputNav';
 import BottomTabNav from './BottomTabNav';
 import AddressEdit from '../screens/orderScreen/AddressEdit';
-import PaymentHistoryNav from './PaymentHistoryNav';
+import OrderHistoryNav from './OrderHistoryNav';
 import HistoryNav from './HistoryNav';
-import PayMethodGuidePage from '../screens/orderScreen/PaymethodGuidePage';
+import OrderHeaderTabNav from './OrderHeaderTabNav';
+import OrderGuideHeaderTabNav from './OrderGuideHeaderTabNav';
 
 import Guide from '../screens/Guide';
 import Login from '../screens/Login';
 import FoodDetail from '../screens/FoodDetail';
+import Account from '../screens/myPageScreen/Account';
+import OrderComplete from '../screens/orderScreen/OrderComplete';
 import BackArrow from '../components/common/BackArrow';
+import KakaoPay from '../components/payment/KakaoPay';
+import CustomErrorBoundary from '../components/common/CustomErrorBoundary';
 import {Pressable, Image} from 'react-native';
 import {icons} from '../assets/icons/iconSource';
 import {useDispatch} from 'react-redux';
-import Account from '../screens/myPageScreen/Account';
-import KakaoPay from '../components/payment/KakaoPay';
-import PaymentComplete from '../screens/orderScreen/OrderComplete';
-import CustomErrorBoundary from '../components/common/CustomErrorBoundary';
-import OrderHeaderTabNav from './OrderHeaderTabNav';
 
 const Stack = createNativeStackNavigator();
 
@@ -97,7 +97,11 @@ const RootStackNav = () => {
           headerLeft: () => <BackArrow goBackFn={goBack} />,
           headerRight: () => {
             return (
-              <Pressable onPress={() => navigate('PayMethodGuidePageNav')}>
+              <Pressable
+                onPress={() => {
+                  // ************************* temp
+                  navigate('OrderGuideHeaderTabNav');
+                }}>
                 <Image
                   source={icons.question_24}
                   style={{width: 24, height: 24}}
@@ -133,8 +137,8 @@ const RootStackNav = () => {
       />
       <Stack.Screen name="KakaoPayNav" component={KakaoPay} />
       <Stack.Screen name="HistoryNav" component={HistoryNav} />
-      <Stack.Screen name="PaymentHistoryNav" component={PaymentHistoryNav} />
-      <Stack.Screen name="PaymentComplete" component={PaymentComplete} />
+      <Stack.Screen name="OrderHistoryNav" component={OrderHistoryNav} />
+      <Stack.Screen name="OrderComplete" component={OrderComplete} />
       <Stack.Screen
         name="Account"
         component={Account}
@@ -152,8 +156,8 @@ const RootStackNav = () => {
         }}
       />
       <Stack.Screen
-        name="PayMethodGuidePageNav"
-        component={PayMethodGuidePage}
+        name="OrderGuideHeaderTabNav"
+        component={OrderGuideHeaderTabNav}
         options={{
           headerShown: true,
           headerLeft: () => <BackArrow goBackFn={goBack} />,

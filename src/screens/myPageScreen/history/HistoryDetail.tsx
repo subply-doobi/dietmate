@@ -278,7 +278,6 @@ const ImageBox = styled.TouchableOpacity`
 const HistoryImage = styled.Image`
   flex: 1;
   border-radius: 10px;
-  background-color: ${colors.highlight};
 `;
 
 const ImageDeleteBtn = styled.TouchableOpacity`

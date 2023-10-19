@@ -5,12 +5,11 @@ import {NavigationProps} from '../constants/constants';
 
 import OrderHistoryDetail from '../screens/myPageScreen/orderHistory/OrderHistoryDetail';
 import OrderHistory from '../screens/myPageScreen/orderHistory/OrderHistory';
-import PaymentHistoryDetail from '../screens/myPageScreen/PaymentHistoryDetail';
 import BackArrow from '../components/common/BackArrow';
 
 const Stack = createNativeStackNavigator();
 
-const PaymentHistoryNav = ({navigation: {navigate}}: NavigationProps) => {
+const OrderHistoryNav = ({navigation: {navigate}}: NavigationProps) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -52,4 +51,4 @@ const PaymentHistoryNav = ({navigation: {navigate}}: NavigationProps) => {
   );
 };
 
-export default PaymentHistoryNav;
+export default OrderHistoryNav;

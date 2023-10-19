@@ -1,8 +1,6 @@
-import React from 'react';
 import IMP from 'iamport-react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
-import {setCurrentDiet} from '../../stores/slices/cartSlice';
 import {useUpdateDiet, useCreateDiet} from '../../query/queries/diet';
 import {useUpdateOrder, useDeleteOrder} from '../../query/queries/order';
 
@@ -26,7 +24,6 @@ interface IIamportPayment {
 const KakaoPay = () => {
   const route = useRoute();
   const {navigate, reset} = useNavigation();
-  const dispatch = useDispatch();
 
   const {customerData, priceTotal, orderNumber} = route.params;
   const updateDietMutation = useUpdateDiet();
@@ -86,7 +83,7 @@ const KakaoPay = () => {
               index: 0,
               routes: [
                 {name: 'BottomTabNav', params: {screen: 'Home'}},
-                {name: 'PaymentComplete'},
+                {name: 'OrderComplete'},
               ],
             }),
             createDietMutation.mutate())

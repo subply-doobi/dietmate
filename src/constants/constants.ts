@@ -4,6 +4,7 @@ import {Dimensions, Platform} from 'react-native';
 export const {width, height} = Dimensions.get('screen');
 export const SCREENWIDTH = Math.min(width, height);
 export const SCREENHEIGHT = Math.max(width, height);
+export const DESIGN_WIDTH = 360;
 export const DALERT_WIDTH = SCREENWIDTH - 80;
 export const IS_ANDROID = Platform.OS === 'android';
 export const IS_IOS = Platform.OS === 'ios';

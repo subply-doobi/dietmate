@@ -31,7 +31,7 @@ import {IProductData} from '../../../query/types/product';
 import {useGetOrderDetail} from '../../../query/queries/order';
 import {useNavigation} from '@react-navigation/native';
 
-const PaymentHistoryDetail = props => {
+const OrderHistoryDetail = props => {
   const navigation = useNavigation();
   const {productData, totalPrice, orderNo, buyDate} = props?.route?.params;
   const addMutation = useCreateDietDetail();
@@ -268,7 +268,7 @@ const PaymentHistoryDetail = props => {
   );
 };
 
-export default PaymentHistoryDetail;
+export default OrderHistoryDetail;
 
 const Container = styled.View`
   flex: 1;

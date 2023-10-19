@@ -83,7 +83,7 @@ const MenuCard = ({dietNo, dietSeq}: IMenuCard) => {
       <MenuBox>
         {reGroupedDataBySeller?.map((group, index: number) => (
           // 판매자별 구매상품 묶음
-          <SellerGroupBox>
+          <SellerGroupBox key={index}>
             <Row style={{marginTop: 24}}>
               <HomeLinkButton
                 onPress={() => Linking.openURL('https://naver.com')}>
@@ -133,10 +133,6 @@ const SelfOrder = () => {
     </Container>
   );
 };
-
-interface FoodInOneDietProps {
-  dietNo: string;
-}
 
 export default SelfOrder;
 
