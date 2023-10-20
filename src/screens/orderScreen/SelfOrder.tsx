@@ -19,6 +19,9 @@ import {SCREENWIDTH} from '../../constants/constants';
 import {BASE_URL} from '../../query/queries/urls';
 import {useListDiet, useListDietDetail} from '../../query/queries/diet';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useKakaoPayReady, useCreateOrder} from '../../query/queries/order';
+import {useUpdateDiet, useCreateDiet} from '../../query/queries/diet';
+import {useUpdateOrder, useDeleteOrder} from '../../query/queries/order';
 
 //판매사별로 묶어주기 => util sumUp regroupBySeller 함수에 reduce적용해보기
 // const groupBySeller = (arg: any) => {
@@ -61,10 +64,8 @@ interface IMenuCard {
 const MenuCard = ({dietNo, dietSeq}: IMenuCard) => {
   const {data: dietDetailData, isLoading: isListDietDetailLoading} =
     useListDietDetail(dietNo);
-  console.log('MenuCard: listDietDetail: ', dietDetailData);
   const reGroupedDataBySeller =
     dietDetailData && reGroupBySeller(dietDetailData);
-  console.log('MenuCard: dietDetailGroupedBySeller: ', reGroupedDataBySeller);
 
   if (isListDietDetailLoading) {
     return <ActivityIndicator />;
@@ -74,7 +75,7 @@ const MenuCard = ({dietNo, dietSeq}: IMenuCard) => {
       <CardTitle>
         {dietSeq}{' '}
         <CardTitle style={{color: colors.textSub}}>
-          (x {dietDetailData && dietDetailData[0].qty}개)
+          (x {dietDetailData && dietDetailData[0]?.qty}개)
         </CardTitle>{' '}
       </CardTitle>
       <HorizontalSpace height={16} />
@@ -105,6 +106,12 @@ const MenuCard = ({dietNo, dietSeq}: IMenuCard) => {
 
 const SelfOrder = () => {
   const {data: listDiet, isLoading: isListDietLoading} = useListDiet();
+  const createOrderMutation = useCreateOrder();
+  const updateDietMutation = useUpdateDiet();
+  const updateOrderMutation = useUpdateOrder();
+  const deleteOrderMutation = useDeleteOrder();
+  const createDietMutation = useCreateDiet();
+
   if (isListDietLoading) {
     return <ActivityIndicator />;
   }
@@ -127,7 +134,31 @@ const SelfOrder = () => {
       <BtnBottomCTA
         width={SCREENWIDTH - 16}
         btnStyle={'activated'}
-        onPress={() => console.log('주문내역에 저장')}>
+        onPress={
+          async () => {
+            const orderNumber = await createOrderMutation.mutateAsync({});
+            updateDietMutation.mutate({
+              statusCd: 'SP006005',
+              orderNo: orderNumber.orderNo,
+            }),
+              updateOrderMutation.mutate({
+                statusCd: 'SP006005',
+                orderNo: orderNumber.orderNo,
+                customData: 'SELF_ORDER',
+                appScheme: 'string',
+                escrow: 'string',
+                customerUid: 'string',
+                buyDate: 'string',
+                productShippingPrice: 'string',
+                statusNm: 'string',
+              }),
+              createDietMutation.mutate();
+          }
+          // async () => {
+          //   const orderNumber = await createOrderMutation.mutateAsync({});
+          //   console.log('주문내역 저장하기', orderNumber.orderNo);
+          // }
+        }>
         <BtnText>주문내역에 저장하기</BtnText>
       </BtnBottomCTA>
     </Container>
