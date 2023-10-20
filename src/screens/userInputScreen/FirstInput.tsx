@@ -127,7 +127,7 @@ const FirstInput = props => {
   const navigation = useNavigation();
   let checkGuestLogin = false;
   // const {isGuestLogin} = props?.route?.params;
-  // console.log('userInfo1: props: ', props.route.params);
+  // console.log('userInfom1: props: ', props.route.params);
   props.route.params === undefined
     ? (checkGuestLogin = false)
     : (checkGuestLogin = true);

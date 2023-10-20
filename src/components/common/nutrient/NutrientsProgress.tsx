@@ -82,7 +82,6 @@ const NutrientsProgress = ({
 
   // react-query
   const {data: baseLineData, isInitialLoading, isLoading} = useGetBaseLine();
-  console.log('NutrientsProgress: baseLineData', baseLineData);
 
   // etc
   const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);

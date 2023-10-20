@@ -40,6 +40,7 @@ const OrderHistory = () => {
   // navigation
   const {data: orderData, isLoading} = useGetOrder();
   const {navigate} = useNavigation();
+  console.log('orderData', orderData);
 
   // useState
   const [emptyAlertShow, setEmptyAlertShow] = useState(false);
@@ -100,7 +101,6 @@ const OrderHistory = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* 주문날짜 별로 반복*/}
         {regroupedData?.map((order, orderIdx) => {
-          console.log('order', order);
           return (
             <OrderBox key={orderIdx}>
               <Row style={{justifyContent: 'space-between'}}>

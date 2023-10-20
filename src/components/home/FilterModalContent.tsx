@@ -15,7 +15,6 @@ import PriceContent from './filterContents/PriceContent';
 import SearchContent from './filterContents/SearchContent';
 import DAlert from '../common/alert/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
-import NutritionContent2 from './filterContents/NutritionContent2';
 import {IFilterParams} from '../../query/types/product';
 
 interface Props {
@@ -63,7 +62,7 @@ const FilterModalContent = (props: Props) => {
     nutritionParam,
     priceParam,
   };
-  console.log('FILTERMODALCONTENT/params:', params.priceParam);
+  console.log('FILTERMODALCONTENT/params:', params);
   const [initializeModalShow, setInitializeModalShow] = useState(false);
   const resetType = [
     {
@@ -176,7 +175,7 @@ const FilterModalContent = (props: Props) => {
       //   nutritionParam={nutritionParam}
       //   filterParams={filterParams}
       // />
-      <NutritionContent2
+      <NutritionContent
         setNutritionParam={setNutritionParam}
         nutritionParam={nutritionParam}
         filterParams={filterParams}
