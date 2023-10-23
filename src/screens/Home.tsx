@@ -165,7 +165,7 @@ const Home = () => {
 
   useEffect(() => {
     const initializeDietNo = async () => {
-      const initialDietNo = (await queryFn<IDietData>(LIST_DIET))[0].dietNo;
+      const initialDietNo = (await queryFn<IDietData>(LIST_DIET))[0]?.dietNo;
       initialDietNo && dispatch(setCurrentDiet(initialDietNo));
     };
     initializeDietNo();

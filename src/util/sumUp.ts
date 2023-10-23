@@ -7,6 +7,7 @@ import {
   IDietTotalData,
 } from '../query/types/diet';
 import {IProductData, IProductsData} from '../query/types/product';
+import {IOrderData, IOrderedProduct} from '../query/types/order';
 
 export const sumUpNutrients = (dietDetail: IDietDetailData | undefined) => {
   let cal = 0;
@@ -27,7 +28,7 @@ export const sumUpNutrients = (dietDetail: IDietDetailData | undefined) => {
 
 /** 수량 상관없는 가격합계만 */
 export const sumUpPrice = (
-  dietDetail: IDietDetailData | undefined,
+  dietDetail: IDietDetailData | IOrderedProduct[] | undefined,
   qtyConsidered?: boolean | undefined,
 ) => {
   if (!dietDetail) {

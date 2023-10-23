@@ -37,8 +37,13 @@ const OrderComplete = () => {
   const navigation = useNavigation();
 
   const goToOrderHistory = () => {
-    navigation.navigate('OrderHistoryNav', {
-      screen: 'OrderHistory',
+    console.log('주문내역 바로가기');
+    navigation.reset({
+      index: 0,
+      routes: [
+        {name: 'BottomTabNav', params: {screen: 'Home'}},
+        {name: 'OrderHistoryNav', params: {screen: 'OrderHistory'}},
+      ],
     });
   };
   const goToHome = () => {
@@ -55,9 +60,13 @@ const OrderComplete = () => {
         1차 테스트에 참여해주셔서 감사합니다
       </Desc>
       <Desc>
-        스스로 구매하실 분들도{'\n'}
-        <Desc style={{fontWeight: 'bold'}}>주문내역</Desc>에서 식단을 확인할 수
-        있어요
+        <Desc style={{fontWeight: 'bold', color: colors.textMain}}>
+          스스로 구매하실 분들도{'\n'}
+        </Desc>
+        <Desc style={{fontWeight: 'bold', color: colors.textMain}}>
+          주문내역
+        </Desc>
+        에서 식단을 확인할 수 있어요
       </Desc>
       <Desc>
         초기 서비스라 불편한 점이 많지만{'\n'}

@@ -27,7 +27,7 @@ import {useGetBaseLine, useUpdateBaseLine} from '../../query/queries/baseLine';
 import {
   useCreateOrder,
   useUpdateOrder,
-  useGetOrder,
+  useListOrder,
 } from '../../query/queries/order';
 import {convertNutr, convertNutrByWeight} from '../../util/targetCalculation';
 import {useListDiet, useUpdateDiet} from '../../query/queries/diet';
@@ -59,7 +59,7 @@ const Mypage = () => {
   // react-query
   const {data: baseLineData} = useGetBaseLine();
   const updateMutation = useUpdateBaseLine();
-  const {data: orderData, isLoading} = useGetOrder();
+  const {data: orderData, isLoading} = useListOrder();
 
   // FlatList Data
   type INutrTargetData = Array<{

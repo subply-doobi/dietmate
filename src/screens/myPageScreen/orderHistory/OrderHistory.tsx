@@ -12,11 +12,11 @@ import {
 } from '../../../styles/StyledConsts';
 import colors from '../../../styles/colors';
 import {useNavigation} from '@react-navigation/native';
-import {useGetOrder, useUpdateOrder} from '../../../query/queries/order';
+import {useListOrder, useUpdateOrder} from '../../../query/queries/order';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ActivityIndicator} from 'react-native';
 import {BASE_URL} from '../../../query/queries/urls';
-import {commaToNum, sumUpNutrients} from '../../../util/sumUp';
+import {commaToNum, sumUpNutrients, sumUpPrice} from '../../../util/sumUp';
 import {isSearchBarAvailableForCurrentPlatform} from 'react-native-screens';
 import DAlert from '../../../components/common/alert/DAlert';
 import CommonAlertContent from '../../../components/common/alert/CommonAlertContent';
@@ -38,7 +38,7 @@ interface IProductData {
 
 const OrderHistory = () => {
   // navigation
-  const {data: orderData, isLoading} = useGetOrder();
+  const {data: orderData, isLoading} = useListOrder();
   const {navigate} = useNavigation();
   console.log('orderData', orderData);
 
@@ -107,14 +107,11 @@ const OrderHistory = () => {
                 <OrderDate>{order[0][0].buyDate}</OrderDate>
                 <DetailBtn
                   onPress={() =>
-                    navigate('PaymentHistoryNav', {
+                    navigate('OrderHistoryNav', {
                       screen: 'OrderHistoryDetail',
                       params: {
-                        productData: order,
-                        buyDate: order[0][0].buyDate,
-                        totalPrice: totalPrice(orderIdx),
-                        orderNo: order[0][0].orderNo,
-                        qty: order[0][0].qty,
+                        orderDetailData: order,
+                        totalPrice: order[0][0].orderPrice,
                       },
                     })
                   }>
@@ -160,7 +157,13 @@ const OrderHistory = () => {
                 <ArrowImage source={icons.arrowRight_20} />
               </Row>
               <HorizontalLine style={{marginTop: 8}} />
-              <TotalPrice>{commaToNum(totalPrice(orderIdx))} 원</TotalPrice>
+              {order[0][0].orderTypeCd === 'SP011001' ? (
+                <SelfOrderTextBox>
+                  <SelfOrderText>직접 구매한 식단</SelfOrderText>
+                </SelfOrderTextBox>
+              ) : (
+                <TotalPrice>{commaToNum(order[0][0].orderPrice)} 원</TotalPrice>
+              )}
             </OrderBox>
           );
         })}
@@ -223,4 +226,21 @@ const TotalPrice = styled(TextMain)`
   font-size: 16px;
   font-weight: bold;
   align-self: flex-end;
+`;
+
+const SelfOrderTextBox = styled.View`
+  height: 24px;
+  width: 100%;
+  background-color: ${colors.backgroundLight2};
+
+  justify-content: center;
+  align-items: flex-end;
+
+  margin-top: 8px;
+  padding: 0px 8px 0px 0px;
+`;
+
+const SelfOrderText = styled(TextMain)`
+  font-size: 16px;
+  font-weight: bold;
 `;

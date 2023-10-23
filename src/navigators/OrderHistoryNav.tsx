@@ -6,10 +6,13 @@ import {NavigationProps} from '../constants/constants';
 import OrderHistoryDetail from '../screens/myPageScreen/orderHistory/OrderHistoryDetail';
 import OrderHistory from '../screens/myPageScreen/orderHistory/OrderHistory';
 import BackArrow from '../components/common/BackArrow';
+import {useNavigation} from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 
-const OrderHistoryNav = ({navigation: {navigate}}: NavigationProps) => {
+const OrderHistoryNav = () => {
+  const {goBack, navigate} = useNavigation();
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -24,11 +27,7 @@ const OrderHistoryNav = ({navigation: {navigate}}: NavigationProps) => {
             color: colors.textMain,
           },
           headerShadowVisible: false,
-          headerLeft: () => (
-            <BackArrow
-              goBackFn={() => navigate('BottomTabNav', {screen: 'Mypage'})}
-            />
-          ),
+          headerLeft: () => <BackArrow goBackFn={goBack} />,
         }}
       />
       <Stack.Screen
