@@ -25,7 +25,12 @@ import {
   DELETE_ORDER,
   UPDATE_DIET,
 } from './urls';
-import {IOrderData} from '../types/order';
+import {
+  ICreateOrderParams,
+  IOrderData,
+  IOrderDetailData,
+  IUpdateOrderParams,
+} from '../types/order';
 
 export const useKakaoPayReady = () => {
   const dispatch = useDispatch();
@@ -121,7 +126,8 @@ export const useKakaopayApprove = () => {
 
 export const useCreateOrder = () => {
   const mutation = useMutation({
-    mutationFn: data => mutationFn(`${CREATE_ORDER}`, 'put', data),
+    mutationFn: (body: ICreateOrderParams) =>
+      mutationFn(`${CREATE_ORDER}`, 'put', body),
     // .then(res => {
     //   mutationFn(
     //     `${UPDATE_ORDER}?statusCd=SP006003&orderNo=${res.orderNo}`,
@@ -149,7 +155,14 @@ export const useCreateOrder = () => {
 
 export const useUpdateOrder = () => {
   const mutation = useMutation({
-    mutationFn: ({statusCd, orderNo}: {statusCd: string; orderNo: string}) =>
+    mutationFn: ({
+      // parameter로 넘길 것
+      orderNo,
+      statusCd,
+    }: {
+      orderNo: string;
+      statusCd: string;
+    }) =>
       mutationFn(
         `${UPDATE_ORDER}?statusCd=${statusCd}&orderNo=${orderNo}`,
         'post',
@@ -166,14 +179,14 @@ export const useUpdateOrder = () => {
   return mutation;
 };
 
-export const useGetOrder = () => {
+export const useListOrder = () => {
   return useQuery<IOrderData>({
     queryKey: [ORDER],
     queryFn: () => queryFn(`${LIST_ORDER}`),
   });
 };
-export const useGetOrderDetail = orderNo => {
-  return useQuery({
+export const useListOrderDetail = (orderNo: string) => {
+  return useQuery<IOrderDetailData>({
     queryKey: [ORDER_DETAIL],
     queryFn: () => queryFn(`${LIST_ORDER_DETAIL}/${orderNo}`),
   });

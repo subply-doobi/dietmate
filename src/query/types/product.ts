@@ -58,6 +58,8 @@ export interface IProductData {
   subCategoryNm: string;
   sugar: string;
   transFat: string;
+  link1: string;
+  link2: string;
 }
 
 export type IProductsData = IProductData[];

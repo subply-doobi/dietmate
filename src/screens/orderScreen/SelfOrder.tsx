@@ -22,6 +22,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {useKakaoPayReady, useCreateOrder} from '../../query/queries/order';
 import {useUpdateDiet, useCreateDiet} from '../../query/queries/diet';
 import {useUpdateOrder, useDeleteOrder} from '../../query/queries/order';
+import {useNavigation} from '@react-navigation/native';
 
 //판매사별로 묶어주기 => util sumUp regroupBySeller 함수에 reduce적용해보기
 // const groupBySeller = (arg: any) => {
@@ -45,7 +46,7 @@ const ProductInfo = ({group}: IProductInfo) => {
             <ProductName>{product?.productNm}</ProductName>
             <PriceAndQuantity>{commaToNum(product?.price)}원</PriceAndQuantity>
             <Row style={{alignSelf: 'flex-end'}}>
-              <LinkButton onPress={() => Linking.openURL('https://naver.com')}>
+              <LinkButton onPress={() => Linking.openURL(product.link2)}>
                 <LinkText>구매링크</LinkText>
               </LinkButton>
             </Row>
@@ -87,7 +88,7 @@ const MenuCard = ({dietNo, dietSeq}: IMenuCard) => {
           <SellerGroupBox key={index}>
             <Row style={{marginTop: 24}}>
               <HomeLinkButton
-                onPress={() => Linking.openURL('https://naver.com')}>
+                onPress={() => Linking.openURL(`${group[0].link1}`)}>
                 <SellerText>{group[0].platformNm}</SellerText>
                 <HomeLinkImage source={icons.mainPurpleLine_20} />
               </HomeLinkButton>
@@ -105,16 +106,62 @@ const MenuCard = ({dietNo, dietSeq}: IMenuCard) => {
 };
 
 const SelfOrder = () => {
+  // navigation
+  const {reset} = useNavigation();
+
+  // react-query
   const {data: listDiet, isLoading: isListDietLoading} = useListDiet();
   const createOrderMutation = useCreateOrder();
   const updateDietMutation = useUpdateDiet();
   const updateOrderMutation = useUpdateOrder();
-  const deleteOrderMutation = useDeleteOrder();
   const createDietMutation = useCreateDiet();
 
   if (isListDietLoading) {
     return <ActivityIndicator />;
   }
+
+  const onHandleSelfOrder = async () => {
+    const orderNumber = await createOrderMutation.mutateAsync({
+      // 두비서버 자체정보
+      orderTypeCd: 'SP011002',
+      shippingPrice: '4000',
+      orderPrice: '0',
+
+      // 아임포트 결제 정보 ,
+      pg: '',
+      escrow: '',
+      payMethod: '',
+      payName: '',
+      payAmount: '',
+      customData: '',
+      merchantUid: '',
+      buyerName: '',
+      buyerTel: '',
+      buyerEmail: '',
+      buyerAddr: '',
+      buyerZipCode: '',
+      appScheme: '',
+      customerUid: '',
+    });
+    await updateDietMutation.mutateAsync({
+      statusCd: 'SP006005',
+      orderNo: orderNumber.orderNo,
+    });
+    await updateOrderMutation.mutateAsync({
+      orderNo: orderNumber.orderNo,
+      statusCd: 'SP006005',
+    });
+    await createDietMutation.mutateAsync();
+
+    reset({
+      index: 0,
+      routes: [
+        {name: 'BottomTabNav', params: {screen: 'Home'}},
+        {name: 'OrderComplete'},
+      ],
+    });
+  };
+
   return (
     <Container>
       <HorizontalSpace height={4} />
@@ -134,31 +181,7 @@ const SelfOrder = () => {
       <BtnBottomCTA
         width={SCREENWIDTH - 16}
         btnStyle={'activated'}
-        onPress={
-          async () => {
-            const orderNumber = await createOrderMutation.mutateAsync({});
-            updateDietMutation.mutate({
-              statusCd: 'SP006005',
-              orderNo: orderNumber.orderNo,
-            }),
-              updateOrderMutation.mutate({
-                statusCd: 'SP006005',
-                orderNo: orderNumber.orderNo,
-                customData: 'SELF_ORDER',
-                appScheme: 'string',
-                escrow: 'string',
-                customerUid: 'string',
-                buyDate: 'string',
-                productShippingPrice: 'string',
-                statusNm: 'string',
-              }),
-              createDietMutation.mutate();
-          }
-          // async () => {
-          //   const orderNumber = await createOrderMutation.mutateAsync({});
-          //   console.log('주문내역 저장하기', orderNumber.orderNo);
-          // }
-        }>
+        onPress={async () => onHandleSelfOrder()}>
         <BtnText>주문내역에 저장하기</BtnText>
       </BtnBottomCTA>
     </Container>

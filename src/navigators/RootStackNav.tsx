@@ -126,7 +126,7 @@ const RootStackNav = () => {
           headerLeft: () => (
             <BackArrow
               goBackFn={() =>
-                navigate('OrderHeaderTab', {
+                navigate('OrderHeaderTabNav', {
                   screen: 'Order',
                   params: {from: 'AddressEdit'},
                 })
