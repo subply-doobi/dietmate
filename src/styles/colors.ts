@@ -15,6 +15,7 @@ export default {
   textMain: '#444444',
   textSub: '#8f8f8f',
   highlight: '#DECFF9',
+  highlight2: '#F9F6FF',
   line: '#8f8f8f',
   lineLight: '#E5E5E5',
   kakaoColor: '#ffe812',

@@ -9,7 +9,7 @@ import Home from '../screens/Home';
 import Mypage from '../screens/myPageScreen/Mypage';
 import Likes from '../screens/Likes';
 import Cart from '../screens/Cart';
-import BackArrow from '../components/common/BackArrow';
+import BackArrow from '../components/common/navigation/BackArrow';
 
 import {useListDietDetailAll} from '../query/queries/diet';
 

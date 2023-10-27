@@ -12,12 +12,12 @@ import {
 } from '@react-navigation/native';
 import {useFlipper} from '@react-navigation/devtools';
 import RootStackNav from './src/navigators/RootStackNav';
-import ErrorAlert from './src/components/common/ErrorAlert';
+import ErrorAlert from './src/components/common/error/ErrorAlert';
 import SplashScreen from 'react-native-splash-screen';
 
 import * as Sentry from '@sentry/react-native';
 import {ErrorBoundary} from 'react-error-boundary';
-import CustomErrorBoundary from './src/components/common/CustomErrorBoundary';
+import CustomErrorBoundary from './src/components/common/error/CustomErrorBoundary';
 
 Sentry.init({
   dsn: 'https://2fd6acc146d943ddb7a659b5dc18e632@o4505112210178048.ingest.sentry.io/4505112441782272',

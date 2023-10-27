@@ -1,5 +1,20 @@
 import {IFilterParams, IProductsData} from '../../query/types/product';
-import {filterBtnRange} from '../../constants/constants';
+import {FILTER_BTN_RANGE} from '../../constants/constants';
+import {ISortFilter} from '../../stores/slices/sortFilterSlice';
+
+export const checkisFiltered = (
+  filter: ISortFilter['filter'],
+  filterId: number,
+) => {
+  // 카테고리
+  if (filterId === 0) return filter.category.length > 0;
+
+  // 가격
+  if (filterId === 2) return filter.price.length > 0;
+
+  // 영양성분
+  return Object.values(filter.nutrition).some(value => value.length > 0);
+};
 
 const findIdxRange = (
   calorieInitialState: number[],
@@ -11,15 +26,15 @@ const findIdxRange = (
     calorieInitialState.length === 0
       ? []
       : [
-          filterBtnRange[0].value.findIndex(
+          FILTER_BTN_RANGE[0].value.findIndex(
             item =>
               item[0] <= calorieInitialState[0] &&
               calorieInitialState[0] < item[1],
           ),
           calorieInitialState[1] >
-          filterBtnRange[0].value[filterBtnRange[0].value.length - 1][1]
-            ? filterBtnRange[0].value.length - 1
-            : filterBtnRange[0].value.findIndex(
+          FILTER_BTN_RANGE[0].value[FILTER_BTN_RANGE[0].value.length - 1][1]
+            ? FILTER_BTN_RANGE[0].value.length - 1
+            : FILTER_BTN_RANGE[0].value.findIndex(
                 item =>
                   item[0] <= calorieInitialState[1] &&
                   calorieInitialState[1] < item[1],
@@ -29,14 +44,14 @@ const findIdxRange = (
     carbInitialState.length === 0
       ? []
       : [
-          filterBtnRange[1].value.findIndex(
+          FILTER_BTN_RANGE[1].value.findIndex(
             item =>
               item[0] <= carbInitialState[0] && carbInitialState[0] < item[1],
           ),
           carbInitialState[1] >
-          filterBtnRange[1].value[filterBtnRange[1].value.length - 1][1]
-            ? filterBtnRange[1].value.length - 1
-            : filterBtnRange[1].value.findIndex(
+          FILTER_BTN_RANGE[1].value[FILTER_BTN_RANGE[1].value.length - 1][1]
+            ? FILTER_BTN_RANGE[1].value.length - 1
+            : FILTER_BTN_RANGE[1].value.findIndex(
                 item =>
                   item[0] <= carbInitialState[1] &&
                   carbInitialState[1] < item[1],
@@ -46,15 +61,15 @@ const findIdxRange = (
     proteinInitialState.length === 0
       ? []
       : [
-          filterBtnRange[2].value.findIndex(
+          FILTER_BTN_RANGE[2].value.findIndex(
             item =>
               item[0] <= proteinInitialState[0] &&
               proteinInitialState[0] < item[1],
           ),
           proteinInitialState[1] >
-          filterBtnRange[2].value[filterBtnRange[2].value.length - 1][1]
-            ? filterBtnRange[2].value.length - 1
-            : filterBtnRange[2].value.findIndex(
+          FILTER_BTN_RANGE[2].value[FILTER_BTN_RANGE[2].value.length - 1][1]
+            ? FILTER_BTN_RANGE[2].value.length - 1
+            : FILTER_BTN_RANGE[2].value.findIndex(
                 item =>
                   item[0] <= proteinInitialState[1] &&
                   proteinInitialState[1] < item[1],
@@ -64,14 +79,14 @@ const findIdxRange = (
     fatInitialState.length === 0
       ? []
       : [
-          filterBtnRange[3].value.findIndex(
+          FILTER_BTN_RANGE[3].value.findIndex(
             item =>
               item[0] <= fatInitialState[0] && fatInitialState[0] < item[1],
           ),
           fatInitialState[1] >
-          filterBtnRange[3].value[filterBtnRange[3].value.length - 1][1]
-            ? filterBtnRange[3].value.length - 1
-            : filterBtnRange[3].value.findIndex(
+          FILTER_BTN_RANGE[3].value[FILTER_BTN_RANGE[3].value.length - 1][1]
+            ? FILTER_BTN_RANGE[3].value.length - 1
+            : FILTER_BTN_RANGE[3].value.findIndex(
                 item =>
                   item[0] <= fatInitialState[1] && fatInitialState[1] < item[1],
               ),

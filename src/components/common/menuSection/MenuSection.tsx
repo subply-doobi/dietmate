@@ -25,9 +25,9 @@ import {
 } from '../../../query/queries/diet';
 import {scrollTo} from 'react-native-reanimated';
 import CartFoodList from '../../cart/CartFoodList';
-import DBottomSheet from '../DBottomSheet';
+import DBottomSheet from '../bottomsheet/DBottomSheet';
 import NumberPickerContent from '../../cart/NumberPickerContent';
-import Menu from './Menu';
+import Menu from '../../cart/Menu';
 
 const MenuSection = () => {
   // redux

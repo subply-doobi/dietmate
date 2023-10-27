@@ -8,18 +8,13 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../stores/store';
 import {setCurrentDiet, setTotalFoodList} from '../stores/slices/cartSlice';
-import {setListTitle} from '../stores/slices/filterSlice';
 import {
   FOOD_LIST_ITEM_HEIGHT,
   HOME_FILTER_HEADER_HEIGHT,
   categoryCode,
 } from '../constants/constants';
 import {queryFn} from '../query/queries/requestFn';
-import {
-  IFilterParams,
-  IProductData,
-  IProductsData,
-} from '../query/types/product';
+import {IProductData, IProductsData} from '../query/types/product';
 import {SCREENWIDTH} from '../constants/constants';
 import colors from '../styles/colors';
 import {icons} from '../assets/icons/iconSource';
@@ -28,9 +23,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // doobi Component
 import FoodList from '../components/home/FoodList';
-import DBottomSheet from '../components/common/DBottomSheet';
+import DBottomSheet from '../components/common/bottomsheet/DBottomSheet';
 import FilterModalContent from '../components/home/FilterModalContent';
-import DTooltip from '../components/common/DTooltip';
+import DTooltip from '../components/common/tooltip/DTooltip';
 import MenuSection from '../components/common/menuSection/MenuSection';
 import FlatlistHeaderComponent from '../components/home/FlatlistHeaderComponent';
 
@@ -45,36 +40,30 @@ import CommonAlertContent from '../components/common/alert/CommonAlertContent';
 
 import {useHandleError} from '../util/handleError';
 import {firebase} from '@react-native-firebase/crashlytics';
+import FilterModalContent2 from '../components/home/FilterModalContent';
+import SortModalContent from '../components/home/SortModalContent';
 
 const Home = () => {
   // navigation
 
   const {navigate} = useNavigation();
   // console.log('HOME:', useHandleError()(new Error('test')));
+
   // redux
   const dispatch = useDispatch();
   const {currentDietNo, totalFoodListIsLoaded} = useSelector(
     (state: RootState) => state.cart,
   );
-  // console.log(useListDiet());
+  const {applied: appliedSortFilter} = useSelector(
+    (state: RootState) => state.sortFilter,
+  );
+
   // state
   const [productAlertShow, setProductAlertShow] = useState(false);
+  const [sortModalShow, setSortModalShow] = useState(false);
   const [filterModalShow, setFilterModalShow] = useState(false);
   const [tooltipShow, setTooltipShow] = useState(false);
-  const [searchText, setSearchText] = useState('');
-  const [filterIndex, setFilterIndex] = useState(0);
-  const [sortParam, setSortParam] = useState('');
-  const [sortImageToggle, setSortImageToggle] = useState(0);
-  const [filterParams, setFilterParams] = useState<IFilterParams>({
-    categoryParam: '',
-    nutritionParam: {
-      calorieParam: [],
-      carbParam: [],
-      proteinParam: [],
-      fatParam: [],
-    },
-    priceParam: [],
-  });
+
   // react-query
   const {data: baseLineData, isLoading: baseLineLoading} = useGetBaseLine(); // 미리 캐싱
   const {data: dietDetailData, isLoading: listDietLoading} = useListDietDetail(
@@ -91,16 +80,11 @@ const Home = () => {
   } = useListProduct(
     {
       dietNo: currentDietNo,
-      searchText,
-      categoryCd: filterParams.categoryParam,
-      sort: sortParam,
-      filter: filterParams,
+      appliedSortFilter,
     },
     {
       enabled: currentDietNo ? true : false,
       onSuccess: (data: IProductsData) => {
-        dispatch(setListTitle('전체'));
-
         if (data.length === 0) setProductAlertShow(true);
 
         // 처음 앱 켰을 때 totalFoodList를 redux에 저장해놓고 끼니 자동구성에 사용
@@ -108,22 +92,6 @@ const Home = () => {
         dispatch(setTotalFoodList(data));
       },
     },
-  );
-  //카테고리별로 묶어주기
-  // const groupByCategory = (arg: any) => {
-  //   const group = arg.reduce((r, a) => {
-  //     r[a.categoryNm] = [...(r[a.categoryNm] || []), a];
-  //     return r;
-  //   }, {});
-  //   return group;
-  // };
-  // const groupedCategory = groupByCategory(productData);
-  // console.log('catecatecate:', groupedCategory);
-  // etc
-  // category code로 category name 찾기
-  const categoryNameArr = Object.keys(categoryCode);
-  const categoryName = categoryNameArr.find(
-    name => categoryCode[name] === filterParams.categoryParam,
   );
 
   // flatList render fn
@@ -177,28 +145,15 @@ const Home = () => {
     initializeTooltip();
   }, []);
 
-  // 정렬, 필터 바뀔 때마다 sortImageToggle 바꿔주기
-  useEffect(() => {
-    const checkSortImageToggle = () => {
-      sortParam.includes('DESC')
-        ? setSortImageToggle(1)
-        : sortParam.includes('ASC')
-        ? setSortImageToggle(2)
-        : setSortImageToggle(0);
-    };
-    checkSortImageToggle();
-  }, [sortParam]);
-
   // 정렬, 필터 바뀔 때마다 refetch / 스크롤 맨 위로
   useEffect(() => {
     if (!totalFoodListIsLoaded) return;
     currentDietNo && refetchProduct();
     scrollTop();
-  }, [sortParam, filterParams]);
+  }, [appliedSortFilter]);
   return (
     <Container>
       {/* 끼니선택, progressBar section */}
-
       {baseLineLoading === false &&
       listDietLoading === false &&
       productIsLoading === false ? (
@@ -211,18 +166,9 @@ const Home = () => {
         {/* 검색결과 수 및 정렬 필터 */}
         <FlatlistHeaderComponent
           translateY={translateY}
-          productData={productData}
-          searchText={searchText}
-          setSearchText={setSearchText}
-          refetchProduct={refetchProduct}
-          sortImageToggle={sortImageToggle}
-          setSortParam={setSortParam}
-          sortParam={sortParam}
+          searchedNum={productData?.length}
           setFilterModalShow={setFilterModalShow}
-          filterParams={filterParams}
-          setFilterParams={setFilterParams}
-          setFilterIndex={setFilterIndex}
-          categoryName={categoryName}
+          setSortModalShow={setSortModalShow}
         />
 
         {/* 식품 리스트 */}
@@ -273,15 +219,20 @@ const Home = () => {
         alertShow={filterModalShow}
         setAlertShow={setFilterModalShow}
         renderContent={() => (
-          <FilterModalContent
-            closeModal={setFilterModalShow}
-            filterParams={filterParams}
-            setFilterParams={setFilterParams}
-            filterIndex={filterIndex}
-          />
+          <FilterModalContent setFilterModalShow={setFilterModalShow} />
         )}
         filterHeight={514}
       />
+      <DBottomSheet
+        alertShow={sortModalShow}
+        setAlertShow={setSortModalShow}
+        renderContent={() => (
+          <SortModalContent setSortModalShow={setSortModalShow} />
+        )}
+        onCancel={() => {}}
+      />
+
+      {/* 알럿창 */}
       <DAlert
         alertShow={productAlertShow}
         onConfirm={() => setProductAlertShow(false)}

@@ -38,7 +38,7 @@ export const COMMON_CODE = `${BASE_URL}/api/member/code/list-code`;
 
 // category-controller
 export const LIST_CATEGORY = `${BASE_URL}/api/member/category/list-category/CG`;
-export const COUNT_CATEGORY = `${BASE_URL}/api/member/category/list-category-product-cnt/CG`;
+export const LIST_CATEGORY_PRODUCT_CNT = `${BASE_URL}/api/member/category/list-category-product-cnt/CG`;
 
 // api-member-order-controller
 export const CREATE_ORDER = `${BASE_URL}/api/member/order/create-order`; //주문 정보 생성

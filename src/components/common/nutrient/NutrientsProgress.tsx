@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import * as Progress from 'react-native-progress';
 
 import colors from '../../../styles/colors';
-import {VerticalSpace} from '../../../styles/StyledConsts';
+import {Col, Row, VerticalSpace} from '../../../styles/StyledConsts';
 import {
   checkNutrSatisfied,
   getExceedIdx,
@@ -13,7 +12,7 @@ import {
 
 import {useGetBaseLine} from '../../../query/queries/baseLine';
 import {useListDietDetail} from '../../../query/queries/diet';
-import DTooltip from '../DTooltip';
+import DTooltip from '../tooltip/DTooltip';
 import {NUTR_ERROR_RANGE, SCREENWIDTH} from '../../../constants/constants';
 import {RootState} from '../../../stores/store';
 import {useDispatch, useSelector} from 'react-redux';
@@ -133,11 +132,14 @@ const NutrientsProgress = ({
           dispatch(setNutrTooltipText(''));
         }}
       />
-      {isLoading ? (
-        <ActivityIndicator />
-      ) : (
-        baseLineData && (
-          <>
+
+      <Col style={{width: '100%', height: 70}}>
+        {baseLineData && (
+          <Row
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
             <ProgressBar
               title="칼로리(kcal)"
               numerator={cal}
@@ -164,9 +166,9 @@ const NutrientsProgress = ({
               numerator={fat}
               denominator={parseInt(baseLineData.fat)}
             />
-          </>
-        )
-      )}
+          </Row>
+        )}
+      </Col>
     </Container>
   );
 };
@@ -194,8 +196,6 @@ const ProgressBarNumber = styled.Text`
 const Container = styled.View`
   background-color: ${colors.white};
   width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: center;
 `;
 
