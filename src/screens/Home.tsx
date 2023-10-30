@@ -45,6 +45,7 @@ import CommonAlertContent from '../components/common/alert/CommonAlertContent';
 
 import {useHandleError} from '../util/handleError';
 import {firebase} from '@react-native-firebase/crashlytics';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const Home = () => {
   // navigation
@@ -297,7 +298,7 @@ const Home = () => {
 
 export default Home;
 
-const Container = styled.View`
+const Container = styled.SafeAreaView`
   flex: 1;
 `;
 
