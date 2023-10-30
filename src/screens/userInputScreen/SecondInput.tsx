@@ -26,7 +26,7 @@ import {
 import {calculateNutrTarget} from '../../util/targetCalculation';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {useNavigation} from '@react-navigation/native';
-import DTooltip from '../../components/common/DTooltip';
+import DTooltip from '../../components/common/tooltip/DTooltip';
 import {
   useWorkoutPurposeCode,
   useWorkoutIntensityCode,

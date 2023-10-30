@@ -36,7 +36,7 @@ export interface userInfoState {
 
 const initialState: userInfoState = {
   userInfo: {
-    nickname: '',
+    nickNm: '',
     gender: 'M',
     age: '',
     height: '',

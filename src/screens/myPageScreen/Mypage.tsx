@@ -359,7 +359,7 @@ const RecommendationContainer = styled.View`
   width: 100%;
   height: 34px;
   margin-top: 24px;
-  background-color: ${colors.highlight};
+  background-color: ${colors.highlight2};
   justify-content: center;
   align-items: center;
 `;

@@ -19,7 +19,7 @@ import {
   UserInfoTextInput,
 } from '../../styles/StyledConsts';
 
-import DTooltip from '../common/DTooltip';
+import DTooltip from '../common/tooltip/DTooltip';
 
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import colors from '../../styles/colors';

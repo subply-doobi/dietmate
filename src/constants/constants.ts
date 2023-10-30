@@ -89,6 +89,15 @@ export const categoryCode: {[key: string]: string} = {
   음료: 'CG006',
 };
 
+export const categoryCodeToName: {[key: string]: string} = {
+  CG001: '도시락',
+  CG002: '닭가슴살',
+  CG003: '샐러드',
+  CG004: '영양간식',
+  CG005: '과자',
+  CG006: '음료',
+};
+
 interface INutrErrorRange {
   [key: string]: [number, number];
 }
@@ -99,8 +108,24 @@ export const NUTR_ERROR_RANGE: INutrErrorRange = {
   fat: [-3, 3],
 };
 
-export const filterBtnRange = [
+export const SORT_LIST = [
+  {id: 0, label: '칼로리', name: 'calorie'},
+  {id: 1, label: '탄수화물', name: 'carb'},
+  {id: 2, label: '단백질', name: 'protein'},
+  {id: 3, label: '지방', name: 'fat'},
+  {id: 4, label: '가격', name: 'price'},
+  {id: 5, label: '가칼비', name: 'priceCalorieCompare'},
+  {id: 6, label: '가단비', name: 'priceProteinCompare'},
+];
+
+export const FILTER_LIST = [
+  {id: 0, label: '카테고리', name: 'category'},
+  {id: 1, label: '영양성분', name: 'nutrition'},
+  {id: 2, label: '가격', name: 'price'},
+];
+export const FILTER_BTN_RANGE = [
   {
+    name: 'calorie',
     label: '칼로리 (kcal)',
     value: [
       [0, 100],
@@ -110,6 +135,7 @@ export const filterBtnRange = [
     ],
   },
   {
+    name: 'carb',
     label: '탄수화물 (g)',
     value: [
       [0, 20],
@@ -119,6 +145,7 @@ export const filterBtnRange = [
     ],
   },
   {
+    name: 'protein',
     label: '단백질 (g)',
     value: [
       [0, 10],
@@ -128,12 +155,26 @@ export const filterBtnRange = [
     ],
   },
   {
+    name: 'fat',
     label: '지방 (g)',
     value: [
       [0, 5],
       [5, 10],
       [10, 15],
       [15, 20],
+    ],
+  },
+  {
+    name: 'price',
+    label: '가격 (원)',
+    value: [
+      [0, 1000],
+      [1000, 2000],
+      [2000, 3000],
+      [3000, 4000],
+      [4000, 5000],
+      [5000, 6000],
+      [6000, 7000],
     ],
   },
 ];

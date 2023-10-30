@@ -6,7 +6,6 @@ import styled from 'styled-components/native';
 import colors from '../../styles/colors';
 import {icons} from '../../assets/icons/iconSource';
 //doobi Component
-import DBottomSheet from '../common/DBottomSheet';
 import {
   HorizontalLine,
   HorizontalSpace,
@@ -14,42 +13,47 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/StyledConsts';
-import SortModalContent from './SortModalContent';
-import FilterHeader from './FilterHeader';
-import {IFilterParams} from '../../query/types/product';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  applySortFilter,
+  copySortFilter,
+  updateSearch,
+} from '../../stores/slices/sortFilterSlice';
+import {RootState} from '../../stores/store';
+import Filter from './Filter';
+import {SORT_LIST} from '../../constants/constants';
+
+interface ISortImg {
+  [key: string]: any;
+  ASC: any;
+  DESC: any;
+  '': any;
+}
+const sortImg: ISortImg = {
+  ASC: icons.sortAscending_24,
+  DESC: icons.sortDescending_24,
+  '': icons.sort_24,
+};
 
 interface IFlatlistHeaderComponent {
   translateY: any;
-  productData: any;
-  searchText: any;
-  setSearchText: any;
-  refetchProduct: any;
-  sortImageToggle: any;
-  setSortParam: any;
-  sortParam: any;
-  setFilterModalShow: any;
-  filterParams: IFilterParams;
-  setFilterParams: React.Dispatch<SetStateAction<IFilterParams>>;
-  setFilterIndex: any;
-  categoryName: any;
+  searchedNum: number | undefined;
+  setFilterModalShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setSortModalShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const FlatlistHeaderComponent = ({
   translateY,
-  productData,
-  searchText,
-  setSearchText,
-  refetchProduct,
-  sortImageToggle,
-  setSortParam,
-  sortParam,
+  searchedNum,
+  setSortModalShow,
   setFilterModalShow,
-  filterParams,
-  setFilterParams,
-  setFilterIndex,
-  categoryName,
 }: IFlatlistHeaderComponent) => {
+  // redux
+  const dispatch = useDispatch();
+  const {copied: sortFilterCopied, applied: sortFilterApplied} = useSelector(
+    (state: RootState) => state.sortFilter,
+  );
+
   //state
-  const [sortModalShow, setSortModalShow] = useState(false);
   const [searchBarFocus, setSearchBarFocus] = useState(false);
 
   // ref
@@ -57,6 +61,16 @@ const FlatlistHeaderComponent = ({
   useEffect(() => {
     searchInputRef.current?.focus();
   }, [searchBarFocus]);
+
+  // etc
+  // 현재 정렬 value, label
+  const sortKey = Object.keys(sortFilterApplied.sort).find(
+    key => sortFilterApplied.sort[key],
+  );
+  const sortValue = sortKey ? sortFilterApplied.sort[sortKey] : '';
+  const sortLabel = sortKey
+    ? SORT_LIST[SORT_LIST.findIndex(item => item.name === sortKey)].label
+    : '정렬';
 
   return (
     <Animated.View
@@ -81,22 +95,20 @@ const FlatlistHeaderComponent = ({
         <Row style={{alignItems: 'flex-end', flex: 1}}>
           <ListTitle>검색된 결과 </ListTitle>
 
-          <NoOfFoods>
-            {!!productData ? `${productData?.length}개` : ``}
-          </NoOfFoods>
+          <NoOfFoods>{searchedNum ? `${searchedNum}개` : ``}</NoOfFoods>
 
           {searchBarFocus ? (
             <SearchBox style={{flex: 1, marginRight: 8}}>
               <SearchInput
-                onChangeText={setSearchText}
-                value={searchText}
+                onChangeText={text => dispatch(updateSearch(text))}
+                value={sortFilterCopied.filter.search}
                 ref={searchInputRef}
                 placeholder="검색어 입력"
-                onSubmitEditing={() => refetchProduct()}
+                onSubmitEditing={() => dispatch(applySortFilter())}
               />
               <SearchCancelBtn
                 onPress={() => {
-                  setSearchText('');
+                  dispatch(updateSearch(''));
                   setSearchBarFocus(false);
                 }}>
                 <SearchCancelImage source={icons.cancelRound_24} />
@@ -113,42 +125,23 @@ const FlatlistHeaderComponent = ({
           )}
         </Row>
 
-        <SortBtn onPress={() => setSortModalShow(true)}>
-          <SortBtnText>정렬</SortBtnText>
-          {sortImageToggle === 0 ? (
-            <SortImage source={icons.sort_24} />
-          ) : sortImageToggle === 1 ? (
-            <SortImage source={icons.sortDescending_24} />
-          ) : (
-            <SortImage source={icons.sortAscending_24} />
-          )}
+        {/* 정렬 */}
+        <SortBtn
+          onPress={() => {
+            // sort bottom sheet 열 때 적용되어있는 sort, filter 복사
+            dispatch(copySortFilter());
+            setSortModalShow(true);
+          }}>
+          <SortBtnText>{sortLabel}</SortBtnText>
+          <SortImage source={sortImg[sortValue]} />
         </SortBtn>
       </Row>
-      <DBottomSheet
-        alertShow={sortModalShow}
-        setAlertShow={setSortModalShow}
-        renderContent={() => (
-          <SortModalContent
-            closeModal={setSortModalShow}
-            setSortParam={setSortParam}
-            sortParam={sortParam}
-          />
-        )}
-        onCancel={() => {}}
-      />
+
       <HorizontalLine style={{marginTop: 8}} />
       <HorizontalSpace height={8} />
-      <FilterHeader
-        setFilterIndex={setFilterIndex}
-        onPress={() => {
-          setFilterModalShow(true);
-        }}
-        filterParams={filterParams}
-        setFilterParams={setFilterParams}
-        setSortParam={setSortParam}
-        filterHeaderText={categoryName}
-        setSearchText={setSearchText}
-      />
+
+      {/* 필터 (검색 제외) */}
+      <Filter setFilterModalShow={setFilterModalShow} />
 
       <HorizontalSpace height={16} />
     </Animated.View>

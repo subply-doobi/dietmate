@@ -21,7 +21,6 @@ const navigateByUserInfo = async (
 ) => {
   const hasBaseLine = Object.keys(data).length === 0 ? false : true;
   const canSkipOnboarding = await checkNotShowAgain('ONBOARDING');
-  console.log('canSksdkfls:', canSkipOnboarding);
   if (isGuestLogin) {
     return navigation.navigate('Guide', {isGuestLogin: isGuestLogin});
   }

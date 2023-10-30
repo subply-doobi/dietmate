@@ -1,20 +1,8 @@
-export interface IFilterParams {
-  categoryParam: string;
-  nutritionParam: {
-    calorieParam: number[];
-    carbParam: number[];
-    proteinParam: number[];
-    fatParam: number[];
-  };
-  priceParam: number[];
-}
+import {ISortFilter} from '../../stores/slices/sortFilterSlice';
 
 export interface IListProductParams {
   dietNo: string;
-  searchText?: string;
-  categoryCd?: string;
-  sort?: string;
-  filter?: IFilterParams;
+  appliedSortFilter: ISortFilter;
 }
 
 export interface ICreateProductAutoParams {

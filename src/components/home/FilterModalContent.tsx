@@ -1,309 +1,170 @@
-import React, {SetStateAction, useState} from 'react';
 import {ScrollView} from 'react-native';
+
 import styled from 'styled-components/native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-
-//doobi util, redux, etc
-import {icons} from '../../assets/icons/iconSource';
-import {Row, BtnCTA, Col} from '../../styles/StyledConsts';
+import {
+  BtnCTA,
+  BtnText,
+  Col,
+  HorizontalSpace,
+  Row,
+  TextMain,
+} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
+import {icons} from '../../assets/icons/iconSource';
+import {FILTER_LIST, SCREENWIDTH} from '../../constants/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../stores/store';
+import {
+  applySortFilter,
+  changeSelectedFilter,
+  initializeCategory,
+  initializeFilter,
+  initializeNutrition,
+  initializePrice,
+} from '../../stores/slices/sortFilterSlice';
+import CategoryFilter from './filter/CategoryFilter';
+import NutritionFilter from './filter/NutritionFilter';
+import {AnyAction, Dispatch} from '@reduxjs/toolkit';
+import PriceFilter from './filter/PriceFilter';
+import {checkisFiltered} from '../../util/home/filterUtils';
 
-//doobi Component
-import CategoryContent from './filterContents/CategoryContent';
-import NutritionContent from './filterContents/NutritionContent';
-import PriceContent from './filterContents/PriceContent';
-import SearchContent from './filterContents/SearchContent';
-import DAlert from '../common/alert/DAlert';
-import CommonAlertContent from '../common/alert/CommonAlertContent';
-import {IFilterParams} from '../../query/types/product';
+const initializeSome = (
+  dispatch: Dispatch<AnyAction>,
+  filterId: number | undefined,
+) => {
+  if (filterId === 0) dispatch(initializeCategory());
+  else if (filterId === 1) dispatch(initializeNutrition());
+  else if (filterId === 2) dispatch(initializePrice());
+  else return;
+};
 
-interface Props {
-  filterIndex: number;
-  closeModal: () => void;
-  setFilterParams: React.Dispatch<SetStateAction<IFilterParams>>;
-  filterParams: any;
+interface IFilterModalContent {
+  setFilterModalShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const FilterModalContent = (props: Props) => {
-  const {filterIndex, closeModal, setFilterParams, filterParams} = props;
-  const [clicked, setClicked] = useState(filterIndex);
-  const [categoryParam, setCategoryParam] = useState(
-    filterParams.categoryParam,
-  );
-
-  // filter 기본값
-  const filterModalInitialState = {
-    calorieParam: filterParams.nutritionParam?.calorieParam || [],
-    carbParam: filterParams.nutritionParam?.carbParam || [],
-    proteinParam: filterParams.nutritionParam?.proteinParam || [],
-    fatParam: filterParams.nutritionParam?.fatParam || [],
-  };
-  // filter 설정되어있을 경우 기본값 설정
-  if (filterParams.nutritionParam) {
-    filterModalInitialState.calorieParam =
-      filterParams.nutritionParam.calorieParam;
-    filterModalInitialState.carbParam = filterParams.nutritionParam.carbParam;
-    filterModalInitialState.proteinParam =
-      filterParams.nutritionParam.proteinParam;
-    filterModalInitialState.fatParam = filterParams.nutritionParam.fatParam;
-  }
-
-  const [nutritionParam, setNutritionParam] = useState<{
-    calorieParam: number[];
-    carbParam: number[];
-    proteinParam: number[];
-    fatParam: number[];
-  }>(filterModalInitialState);
-  const [priceParam, setPriceParam] = useState<number[]>(
-    filterParams.priceParam,
-  );
-  const params = {
-    categoryParam,
-    nutritionParam,
-    priceParam,
-  };
-  console.log('FILTERMODALCONTENT/params:', params);
-  const [initializeModalShow, setInitializeModalShow] = useState(false);
-  const resetType = [
-    {
-      text: '카테고리 초기화',
-      reset: () => {
-        setCategoryParam('');
-        // setFilterParams({...filterParams, categoryParam: ''});
-      },
-    },
-    {
-      text: '영양성분 초기화',
-      reset: () => {
-        setNutritionParam({
-          calorieParam: [],
-          carbParam: [],
-          proteinParam: [],
-          fatParam: [],
-        });
-        // setFilterParams({...filterParams, nutritionParam: ''});
-      },
-    },
-    {
-      text: '가격 초기화',
-      reset: () => {
-        setPriceParam([]);
-        // setFilterParams({...filterParams, priceParam: ''});
-      },
-    },
-  ];
-  //filter button 눌렀을때 모달 header text
-  const FilterHeaderText = () => {
-    return (
-      <SafeAreaView>
-        <FilterRow>
-          <Button
-            onPress={() => {
-              setClicked(0);
-            }}>
-            {params.categoryParam ? (
-              <Row>
-                <Text id="0" clicked={clicked}>
-                  카테고리
-                </Text>
-                <Badge />
-              </Row>
-            ) : (
-              <Text id="0" clicked={clicked}>
-                카테고리
-              </Text>
-            )}
-          </Button>
-          <Button
-            onPress={() => {
-              setClicked(1);
-            }}>
-            {params.nutritionParam.calorieParam.length === 2 ||
-            params.nutritionParam.carbParam.length === 2 ||
-            params.nutritionParam.proteinParam.length === 2 ||
-            params.nutritionParam.fatParam.length === 2 ? (
-              <Row>
-                <Text id="1" clicked={clicked}>
-                  영양성분
-                </Text>
-                <Badge />
-              </Row>
-            ) : (
-              <Text id="1" clicked={clicked}>
-                영양성분
-              </Text>
-            )}
-          </Button>
-          <Button
-            onPress={() => {
-              setClicked(2);
-            }}>
-            {params.priceParam.length === 2 ? (
-              <Row>
-                <Text id="2" clicked={clicked}>
-                  가격
-                </Text>
-                <Badge />
-              </Row>
-            ) : (
-              <Text id="2" clicked={clicked}>
-                가격
-              </Text>
-            )}
-          </Button>
-          <Button
-            onPress={() => {
-              setClicked(3);
-            }}></Button>
-          <InitialzieBtn
-            onPress={() => resetType.forEach(item => item.reset())}>
-            <Image source={icons.initialize_24} />
-          </InitialzieBtn>
-        </FilterRow>
-      </SafeAreaView>
-    );
-  };
-  const showContent = (index: number) => {
-    return index === 0 ? (
-      <CategoryContent
-        setCategoryParam={setCategoryParam}
-        categoryParam={categoryParam}
-      />
-    ) : index === 1 ? (
-      // <NutritionContent
-      //   setNutritionParam={setNutritionParam}
-      //   nutritionParam={nutritionParam}
-      //   filterParams={filterParams}
-      // />
-      <NutritionContent
-        setNutritionParam={setNutritionParam}
-        nutritionParam={nutritionParam}
-        filterParams={filterParams}
-      />
-    ) : index === 2 ? (
-      <PriceContent
-        setPriceParam={setPriceParam}
-        priceParam={priceParam}
-        filterParams={filterParams}
-      />
-    ) : index === 3 ? (
-      <SearchContent />
-    ) : (
-      <></>
-    );
-  };
+const FilterModalContent = ({setFilterModalShow}: IFilterModalContent) => {
+  // redux
+  // 0: 카테고리 | 1: 영양성분 | 2: 가격
+  const dispatch = useDispatch();
+  const {
+    copied: {selectedFilter, filter},
+  } = useSelector((state: RootState) => state.sortFilter);
 
   return (
-    <Col style={{height: '100%'}}>
-      <FilterHeaderText />
-      <ScrollView
-        style={{marginTop: 16}}
-        contentContainerStyle={{paddingBottom: 80}}
-        showsVerticalScrollIndicator={false}>
-        {/* <ShowContent index={clicked} /> */}
-        {/* 이유를 알려줘 */}
-        {showContent(clicked)}
-      </ScrollView>
+    <Container>
+      {/* 카테고리 | 영양성분 | 가격 |  */}
+      <FilterTitleRow>
+        {FILTER_LIST.map(f => (
+          <FilterTitleBtn
+            key={f.id}
+            onPress={() => dispatch(changeSelectedFilter(f.id))}>
+            <FilterTitle isActivated={selectedFilter === f.id}>
+              {f.label}
+            </FilterTitle>
+            <FilterDot isActivated={checkisFiltered(filter, f.id)} />
+          </FilterTitleBtn>
+        ))}
 
-      {/* 초기화 | 확인 버튼 */}
-      <BottomRow>
-        <BtnCTA
-          style={{
-            flex: 1,
-          }}
-          btnStyle={'border'}
+        {/* 상단 전체초기화 버튼 */}
+        <InitialzieBtn
           onPress={() => {
-            resetType[clicked].reset();
+            dispatch(initializeFilter());
           }}>
-          <BottomText style={{color: colors.textSub}}>
-            {resetType[clicked].text}
-          </BottomText>
-        </BtnCTA>
-        {/* <DAlert
-          alertShow={initializeModalShow}
-          onConfirm={() => {
-            if (isTotalInitailize) {
-              setCategoryParam('');
-              // setFilterParams('');
-              setNutritionParam({
-                calorieParam: [],
-                carbParam: [],
-                proteinParam: [],
-                fatParam: [],
-              });
-              setPriceParam('');
-              setInitializeModalShow(false);
-            } else {
-              resetType[clicked].reset();
-              setInitializeModalShow(false);
-            }
-          }}
-          onCancel={() => setInitializeModalShow(false)}
-          renderContent={() => (
-            <CommonAlertContent text={`적용된 필터가\n초기화 됩니다`} />
-          )}
-          confirmLabel="초기화"
-        /> */}
+          <InitializeIcon source={icons.initialize_24} />
+        </InitialzieBtn>
+      </FilterTitleRow>
+
+      <HorizontalSpace height={16} />
+
+      {/* 0: 카테고리 | 1: 영양성분 | 2: 가격 */}
+      <Col style={{flex: 1, marginBottom: 80}}>
+        <ScrollView>
+          {selectedFilter === 0 && <CategoryFilter />}
+          {selectedFilter === 1 && <NutritionFilter />}
+          {selectedFilter === 2 && <PriceFilter />}
+        </ScrollView>
+      </Col>
+
+      {/* 하단 필터 초기화 및 확인 버튼 */}
+      <BottomBtnBox>
         <BtnCTA
-          style={{
-            flex: 1,
-            marginLeft: 8,
-          }}
-          btnStyle={'activated'}
+          height={52}
+          btnStyle="border"
+          width={(SCREENWIDTH - 32 - 8) / 2}
           onPress={() => {
-            setFilterParams(params);
-            closeModal(false);
+            initializeSome(dispatch, selectedFilter);
           }}>
-          <BottomText>확인</BottomText>
+          <BtnText style={{color: colors.textSub}}>
+            {selectedFilter !== undefined && FILTER_LIST[selectedFilter].label}{' '}
+            초기화
+          </BtnText>
         </BtnCTA>
-      </BottomRow>
-    </Col>
+        <BtnCTA
+          height={52}
+          btnStyle="activated"
+          width={(SCREENWIDTH - 32 - 8) / 2}
+          onPress={() => {
+            dispatch(applySortFilter());
+            setFilterModalShow(false);
+          }}>
+          <BtnText>확인</BtnText>
+        </BtnCTA>
+      </BottomBtnBox>
+    </Container>
   );
 };
 
 export default FilterModalContent;
 
-const Text = styled.Text`
+const Container = styled.View`
+  height: 100%;
+`;
+
+const FilterTitleRow = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 24px;
+
+  column-gap: 12px;
+`;
+
+const FilterTitleBtn = styled.Pressable`
+  flex-direction: row;
+`;
+const FilterTitle = styled(TextMain)`
   font-size: 18px;
-  color: ${({id, clicked}) =>
-    id === String(clicked) ? colors.textMain : colors.textSub};
-  font-weight: ${({id, clicked}) =>
-    id === String(clicked) ? 'bold' : 'normal'};
+  font-weight: bold;
+  color: ${({isActivated}: {isActivated: boolean}) =>
+    isActivated ? colors.textMain : colors.textSub};
+`;
+const FilterDot = styled.View`
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background-color: ${({isActivated}: {isActivated: boolean}) =>
+    isActivated ? colors.main : colors.white};
 `;
 
-const BottomText = styled.Text`
-  font-size: 16px;
-  color: ${colors.white};
-`;
-const Button = styled.TouchableOpacity``;
-
-const InitialzieBtn = styled.TouchableOpacity`
+const InitialzieBtn = styled.Pressable`
   position: absolute;
   right: 0px;
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
 `;
 
-const Image = styled.Image`
+const InitializeIcon = styled.Image`
   width: 24px;
   height: 24px;
 `;
-const FilterRow = styled(Row)`
-  justify-content: center;
-  margin-top: 24px;
-  column-gap: 20px;
-`;
-const BottomRow = styled.View`
+
+const BottomBtnBox = styled.View`
   position: absolute;
   bottom: 0px;
+  justify-content: center;
+  column-gap: 8px;
   flex-direction: row;
-  justify-content: space-between;
-`;
-
-const Badge = styled.View`
-  width: 6px;
-  height: 6px;
-  border-radius: 8px;
-  background-color: ${colors.main};
-  position: absolute;
-  top: 0px;
-  right: -6px;
 `;

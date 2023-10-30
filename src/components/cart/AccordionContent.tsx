@@ -9,7 +9,7 @@ import NutrientsProgress from '../common/nutrient/NutrientsProgress';
 
 // react-query
 import {IDietDetailData} from '../../query/types/diet';
-import Menu from '../common/menuSection/Menu';
+import Menu from './Menu';
 import {SetStateAction} from 'react';
 
 interface IAccordionContent {

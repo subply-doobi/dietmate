@@ -5,7 +5,7 @@ import {NavigationProps} from '../constants/constants';
 
 import OrderHistoryDetail from '../screens/myPageScreen/orderHistory/OrderHistoryDetail';
 import OrderHistory from '../screens/myPageScreen/orderHistory/OrderHistory';
-import BackArrow from '../components/common/BackArrow';
+import BackArrow from '../components/common/navigation/BackArrow';
 import {useNavigation} from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();

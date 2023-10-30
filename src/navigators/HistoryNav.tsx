@@ -5,7 +5,7 @@ import {NavigationProps} from '../constants/constants';
 
 import History from '../screens/myPageScreen/history/History';
 import HistoryDetail from '../screens/myPageScreen/history/HistoryDetail';
-import BackArrow from '../components/common/BackArrow';
+import BackArrow from '../components/common/navigation/BackArrow';
 
 const Stack = createNativeStackNavigator();
 const HistoryNav = ({navigation: {navigate, goBack}}: NavigationProps) => {

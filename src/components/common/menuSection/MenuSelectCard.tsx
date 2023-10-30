@@ -50,6 +50,9 @@ const MenuSelectCard = () => {
       <Row
         style={{
           marginTop: 8,
+          marginLeft: 4,
+          alignItems: 'flex-end',
+          columnGap: 4,
         }}>
         {dietData?.map(menu => {
           const isActivated = menu.dietNo === currentDietNo ? true : false;
@@ -114,6 +117,4 @@ const CardBtn = styled.TouchableOpacity`
   background-color: ${({isActivated}: StyledProps) =>
     isActivated ? colors.white : colors.inactivated};
   border-color: ${colors.white};
-  margin-right: -4px;
-  margin-left: 8px;
 `;

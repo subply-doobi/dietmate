@@ -14,7 +14,7 @@ import {setMenuActiveSection} from '../../stores/slices/cartSlice';
 // doobi Component
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
-import DTooltip from '../common/DTooltip';
+import DTooltip from '../common/tooltip/DTooltip';
 import AutoDietModal from './AutoDietModal';
 import {
   Col,
@@ -128,11 +128,7 @@ const AccordionInactiveHeader = ({
         )}
       </MenuDeleteBtn>
       {numOfFoods !== 0 ? (
-        <Col
-          style={{
-            flex: 1,
-            height: '100%',
-          }}>
+        <Col style={{flex: 1, height: '100%'}}>
           <FoodNoAndPrice>
             {numOfFoods}가지 식품: {commaToNum(priceSum)}원
           </FoodNoAndPrice>

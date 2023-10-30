@@ -123,7 +123,7 @@ const SelfOrder = () => {
   const onHandleSelfOrder = async () => {
     const orderNumber = await createOrderMutation.mutateAsync({
       // 두비서버 자체정보
-      orderTypeCd: 'SP011002',
+      orderTypeCd: 'SP011001',
       shippingPrice: '4000',
       orderPrice: '0',
 

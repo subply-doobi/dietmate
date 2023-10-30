@@ -80,30 +80,25 @@ export const useListProduct = (
 ) => {
   const enabled = options?.enabled ?? true;
   const dietNo = params?.dietNo ? params.dietNo : '';
-  const searchText = params?.searchText ? params?.searchText : '';
-  const categoryCd = params?.categoryCd ? params?.categoryCd : '';
-  const sort = params?.sort ? params?.sort : '';
-  const filter = params?.filter
-    ? params?.filter
-    : {
-        categoryParam: '',
-        nutritionParam: {
-          calorieParam: [],
-          carbParam: [],
-          proteinParam: [],
-          fatParam: [],
-        },
-        priceParam: [],
-      };
 
-  const calorie = filter.nutritionParam.calorieParam;
-  const carb = filter.nutritionParam.carbParam;
-  const protein = filter.nutritionParam.proteinParam;
-  const fat = filter.nutritionParam.fatParam;
-  const price = filter.priceParam;
+  const {
+    sort,
+    filter: {
+      category,
+      nutrition: {calorie, carb, protein, fat},
+      price,
+      search,
+    },
+  } = params?.appliedSortFilter;
 
-  const categoryParam = categoryCd === '' ? '' : categoryCd;
-
+  const searchParam = search;
+  const categoryParam = category;
+  const sortKey = Object.keys(sort).find(key => sort[key] !== '');
+  const sortParam = sortKey
+    ? `&sort=${sortKey.charAt(0).toUpperCase()}${sortKey.slice(1)},${
+        sort[sortKey]
+      }`
+    : '';
   const calorieParam =
     calorie.length === 2 ? `Calorie,${calorie[0]},${calorie[1]}|` : '';
   const carbParam = carb.length === 2 ? `Carb,${carb[0]},${carb[1]}|` : '';
@@ -116,7 +111,7 @@ export const useListProduct = (
     queryKey: [PRODUCTS, dietNo],
     queryFn: () =>
       queryFn(
-        `${LIST_PRODUCT}/${dietNo}?searchText=${searchText}&categoryCd=${categoryParam}&sort=${sort}&filter=${calorieParam}${carbParam}${proteinParam}${fatParam}${priceParam}`,
+        `${LIST_PRODUCT}/${dietNo}?searchText=${searchParam}&categoryCd=${categoryParam}&sort=${sortParam}&filter=${calorieParam}${carbParam}${proteinParam}${fatParam}${priceParam}`,
       ),
     enabled,
     onSuccess: data => {

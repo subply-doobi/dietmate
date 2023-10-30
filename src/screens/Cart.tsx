@@ -22,7 +22,7 @@ import DAlert from '../components/common/alert/DAlert';
 import CreateLimitAlertContent from '../components/common/alert/CreateLimitAlertContent';
 import CommonAlertContent from '../components/common/alert/CommonAlertContent';
 import NumberPickerContent from '../components/cart/NumberPickerContent';
-import DBottomSheet from '../components/common/DBottomSheet';
+import DBottomSheet from '../components/common/bottomsheet/DBottomSheet';
 import AccordionContent from '../components/cart/AccordionContent';
 import AccordionInactiveHeader from '../components/cart/AccordionInactiveHeader';
 import AccordionActiveHeader from '../components/cart/AccordionActiveHeader';
