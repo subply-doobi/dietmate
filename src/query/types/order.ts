@@ -79,7 +79,7 @@ export interface ICreateOrderParams {
   payMethod: string;
   payName: string;
   payAmount: string;
-  customData: string;
+  customData?: string;
   merchantUid: string;
   buyerName: string;
   buyerTel: string;

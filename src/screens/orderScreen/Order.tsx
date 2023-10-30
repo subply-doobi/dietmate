@@ -313,7 +313,7 @@ const Order = () => {
       payMethod: '카카오페이',
       payName: kakaopayData.name,
       payAmount: kakaopayData.amount,
-      customData: kakaopayData.custom_data,
+      // customData: kakaopayData.custom_data,
       merchantUid: kakaopayData.merchant_uid,
       buyerName: kakaopayData.buyer_name,
       buyerTel: kakaopayData.buyer_tel,
