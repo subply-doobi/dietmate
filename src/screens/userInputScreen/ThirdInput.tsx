@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
 import {useForm, useWatch} from 'react-hook-form';
 import Accordion from 'react-native-collapsible/Accordion';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 //doobi util, redux, etc
 import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
@@ -68,15 +68,15 @@ interface IRequestBody {
 
 const ThirdInput = () => {
   // navigation
+  const {params} = useRoute();
   const navigation = useNavigation();
-  const {navigate} = navigation;
+  console.log('ThirdInput/params', params);
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
   const updateMutation = useUpdateBaseLine();
   const createMutation = useCreateBaseLine();
   const {data: dietData} = useListDiet();
-  console.log('ThirdInput/dietData', dietData?.length);
   const createDietMutation = useCreateDiet();
   const {data: dietDetailData, isLoading: listDietLoading} = useListDietDetail(
     currentDietNo,
@@ -84,15 +84,13 @@ const ThirdInput = () => {
       enabled: currentDietNo ? true : false,
     },
   );
+
   // redux
   const {userInfo, userTarget} = useSelector(
     (state: RootState) => state.userInfo,
   );
-  const {currentDietNo, totalFoodListIsLoaded} = useSelector(
-    (state: RootState) => state.cart,
-  );
-  console.log('ThirdInput/currentDietNo', currentDietNo);
-  const totalBaseLine: IRequestBody = {...userInfo, ...userTarget};
+  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+
   // ref
   const scrollRef = useRef<ScrollView>(null);
 
@@ -210,30 +208,21 @@ const ThirdInput = () => {
     const requestBody: IRequestBody =
       convertDataByMethod[calculationMethod](dataToConvert);
     if (!baseLineData) return;
-    if (Object.keys(baseLineData).length === 0 && dietData?.length === 0) {
-      createDietMutation.mutate();
-      createMutation.mutate(requestBody);
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
-      });
-    } else if (Object.keys(baseLineData).length === 0 && dietData?.length > 0) {
-      createMutation.mutate(requestBody);
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
-      });
-    } else {
-      updateMutation.mutate(requestBody);
-      navigation.reset({
-        index: 1,
-        routes: [
-          // {name: 'BottomTabNav', params: {screen: 'Home'}},
-          {name: 'BottomTabNav', params: {screen: 'Mypage'}},
-        ],
-      });
-    }
-    // navigate('BottomTabNav', {screen: 'Home'});
+
+    dietData?.length === 0 && createDietMutation.mutate();
+    Object.keys(baseLineData).length === 0
+      ? createMutation.mutate(requestBody)
+      : updateMutation.mutate(requestBody);
+
+    navigation.reset({
+      index: 1,
+      routes: [
+        {
+          name: 'BottomTabNav',
+          params: {screen: params?.from === 'Mypage' ? 'Mypage' : 'Home'},
+        },
+      ],
+    });
   };
   // TBD | 스크롤뷰 ref를 Manual에 넘겨서 단백질입력 활성화시 스크롤 내려주기
   return (

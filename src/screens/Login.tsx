@@ -11,22 +11,19 @@ import {IBaseLine} from '../query/types/baseLine';
 import {checkNotShowAgain} from '../util/asyncStorage';
 
 //react-query
-import {useGetBaseLine, useGetGuestLogin} from '../query/queries/baseLine';
+import {useGetBaseLine} from '../query/queries/baseLine';
 //doobi Component
 import {BtnCTA, BtnText} from '../styles/StyledConsts';
 const navigateByUserInfo = async (
   data: IBaseLine | any,
   navigation: NavigationProp<any>,
-  isGuestLogin: boolean,
 ) => {
   const hasBaseLine = Object.keys(data).length === 0 ? false : true;
   const canSkipOnboarding = await checkNotShowAgain('ONBOARDING');
-  if (isGuestLogin) {
-    return navigation.navigate('Guide', {isGuestLogin: isGuestLogin});
-  }
+
   if (!canSkipOnboarding) {
     // canSkipOnboarding 아니면 가이드로
-    navigation.navigate('Guide', {isGuestLogin: isGuestLogin});
+    navigation.navigate('Guide');
     return;
   }
   if (!hasBaseLine) {
@@ -47,29 +44,33 @@ const Login = () => {
   const navigation = useNavigation();
   // react-query
   const {refetch} = useGetBaseLine({enabled: false});
-  // console.log('LOGIN/useGetBaseLine', useGetBaseLine({enabled: false}));
-  const signInWithKakao = async (): Promise<void> => {
-    const data = await kakaoLogin();
-    if (data === undefined) return;
-    const refetchedData = await refetch().then(res => res.data);
-    refetchedData && navigateByUserInfo(refetchedData, navigation, false);
-  };
-  // etc guestLogin 때문에 자동 로그인 정지
-  // useEffect(() => {
-  //   const checkUser = async () => {
-  //     const {isValidated} = await validateToken();
-  //     if (!isValidated) return;
-  //     const refetchedData = await refetch().then(res => res.data);
-  //     refetchedData && navigateByUserInfo(refetchedData, navigation, false);
-  //   };
 
-  //   checkUser();
-  // }, []);
+  // kakaoLogin
+  const signInWithKakao = async (): Promise<void> => {
+    const KLdata = await kakaoLogin();
+    if (KLdata === undefined) return;
+    const baseLineData = await refetch().then(res => res.data);
+    baseLineData && navigateByUserInfo(baseLineData, navigation);
+  };
+
   //guest login
   const signInWithGuest = async (): Promise<void> => {
-    await guestLogin();
-    navigateByUserInfo('', navigation, true);
+    const GLdata = await guestLogin();
+    if (GLdata === undefined) return;
+    const baseLineData = await refetch().then(res => res.data);
+    baseLineData && navigateByUserInfo(baseLineData, navigation);
   };
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const {isValidated} = await validateToken();
+      if (!isValidated) return;
+      const baseLineData = await refetch().then(res => res.data);
+      baseLineData && navigateByUserInfo(baseLineData, navigation);
+    };
+
+    checkUser();
+  }, []);
 
   return (
     <Container>

@@ -31,7 +31,7 @@ import Dropdown from '../../components/userInput/Dropdown';
 //react-query
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {useDietPurposeCode} from '../../query/queries/code';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 interface IFormData {
   gender: string;
@@ -122,15 +122,13 @@ const renderWeightInput = (
   );
 };
 
-const FirstInput = props => {
-  const {data, isLoading} = useGetBaseLine();
+const FirstInput = () => {
+  // navigation
+  const {params} = useRoute();
   const navigation = useNavigation();
-  let checkGuestLogin = false;
-  // const {isGuestLogin} = props?.route?.params;
-  // console.log('userInfom1: props: ', props.route.params);
-  props.route.params === undefined
-    ? (checkGuestLogin = false)
-    : (checkGuestLogin = true);
+
+  // react-query
+  const {data, isLoading} = useGetBaseLine();
   const dietPurposeCd = useDietPurposeCode('SP002');
   const dietPurposeCdCategory = dietPurposeCd.data;
   const newDietPurposeCdCategory = dietPurposeCdCategory?.map(item => {
@@ -138,9 +136,7 @@ const FirstInput = props => {
   });
   // state
   // redux
-  const {userInfo} = useSelector((state: RootState) => state.userInfo);
   const dispatch = useDispatch();
-  // console.log('userInfo1: userInfo: ', userInfo);
 
   // refs
   const scrollRef = useRef<ScrollView>(null);
@@ -164,15 +160,11 @@ const FirstInput = props => {
     // 나중에 사용자 정보 있으면 초기값으로 넣어줘야함.
 
     defaultValues: {
-      gender: checkGuestLogin ? '' : data?.gender ? data?.gender : '',
-      age: checkGuestLogin ? '' : data?.age ? data?.age : '',
-      height: checkGuestLogin ? '' : data?.height ? data?.height : '',
-      weight: checkGuestLogin ? '' : data?.weight ? data?.weight : '',
-      dietPurposeCd: checkGuestLogin
-        ? 'SP002001'
-        : data?.dietPurposeCd
-        ? data?.dietPurposeCd
-        : 'SP002001',
+      gender: data?.gender ? data?.gender : '',
+      age: data?.age ? data?.age : '',
+      height: data?.height ? data?.height : '',
+      weight: data?.weight ? data?.weight : '',
+      dietPurposeCd: data?.dietPurposeCd ? data?.dietPurposeCd : 'SP002001',
     },
   });
   const genderValue = useWatch({control, name: 'gender'});
@@ -293,7 +285,10 @@ const FirstInput = props => {
               bmr: BMR,
             }),
           );
-          navigation.navigate('InputNav', {screen: 'SecondInput', params: BMR});
+          navigation.navigate('InputNav', {
+            screen: 'SecondInput',
+            params,
+          });
         }}>
         <BtnText>다음</BtnText>
       </BtnBottomCTA>

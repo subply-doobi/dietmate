@@ -254,21 +254,13 @@ const FoodDetail = () => {
       </Container>
       <View>
         <StickyFooter>
-          <Pressable
-            style={{
-              marginRight: 4,
-              width: 52,
-              height: 52,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onPress={handlePressLikeBtn}>
+          <LikeBtn onPress={handlePressLikeBtn}>
             <Image
               // 조건에 따라서 서로 다른 좋아요 버튼 갖게 할 것
               style={{width: 52, height: 52}}
               source={isIncludedInLike ? icons.likeActivated_48 : icons.like_48}
             />
-          </Pressable>
+          </LikeBtn>
           <BtnCTA
             btnStyle={'activated'}
             style={{flex: 1}}
@@ -299,6 +291,7 @@ const InnerContainer = styled.View`
 const FoodImageContainer = styled.Image`
   width: 100%;
   height: 240px;
+  background-color: ${colors.inactivated};
 `;
 const SellerText = styled(TextSub)`
   margin-top: 10px;
@@ -353,4 +346,12 @@ const NutritionInImage = styled.View`
   width: 100%;
   height: 24px;
   background-color: ${colors.blackOpacity50};
+`;
+
+const LikeBtn = styled.Pressable`
+  width: 52px;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
 `;

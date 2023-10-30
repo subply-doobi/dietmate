@@ -25,7 +25,7 @@ import {
 } from '../../styles/StyledConsts';
 import {calculateNutrTarget} from '../../util/targetCalculation';
 import {useGetBaseLine} from '../../query/queries/baseLine';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import DTooltip from '../../components/common/tooltip/DTooltip';
 import {
   useWorkoutPurposeCode,
@@ -86,6 +86,7 @@ const onHandlePress = (
   durationCd: string,
   intensityIdx: number,
   intensityCd: string,
+  params: any,
 ) => {
   // 기초대사량 직접 입력된 경우는 입력된 bmr로
   const bmrMod = bmrKnownValue ? bmrKnownValue : userInfo.bmr;
@@ -121,8 +122,7 @@ const onHandlePress = (
       fat: nutrTarget.fat,
     }),
   );
-
-  navigate('InputNav', {screen: 'ThirdInput', params: ''});
+  navigate('InputNav', {screen: 'ThirdInput', params});
 };
 
 const SecondInput = () => {
@@ -130,6 +130,7 @@ const SecondInput = () => {
   const workoutFrequencyCode = useWorkoutFrequencyCode('SP009');
   const workoutIntensityCode = useWorkoutIntensityCode('SP010');
   // navigation
+  const {params} = useRoute();
   const {navigate} = useNavigation();
   const [frequency, setFrequency] = useState({index: 0, cd: ''});
   const [duration, setDuration] = useState({index: 0, cd: ''});
@@ -326,6 +327,7 @@ const SecondInput = () => {
             duration.cd,
             intensity.index,
             intensity.cd,
+            params,
           )
         }>
         <BtnCTAText>다음</BtnCTAText>

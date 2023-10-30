@@ -27,7 +27,6 @@ interface IGuidePage {
   onboardingSource?: any;
   stepImage: any;
   onboardingSourceType: 'none' | 'img' | 'lottie';
-  isGuestLogin?: boolean;
 }
 const renderGuideContents = (step: number, guidePageArray: IGuidePage[]) => {
   return (
@@ -41,12 +40,10 @@ const renderGuideContents = (step: number, guidePageArray: IGuidePage[]) => {
   );
 };
 
-const Guide = param => {
-  //params
-  const {isGuestLogin} = param?.route?.params;
-  console.log('Guide/isGuestLogin', isGuestLogin);
+const Guide = () => {
   // navigation
-  const {navigate, reset} = useNavigation();
+  const {reset} = useNavigation();
+  const {params} = useRoute();
 
   // useState
   const [step, setStep] = useState(1);
@@ -193,10 +190,35 @@ const Guide = param => {
       onboardingSource: require('../assets/onboardingLottie/remainNutrFilter.json'),
     },
   ];
+
+  // onPressFn
+  const finishGuide = () => {
+    // step 1로 초기화 후 홈페이지 or 원래 보던 페이지로 이동
+    setStep(1);
+    // 온보딩 다시 보지 않기로 설정
+    updateNotShowAgain('ONBOARDING');
+    // Mypage에서 가이드 화면 온 경우 다시 Mypage로 이동
+    // or login 화면으로 이동
+    if (params?.from === 'Mypage') {
+      reset({
+        index: 0,
+        routes: [
+          {name: 'BottomTabNav', params: {screen: 'Home'}},
+          {name: 'BottomTabNav', params: {screen: 'Mypage'}},
+        ],
+      });
+      return;
+    }
+    reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
+  };
+
   //건너뛰기 누르면 다시는 안보여줌
   //다음 다 눌러도 다시는 안보여줌
   //유일하게 myPage에서 다시보기 가능한데 다보면 myPage로 이동
-  // FIRSTINPUT, HOME, MYPAGE
+
   return (
     <Container>
       <Row style={{columnGap: 4}}>
@@ -230,20 +252,7 @@ const Guide = param => {
             flex: 1,
           }}
           btnStyle={'border'}
-          onPress={() => {
-            updateNotShowAgain('ONBOARDING');
-            // step 1로 초기화 후 홈페이지 or 원래 보던 페이지로 이동
-            setStep(1);
-            isGuestLogin
-              ? navigate('InputNav', {
-                  screen: 'FirstInput',
-                  params: {isGuestLogin: true},
-                })
-              : reset({
-                  index: 0,
-                  routes: [{name: 'Login'}],
-                });
-          }}>
+          onPress={() => finishGuide()}>
           <BottomText style={{color: colors.textSub}}>건너뛰기</BottomText>
         </BtnCTA>
 
@@ -253,20 +262,7 @@ const Guide = param => {
           }}
           btnStyle={'activated'}
           onPress={() => {
-            if (step === guidePageArray.length) {
-              setStep(1);
-              updateNotShowAgain('ONBOARDING');
-              isGuestLogin
-                ? navigate('InputNav', {
-                    screen: 'FirstInput',
-                    params: {isGuestLogin: true},
-                  })
-                : reset({
-                    index: 0,
-                    routes: [{name: 'Login'}],
-                  });
-              return;
-            }
+            if (step === guidePageArray.length) finishGuide();
             setStep(step + 1);
           }}>
           <BottomText>다음</BottomText>
