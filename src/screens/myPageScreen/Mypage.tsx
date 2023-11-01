@@ -49,7 +49,7 @@ const navigateByBtnId: INavigateByBtnId = {
   OrderHistory: (btnId, navigate) =>
     navigate('OrderHistoryNav', {screen: btnId}),
   Account: (btnId, navigate) => navigate(btnId),
-  Guide: (btnId, navigate) => navigate(btnId),
+  Guide: (btnId, navigate) => navigate(btnId, {from: 'Mypage'}),
 };
 
 const Mypage = () => {
@@ -256,7 +256,10 @@ const Mypage = () => {
           </ProfileTextContainer>
           <UserInfoBtnContainer
             onPress={() => {
-              navigate('InputNav', {screen: 'FirstInput'});
+              navigate('InputNav', {
+                screen: 'FirstInput',
+                params: {from: 'Mypage'},
+              });
             }}>
             <UserInfoBtnText>정보변경</UserInfoBtnText>
             <RightArrow source={icons.arrowRight_20} />

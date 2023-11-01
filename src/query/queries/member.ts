@@ -22,9 +22,8 @@ export const useDeleteProfile = () => {
     mutationFn: () => mutationFn(`${DELETE_USER}`, 'delete'),
     onSuccess: e => {
       console.log('delete success', e);
-      removeToken();
-      resetGuide();
       queryClient.removeQueries([]);
+      // queryClient.invalidateQueries([]);
     },
     onError: e => {
       console.log('delete error', e);

@@ -9,6 +9,12 @@ interface TableItem {
   rate?: string;
   color?: string;
 }
+// 영양소제한
+// 나트륨 => 2300mg
+// 당류 => 20% (1일 영양소 기준치)
+// 트랜스지방 => 0.01% (1일 에너지 기준치)
+// 포화지방 => 7% (1일 에너지 기준치)
+// 콜레스테롤 => 300mg
 
 export const makeTableData = (
   food: IProductData | undefined,
@@ -22,7 +28,7 @@ export const makeTableData = (
       column2: `${food.calorie ? Math.ceil(Number(food.calorie)) : ''} kcal`,
       rate: baseLineData
         ? `${Math.ceil(
-            (Number(food.calorie) / Number(baseLineData.calorie)) * 3 * 100,
+            (Number(food.calorie) / (Number(baseLineData.calorie) * 3)) * 100,
           )}%`
         : '',
       color: colors.main,
@@ -33,7 +39,7 @@ export const makeTableData = (
       column2: `${food.carb ? Math.ceil(Number(food.carb)) : ''} g`,
       rate: baseLineData
         ? `${Math.ceil(
-            (Number(food.carb) / Number(baseLineData.carb)) * 3 * 100,
+            (Number(food.carb) / (Number(baseLineData.carb) * 3)) * 100,
           )}%`
         : '',
       color: colors.blue,
@@ -44,7 +50,7 @@ export const makeTableData = (
       column2: `${food.protein ? Math.ceil(Number(food.protein)) : ''} g`,
       rate: baseLineData
         ? `${Math.ceil(
-            (Number(food.protein) / Number(baseLineData.protein)) * 3 * 100,
+            (Number(food.protein) / (Number(baseLineData.protein) * 3)) * 100,
           )}%`
         : '',
       color: colors.green,
@@ -55,7 +61,7 @@ export const makeTableData = (
       column2: `${food.fat ? Math.ceil(Number(food.fat)) : ''} g`,
       rate: baseLineData
         ? `${Math.ceil(
-            (Number(food.fat) / Number(baseLineData.fat)) * 3 * 100,
+            (Number(food.fat) / (Number(baseLineData.fat) * 3)) * 100,
           )}%`
         : '',
       color: colors.orange,
@@ -74,7 +80,9 @@ export const makeTableData = (
       column2: `${food.sugar ? Math.ceil(Number(food.sugar)) : ''} g`,
       rate: baseLineData
         ? `${Math.ceil(
-            (Number(food.sugar) / 0.2 / Number(baseLineData.calorie)) * 3 * 100,
+            (Number(food.sugar) /
+              ((Number(baseLineData.calorie) / 4) * 3 * 0.2)) *
+              100,
           )}%`
         : '',
     },
@@ -85,8 +93,8 @@ export const makeTableData = (
       column2: `${food.transFat ? Math.ceil(Number(food.transFat)) : ''} g`,
       rate: baseLineData
         ? `${Math.ceil(
-            (Number(food.transFat) / 0.1 / Number(baseLineData.calorie)) *
-              3 *
+            (Number(food.transFat) /
+              ((Number(baseLineData.calorie) / 9) * 0.01 * 3)) *
               100,
           )}%`
         : '',
@@ -99,8 +107,8 @@ export const makeTableData = (
       } g`,
       rate: baseLineData
         ? `${Math.ceil(
-            (Number(food.saturatedFat) / 0.7 / Number(baseLineData.calorie)) *
-              3 *
+            (Number(food.saturatedFat) /
+              (((Number(baseLineData.calorie) * 0.07) / 9) * 3)) *
               100,
           )}%`
         : '',

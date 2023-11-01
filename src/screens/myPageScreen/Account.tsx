@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {HorizontalLine, TextMain, Col} from '../../styles/StyledConsts';
-import {removeToken} from '../../util/asyncStorage';
+import {removeToken, resetGuide} from '../../util/asyncStorage';
 import {useDeleteProfile} from '../../query/queries/member';
 import {resetUserInfo} from '../../stores/slices/userInfoSlice';
 
@@ -52,8 +52,15 @@ const Account = () => {
     }
   };
   //회원탈퇴 Fn
-  const onWithdrawal = () => {
-    removeToken();
+  const onWithdrawal = async () => {
+    await deleteUser.mutateAsync();
+    await removeToken();
+    await resetGuide();
+    dispatch(resetUserInfo());
+    reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
   };
   //개인정보처리방침 Fn
   const onPrivacyPolicy = () => {
@@ -67,14 +74,7 @@ const Account = () => {
         renderContent={() => (
           <WithdrawalContent deleteText={'계정을 삭제합니다'} />
         )}
-        onConfirm={() => {
-          deleteUser.mutate();
-          // dispatch(resetUserInfo());
-          reset({
-            index: 0,
-            routes: [{name: 'Login'}],
-          });
-        }}
+        onConfirm={() => onWithdrawal()}
         onCancel={() => {
           setIsAlert(false);
         }}

@@ -65,7 +65,11 @@ const Home = () => {
   const [tooltipShow, setTooltipShow] = useState(false);
 
   // react-query
-  const {data: baseLineData, isLoading: baseLineLoading} = useGetBaseLine(); // 미리 캐싱
+  const {
+    data: baseLineData,
+    isLoading: baseLineLoading,
+    isFetching: isBaseLineFetching,
+  } = useGetBaseLine(); // 미리 캐싱
   const {data: dietDetailData, isLoading: listDietLoading} = useListDietDetail(
     currentDietNo,
     {
@@ -154,7 +158,7 @@ const Home = () => {
   return (
     <Container>
       {/* 끼니선택, progressBar section */}
-      {baseLineLoading === false &&
+      {isBaseLineFetching === false &&
       listDietLoading === false &&
       productIsLoading === false ? (
         <MenuSection />
