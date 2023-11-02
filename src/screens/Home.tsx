@@ -149,12 +149,12 @@ const Home = () => {
   // Animation
   // flatList header hide Event
   const scrollY = useRef(new Animated.Value(0)).current;
+  console.log('scrollY:', scrollY);
   const diffClamp = Animated.diffClamp(scrollY, 0, 100);
   const translateY = diffClamp.interpolate({
     inputRange: [0, 100],
     outputRange: [0, -100],
   });
-
   // flatlist scrollToTop
   const flatListRef = useRef<FlatList<IProductData> | null>(null);
   const scrollTop = () => {
@@ -246,7 +246,13 @@ const Home = () => {
             refreshing={productIsFetching}
             onRefresh={refetchProduct}
             progressViewOffset={HOME_FILTER_HEADER_HEIGHT}
-            onScroll={e => scrollY.setValue(e.nativeEvent.contentOffset.y)}
+            onScroll={e => {
+              scrollY.setValue(
+                e.nativeEvent.contentOffset.y < 0
+                  ? 0
+                  : e.nativeEvent.contentOffset.y,
+              );
+            }}
             ref={flatListRef}
           />
         )}
