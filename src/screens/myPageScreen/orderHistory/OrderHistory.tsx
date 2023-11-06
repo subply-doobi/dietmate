@@ -40,7 +40,6 @@ const OrderHistory = () => {
   // navigation
   const {data: orderData, isLoading} = useListOrder();
   const {navigate} = useNavigation();
-  console.log('orderData', orderData);
 
   // useState
   const [emptyAlertShow, setEmptyAlertShow] = useState(false);

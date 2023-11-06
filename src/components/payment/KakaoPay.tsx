@@ -14,48 +14,47 @@ const KakaoPay = () => {
   const deleteOrderMutation = useDeleteOrder();
   const createDietMutation = useCreateDiet();
 
+  // SP006004 updateOrder
+  // SP006001 updateDiet
+  /** 실패했을 경우
+   *  1. updateDiet로 SP006001로 statusCd 변경
+   *  2. deleteOrder로 SP006004로 orderNo 삭제
+   *  3. navigate('Order')
+   */
+  const onPaymentSuccess = async () => {
+    await updateDietMutation.mutateAsync({
+      statusCd: 'SP006005',
+      orderNo: orderNumber.orderNo,
+    });
+    await updateOrderMutation.mutateAsync({
+      orderNo: orderNumber.orderNo,
+      statusCd: 'SP006005',
+    });
+    await createDietMutation.mutateAsync();
+    reset({
+      index: 0,
+      routes: [
+        {name: 'BottomTabNav', params: {screen: 'Home'}},
+        {name: 'OrderComplete'},
+      ],
+    });
+  };
+  const onPaymentFail = async () => {
+    await updateDietMutation.mutateAsync({
+      statusCd: 'SP006001',
+      orderNo: orderNumber.orderNo,
+    });
+    await deleteOrderMutation.mutateAsync({orderNo: orderNumber.orderNo});
+    navigate('Order');
+  };
+
   return (
     <IMP.Payment
       userCode={'imp88778331'} // this one you can get in the iamport console.
       data={kakaopayData}
       callback={response => {
-        console.log('결제 응답', response);
-        response.imp_success === 'true'
-          ? (updateDietMutation.mutate({
-              statusCd: 'SP006005',
-              orderNo: orderNumber.orderNo,
-            }),
-            updateOrderMutation.mutate({
-              orderNo: orderNumber.orderNo,
-              statusCd: 'SP006005',
-            }),
-            reset({
-              index: 0,
-              routes: [
-                {name: 'BottomTabNav', params: {screen: 'Home'}},
-                {name: 'OrderComplete'},
-              ],
-            }),
-            createDietMutation.mutate())
-          : console.log('결제실패');
-
-        response.error_msg === '[결제포기] 사용자가 결제를 취소하셨습니다'
-          ? (navigate('Order'),
-            updateDietMutation.mutate({
-              statusCd: 'SP006001',
-              orderNo: orderNumber.orderNo,
-            }),
-            deleteOrderMutation.mutate({
-              orderNo: orderNumber.orderNo,
-            }))
-          : console.log('결제 오류');
-        // SP006004 updateOrder
-        // SP006001 updateDiet
-        /** 실패했을 경우
-         *  1. updateDiet로 SP006001로 statusCd 변경
-         *  2. deleteOrder로 SP006004로 orderNo 삭제
-         *  3. navigate('Order')
-         */
+        // success가 아닌 경우 1. 아임포트 자체오류 || 2. 사용자 취소 구분은 아직 없음
+        response.imp_success === true ? onPaymentSuccess() : onPaymentFail();
       }}
     />
   );

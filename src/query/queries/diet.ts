@@ -65,6 +65,7 @@ export const useCreateDiet = (options?: IMutationOptions) => {
       return {prevEmptyData};
     },
     onSuccess: data => {
+      console.log('createDiet success: ', data);
       options?.onSuccess && options?.onSuccess(data);
       // 현재 구성중인 끼니의 dietNo, dietIdx를 redux에 저장 => 장바구니와 동기화
       dispatch(setCurrentDiet(data.dietNo));

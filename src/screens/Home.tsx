@@ -31,7 +31,11 @@ import FlatlistHeaderComponent from '../components/home/FlatlistHeaderComponent'
 
 // react-query
 import {LIST_DIET} from '../query/queries/urls';
-import {useListDietDetail, useListDiet} from '../query/queries/diet';
+import {
+  useListDietDetail,
+  useListDiet,
+  useCreateDiet,
+} from '../query/queries/diet';
 import {useListProduct} from '../query/queries/product';
 import {IDietData} from '../query/types/diet';
 import {useGetBaseLine} from '../query/queries/baseLine';
@@ -45,9 +49,7 @@ import SortModalContent from '../components/home/SortModalContent';
 
 const Home = () => {
   // navigation
-
   const {navigate} = useNavigation();
-  // console.log('HOME:', useHandleError()(new Error('test')));
 
   // redux
   const dispatch = useDispatch();
@@ -76,6 +78,9 @@ const Home = () => {
       enabled: currentDietNo ? true : false,
     },
   );
+  const {refetch: refetchListDiet, isSuccess: isListDietSuccess} =
+    useListDiet();
+  const createDietMutation = useCreateDiet();
   const {
     data: productData,
     refetch: refetchProduct,
@@ -134,13 +139,23 @@ const Home = () => {
 
   // useEffect
   // 앱 시작할 때 내가 어떤 끼니를 보고 있는지 redux에 저장해놓기 위해 필요함
+  useEffect(() => {
+    const initializeDiet = async () => {
+      const dietData = (await refetchListDiet()).data;
+      if (!dietData) return;
+      if (dietData?.length === 0) {
+        createDietMutation.mutateAsync().then(res => {
+          dispatch(setCurrentDiet(res.dietNo));
+        });
+        return;
+      }
+      dispatch(setCurrentDiet(dietData[0]?.dietNo));
+    };
+
+    initializeDiet();
+  }, []);
 
   useEffect(() => {
-    const initializeDietNo = async () => {
-      const initialDietNo = (await queryFn<IDietData>(LIST_DIET))[0]?.dietNo;
-      initialDietNo && dispatch(setCurrentDiet(initialDietNo));
-    };
-    initializeDietNo();
     //tooltip 관련
     const initializeTooltip = async () => {
       const notShowAgain = await checkNotShowAgain('HOME_TOOLTIP');
@@ -155,6 +170,7 @@ const Home = () => {
     currentDietNo && refetchProduct();
     scrollTop();
   }, [appliedSortFilter]);
+
   return (
     <Container>
       {/* 끼니선택, progressBar section */}
