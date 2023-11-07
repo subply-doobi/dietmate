@@ -11,7 +11,6 @@ import {
 } from '../../../util/sumUp';
 
 import {useGetBaseLine} from '../../../query/queries/baseLine';
-import {useListDietDetail} from '../../../query/queries/diet';
 import DTooltip from '../tooltip/DTooltip';
 import {NUTR_ERROR_RANGE, SCREENWIDTH} from '../../../constants/constants';
 import {RootState} from '../../../stores/store';

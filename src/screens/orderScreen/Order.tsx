@@ -43,31 +43,31 @@ import KakaoPay from '../../components/payment/KakaoPay';
 import {useKakaoPayReady, useCreateOrder} from '../../query/queries/order';
 import {sumUpDietTotal} from '../../util/sumUp';
 import {useListAddress, useGetAddress} from '../../query/queries/address';
+import {useListDietDetail} from '../../query/queries/diet';
+import {useGetUser} from '../../query/queries/user';
 
 const Order = () => {
-  // const {data: listAddressData} = useListAddress();
-  // console.log('listAddressData:', listAddressData);
+  // redux
+  const dispatch = useDispatch();
+  const {orderInfo, selectedAddressId, orderSummary} = useSelector(
+    (state: RootState) => state.order,
+  );
+
+  const {priceTotal, menuNum, productNum} = sumUpDietTotal(
+    orderInfo.foodToOrder,
+  );
+
+  // react-query
   const {data: getAddressData} = useGetAddress();
   const {data: listAddressData, isLoading: listAddressDataLoading} =
     useListAddress();
+  const {data: userData} = useGetUser();
+  const createOrderMutation = useCreateOrder();
+
   //navigation
   const {navigate} = useNavigation();
   //cart에 있는 제품들을 주문하기 위해 paymentProduct로 변환
   //modifiedDietTotal을 서버에 저장
-
-  // redux
-  const {orderInfo, selectedAddressId, orderSummary} = useSelector(
-    (state: RootState) => state.order,
-  );
-  const {foodToOrder} = orderInfo;
-  const {priceTotal, menuNum, productNum} = sumUpDietTotal(
-    orderInfo.foodToOrder,
-  );
-  const createOrderMutation = useCreateOrder();
-
-  // 주문자 정보가 orderInfo에 저장되어있음
-
-  const dispatch = useDispatch();
 
   let initialCustomerData: ICustomer = {
     address: {base: '', addressDetail: '', postalCode: ''},
@@ -80,16 +80,9 @@ const Order = () => {
   };
   // state
   const [customerData, setCustomerData] = useState(initialCustomerData);
+
   // etc
-  let totalAmount = 2200;
-  //totalAmount는 잠시 이렇게
-  // let totalAmount: number = cart[0].reduce((acc: number, cur: IProduct) => {
-  //   acc = acc + cur.price * cur.qty;
-  //   return acc;
-  // }, 0);
-
   // react-hook-form
-
   const {
     control,
     handleSubmit,
@@ -245,16 +238,6 @@ const Order = () => {
     });
   };
 
-  const handlePressPaymentBtn = () => {
-    pay(2400);
-    setIsPaymentModalVisible(true);
-  };
-  // AddressEdit스크린에서 다시 Orders스크린 온 경우 active section설정
-  // navigation 적용할 것 -> InputNav.tsx: AddressEdit Screen | AddressEdit.tsx: delete, confirm
-  // useEffect(() => {
-  //   handleSubmit(() => {})();
-  // }, []);
-
   interface IIamportPayment {
     pg: string; //kakaopay, html5_inicis 등등
     pay_method: string; //결제수단: kakaopay의 경우 'card'하나만 존재
@@ -275,7 +258,7 @@ const Order = () => {
     pg: 'kakaopay',
     escrow: false,
     pay_method: 'card',
-    name: '결제명',
+    name: `총 ${menuNum}개 끼니 (${productNum}개 식품)`,
     custom_data: {
       customerData,
       // transactionData : response값으로
@@ -284,7 +267,7 @@ const Order = () => {
     amount: String(priceTotal),
     buyer_name: customerData.orderer,
     buyer_tel: customerData.ordererContact,
-    buyer_email: 'example@naver.com',
+    buyer_email: userData?.email ? userData.email : '',
     buyer_addr: customerData.address.base + customerData.address.addressDetail,
     buyer_postcode: customerData.address.postalCode,
     app_scheme: 'example',
