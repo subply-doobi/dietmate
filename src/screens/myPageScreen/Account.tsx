@@ -2,13 +2,11 @@ import {logout} from '@react-native-seoul/kakao-login';
 import styled from 'styled-components/native';
 import {Linking} from 'react-native';
 import {useState} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 import {HorizontalLine, TextMain, Col} from '../../styles/StyledConsts';
 import {removeToken, resetGuide} from '../../util/asyncStorage';
 import {useDeleteProfile} from '../../query/queries/member';
-import {resetUserInfo} from '../../stores/slices/userInfoSlice';
 
 import colors from '../../styles/colors';
 import {icons} from '../../assets/icons/iconSource';
@@ -27,18 +25,21 @@ const WithdrawalContent = ({deleteText}: {deleteText: string}) => {
 };
 
 const Account = () => {
+  // redux
+  const dispatch = useDispatch();
+
   // useState
   const [isAlert, setIsAlert] = useState(false);
+
   // navigation
   const {reset} = useNavigation();
   const deleteUser = useDeleteProfile();
+
   // PRIVACY URL
   const PRIVACY_URL = 'https://sites.google.com/view/dietmate-privacypolicy/';
   const link = () => {
     Linking.openURL(PRIVACY_URL);
   };
-  // redux
-  const dispatch = useDispatch();
   // logout Fn
   const onLogout = async () => {
     try {
@@ -56,7 +57,6 @@ const Account = () => {
     await deleteUser.mutateAsync();
     await removeToken();
     await resetGuide();
-    dispatch(resetUserInfo());
     reset({
       index: 0,
       routes: [{name: 'Login'}],

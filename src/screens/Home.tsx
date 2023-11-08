@@ -56,7 +56,7 @@ const Home = () => {
   const {currentDietNo, totalFoodListIsLoaded} = useSelector(
     (state: RootState) => state.cart,
   );
-  const {applied: appliedSortFilter} = useSelector(
+  const {applied: appliedSortFilter, copied: copiedSortFilter} = useSelector(
     (state: RootState) => state.sortFilter,
   );
 
@@ -95,7 +95,6 @@ const Home = () => {
       enabled: currentDietNo ? true : false,
       onSuccess: (data: IProductsData) => {
         if (data.length === 0) setProductAlertShow(true);
-
         // 처음 앱 켰을 때 totalFoodList를 redux에 저장해놓고 끼니 자동구성에 사용
         if (totalFoodListIsLoaded) return;
         dispatch(setTotalFoodList(data));

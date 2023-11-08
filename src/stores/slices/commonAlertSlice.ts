@@ -1,11 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 
-interface ICommonAlertSlice {
+interface ICommonAlert {
   errorCode: number | undefined;
 }
 
-const initialState: ICommonAlertSlice = {
+const initialState: ICommonAlert = {
   errorCode: undefined,
 };
 

@@ -170,7 +170,6 @@ const userInputSlice = createSlice({
   initialState,
   reducers: {
     loadBaseLineData: (state, action: PayloadAction<IBaseLine>) => {
-      console.log('loadBaseLineData! ');
       // FirstInput
       state.gender.value = action.payload.gender;
       state.age.value = action.payload.age;
@@ -203,9 +202,9 @@ const userInputSlice = createSlice({
       const {name, value} = action.payload;
       state[name].value = value;
       // 운동 "안함" => 운동시간, 강도도 첫번째 선택지로
-      if (name === 'sportsSeqCd' && value === SPORTS_SEQ_CD[0].value) {
-        state.sportsTimeCd.value = SPORTS_TIME_CD[0].value;
-        state.sportsStrengthCd.value = SPORTS_STRENGTH_CD[0].value;
+      if (name === 'sportsSeqCd' && value === SPORTS_SEQ_CD[0].cd) {
+        state.sportsTimeCd.value = SPORTS_TIME_CD[0].cd;
+        state.sportsStrengthCd.value = SPORTS_STRENGTH_CD[0].cd;
       }
 
       // validation
