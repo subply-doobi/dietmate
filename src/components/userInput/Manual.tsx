@@ -23,7 +23,6 @@ const Manual = ({scrollRef}: IManual) => {
   const dispatch = useDispatch();
   const userInputState = useSelector((state: RootState) => state.userInput);
   const {carb, protein, fat} = userInputState;
-  console.log(carb.value, protein.value, fat.value);
 
   // react-query
   const {data: seqCodeData} = useListCode('SP008'); // SP008 : 운동빈도 (sportsSeqCd)

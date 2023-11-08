@@ -1,20 +1,12 @@
 // Description: 첫번째 유저 정보 입력 화면
 //RN, 3rd
-import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {useEffect, useRef, useState} from 'react';
+import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
-import {Controller, useForm, useWatch} from 'react-hook-form';
 import {useDispatch, useSelector} from 'react-redux';
 //doobi util, redux, etc
 import {RootState} from '../../stores/store';
-import {saveUserInfo} from '../../stores/slices/userInfoSlice';
-import {
-  DIET_PURPOSE_CD,
-  NavigationProps,
-  validationRules,
-} from '../../constants/constants';
-import colors from '../../styles/colors';
-import {calculateBMR} from '../../util/targetCalculation';
+import {DIET_PURPOSE_CD} from '../../constants/constants';
 
 //doobi Component
 import {
@@ -37,6 +29,7 @@ import {useGetBaseLine} from '../../query/queries/baseLine';
 import {useListCode} from '../../query/queries/code';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {loadBaseLineData, setValue} from '../../stores/slices/userInputSlice';
+import colors from '../../styles/colors';
 
 const genderBtnItem = [
   {label: '남성', value: 'M'},
@@ -78,7 +71,11 @@ const FirstInput = () => {
   }, [dietPurposeTemp]);
 
   useEffect(() => {
-    baseLineData && dispatch(loadBaseLineData(baseLineData));
+    // 첫 회원가입한 후 baseLine 없으면 빈 오브젝트 !!! baseLineData 자체가 false는 아님!!
+    console.log('FirstInput: baseline', baseLineData);
+    baseLineData &&
+      Object.keys(baseLineData).length !== 0 &&
+      dispatch(loadBaseLineData(baseLineData));
   }, []);
 
   // etc

@@ -36,28 +36,6 @@ import {
   useListDietDetail,
 } from '../../query/queries/diet';
 
-interface IFormData {
-  ratioType: string;
-  caloriePerMeal: string;
-  carbManual: string;
-  proteinManual: string;
-  fatManual: string;
-}
-interface IRequestBody {
-  calorie: string;
-  carb: string;
-  protein: string;
-  fat: string;
-  gender: string;
-  age: string;
-  height: string;
-  weight: string;
-  dietPurposeCd: string;
-  sportsSeqCd: string;
-  sportsTimeCd: string;
-  sportsStrengthCd: string;
-}
-
 const ThirdInput = () => {
   // navigation
   const {params} = useRoute();
@@ -71,9 +49,6 @@ const ThirdInput = () => {
   const createDietMutation = useCreateDiet();
 
   // redux
-  const {userInfo, userTarget} = useSelector(
-    (state: RootState) => state.userInfo,
-  );
   const userInputState = useSelector((state: RootState) => state.userInput);
 
   // ref
@@ -139,9 +114,9 @@ const ThirdInput = () => {
     // //기존 값이 존재하면 update 없으면 create
     const requestBody = convertDataByMethod[calculationMethod](userInputState);
 
-    if (!baseLineData) return;
     dietData?.length === 0 && createDietMutation.mutate();
 
+    if (!baseLineData) return;
     Object.keys(baseLineData).length === 0
       ? createMutation.mutate(requestBody)
       : updateMutation.mutate(requestBody);
