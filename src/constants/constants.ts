@@ -18,66 +18,47 @@ export const FREE_SHIPPING_PRICE = 30000;
 // Doobi server category etc.
 
 //주간 운동 횟수
-export const WORKOUT_PURPOSE_CD = [
-  {label: '안함', value: 'SP008001'},
-  {label: '1회', value: 'SP008002'},
-  {label: '2회', value: 'SP008003'},
-  {label: '3회', value: 'SP008004'},
-  {label: '4회', value: 'SP008005'},
-  {label: '5회', value: 'SP008006'},
-  {label: '6회', value: 'SP008007'},
-  {label: '으악그만', value: 'SP008008'},
+export const SPORTS_SEQ_CD = [
+  {cdNm: '안함', cd: 'SP008001'},
+  {cdNm: '1회', cd: 'SP008002'},
+  {cdNm: '2회', cd: 'SP008003'},
+  {cdNm: '3회', cd: 'SP008004'},
+  {cdNm: '4회', cd: 'SP008005'},
+  {cdNm: '5회', cd: 'SP008006'},
+  {cdNm: '6회', cd: 'SP008007'},
+  {cdNm: '으악그만', cd: 'SP008008'},
 ];
 
 //회당 운동 시간(분)
-export const WORKOUT_FREQUENCY_CD = [
-  {label: '30분 이하', value: 'SP009001'},
-  {label: '60분 이하', value: 'SP009002'},
-  {label: '90분 이하', value: 'SP009003'},
-  {label: '120분 이하', value: 'SP009004'},
-  {label: '으악그만', value: 'SP009005'},
+export const SPORTS_TIME_CD = [
+  {cdNm: '30분 이하', cd: 'SP009001'},
+  {cdNm: '60분 이하', cd: 'SP009002'},
+  {cdNm: '90분 이하', cd: 'SP009003'},
+  {cdNm: '120분 이하', cd: 'SP009004'},
+  {cdNm: '으악그만', cd: 'SP009005'},
 ];
 
 //운동 강도(누가 뭐래도 내 느낌)
-export const WORKOUT_INTENSITY_CD = [
-  {label: '이정도면 잠들기도 가능', value: 'SP010001'},
-  {label: '적당한 산책 느낌', value: 'SP010002'},
-  {label: '숨이 가쁘지만 버틸 만한 정도', value: 'SP010003'},
-  {label: '중간중간 쉬지 않으면 못버틴다', value: 'SP010004'},
-  {label: '유언장이 준비되어 있다', value: 'SP010005'},
+export const SPORTS_STRENGTH_CD = [
+  {cdNm: '이정도면 잠들기도 가능', cd: 'SP010001'},
+  {cdNm: '적당한 산책 느낌', cd: 'SP010002'},
+  {cdNm: '숨이 가쁘지만 버틸 만한 정도', cd: 'SP010003'},
+  {cdNm: '중간중간 쉬지 않으면 못버틴다', cd: 'SP010004'},
+  {cdNm: '유언장이 준비되어 있다', cd: 'SP010005'},
 ];
-export const DIET_PURPOSE_CD = {
-  1: 'SP002001',
-  2: 'SP002002',
-  3: 'SP002003',
-  4: 'SP002004',
-  5: 'SP002005',
-};
-export const purposeCategory = [
-  {label: '다이어트(한 달 1~2kg감량)', value: 'SP002001'},
-  {label: '다이어트(한 달 3~4kg감량)', value: 'SP002002'},
-  {label: '체중유지', value: 'SP002003'},
-  {label: '체중증가(한 달 1~2kg증량) ', value: 'SP002004'},
-  {label: '체중증가(한 달 3~4kg증량)', value: 'SP002005'},
+
+export const DIET_PURPOSE_CD = [
+  {cdNm: '다이어트(한 달 1~2kg감량)', cd: 'SP002001'},
+  {cdNm: '다이어트(한 달 3~4kg감량)', cd: 'SP002002'},
+  {cdNm: '체중유지', cd: 'SP002003'},
+  {cdNm: '체중증가(한 달 1~2kg증량) ', cd: 'SP002004'},
+  {cdNm: '체중증가(한 달 3~4kg증량)', cd: 'SP002005'},
 ];
-export const weightTrainingCategrory = [
-  {label: '하루 30분 이하', value: 'SP003001'},
-  {label: '하루 30분~1시간 이하', value: 'SP003002'},
-  {label: '하루 1시간~1시간30분이하', value: 'SP003003'},
-  {label: '하루 1시간30분~2시간 이하', value: 'SP003004'},
-  {label: '하루 2시간 이상', value: 'SP003005'},
-];
-export const aerobicTrainingCategrory = [
-  {label: '하루 30분 이하', value: 'SP004001'},
-  {label: '하루 30분~1시간 이하', value: 'SP004002'},
-  {label: '하루 1시간~1시간30분이하', value: 'SP004003'},
-  {label: '하루 1시간30분~2시간 이하', value: 'SP004004'},
-  {label: '하루 2시간 이상', value: 'SP004005'},
-];
-export const nutrRatioCategory = [
-  {label: '55 : 20 : 25(보건복지부 권장)', value: 'SP005001'},
-  {label: '20 : 20: 60(저탄고지 식단)', value: 'SP005002'},
-  {label: '40 : 40 : 20(벌크업용)', value: 'SP005003'},
+
+export const NUTR_RATIO_CD = [
+  {cdNm: '55 : 20 : 25(보건복지부 권장)', cd: 'SP005001'},
+  {cdNm: '20 : 20: 60(저탄고지 식단)', cd: 'SP005002'},
+  {cdNm: '40 : 40 : 20(벌크업용)', cd: 'SP005003'},
 ];
 
 export const categoryCode: {[key: string]: string} = {
@@ -255,96 +236,154 @@ export const ratioCdToValue: IRatioCdValue = {
 };
 
 // validationRules
-interface IValidationRules {
-  [key: string]: {
-    [key: string]: any;
-  };
-}
 const regex = /^[ㄱ-ㅎ|가-힣]+$/; //문자열에 한글만 있는지 확인
 
-export const validationRules: IValidationRules = {
-  age: {
-    required: '필수 정보입니다',
-    maxLength: 3,
-    validate: {
-      range: (v: string) =>
-        (parseInt(v) >= 10 && parseInt(v) <= 100) ||
-        '10~100세 안으로 입력해주세요',
-    },
+// baseLine validation
+interface IValidateBaseLine {
+  [key: string]: (v: string) => {
+    isValid: boolean;
+    errMsg: string;
+  };
+}
+export const validateBaseLine: IValidateBaseLine = {
+  // FirstInput
+  gender: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '성별을 선택해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
   },
-  orderer: {
-    required: '필수 정보입니다',
-    // validate: {
-    // isValid: v => regex.test(v) || '한글로 입력',
-    // },
+  age: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '나이를 입력해주세요',
+      };
+    if (Number(v) < 10 || Number(v) > 100)
+      return {
+        isValid: false,
+        errMsg: '10~100세 안으로 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
   },
-  ordererContact: {
-    required: '필수 정보입니다',
+  height: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '신장을 입력해주세요',
+      };
+    if (Number(v) < 120 || Number(v) > 230)
+      return {
+        isValid: false,
+        errMsg: '120~230cm 안으로 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
   },
-  height: {
-    required: '필수 정보입니다',
-    maxLength: 3,
-    validate: {
-      range: (v: string) =>
-        (parseFloat(v) >= 120 && parseFloat(v) <= 230) ||
-        '정확한 신장을 입력해주세요',
-    },
+  weight: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '몸무게를 입력해주세요',
+      };
+    if (Number(v) < 30 || Number(v) > 130)
+      return {
+        isValid: false,
+        errMsg: '30~130kg 안으로 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
   },
-  weight: {
-    required: '필수 정보입니다',
-    maxLength: 3,
-    validate: {
-      range: (v: string) =>
-        (parseInt(v) >= 30 && parseInt(v) <= 130) ||
-        '정확한 몸무게를 입력해주세요',
-    },
+
+  // SecondInput
+  bmrKnown: (v: string) => {
+    if (Number(v) < 500 || Number(v) > 2500)
+      return {
+        isValid: false,
+        errMsg: '정확한 기초대사량을 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
   },
-  bmrKnown: {
-    maxlength: 4,
-    validate: {
-      range: (v: string) =>
-        (parseFloat(v) >= 500 && parseFloat(v) <= 3000) ||
-        v === '' ||
-        '정확한 기초대사량을 입력해주세요',
-    },
+
+  // ThirdInput
+  calorie: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '한 끼 목표 칼로리를 입력해주세요',
+      };
+    if (Number(v) < 300 || Number(v) > 1400)
+      return {
+        isValid: false,
+        errMsg: '300~1400 kcal 사이로 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
   },
-  caloriePerMeal: {
-    maxlength: 4,
-    validate: {
-      range: (v: string) =>
-        (parseFloat(v) >= 300 && parseFloat(v) <= 1400) ||
-        '300~1400 kcal 사이로 입력해주세요',
-    },
+  carb: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '한 끼 목표 탄수화물을 입력해주세요',
+      };
+    if (Number(v) < 10 || Number(v) > 375)
+      return {
+        isValid: false,
+        errMsg: `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
   },
-  carbManual: {
-    maxlength: 3,
-    validate: {
-      range: (v: string) =>
-        !v
-          ? '탄수화물 양을 입력해주세요'
-          : (parseFloat(v) >= 10 && parseFloat(v) <= 375) ||
-            `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
-    },
+  protein: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '한 끼 목표 단백질을 입력해주세요',
+      };
+    if (Number(v) < 10 || Number(v) > 375)
+      return {
+        isValid: false,
+        errMsg: `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
   },
-  proteinManual: {
-    maxlength: 3,
-    validate: {
-      range: (v: string) =>
-        !v
-          ? '단백질 양을 입력해주세요'
-          : (parseFloat(v) >= 10 && parseFloat(v) <= 375) ||
-            `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
-    },
-  },
-  fatManual: {
-    maxlength: 3,
-    validate: {
-      range: (v: string) =>
-        !v
-          ? '지방 양을 입력해주세요'
-          : (parseFloat(v) >= 5 && parseFloat(v) <= 100) ||
-            `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
-    },
+  fat: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '한 끼 목표 지방을 입력해주세요',
+      };
+    if (Number(v) < 5 || Number(v) > 100)
+      return {
+        isValid: false,
+        errMsg: `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
   },
 };
 

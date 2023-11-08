@@ -1,6 +1,6 @@
 // Description: 첫번째 유저 정보 입력 화면
 //RN, 3rd
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {Controller, useForm, useWatch} from 'react-hook-form';
@@ -8,7 +8,11 @@ import {useDispatch, useSelector} from 'react-redux';
 //doobi util, redux, etc
 import {RootState} from '../../stores/store';
 import {saveUserInfo} from '../../stores/slices/userInfoSlice';
-import {NavigationProps, validationRules} from '../../constants/constants';
+import {
+  DIET_PURPOSE_CD,
+  NavigationProps,
+  validationRules,
+} from '../../constants/constants';
 import colors from '../../styles/colors';
 import {calculateBMR} from '../../util/targetCalculation';
 
@@ -30,148 +34,68 @@ import {
 import Dropdown from '../../components/userInput/Dropdown';
 //react-query
 import {useGetBaseLine} from '../../query/queries/baseLine';
-import {useDietPurposeCode} from '../../query/queries/code';
+import {useListCode} from '../../query/queries/code';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {loadBaseLineData, setValue} from '../../stores/slices/userInputSlice';
 
-interface IFormData {
-  gender: string;
-  age: string;
-  height: string;
-  weight: string;
-  dietPurposeCd: string;
-}
-
-//나이 Input
-const renderAgeInput = (
-  {field: {onChange, value}}: any,
-  userInfo1Refs?: React.MutableRefObject<any[]>,
-) => {
-  return (
-    <>
-      <InputHeader isActivated={value ? true : false}>만 나이</InputHeader>
-      <Input
-        placeholder="만 나이를 입력해주세요"
-        value={value}
-        onChangeText={onChange}
-        isActivated={value ? true : false}
-        keyboardType="numeric"
-        maxLength={3}
-        ref={el => {
-          userInfo1Refs ? (userInfo1Refs.current[0] = el) : null;
-        }}
-        onSubmitEditing={() => {
-          userInfo1Refs?.current[1].focus();
-        }}
-      />
-    </>
-  );
-};
-//신장 Input
-const renderHeightInput = (
-  {field: {onChange, onBlur, value}}: any,
-  userInfo1Refs?: React.MutableRefObject<any[]>,
-  scrollRef?: any,
-) => {
-  return (
-    <>
-      <InputHeader isActivated={value ? true : false}>신장(cm)</InputHeader>
-      <Input
-        placeholder="신장을 입력해주세요"
-        onFocus={() => {
-          scrollRef?.current.scrollTo({y: 80, animated: true});
-        }}
-        value={value}
-        onChangeText={onChange}
-        isActivated={value ? true : false}
-        keyboardType="numeric"
-        maxLength={3}
-        ref={el => {
-          userInfo1Refs ? (userInfo1Refs.current[1] = el) : null;
-        }}
-        onSubmitEditing={() => {
-          userInfo1Refs?.current[2].focus();
-        }}
-      />
-    </>
-  );
-};
-//몸무게 Input
-const renderWeightInput = (
-  {field: {onChange, onBlur, value}}: any,
-  userInfo1Refs?: React.MutableRefObject<any[]>,
-  scrollRef?: any, // TBD | scrollView ref type?!
-) => {
-  return (
-    <>
-      <InputHeader isActivated={value ? true : false}>몸무게(kg)</InputHeader>
-      <Input
-        placeholder="몸무게를 입력해주세요"
-        onFocus={() => {
-          scrollRef?.current.scrollToEnd();
-        }}
-        value={value}
-        onChangeText={onChange}
-        isActivated={value ? true : false}
-        keyboardType="numeric"
-        maxLength={3}
-        ref={el => {
-          userInfo1Refs ? (userInfo1Refs.current[2] = el) : null;
-        }}
-      />
-    </>
-  );
-};
+const genderBtnItem = [
+  {label: '남성', value: 'M'},
+  {label: '여성', value: 'F'},
+];
 
 const FirstInput = () => {
   // navigation
   const {params} = useRoute();
   const navigation = useNavigation();
 
-  // react-query
-  const {data, isLoading} = useGetBaseLine();
-  const dietPurposeCd = useDietPurposeCode('SP002');
-  const dietPurposeCdCategory = dietPurposeCd.data;
-  const newDietPurposeCdCategory = dietPurposeCdCategory?.map(item => {
-    return {value: item.cd, label: item.cdNm};
-  });
-  // state
   // redux
   const dispatch = useDispatch();
+  const {gender, age, height, weight, dietPurposeCd} = useSelector(
+    (state: RootState) => state.userInput,
+  );
+
+  // useState
+  const [dietPurposeTemp, setDietPurposeTemp] = useState(dietPurposeCd.value);
+
+  // react-query
+  const {data: baseLineData, isLoading: isBaseLineDataLoading} =
+    useGetBaseLine();
+  const {data: dPCodeData, isLoading: isDPCodeDataLoading} =
+    useListCode('SP002'); // SP002 : 식단의 목적
+  const dietPurposeDDItems = dPCodeData?.map(item => {
+    return {value: item.cd, label: item.cdNm};
+  });
 
   // refs
   const scrollRef = useRef<ScrollView>(null);
   const userInfo1Refs = useRef([]);
-  /**
-   * 먼저 서버 정보 공통 코드목록으로 API호출하기 설정
-   * cd => value
-   * cdNm => label
-   * 로 바꾸는 작업을 해야함
-   * 유저정보 체크 후 값이 있으면, 기존 값 올려두기
-   *  없다면 설정할 필요없이 기존 코드 그대로
-   *
-   */
-  // react-hook-form
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: {errors, isValid},
-  } = useForm<IFormData>({
-    // 나중에 사용자 정보 있으면 초기값으로 넣어줘야함.
 
-    defaultValues: {
-      gender: data?.gender ? data?.gender : '',
-      age: data?.age ? data?.age : '',
-      height: data?.height ? data?.height : '',
-      weight: data?.weight ? data?.weight : '',
-      dietPurposeCd: data?.dietPurposeCd ? data?.dietPurposeCd : 'SP002001',
-    },
-  });
-  const genderValue = useWatch({control, name: 'gender'});
-  const ageValue = useWatch({control, name: 'age'});
-  const heightValue = useWatch({control, name: 'height'});
-  const weightValue = useWatch({control, name: 'weight'});
-  const dietPurposeValue = useWatch({control, name: 'dietPurposeCd'});
+  // useEffect
+  useEffect(() => {
+    dispatch(setValue({name: 'dietPurposeCd', value: dietPurposeTemp}));
+    // dropdown picker에는 setStateAction 만 가능
+    // 우리는 redux로 관리하고 있으므로 임시로 useState를 만들어서 관리
+  }, [dietPurposeTemp]);
+
+  useEffect(() => {
+    baseLineData && dispatch(loadBaseLineData(baseLineData));
+  }, []);
+
+  // etc
+  const isValidAll = [
+    gender.isValid,
+    age.isValid,
+    height.isValid,
+    weight.isValid,
+  ].every(item => item === true);
+
+  const onCTAPress = () => {
+    navigation.navigate('InputNav', {
+      screen: 'SecondInput',
+      params,
+    });
+  };
+
   return (
     <Container>
       <ScrollView
@@ -181,115 +105,111 @@ const FirstInput = () => {
         <Title>{'기본정보를\n입력해주세요'}</Title>
 
         {/* gender */}
-        <Row style={{justifyContent: 'space-between'}}>
-          <BtnToggle
-            isActivated={genderValue === 'M' ? true : false}
-            onPress={() => setValue('gender', 'M')}>
-            <ToggleText isActivated={genderValue === 'M' ? true : false}>
-              남성
-            </ToggleText>
-          </BtnToggle>
-          <VerticalSpace width={8} />
-          <BtnToggle
-            isActivated={genderValue === 'F' ? true : false}
-            onPress={() => setValue('gender', 'F')}>
-            <ToggleText isActivated={genderValue === 'F' ? true : false}>
-              여성
-            </ToggleText>
-          </BtnToggle>
+        <Row style={{justifyContent: 'space-between', columnGap: 8}}>
+          {genderBtnItem.map((item, index) => (
+            <BtnToggle
+              key={index}
+              isActivated={gender.value === item.value}
+              onPress={() =>
+                dispatch(setValue({name: 'gender', value: item.value}))
+              }>
+              <ToggleText isActivated={gender.value === item.value}>
+                {item.label}
+              </ToggleText>
+            </BtnToggle>
+          ))}
         </Row>
 
-        {/* --- age --- */}
-        <Controller
-          control={control}
-          rules={validationRules.age}
-          render={field => renderAgeInput(field, userInfo1Refs)}
-          name="age"
+        {/* age */}
+        <InputHeader isActivated={!!age.value}>만 나이</InputHeader>
+        <Input
+          placeholder="만 나이를 입력해주세요"
+          value={age.value}
+          onChangeText={v => dispatch(setValue({name: 'age', value: v}))}
+          isActivated={!!age.value}
+          keyboardType="numeric"
+          maxLength={3}
+          ref={el => {
+            userInfo1Refs ? (userInfo1Refs.current[0] = el) : null;
+          }}
+          onSubmitEditing={() => {
+            userInfo1Refs?.current[1].focus();
+          }}
         />
-        {errors.age && (
+        {age.errMsg && (
           <ErrorBox>
-            <ErrorText>{errors.age.message}</ErrorText>
+            <ErrorText>{age.errMsg}</ErrorText>
           </ErrorBox>
         )}
 
-        {/* --- height --- */}
-        <Controller
-          control={control}
-          rules={validationRules.height}
-          render={field => renderHeightInput(field, userInfo1Refs, scrollRef)}
-          name="height"
+        {/* height */}
+        <InputHeader isActivated={!!height.value}>신장(cm)</InputHeader>
+        <Input
+          placeholder="신장을 입력해주세요"
+          onFocus={() => {
+            scrollRef?.current.scrollTo({y: 80, animated: true});
+          }}
+          value={height.value}
+          onChangeText={v => dispatch(setValue({name: 'height', value: v}))}
+          isActivated={!!height.value}
+          keyboardType="numeric"
+          maxLength={3}
+          ref={el => {
+            userInfo1Refs ? (userInfo1Refs.current[1] = el) : null;
+          }}
+          onSubmitEditing={() => {
+            userInfo1Refs?.current[2].focus();
+          }}
         />
-        {errors.height && (
+        {height.errMsg && (
           <ErrorBox>
-            <ErrorText>{errors.height.message}</ErrorText>
+            <ErrorText>{height.errMsg}</ErrorText>
           </ErrorBox>
         )}
 
-        {/* --- weight --- */}
-        <Controller
-          control={control}
-          rules={validationRules.weight}
-          render={field => renderWeightInput(field, userInfo1Refs, scrollRef)}
-          name="weight"
+        {/* weight */}
+        <InputHeader isActivated={!!weight.value}>몸무게(kg)</InputHeader>
+        <Input
+          placeholder="몸무게를 입력해주세요"
+          onFocus={() => {
+            scrollRef?.current.scrollToEnd();
+          }}
+          value={weight.value}
+          onChangeText={v => dispatch(setValue({name: 'weight', value: v}))}
+          isActivated={!!weight.value}
+          keyboardType="numeric"
+          maxLength={3}
+          ref={el => {
+            userInfo1Refs ? (userInfo1Refs.current[2] = el) : null;
+          }}
         />
-        {errors.weight && (
+        {weight.errMsg && (
           <ErrorBox>
-            <ErrorText>{errors.weight.message}</ErrorText>
+            <ErrorText>{weight.errMsg}</ErrorText>
           </ErrorBox>
         )}
 
         {/* --- purpose --- */}
         <Dropdown
           placeholder="식단의 목적"
-          items={dietPurposeCd.isLoading ? [] : newDietPurposeCdCategory}
-          value={dietPurposeValue}
-          setValue={setValue}
+          items={
+            dPCodeData
+              ? dietPurposeDDItems
+              : DIET_PURPOSE_CD.map(item => ({
+                  value: item.cd,
+                  label: item.cdNm,
+                }))
+          }
+          value={dietPurposeTemp}
+          setValue={setDietPurposeTemp}
           scrollRef={scrollRef}
-          reactHookFormName={'dietPurposeCd'}
         />
       </ScrollView>
       <BtnBottomCTA
-        btnStyle={
-          genderValue &&
-          ageValue &&
-          heightValue &&
-          weightValue &&
-          Object.keys(errors).length === 0
-            ? 'activated'
-            : 'inactivated'
-        }
-        disabled={
-          genderValue &&
-          ageValue &&
-          heightValue &&
-          weightValue &&
-          Object.keys(errors).length === 0
-            ? false
-            : true
-        }
+        btnStyle={isValidAll ? 'activated' : 'inactivated'}
+        disabled={!isValidAll}
         height={52}
-        onPress={() => {
-          const BMR = calculateBMR(
-            genderValue,
-            ageValue,
-            heightValue,
-            weightValue,
-          );
-          dispatch(
-            saveUserInfo({
-              gender: genderValue,
-              age: ageValue,
-              height: heightValue,
-              weight: weightValue,
-              dietPurposeCd: dietPurposeValue,
-              bmr: BMR,
-            }),
-          );
-          navigation.navigate('InputNav', {
-            screen: 'SecondInput',
-            params,
-          });
-        }}>
+        onPress={() => onCTAPress()}>
         <BtnText>다음</BtnText>
       </BtnBottomCTA>
     </Container>

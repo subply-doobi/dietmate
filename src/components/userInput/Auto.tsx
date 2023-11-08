@@ -6,15 +6,33 @@ import {RootState} from '../../stores/store';
 import colors from '../../styles/colors';
 import {Col} from '../../styles/StyledConsts';
 import {purposeCdToValue} from '../../constants/constants';
+import {calculateNutrTarget} from '../../util/targetCalculation';
+import {useListCode} from '../../query/queries/code';
+import {getRecommendedNutr} from '../../util/userInput/targetByReduxData';
 
 const Auto = () => {
-  const {
-    userInfo: {dietPurposeCd},
-    userTarget: {tmr, calorie, carb, protein, fat},
-  } = useSelector((state: RootState) => state.userInfo);
-  const purposeText = purposeCdToValue[dietPurposeCd].targetText;
-  const calorieModText = purposeCdToValue[dietPurposeCd].additionalCalorieText;
+  // redux
+  const userInputState = useSelector((state: RootState) => state.userInput);
 
+  // react-query
+  const {data: seqCodeData} = useListCode('SP008'); // SP008 : 운동빈도 (sportsSeqCd)
+  const {data: timeCodeData} = useListCode('SP009'); // SP009 : 운동시간 (sportsTimeCd)
+  const {data: strengthCodeData} = useListCode('SP010'); // SP010 : 운동강도 (sportsStrengthCd)
+
+  // 목표영양 계산 필요. (이전에는 secondInput에서 계산했음)
+  // 운동 횟수 : 안함 인 경우 -> 운동시간/강도 무시해주기!
+
+  const purposeText =
+    purposeCdToValue[userInputState.dietPurposeCd.value].targetText;
+  const calorieModText =
+    purposeCdToValue[userInputState.dietPurposeCd.value].additionalCalorieText;
+
+  const {calorie, carb, protein, fat, tmr} = getRecommendedNutr(
+    seqCodeData,
+    timeCodeData,
+    strengthCodeData,
+    userInputState,
+  );
   return (
     <ContentsContainer>
       <Col>

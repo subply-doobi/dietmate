@@ -10,8 +10,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
-import {nutrRatioCategory} from '../../constants/constants';
-import {convertDataByMethod} from '../../util/userInfoSubmit';
+import {convertDataByMethod} from '../../util/userInput/userInfoSubmit';
 //doobi Component
 import {
   BtnBottomCTA,
@@ -49,9 +48,6 @@ interface IRequestBody {
   carb: string;
   protein: string;
   fat: string;
-  companyCd: string;
-  userId: string;
-  nickNm: string;
   gender: string;
   age: string;
   height: string;
@@ -60,17 +56,12 @@ interface IRequestBody {
   sportsSeqCd: string;
   sportsTimeCd: string;
   sportsStrengthCd: string;
-  dietPurposeNm: string;
-  sportsSeqNm: string;
-  sportsTimeNm: string;
-  sportsStrengthNm: string;
 }
 
 const ThirdInput = () => {
   // navigation
   const {params} = useRoute();
   const navigation = useNavigation();
-  console.log('ThirdInput/params', params);
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
@@ -78,44 +69,15 @@ const ThirdInput = () => {
   const createMutation = useCreateBaseLine();
   const {data: dietData} = useListDiet();
   const createDietMutation = useCreateDiet();
-  const {data: dietDetailData, isLoading: listDietLoading} = useListDietDetail(
-    currentDietNo,
-    {
-      enabled: currentDietNo ? true : false,
-    },
-  );
 
   // redux
   const {userInfo, userTarget} = useSelector(
     (state: RootState) => state.userInfo,
   );
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+  const userInputState = useSelector((state: RootState) => state.userInput);
 
   // ref
   const scrollRef = useRef<ScrollView>(null);
-
-  // react-hook-form
-  const calorieRecommended = userTarget.calorie;
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: {errors, isValid},
-  } = useForm<IFormData>({
-    defaultValues: {
-      ratioType: nutrRatioCategory[0].value,
-      caloriePerMeal: '',
-      carbManual: '',
-      proteinManual: '',
-      fatManual: '',
-    },
-  });
-  //check validation
-  const ratioType = useWatch({control, name: 'ratioType'});
-  const caloriePerMeal = useWatch({control, name: 'caloriePerMeal'});
-  const carbManual = useWatch({control, name: 'carbManual'});
-  const proteinManual = useWatch({control, name: 'proteinManual'});
-  const fatManual = useWatch({control, name: 'fatManual'});
 
   // accordion
   // activeSections[0] == 1 : 두비가 알아서 / 탄단지 비율 / 영양성분 직접 입력
@@ -127,32 +89,11 @@ const ThirdInput = () => {
     },
     {
       title: <Text>탄:단:지 비율로 계산하기</Text>,
-      content: (
-        <CalculateByRatio
-          ratioType={ratioType}
-          calorie={caloriePerMeal}
-          setValue={setValue}
-          control={control}
-          handleSubmit={handleSubmit}
-          calorieRecommended={calorieRecommended}
-          errors={errors}
-        />
-      ),
+      content: <CalculateByRatio />,
     },
     {
       title: <Text>각 영양성분 직접 입력 (고수용)</Text>,
-      content: (
-        <Manual
-          carbManual={carbManual}
-          proteinManual={proteinManual}
-          fatManual={fatManual}
-          setValue={setValue}
-          control={control}
-          handleSubmit={handleSubmit}
-          errors={errors}
-          scrollRef={scrollRef}
-        />
-      ),
+      content: <Manual scrollRef={scrollRef} />,
     },
   ];
   const renderHeader = (section: any, index: number, isActive: boolean) => {
@@ -184,32 +125,23 @@ const ThirdInput = () => {
 
   const btnIsActive =
     activeSections[0] === 0 ||
-    (activeSections[0] === 1 && !errors.caloriePerMeal) ||
+    (activeSections[0] === 1 && userInputState.calorie.isValid) ||
     (activeSections[0] === 2 &&
-      !errors.carbManual &&
-      !errors.proteinManual &&
-      !errors.fatManual)
+      userInputState.carb.isValid &&
+      userInputState.protein.isValid &&
+      userInputState.fat.isValid)
       ? true
       : false;
   const btnStyle = btnIsActive ? 'activated' : 'inactivated';
 
   const onSubmit = () => {
-    //기존 값이 존재하면 update 없으면 create
     const calculationMethod = activeSections[0];
-    const dataToConvert = {
-      userInfo,
-      userTarget,
-      ratioType,
-      caloriePerMeal,
-      carbManual,
-      proteinManual,
-      fatManual,
-    };
-    const requestBody: IRequestBody =
-      convertDataByMethod[calculationMethod](dataToConvert);
-    if (!baseLineData) return;
+    // //기존 값이 존재하면 update 없으면 create
+    const requestBody = convertDataByMethod[calculationMethod](userInputState);
 
+    if (!baseLineData) return;
     dietData?.length === 0 && createDietMutation.mutate();
+
     Object.keys(baseLineData).length === 0
       ? createMutation.mutate(requestBody)
       : updateMutation.mutate(requestBody);
@@ -224,6 +156,7 @@ const ThirdInput = () => {
       ],
     });
   };
+
   // TBD | 스크롤뷰 ref를 Manual에 넘겨서 단백질입력 활성화시 스크롤 내려주기
   return (
     <Container>
@@ -252,7 +185,7 @@ const ThirdInput = () => {
       </ScrollView>
       <BtnBottomCTA
         btnStyle={btnStyle}
-        disabled={btnIsActive ? false : true}
+        disabled={!btnIsActive}
         onPress={() => {
           onSubmit();
         }}>

@@ -1,11 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 
-import {
-  aerobicTrainingCategrory,
-  purposeCategory,
-  weightTrainingCategrory,
-} from '../../constants/constants';
+import {DIET_PURPOSE_CD} from '../../constants/constants';
 
 export interface IUserInfo {
   nickNm: string;
@@ -41,7 +37,7 @@ const initialState: userInfoState = {
     age: '',
     height: '',
     weight: '',
-    dietPurposeCd: purposeCategory[0].value,
+    dietPurposeCd: DIET_PURPOSE_CD[0].value,
     bmr: '',
     sportsSeqCd: '',
     sportsTimeCd: '',

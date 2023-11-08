@@ -1,13 +1,8 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 
-import {IProduct} from '../../constants/constants';
 import {IDietDetailData} from '../../query/types/diet';
 
-interface IFoodToOrder {
-  product: IProduct;
-  quantity: string;
-}
 interface IAddress {
   postalCode: string;
   base: string;

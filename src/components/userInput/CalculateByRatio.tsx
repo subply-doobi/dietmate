@@ -1,9 +1,9 @@
 //RN, 3rd
 import styled from 'styled-components/native';
-import {Controller} from 'react-hook-form';
+
 //doobi util, redux, etc
 import colors from '../../styles/colors';
-import {nutrRatioCategory, validationRules} from '../../constants/constants';
+import {NUTR_RATIO_CD} from '../../constants/constants';
 import {calculateCaloriesToNutr} from '../../util/targetCalculation';
 //Doobi components
 import {
@@ -14,85 +14,88 @@ import {
 } from '../../styles/StyledConsts';
 
 import Dropdown from './Dropdown';
+import {getRecommendedNutr} from '../../util/userInput/targetByReduxData';
+import {RootState} from '../../stores/store';
+import {useDispatch, useSelector} from 'react-redux';
+import {useListCode} from '../../query/queries/code';
+import {useEffect, useState} from 'react';
+import {setValue} from '../../stores/slices/userInputSlice';
 
-interface IField {
-  field: {
-    onChange: Function;
-    onBlur: Function;
-    value: string;
-  };
-}
-const renderCaloriePerMealInput = (
-  {field: {onChange, onBlur, value}}: IField,
-  handleSubmit: Function,
-  calorieRecommended?: string,
-) => {
-  return (
-    <>
-      <InputHeader isActivated={value ? true : false}>
-        한 끼 칼로리 (kcal)
-      </InputHeader>
-      <Input
-        placeholder={`한 끼 칼로리 입력 (권장: ${calorieRecommended})`}
-        value={value}
-        onChangeText={onChange}
-        onFocus={() => handleSubmit()}
-        isActivated={value ? true : false}
-        keyboardType="numeric"
-        maxLength={4}
-      />
-    </>
-  );
-};
+const CalculateByRatio = () => {
+  // redux
+  const dispatch = useDispatch();
+  const userInputState = useSelector((state: RootState) => state.userInput);
 
-interface ICalculateByRatio {
-  ratioType: string;
-  calorie: string;
-  setValue: any;
-  control: any;
-  handleSubmit: any;
-  calorieRecommended: any;
-  errors: any;
-}
-const CalculateByRatio = ({
-  ratioType,
-  calorie,
-  setValue,
-  control,
-  handleSubmit,
-  calorieRecommended,
-  errors,
-}: ICalculateByRatio) => {
+  // react-query
+  const {data: ratioCodeData} = useListCode('SP005'); // SP005 : 탄단지비율
+  const {data: seqCodeData} = useListCode('SP008'); // SP008 : 운동빈도 (sportsSeqCd)
+  const {data: timeCodeData} = useListCode('SP009'); // SP009 : 운동시간 (sportsTimeCd)
+  const {data: strengthCodeData} = useListCode('SP010'); // SP010 : 운동강도 (sportsStrengthCd)
+
+  // useState
+  const [ratioTemp, setRatioTemp] = useState(userInputState.ratio.value);
+
+  // useEffect
+  useEffect(() => {
+    // dropdown picker는 useState set function만 가능해서 redux로 다시 넘기기
+    dispatch(setValue({name: 'ratio', value: ratioTemp}));
+  }, [ratioTemp]);
+
+  // etc
+  const ratioDDItems = ratioCodeData?.map(item => {
+    return {value: item.cd, label: item.cdNm};
+  });
+
   // 칼로리로 자동 계산된 각 영양성분
-  const {carb, protein, fat} = calculateCaloriesToNutr(ratioType, calorie);
+  const {carb, protein, fat} = calculateCaloriesToNutr(
+    userInputState.ratio.value,
+    userInputState.calorie.value,
+  );
+
+  // 권장 칼로리
+  const {calorie: recommendedCalorie} = getRecommendedNutr(
+    seqCodeData,
+    timeCodeData,
+    strengthCodeData,
+    userInputState,
+  );
 
   return (
     <ContentContainer>
+      {/* 탄단지 비율 */}
       <Dropdown
         placeholder="탄:단:지 비율"
-        value={ratioType}
-        setValue={setValue}
-        items={nutrRatioCategory}
-        reactHookFormName="ratioType"
-      />
-      {/* --- caloriePerMeal --- */}
-      <Controller
-        control={control}
-        rules={validationRules.caloriePerMeal}
-        render={field =>
-          renderCaloriePerMealInput(field, handleSubmit, calorieRecommended)
+        items={
+          ratioCodeData
+            ? ratioDDItems
+            : NUTR_RATIO_CD.map(item => ({value: item.cd, label: item.cdNm}))
         }
-        name="caloriePerMeal"
+        value={ratioTemp}
+        setValue={setRatioTemp}
       />
 
-      {errors.caloriePerMeal && (
+      {/* --- 한 끼 칼로리 --- */}
+      <InputHeader isActivated={!!userInputState.calorie}>
+        한 끼 칼로리 (kcal)
+      </InputHeader>
+      <Input
+        placeholder={`한 끼 칼로리 입력 (권장: ${recommendedCalorie})`}
+        value={userInputState.calorie.value}
+        onChangeText={v => dispatch(setValue({name: 'calorie', value: v}))}
+        onFocus={() => {}}
+        isActivated={!!userInputState.calorie}
+        keyboardType="numeric"
+        maxLength={4}
+      />
+
+      {userInputState.calorie.errMsg && (
         <ErrorBox>
-          <ErrorText>{errors.caloriePerMeal.message}</ErrorText>
+          <ErrorText>{userInputState.calorie.errMsg}</ErrorText>
         </ErrorBox>
       )}
       <SummaryContainer>
         <NutrientSummaryText>{`칼로리: ${
-          calorie || '  '
+          userInputState.calorie.value || '0 '
         } kcal`}</NutrientSummaryText>
         <NutrientSummaryText>{`탄수화물: ${
           carb ? parseInt(carb) : '  '
