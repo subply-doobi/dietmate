@@ -99,7 +99,6 @@ const RootStackNav = () => {
             return (
               <Pressable
                 onPress={() => {
-                  // ************************* temp
                   navigate('OrderGuideHeaderTabNav');
                 }}>
                 <Image
@@ -136,7 +135,8 @@ const RootStackNav = () => {
         }}
       />
       <Stack.Screen name="KakaoPayNav" component={KakaoPay} />
-      <Stack.Screen name="HistoryNav" component={HistoryNav} />
+      {/* history는 추후 추가 */}
+      {/* <Stack.Screen name="HistoryNav" component={HistoryNav} /> */}
       <Stack.Screen name="OrderHistoryNav" component={OrderHistoryNav} />
       <Stack.Screen name="OrderComplete" component={OrderComplete} />
       <Stack.Screen

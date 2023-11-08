@@ -148,8 +148,6 @@ const sortFilterSlice = createSlice({
         v => v === state.copied.sort[action.payload],
       );
       const nextSortIdx = (currentSortIdx + 1) % 3;
-      console.log(action.payload);
-      console.log(currentSortIdx, nextSortIdx);
 
       // 정렬은 하나만 선택 가능 -> 초기상태에 하나만 적용
       state.copied.sort = {
@@ -167,7 +165,7 @@ const sortFilterSlice = createSlice({
       action: PayloadAction<ISortFilter['selectedFilter']>,
     ) => {
       state.copied.selectedFilter = action.payload;
-      state.applied.selectedFilter = action.payload;
+      // state.applied.selectedFilter = action.payload;
     },
 
     // 남은영양 이하

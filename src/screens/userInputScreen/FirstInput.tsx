@@ -72,7 +72,6 @@ const FirstInput = () => {
 
   useEffect(() => {
     // 첫 회원가입한 후 baseLine 없으면 빈 오브젝트 !!! baseLineData 자체가 false는 아님!!
-    console.log('FirstInput: baseline', baseLineData);
     baseLineData &&
       Object.keys(baseLineData).length !== 0 &&
       dispatch(loadBaseLineData(baseLineData));

@@ -56,9 +56,9 @@ const Filter = ({setFilterModalShow}: IFilter) => {
               key={i}
               isActivated={isFiltered}
               onPress={() => {
-                dispatch(changeSelectedFilter(i));
                 // filter bottom sheet 열 때 적용되어있는 sort, filter 복사
                 dispatch(copySortFilter());
+                dispatch(changeSelectedFilter(i));
                 setFilterModalShow(true);
               }}>
               <FilterBtnText isActivated={isFiltered}>

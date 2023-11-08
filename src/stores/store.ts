@@ -1,6 +1,5 @@
-import {configureStore} from '@reduxjs/toolkit';
+import {configureStore, Store} from '@reduxjs/toolkit';
 
-import userInfoReducer from './slices/userInfoSlice';
 import userInputReducer from './slices/userInputSlice';
 import sortFilterReducer from './slices/sortFilterSlice';
 import cartReducer from './slices/cartSlice';
@@ -8,9 +7,8 @@ import likeReducer from './slices/likeSlice';
 import orderReducer from './slices/orderSlice';
 import commonAlertReducer from './slices/commonAlertSlice';
 
-export const store = configureStore({
+export const store: Store = configureStore({
   reducer: {
-    userInfo: userInfoReducer,
     userInput: userInputReducer,
     sortFilter: sortFilterReducer,
     cart: cartReducer,

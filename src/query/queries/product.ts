@@ -95,17 +95,15 @@ export const useListProduct = (
   const categoryParam = category;
   const sortKey = Object.keys(sort).find(key => sort[key] !== '');
   const sortParam = sortKey
-    ? `&sort=${sortKey.charAt(0).toUpperCase()}${sortKey.slice(1)},${
-        sort[sortKey]
-      }`
+    ? `${sortKey.charAt(0).toUpperCase()}${sortKey.slice(1)},${sort[sortKey]}`
     : '';
   const calorieParam =
-    calorie.length === 2 ? `Calorie,${calorie[0]},${calorie[1]}|` : '';
-  const carbParam = carb.length === 2 ? `Carb,${carb[0]},${carb[1]}|` : '';
+    calorie.length === 2 ? `Calorie,${calorie[0]},${calorie[1]}` : '';
+  const carbParam = carb.length === 2 ? `Carb,${carb[0]},${carb[1]}` : '';
   const proteinParam =
-    protein.length === 2 ? `Protein,${protein[0]},${protein[1]}|` : '';
-  const fatParam = fat.length === 2 ? `Fat,${fat[0]},${fat[1]}|` : '';
-  const priceParam = price.length === 2 ? `Price,${price[0]},${price[1]}|` : '';
+    protein.length === 2 ? `Protein,${protein[0]},${protein[1]}` : '';
+  const fatParam = fat.length === 2 ? `Fat,${fat[0]},${fat[1]}` : '';
+  const priceParam = price.length === 2 ? `Price,${price[0]},${price[1]}` : '';
 
   return useQuery<IProductsData>({
     queryKey: [PRODUCTS, dietNo],

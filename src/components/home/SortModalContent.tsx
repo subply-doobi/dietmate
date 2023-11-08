@@ -45,7 +45,6 @@ const SortModalContent = ({setSortModalShow}: ISortModalContent) => {
     copied: {sort: sortState},
   } = useSelector((state: RootState) => state.sortFilter);
 
-  console.log(sortState);
   // useState
   const [sortTooltipShow, setSortTooltipShow] = useState('');
 

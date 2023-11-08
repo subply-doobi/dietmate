@@ -5,7 +5,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useForm, useWatch} from 'react-hook-form';
 
 import {RootState} from '../../../stores/store';
-import {updateUserInfo} from '../../../stores/slices/userInfoSlice';
 import colors from '../../../styles/colors';
 import {NavigationProps, SCREENWIDTH} from '../../../constants/constants';
 import {changeNutrByWeight} from '../../../util/alertActions';
@@ -59,10 +58,10 @@ const History = ({navigation: {navigate}}: NavigationProps) => {
     const res = changeNutrByWeight(userInfo, weightValue);
     if (autoCalculate) {
       // TBD | store, 서버에 weight, 바뀐 target정보 Put
-      dispatch(updateUserInfo(res));
+      // dispatch(updateUserInfo(res));
     } else if (!autoCalculate) {
       // TBD | store, 서버에 weight, tmr정보만 Put
-      dispatch(updateUserInfo({tmr: res.tmr, weight: weightValue}));
+      // dispatch(updateUserInfo({tmr: res.tmr, weight: weightValue}));
     }
     setAlertShow(false);
     navigate('HistoryNav', {
