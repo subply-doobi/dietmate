@@ -1,8 +1,6 @@
 import React, {useEffect, useRef} from 'react';
-import {View, Text} from 'react-native';
 import styled from 'styled-components/native';
-import {useSelector} from 'react-redux';
-import {Controller} from 'react-hook-form';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {RootState} from '../../stores/store';
 import {
@@ -11,184 +9,127 @@ import {
   InputHeaderText,
   UserInfoTextInput,
 } from '../../styles/StyledConsts';
-import {validationRules} from '../../constants/constants';
 import {calculateManualCalorie} from '../../util/targetCalculation';
 import colors from '../../styles/colors';
+import {getRecommendedNutr} from '../../util/userInput/targetByReduxData';
+import {useListCode} from '../../query/queries/code';
+import {setValue} from '../../stores/slices/userInputSlice';
 
 interface IManual {
-  carbManual: string;
-  proteinManual: string;
-  fatManual: string;
-  setValue: any;
-  control: any;
-  handleSubmit: any;
-  errors: any;
   scrollRef?: any;
 }
-const Manual = ({
-  carbManual,
-  proteinManual,
-  fatManual,
-  setValue,
-  control,
-  handleSubmit,
-  errors,
-  scrollRef,
-}: IManual) => {
+const Manual = ({scrollRef}: IManual) => {
   // redux
-  const {userInfo, userTarget} = useSelector(
-    (state: RootState) => state.userInfo,
-  );
+  const dispatch = useDispatch();
+  const userInputState = useSelector((state: RootState) => state.userInput);
+  const {carb, protein, fat} = userInputState;
 
-  const carbRecommended = userTarget.carb;
-  const proteinRecommended = userTarget.protein;
-  const fatRecommended = userTarget.fat;
+  // react-query
+  const {data: seqCodeData} = useListCode('SP008'); // SP008 : 운동빈도 (sportsSeqCd)
+  const {data: timeCodeData} = useListCode('SP009'); // SP009 : 운동시간 (sportsTimeCd)
+  const {data: strengthCodeData} = useListCode('SP010'); // SP010 : 운동강도 (sportsStrengthCd)
 
   // ref
   const manualRefs = useRef([]);
 
+  // etc
+  // 권장 영양성분
+  const {
+    carb: carbRecommended,
+    protein: proteinRecommended,
+    fat: fatRecommended,
+  } = getRecommendedNutr(
+    seqCodeData,
+    timeCodeData,
+    strengthCodeData,
+    userInputState,
+  );
+
   // 자동으로 계산된 전체 칼로리 및 각 영양성분 칼로리 비율 구하기
   const {totalCalorie, carbRatio, proteinRatio, fatRatio} =
-    calculateManualCalorie(carbManual, proteinManual, fatManual);
-
-  // react-hook-form
-  const renderCarbInput = (
-    {field: {onChange, value}}: IDropdownField,
-    carbRecommended: string,
-    manualRefs?: React.MutableRefObject<any[]>,
-  ) => {
-    return (
-      <>
-        <InputHeader isActivated={value ? true : false}>
-          한 끼 탄수화물 (g)
-        </InputHeader>
-        <Input
-          placeholder={`한 끼 탄수화물 입력 (추천: ${carbRecommended})`}
-          onFocus={() =>
-            setTimeout(() => {
-              scrollRef?.current.scrollToEnd({animated: true});
-            }, 50)
-          }
-          value={value}
-          onChangeText={onChange}
-          isActivated={value ? true : false}
-          keyboardType="numeric"
-          maxLength={3}
-          ref={el => {
-            manualRefs ? (manualRefs.current[0] = el) : null;
-          }}
-          onSubmitEditing={() => {
-            manualRefs?.current[1].focus();
-          }}
-        />
-      </>
-    );
-  };
-  const renderProteinInput = (
-    {field: {onChange, value}}: IDropdownField,
-    proteinRecommended: string,
-    manualRefs?: React.MutableRefObject<any[]>,
-  ) => {
-    return (
-      <>
-        <InputHeader isActivated={value ? true : false}>
-          한 끼 단백질 (g)
-        </InputHeader>
-        <Input
-          placeholder={`한 끼 단백질 입력 (추천: ${proteinRecommended})`}
-          onFocus={() =>
-            setTimeout(() => {
-              scrollRef?.current.scrollToEnd({animated: true});
-            }, 50)
-          }
-          value={value}
-          onChangeText={onChange}
-          isActivated={value ? true : false}
-          keyboardType="numeric"
-          maxLength={3}
-          ref={el => {
-            manualRefs ? (manualRefs.current[1] = el) : null;
-          }}
-          onSubmitEditing={() => {
-            manualRefs?.current[2].focus();
-          }}
-        />
-      </>
-    );
-  };
-  const renderFatInput = (
-    {field: {onChange, value}}: IDropdownField,
-    fatRecommended: string,
-    manualRefs?: React.MutableRefObject<any[]>,
-  ) => {
-    return (
-      <>
-        <InputHeader isActivated={value ? true : false}>
-          한 끼 지방 (g)
-        </InputHeader>
-        <Input
-          placeholder={`한 끼 지방 입력 (추천: ${fatRecommended})`}
-          onFocus={() =>
-            setTimeout(() => {
-              scrollRef?.current.scrollToEnd({animated: true});
-            }, 50)
-          }
-          value={value}
-          onChangeText={onChange}
-          isActivated={value ? true : false}
-          keyboardType="numeric"
-          maxLength={3}
-          ref={el => {
-            manualRefs ? (manualRefs.current[2] = el) : null;
-          }}
-        />
-      </>
-    );
-  };
-
-  useEffect(() => {
-    handleSubmit(() => {})();
-  }, []);
+    calculateManualCalorie(carb.value, protein.value, fat.value);
 
   return (
     <ContentsContainer>
-      <Controller
-        control={control}
-        rules={validationRules.carbManual}
-        render={field => renderCarbInput(field, carbRecommended, manualRefs)}
-        name="carbManual"
-      />
-      {errors.carbManual && (
-        <ErrorBox>
-          <ErrorText>{errors.carbManual.message}</ErrorText>
-        </ErrorBox>
-      )}
-
-      <Controller
-        control={control}
-        rules={validationRules.proteinManual}
-        render={field =>
-          renderProteinInput(field, proteinRecommended, manualRefs)
+      {/* 탄수화물 직접 입력 */}
+      <InputHeader isActivated={!!carb.value}>한 끼 탄수화물 (g)</InputHeader>
+      <Input
+        placeholder={`한 끼 탄수화물 입력 (권장: ${carbRecommended})`}
+        onFocus={() =>
+          setTimeout(() => {
+            scrollRef?.current.scrollToEnd({animated: true});
+          }, 50)
         }
-        name="proteinManual"
+        value={carb.value}
+        onChangeText={v => dispatch(setValue({name: 'carb', value: v}))}
+        isActivated={!!carb.value}
+        keyboardType="numeric"
+        maxLength={3}
+        ref={el => {
+          manualRefs ? (manualRefs.current[0] = el) : null;
+        }}
+        onSubmitEditing={() => {
+          manualRefs?.current[1].focus();
+        }}
       />
-      {errors.proteinManual && (
+      {carb.errMsg && (
         <ErrorBox>
-          <ErrorText>{errors.proteinManual.message}</ErrorText>
+          <ErrorText>{carb.errMsg}</ErrorText>
         </ErrorBox>
       )}
 
-      <Controller
-        control={control}
-        rules={validationRules.fatManual}
-        render={field => renderFatInput(field, fatRecommended, manualRefs)}
-        name="fatManual"
+      {/* 단백질 직접 입력 */}
+      <InputHeader isActivated={!!protein.value}>한 끼 단백질 (g)</InputHeader>
+      <Input
+        placeholder={`한 끼 단백질 입력 (권장: ${proteinRecommended})`}
+        onFocus={() =>
+          setTimeout(() => {
+            scrollRef?.current.scrollToEnd({animated: true});
+          }, 50)
+        }
+        value={protein.value}
+        onChangeText={v => dispatch(setValue({name: 'protein', value: v}))}
+        isActivated={!!protein.value}
+        keyboardType="numeric"
+        maxLength={3}
+        ref={el => {
+          manualRefs ? (manualRefs.current[1] = el) : null;
+        }}
+        onSubmitEditing={() => {
+          manualRefs?.current[2].focus();
+        }}
       />
-      {errors.fatManual && (
+      {protein.errMsg && (
         <ErrorBox>
-          <ErrorText>{errors.fatManual.message}</ErrorText>
+          <ErrorText>{protein.errMsg}</ErrorText>
         </ErrorBox>
       )}
+
+      {/* 지방 직접 입력 */}
+      <InputHeader isActivated={!!fat.value}>한 끼 지방 (g)</InputHeader>
+      <Input
+        placeholder={`한 끼 지방 입력 (권장: ${fatRecommended})`}
+        onFocus={() =>
+          setTimeout(() => {
+            scrollRef?.current.scrollToEnd({animated: true});
+          }, 50)
+        }
+        value={fat.value}
+        onChangeText={v => dispatch(setValue({name: 'fat', value: v}))}
+        isActivated={!!fat.value}
+        keyboardType="numeric"
+        maxLength={3}
+        ref={el => {
+          manualRefs ? (manualRefs.current[2] = el) : null;
+        }}
+      />
+      {fat.errMsg && (
+        <ErrorBox>
+          <ErrorText>{fat.errMsg}</ErrorText>
+        </ErrorBox>
+      )}
+
+      {/* 요약 */}
       <SummaryContainer>
         <NutrientSummaryText>
           칼로리: {totalCalorie || '   '}kcal ( {carbRatio || '  '} :{' '}

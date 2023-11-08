@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {SetStateAction, useState} from 'react';
 import styled from 'styled-components/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -12,18 +12,15 @@ interface CategoryObject {
 interface IDropdown {
   placeholder: string;
   value: string;
-  // setValue: React.Dispatch<React.SetStateAction<string>>;
-  setValue: Function;
-  items: Array<CategoryObject>;
-  setItems?: React.Dispatch<React.SetStateAction<Array<CategoryObject>>>;
+  setValue: React.Dispatch<SetStateAction<string>>;
+  items: Array<CategoryObject> | undefined;
   scrollRef?: any;
-  reactHookFormName?: string;
 }
 
 const Dropdown = (props: IDropdown) => {
   const [open, setOpen] = useState(false);
-  const {placeholder, value, setValue, items, scrollRef, reactHookFormName} =
-    props;
+  const {placeholder, value, setValue, items, scrollRef} = props;
+
   return (
     <>
       <DropdownHeader isActivated={true}>{placeholder}</DropdownHeader>
@@ -61,10 +58,8 @@ const Dropdown = (props: IDropdown) => {
           setOpen(open => !open);
         }}
         value={value}
-        setValue={v =>
-          reactHookFormName ? setValue(reactHookFormName, v) : setValue(v)
-        }
-        items={items}
+        setValue={v => setValue(v)}
+        items={items || []}
         //   onChangeValue={() => {}}
         listMode="SCROLLVIEW"
         dropDownDirection="BOTTOM"

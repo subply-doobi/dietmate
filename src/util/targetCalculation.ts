@@ -46,7 +46,7 @@ export const calculateNutrTarget = (
 ) => {
   // const wcal = 0.0175 * 6 * parseFloat(weight) * timeCdToMinutes[weightTimeCd];
   // const acal = 0.0175 * 7 * parseFloat(weight) * timeCdToMinutes[aerobicTimeCd];
-  // 하루 평균 운동시간
+  // 하루 평균 운동시간 (분)
   const avgDuration = (duration * frequency) / 7;
   // 하루 평균 활동 칼로리
   const aCal = 0.0175 * mets * parseFloat(weight) * avgDuration;
