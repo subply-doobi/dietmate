@@ -9,7 +9,7 @@ import {IProductData} from '../../query/types/product';
 import {useEffect, useMemo, useState} from 'react';
 import {SCREENWIDTH} from '../../constants/constants';
 import {ActivityIndicator} from 'react-native';
-
+import {icons} from '../../assets/icons/iconSource';
 interface IFoodPart {
   productData: IProductData;
 }
@@ -24,25 +24,25 @@ const FoodPart = ({productData}: IFoodPart) => {
     {imageLink: string; width: number; height: number}[]
   >([]);
   const [imgLoading, setImgLoading] = useState(true);
-
+  const [test, setTest] = useState('');
   // useEffect
   useEffect(() => {
     const getImageData = async () => {
-      const imgData = productDetailData?.map(async item => {
+      const imgData = productDetailData?.map(item => {
         const imageLink = item.imageLink;
-        let orgWidth = 0;
-        let orgHeight = 0;
-        await Image.getSize(imageLink, (width, height) => {
-          const modWidth = SCREENWIDTH - 32;
-          const modHeight = height * (modWidth / width);
-          orgWidth = modWidth;
-          orgHeight = modHeight;
+        let modWidth = 0;
+        let modHeight = 0;
+        // const modWidth = SCREENWIDTH - 32;
+        // const modHeight = height * (modWidth / width);
+        return new Promise((resolve, reject) => {
+          Image.getSize(imageLink, (width, height) => {
+            resolve({
+              imageLink,
+              width: SCREENWIDTH - 32,
+              height: height * ((SCREENWIDTH - 32) / width),
+            });
+          });
         });
-        return {
-          imageLink,
-          width: orgWidth,
-          height: orgHeight,
-        };
       });
       if (!imgData) return;
       const result = await Promise.all<
@@ -52,9 +52,8 @@ const FoodPart = ({productData}: IFoodPart) => {
     };
     getImageData();
   }, [productDetailData]);
-
   return (
-    <Pinchable minimumZoomScale={1} maximumZoomScale={2}>
+    <>
       {imgLoading && <ActivityIndicator />}
       {imageData?.map((item, index) => (
         <FastImage
@@ -68,12 +67,16 @@ const FoodPart = ({productData}: IFoodPart) => {
             }
           }}
           resizeMode={FastImage.resizeMode.contain}
+          onLoadEnd={() => console.log('onLoadEnd')}
         />
       ))}
-    </Pinchable>
+    </>
   );
 };
 
 export default FoodPart;
 
-const DetailImg = styled.Image``;
+const BtnImage = styled.Image`
+  width: 300px;
+  height: 300px;
+`;
