@@ -13,6 +13,7 @@ import {icons} from '../../assets/icons/iconSource';
 import {useNavigation} from '@react-navigation/native';
 import DAlert from '../../components/common/alert/DAlert';
 import {queryClient} from '../../query/store';
+import {initializeInput} from '../../stores/slices/userInputSlice';
 
 const WithdrawalContent = ({deleteText}: {deleteText: string}) => {
   return (
@@ -57,6 +58,8 @@ const Account = () => {
     await deleteUser.mutateAsync();
     await removeToken();
     await resetGuide();
+    dispatch(initializeInput());
+
     reset({
       index: 0,
       routes: [{name: 'Login'}],

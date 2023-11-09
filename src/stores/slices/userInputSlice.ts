@@ -169,6 +169,9 @@ const userInputSlice = createSlice({
   name: 'userInput',
   initialState,
   reducers: {
+    initializeInput: state => {
+      state = initialState;
+    },
     loadBaseLineData: (state, action: PayloadAction<IBaseLine>) => {
       // FirstInput
       state.gender.value = action.payload.gender;
@@ -220,6 +223,7 @@ const userInputSlice = createSlice({
   },
 });
 
-export const {setValue, loadBaseLineData} = userInputSlice.actions;
+export const {setValue, loadBaseLineData, initializeInput} =
+  userInputSlice.actions;
 
 export default userInputSlice.reducer;

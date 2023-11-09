@@ -20,6 +20,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useListCode} from '../../query/queries/code';
 import {useEffect, useState} from 'react';
 import {setValue} from '../../stores/slices/userInputSlice';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const CalculateByRatio = () => {
   // redux

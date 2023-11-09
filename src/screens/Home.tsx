@@ -11,15 +11,12 @@ import {setCurrentDiet, setTotalFoodList} from '../stores/slices/cartSlice';
 import {
   FOOD_LIST_ITEM_HEIGHT,
   HOME_FILTER_HEADER_HEIGHT,
-  categoryCode,
 } from '../constants/constants';
-import {queryFn} from '../query/queries/requestFn';
 import {IProductData, IProductsData} from '../query/types/product';
 import {SCREENWIDTH} from '../constants/constants';
 import colors from '../styles/colors';
 import {icons} from '../assets/icons/iconSource';
 import {checkNotShowAgain, updateNotShowAgain} from '../util/asyncStorage';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // doobi Component
 import FoodList from '../components/home/FoodList';
@@ -30,21 +27,16 @@ import MenuSection from '../components/common/menuSection/MenuSection';
 import FlatlistHeaderComponent from '../components/home/FlatlistHeaderComponent';
 
 // react-query
-import {LIST_DIET} from '../query/queries/urls';
 import {
   useListDietDetail,
   useListDiet,
   useCreateDiet,
 } from '../query/queries/diet';
 import {useListProduct} from '../query/queries/product';
-import {IDietData} from '../query/types/diet';
 import {useGetBaseLine} from '../query/queries/baseLine';
 import DAlert from '../components/common/alert/DAlert';
 import CommonAlertContent from '../components/common/alert/CommonAlertContent';
 
-import {useHandleError} from '../util/handleError';
-import {firebase} from '@react-native-firebase/crashlytics';
-import FilterModalContent2 from '../components/home/FilterModalContent';
 import SortModalContent from '../components/home/SortModalContent';
 
 const Home = () => {
