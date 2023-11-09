@@ -481,6 +481,88 @@ export const validateBaseLine: IValidateBaseLine = {
       errMsg: '',
     };
   },
+
+  // Mypage calorie, carb, protein, fat change input
+  calorieChange: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '한 끼 목표 칼로리를 입력해주세요',
+      };
+    if (Number(v) < 300 || Number(v) > 1400)
+      return {
+        isValid: false,
+        errMsg: '300~1400 kcal 사이로 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
+  carbChange: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '한 끼 목표 탄수화물을 입력해주세요',
+      };
+    if (Number(v) < 10 || Number(v) > 375)
+      return {
+        isValid: false,
+        errMsg: `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
+  proteinChange: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '한 끼 목표 단백질을 입력해주세요',
+      };
+    if (Number(v) < 10 || Number(v) > 375)
+      return {
+        isValid: false,
+        errMsg: `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
+  fatChange: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '한 끼 목표 지방을 입력해주세요',
+      };
+    if (Number(v) < 5 || Number(v) > 100)
+      return {
+        isValid: false,
+        errMsg: `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
+  weightChange: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '몸무게를 입력해주세요',
+      };
+    if (Number(v) < 30 || Number(v) > 130)
+      return {
+        isValid: false,
+        errMsg: '30~130kg 안으로 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
 };
 
 // bootpay consts

@@ -67,7 +67,7 @@ const FoodPart = ({productData}: IFoodPart) => {
             }
           }}
           resizeMode={FastImage.resizeMode.contain}
-          onLoadEnd={() => console.log('onLoadEnd')}
+          onLoadEnd={() => console.log('FoodPart: onLoadEnd')}
         />
       ))}
     </>

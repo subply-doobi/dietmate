@@ -13,6 +13,9 @@ import {
 } from '../../styles/StyledConsts';
 import {validationRules} from '../../constants/constants';
 import {IFormField} from '../../constants/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../stores/store';
+import {setValue} from '../../stores/slices/userInputSlice';
 
 const renderNutrInput = (
   {field: {onChange, value}}: IFormField,
@@ -33,28 +36,26 @@ const renderNutrInput = (
   );
 };
 
+const nutrTextByNutr: {[key: string]: string} = {
+  carbChange: '탄수화물 (g)',
+  proteinChange: '단백질 (g)',
+  fatChange: '지방 (g)',
+};
+
 const NutrChangeAlert = ({
   type,
-  control,
-  handleSubmit,
-  errors,
 }: {
-  type: string;
-  control: any;
-  handleSubmit: Function;
-  errors: any;
+  type: 'calorieChange' | 'carbChange' | 'proteinChange' | 'fatChange';
 }) => {
-  useEffect(() => {
-    handleSubmit(() => {})();
-  }, []);
-  const nutrTextByNutr: {[key: string]: string} = {
-    carb: '탄수화물 (g)',
-    protein: '단백질 (g)',
-    fat: '지방 (g)',
-  };
+  // redux
+  const dispatch = useDispatch();
+  const userInputState = useSelector((state: RootState) => state.userInput);
+
+  // etc
   const nutrText = nutrTextByNutr[type];
   return (
     <Container>
+      {/* 알럿 메시지 */}
       <Col style={{marginTop: 24}}>
         <GuideText>
           다른 영양소는{' '}
@@ -72,15 +73,22 @@ const NutrChangeAlert = ({
           을 이용해주세요
         </GuideTextSub>
       </Col>
-      <Controller
-        control={control}
-        rules={validationRules[type + 'Manual']} // validationRules가 "calManual" 이렇게 정리되어있음
-        render={field => renderNutrInput(field, nutrText)}
-        name={type}
+
+      {/* 영양 변경 input */}
+      <InputHeader isActivated={!!userInputState[type].value}>
+        {nutrText}
+      </InputHeader>
+      <Input
+        placeholder={nutrText}
+        value={userInputState[type].value}
+        onChangeText={v => dispatch(setValue({name: type, value: v}))}
+        isActivated={!!userInputState[type].value}
+        keyboardType="numeric"
+        maxLength={3}
       />
-      {errors[type] && (
+      {userInputState[type].errMsg && (
         <ErrorBox>
-          <ErrorText>{errors[type].message}</ErrorText>
+          <ErrorText>{userInputState[type].errMsg}</ErrorText>
         </ErrorBox>
       )}
     </Container>

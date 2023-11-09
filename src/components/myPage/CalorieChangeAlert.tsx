@@ -23,48 +23,25 @@ import DTooltip from '../common/tooltip/DTooltip';
 
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import colors from '../../styles/colors';
-
-const renderCalorieInput = ({field: {onChange, value}}: IFormField) => {
-  return (
-    <>
-      <InputHeader isActivated={value ? true : false}>
-        칼로리 (kcal)
-      </InputHeader>
-      <Input
-        placeholder="칼로리(kcal)"
-        value={value}
-        onChangeText={onChange}
-        isActivated={value ? true : false}
-        keyboardType="numeric"
-        maxLength={4}
-      />
-    </>
-  );
-};
+import {RootState} from '../../stores/store';
+import {setValue} from '../../stores/slices/userInputSlice';
+import {useDispatch, useSelector} from 'react-redux';
 
 //mutation 넣고 계산까지
-const CalChangeAlert = ({
-  type,
-  control,
-  handleSubmit,
-  errors,
-}: {
-  type: string;
-  control: any;
-  handleSubmit: Function;
-  errors: any;
-}) => {
+const CalChangeAlert = () => {
   // redux
+  const dispatch = useDispatch();
+  const {calorieChange} = useSelector((state: RootState) => state.userInput);
+
+  // react-qeury
   const {data, isLoading} = useGetBaseLine();
-  useEffect(() => {
-    handleSubmit(() => {})();
-  }, []);
 
   // state
   const [tooltipShow, setTooltipShow] = useState(false);
 
   return data ? (
     <Container>
+      {/* 알럿 텍스트 */}
       <Col style={{marginTop: 24}}>
         <PurposeText>{data.userId} 님의 목표는</PurposeText>
         <PurposeText>
@@ -82,11 +59,15 @@ const CalChangeAlert = ({
             높이거나 낮춰보세요
           </GuideText>
         </Col>
+
+        {/* 툴팁 버튼 */}
         <TooltipBtn
           onPressIn={() => setTooltipShow(true)}
           onPressOut={() => setTooltipShow(false)}>
           <TooltipImage source={icons.question_24} />
         </TooltipBtn>
+
+        {/* 툴팁 */}
         <DTooltip
           tooltipShow={tooltipShow}
           boxRight={0}
@@ -109,15 +90,24 @@ const CalChangeAlert = ({
           )}
         />
       </Col>
-      <Controller
-        control={control}
-        rules={validationRules.caloriePerMeal}
-        render={field => renderCalorieInput(field)}
-        name="calorie"
+
+      {/* 칼로리 변경 input */}
+      <InputHeader isActivated={!!calorieChange.value}>
+        칼로리 (kcal)
+      </InputHeader>
+      <Input
+        placeholder="칼로리(kcal)"
+        value={calorieChange.value}
+        onChangeText={v =>
+          dispatch(setValue({name: 'calorieChange', value: v}))
+        }
+        isActivated={!!calorieChange.value}
+        keyboardType="numeric"
+        maxLength={4}
       />
-      {errors.calorie && (
+      {calorieChange.errMsg && (
         <ErrorBox>
-          <ErrorText>{errors.calorie.message}</ErrorText>
+          <ErrorText>{calorieChange.errMsg}</ErrorText>
         </ErrorBox>
       )}
     </Container>

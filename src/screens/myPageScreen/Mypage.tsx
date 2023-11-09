@@ -1,8 +1,7 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Text, FlatList} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components/native';
-import {useForm, useWatch} from 'react-hook-form';
 import {useNavigation} from '@react-navigation/native';
 
 import {icons} from '../../assets/icons/iconSource';
@@ -24,13 +23,26 @@ import NutrChangeAlert from '../../components/myPage/NutrientChangeAlert';
 import WeightChangeAlert from '../../components/myPage/WeightChangeAlert';
 
 import {useGetBaseLine, useUpdateBaseLine} from '../../query/queries/baseLine';
-import {
-  useCreateOrder,
-  useUpdateOrder,
-  useListOrder,
-} from '../../query/queries/order';
 import {convertNutr, convertNutrByWeight} from '../../util/targetCalculation';
-import {useListDiet, useUpdateDiet} from '../../query/queries/diet';
+import {loadBaseLineData} from '../../stores/slices/userInputSlice';
+import {RootState} from '../../stores/store';
+
+// FlatList Data
+type INutrFLdata = Array<{
+  nutrient: string;
+  value: number;
+  color: string;
+  alertType:
+    | 'calorieChange'
+    | 'carbChange'
+    | 'proteinChange'
+    | 'fatChange'
+    | 'weightChange';
+}>;
+// alert render fn
+interface IRenderAlert {
+  [key: string]: () => React.ReactElement;
+}
 
 // consts for screens
 export const myPageBtns = [
@@ -56,196 +68,134 @@ const Mypage = () => {
   // navigation
   const {navigate} = useNavigation();
 
+  // redux
+  const dispatch = useDispatch();
+  const userInputState = useSelector((state: RootState) => state.userInput);
+
   // react-query
-  const {data: baseLineData} = useGetBaseLine();
   const updateMutation = useUpdateBaseLine();
-  const {data: orderData, isLoading} = useListOrder();
+  const {data: baseLineData} = useGetBaseLine();
 
-  // FlatList Data
-  type INutrTargetData = Array<{
-    nutrient: string;
-    value: number;
-    color: string;
-    alertType: 'calorie' | 'carb' | 'protein' | 'fat' | 'weight';
-  }>;
+  // useState
+  const [autoCalculate, setAutoCalculate] = useState(false);
+  const [alertShow, setAlertShow] = useState(false);
+  const [alertType, setAlertType] = useState<
+    | 'calorieChange'
+    | 'carbChange'
+    | 'proteinChange'
+    | 'fatChange'
+    | 'weightChange'
+  >('calorieChange');
 
-  const nutrTargetData: INutrTargetData = useMemo(
+  // useEffect
+  useEffect(() => {
+    baseLineData && dispatch(loadBaseLineData(baseLineData));
+  }, [baseLineData]);
+
+  // etc
+  // Flatlist Data
+  const nutrTargetData: INutrFLdata = useMemo(
     () => [
       {
         nutrient: '칼로리',
         value: parseFloat(baseLineData?.calorie || '0'),
         color: colors.main,
-        alertType: 'calorie',
+        alertType: 'calorieChange',
       },
       {
         nutrient: '탄수화물',
         value: parseFloat(baseLineData?.carb || '0'),
         color: colors.blue,
-        alertType: 'carb',
+        alertType: 'carbChange',
       },
       {
         nutrient: '단백질',
         value: parseFloat(baseLineData?.protein || '0'),
         color: colors.green,
-        alertType: 'protein',
+        alertType: 'proteinChange',
       },
       {
         nutrient: '지방',
         value: parseFloat(baseLineData?.fat || '0'),
         color: colors.orange,
-        alertType: 'fat',
+        alertType: 'fatChange',
       },
     ],
     [baseLineData],
   );
 
-  // react-hook-form
-  interface IFormData {
-    calorie: string;
-    carb: string;
-    protein: string;
-    fat: string;
-    weight: string;
-  }
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: {errors, isValid},
-  } = useForm<IFormData>({
-    defaultValues: baseLineData && {
-      calorie: String(parseInt(baseLineData.calorie)),
-      carb: String(parseInt(baseLineData.carb)),
-      protein: String(parseInt(baseLineData.protein)),
-      fat: String(parseInt(baseLineData.fat)),
-      weight: String(parseInt(baseLineData.weight)),
-    },
-  });
-  const calorieValue = useWatch({control, name: 'calorie'});
-  const carbValue = useWatch({control, name: 'carb'});
-  const proteinValue = useWatch({control, name: 'protein'});
-  const fatValue = useWatch({control, name: 'fat'});
-  const weightValue = useWatch({control, name: 'weight'});
-  const [autoCalculate, setAutoCalculate] = useState(false);
-
-  // userInfo change alert
-  const [alertShow, setAlertShow] = useState(false);
-  const [alertType, setAlertType] = useState<
-    'calorie' | 'carb' | 'protein' | 'fat' | 'weight'
-  >('calorie');
-  interface IRenderAlert {
-    [key: string]: () => React.ReactElement;
-  }
+  // alert render fn
   const renderAlertByType: IRenderAlert = {
-    calorie: () => (
-      <CalChangeAlert
-        type="calorie"
-        control={control}
-        handleSubmit={handleSubmit}
-        errors={errors}
-      />
-    ),
-    carb: () => (
-      <NutrChangeAlert
-        type="carb"
-        control={control}
-        handleSubmit={handleSubmit}
-        errors={errors}
-      />
-    ),
-    protein: () => (
-      <NutrChangeAlert
-        type="protein"
-        control={control}
-        handleSubmit={handleSubmit}
-        errors={errors}
-      />
-    ),
-    fat: () => (
-      <NutrChangeAlert
-        type="fat"
-        control={control}
-        handleSubmit={handleSubmit}
-        errors={errors}
-      />
-    ),
-    weight: () => (
+    calorieChange: () => <CalChangeAlert />,
+    carbChange: () => <NutrChangeAlert type="carbChange" />,
+    proteinChange: () => <NutrChangeAlert type="proteinChange" />,
+    fatChange: () => <NutrChangeAlert type="fatChange" />,
+    weightChange: () => (
       <WeightChangeAlert
-        type="weight"
-        control={control}
-        handleSubmit={handleSubmit}
-        errors={errors}
         autoCalculate={autoCalculate}
         setAutoCalculate={setAutoCalculate}
       />
     ),
   };
-  const typeData = {
-    calorie: calorieValue,
-    carb: carbValue,
-    protein: proteinValue,
-    fat: fatValue,
-    weight: weightValue,
-  };
-  const typeValue = typeData[alertType];
+
+  // 알럿 창 확인버튼 동작
   const onAlertConfirm = () => {
     if (!baseLineData) {
       setAlertShow(false);
       return;
     }
-    const {calorie, carb, protein, fat} =
-      alertType !== 'weight'
-        ? convertNutr[alertType](baseLineData.calorie, typeValue)
-        : autoCalculate
-        ? convertNutrByWeight(weightValue, baseLineData)
-        : {
-            calorie: baseLineData.calorie,
-            carb: baseLineData.carb,
-            protein: baseLineData.protein,
-            fat: baseLineData.fat,
-          };
 
-    if (alertType !== 'weight') {
-      setValue('calorie', calorie);
-      setValue('carb', carb);
-      setValue('protein', protein);
-      setValue('fat', fat);
+    // 변경된 몸무게만 업데이트
+    if (alertType === 'weightChange' && !autoCalculate) {
       updateMutation.mutate({
         ...baseLineData,
-        calorie,
-        carb,
-        protein,
-        fat,
+        weight: userInputState.weightChange.value,
       });
-    } else if (autoCalculate) {
-      setValue('calorie', calorie);
-      setValue('carb', carb);
-      setValue('protein', protein);
-      setValue('fat', fat);
-      setValue('weight', typeValue);
-      updateMutation.mutate({
-        ...baseLineData,
-        weight: typeValue,
-        calorie,
-        carb,
-        protein,
-        fat,
-      });
-    } else {
-      setValue('weight', typeValue);
-      updateMutation.mutate({
-        ...baseLineData,
-        weight: typeValue,
-      });
+      setAlertShow(false);
+      return;
     }
+
+    // 변경된 몸무게와 자동계산된 영양 업데이트
+    if (alertType === 'weightChange' && autoCalculate) {
+      const {calorie, carb, protein, fat} = convertNutrByWeight(
+        userInputState.weightChange.value,
+        baseLineData,
+      );
+      updateMutation.mutate({
+        ...baseLineData,
+        calorie,
+        carb,
+        protein,
+        fat,
+        weight: userInputState.weightChange.value,
+      });
+      setAlertShow(false);
+      return;
+    }
+
+    // 선택된 영양으로 다른 영양 자동 계산해서 업데이트
+    const {calorie, carb, protein, fat} = convertNutr[alertType](
+      baseLineData.calorie,
+      userInputState[alertType].value,
+    );
+    updateMutation.mutate({
+      ...baseLineData,
+      calorie,
+      carb,
+      protein,
+      fat,
+    });
     setAlertShow(false);
+    return;
   };
+
   const onAlertCancel = () => {
     setAlertShow(false);
   };
 
   return (
     <Container>
+      {/* 상단 카드 */}
       <Card>
         <ProfileContainer>
           <ProfileTextContainer>
@@ -273,6 +223,8 @@ const Mypage = () => {
             계획과 다르게 진행된다면 아래 목표를 수정해보세요
           </Recommendation>
         </RecommendationContainer>
+
+        {/* 칼탄단지 변경 버튼 */}
         <TargetNutrContainer>
           <FlatList
             data={nutrTargetData}
@@ -283,6 +235,7 @@ const Mypage = () => {
                 value={String(item.value)}
                 color={item.color}
                 onPress={() => {
+                  baseLineData && dispatch(loadBaseLineData(baseLineData));
                   setAlertType(item.alertType);
                   setAlertShow(true);
                 }}
@@ -294,13 +247,16 @@ const Mypage = () => {
         </TargetNutrContainer>
       </Card>
       <HorizontalSpace height={24} />
+
+      {/* 하단 메뉴 */}
       <Card style={{flex: 1}}>
         {myPageBtns.map((item, index) => (
           <Col key={item.btnId}>
             <PageBtn
               onPress={() => {
                 if (item.btnId === 'ChangeWeight') {
-                  setAlertType('weight');
+                  baseLineData && dispatch(loadBaseLineData(baseLineData));
+                  setAlertType('weightChange');
                   setAlertShow(true);
                 } else {
                   navigateByBtnId[item.btnId](item.btnId, navigate);
@@ -315,6 +271,8 @@ const Mypage = () => {
           </Col>
         ))}
       </Card>
+
+      {/* 변경 알럿창 */}
       <DAlert
         alertShow={alertShow}
         renderContent={() => renderAlertByType[alertType]()}

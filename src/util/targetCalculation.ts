@@ -187,10 +187,10 @@ export const convertNutr: {
     input: string,
   ) => {calorie: string; carb: string; protein: string; fat: string};
 } = {
-  calorie: (targetCalorie, nutr) => convertByCalorie(targetCalorie, nutr),
-  carb: (targetCalorie, nutr) => convertByCarb(targetCalorie, nutr),
-  protein: (targetCalorie, nutr) => convertByProtein(targetCalorie, nutr),
-  fat: (targetCalorie, nutr) => convertByFat(targetCalorie, nutr),
+  calorieChange: (targetCalorie, nutr) => convertByCalorie(targetCalorie, nutr),
+  carbChange: (targetCalorie, nutr) => convertByCarb(targetCalorie, nutr),
+  proteinChange: (targetCalorie, nutr) => convertByProtein(targetCalorie, nutr),
+  fatChange: (targetCalorie, nutr) => convertByFat(targetCalorie, nutr),
 };
 
 export const convertNutrByWeight = (

@@ -85,6 +85,33 @@ export interface UserInputState {
     isValid: boolean;
     errMsg: string;
   };
+
+  // Mypage calorie, carb, protein, fat change input
+  calorieChange: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  carbChange: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  proteinChange: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  fatChange: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  weightChange: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
 }
 
 const initialState: UserInputState = {
@@ -163,6 +190,33 @@ const initialState: UserInputState = {
     isValid: false,
     errMsg: '한 끼 목표 지방을 입력해주세요',
   },
+
+  // Mypage change input
+  calorieChange: {
+    value: '',
+    isValid: false,
+    errMsg: '한 끼 목표 칼로리를 입력해주세요',
+  },
+  carbChange: {
+    value: '',
+    isValid: false,
+    errMsg: '한 끼 목표 탄수화물을 입력해주세요',
+  },
+  proteinChange: {
+    value: '',
+    isValid: false,
+    errMsg: '한 끼 목표 단백질을 입력해주세요',
+  },
+  fatChange: {
+    value: '',
+    isValid: false,
+    errMsg: '한 끼 목표 지방을 입력해주세요',
+  },
+  weightChange: {
+    value: '',
+    isValid: false,
+    errMsg: '몸무게를 입력해주세요',
+  },
 };
 
 const userInputSlice = createSlice({
@@ -194,6 +248,22 @@ const userInputSlice = createSlice({
       state.carb.value = '';
       state.protein.value = '';
       state.fat.value = '';
+      // Mypage calorie, carb, protein, fat change input
+      state.calorieChange.value = String(parseInt(action.payload.calorie));
+      state.calorieChange.isValid = true;
+      state.calorieChange.errMsg = '';
+      state.carbChange.value = String(parseInt(action.payload.carb));
+      state.carbChange.isValid = true;
+      state.carbChange.errMsg = '';
+      state.proteinChange.value = String(parseInt(action.payload.protein));
+      state.proteinChange.isValid = true;
+      state.proteinChange.errMsg = '';
+      state.fatChange.value = String(parseInt(action.payload.fat));
+      state.fatChange.isValid = true;
+      state.fatChange.errMsg = '';
+      state.weightChange.value = action.payload.weight;
+      state.weightChange.isValid = true;
+      state.weightChange.errMsg = '';
     },
     setValue: (
       state,

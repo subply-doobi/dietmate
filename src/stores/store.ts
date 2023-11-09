@@ -7,7 +7,7 @@ import likeReducer from './slices/likeSlice';
 import orderReducer from './slices/orderSlice';
 import commonAlertReducer from './slices/commonAlertSlice';
 
-export const store: Store = configureStore({
+export const store = configureStore({
   reducer: {
     userInput: userInputReducer,
     sortFilter: sortFilterReducer,

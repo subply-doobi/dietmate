@@ -14,54 +14,40 @@ import {
   TextSub,
   UserInfoTextInput,
 } from '../../styles/StyledConsts';
-
-const renderWeightInput = ({field: {onChange, value}}: IFormField) => {
-  return (
-    <>
-      <InputHeader isActivated={value ? true : false}>몸무게 (kg)</InputHeader>
-      <Input
-        placeholder="몸무게 (kg)"
-        value={value}
-        onChangeText={onChange}
-        isActivated={value ? true : false}
-        keyboardType="numeric"
-        maxLength={3}
-      />
-    </>
-  );
-};
+import {useDispatch, useSelector} from 'react-redux';
+import {setValue} from '../../stores/slices/userInputSlice';
+import {RootState} from '../../stores/store';
 
 const WeightChangeAlert = ({
-  type,
-  control,
-  handleSubmit,
-  errors,
   autoCalculate,
   setAutoCalculate,
 }: {
-  type: string;
-  control: any;
-  handleSubmit: Function;
-  errors: any;
   autoCalculate: boolean;
   setAutoCalculate: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  useEffect(() => {
-    handleSubmit(() => {})();
-  }, []);
+  // redux
+  const dispatch = useDispatch();
+  const {weightChange} = useSelector((state: RootState) => state.userInput);
+
   return (
     <Container>
-      <Controller
-        control={control}
-        rules={validationRules[type]}
-        render={field => renderWeightInput(field)}
-        name={type}
+      {/* 몸무게 변경 input */}
+      <InputHeader isActivated={!!weightChange.value}>몸무게 (kg)</InputHeader>
+      <Input
+        placeholder="몸무게 (kg)"
+        value={weightChange.value}
+        onChangeText={v => dispatch(setValue({name: 'weightChange', value: v}))}
+        isActivated={!!weightChange.value}
+        keyboardType="numeric"
+        maxLength={3}
       />
-      {errors[type] && (
+      {weightChange.errMsg && (
         <ErrorBox>
-          <ErrorText>{errors[type].message}</ErrorText>
+          <ErrorText>{weightChange.errMsg}</ErrorText>
         </ErrorBox>
       )}
+
+      {/* autoCalculate 버튼 */}
       <Row style={{marginTop: 24, alignItems: 'flex-start'}}>
         <CheckboxContainer onPress={() => setAutoCalculate(check => !check)}>
           {autoCalculate ? (
