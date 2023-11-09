@@ -20,7 +20,6 @@ export const getDoobiToken = async (kakaoAccessToken: string | null) => {
 export const getGuestToken = async () => {
   try {
     const result = await axios.get(`${GET_GUEST}`);
-    console.log('getGuestToken: ', result?.data);
     return result?.status === 200 ? result.data : undefined;
   } catch (e) {
     console.log('getGuestToken error: ', e);

@@ -102,11 +102,12 @@ export const InputHeaderText = styled.Text`
 export const UserInfoTextInput = styled.TextInput`
   justify-content: center;
   align-items: flex-start;
-  height: 40px;
   font-size: 16px;
   border-bottom-width: 1px;
   border-color: ${({isActivated}: StyledProps) =>
     isActivated ? colors.main : colors.inactivated};
+  margin-top: -4px;
+  padding-bottom: 6px;
 `;
 
 export const InputHeader = styled(InputHeaderText)`

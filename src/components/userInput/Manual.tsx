@@ -143,7 +143,6 @@ const Manual = ({scrollRef}: IManual) => {
 export default Manual;
 
 const ContentsContainer = styled.View``;
-
 const InputHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;

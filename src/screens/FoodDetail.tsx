@@ -221,13 +221,7 @@ const FoodDetail = () => {
               [{productData.platformNm}]
             </SellerText>
             <ProductName>{productData.productNm}</ProductName>
-            <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
-              <Col>
-                <Row>
-                  <ShippingText>최소주문수량: </ShippingText>
-                  <ShippingText style={{color: '#ff6060'}}>2개</ShippingText>
-                </Row>
-              </Col>
+            <Row style={{marginTop: 16, justifyContent: 'flex-start'}}>
               <Price>{commaToNum(productData.price)}원</Price>
             </Row>
             <Row
@@ -309,7 +303,6 @@ const ShippingText = styled(TextMain)`
 const Price = styled(TextMain)`
   font-size: 28px;
   font-weight: bold;
-  margin-left: 90px;
 `;
 interface DetailMenuProps {
   onPress: () => void;
