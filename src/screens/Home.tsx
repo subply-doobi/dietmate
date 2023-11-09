@@ -38,6 +38,7 @@ import DAlert from '../components/common/alert/DAlert';
 import CommonAlertContent from '../components/common/alert/CommonAlertContent';
 
 import SortModalContent from '../components/home/SortModalContent';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const Home = () => {
   // navigation
@@ -121,7 +122,6 @@ const Home = () => {
     inputRange: [0, 100],
     outputRange: [0, -100],
   });
-
   // flatlist scrollToTop
   const flatListRef = useRef<FlatList<IProductData> | null>(null);
   const scrollTop = () => {
@@ -202,7 +202,13 @@ const Home = () => {
             refreshing={productIsFetching}
             onRefresh={refetchProduct}
             progressViewOffset={HOME_FILTER_HEADER_HEIGHT}
-            onScroll={e => scrollY.setValue(e.nativeEvent.contentOffset.y)}
+            onScroll={e => {
+              scrollY.setValue(
+                e.nativeEvent.contentOffset.y < 0
+                  ? 0
+                  : e.nativeEvent.contentOffset.y,
+              );
+            }}
             ref={flatListRef}
           />
         )}
@@ -259,7 +265,7 @@ const Home = () => {
 
 export default Home;
 
-const Container = styled.View`
+const Container = styled.SafeAreaView`
   flex: 1;
 `;
 

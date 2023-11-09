@@ -328,7 +328,7 @@ const Mypage = () => {
 
 export default Mypage;
 
-const Container = styled.View`
+const Container = styled.SafeAreaView`
   flex: 1;
   background-color: ${colors.backgroundLight};
 `;

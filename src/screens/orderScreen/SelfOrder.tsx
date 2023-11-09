@@ -179,7 +179,7 @@ const SelfOrder = () => {
 
       {/* 주문내역 저장하기 버튼 */}
       <BtnBottomCTA
-        width={SCREENWIDTH - 16}
+        width={SCREENWIDTH - 32}
         btnStyle={'activated'}
         onPress={async () => onHandleSelfOrder()}>
         <BtnText>주문내역에 저장하기</BtnText>
@@ -190,7 +190,7 @@ const SelfOrder = () => {
 
 export default SelfOrder;
 
-const Container = styled.View`
+const Container = styled.SafeAreaView`
   flex: 1;
 `;
 
