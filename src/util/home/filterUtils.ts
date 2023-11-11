@@ -1,4 +1,4 @@
-import {IFilterParams, IProductsData} from '../../query/types/product';
+import {IFilterParams} from '../../query/types/product';
 import {FILTER_BTN_RANGE} from '../../constants/constants';
 import {ISortFilter} from '../../stores/slices/sortFilterSlice';
 

@@ -1,9 +1,8 @@
-import {min} from 'react-native-reanimated';
 import {NUTR_ERROR_RANGE} from '../../constants/constants';
-import {IBaseLine} from '../../query/types/baseLine';
-import {IProductData, IProductsData} from '../../query/types/product';
+import {IBaseLineData} from '../../query/types/baseLine';
+import {IProductData} from '../../query/types/product';
 
-const getSum = (menu: IProductsData) => {
+const getSum = (menu: IProductData[]) => {
   // 1: cal | 2: carb | 3: protein | 4: fat | 5: price
   const sum = [0, 0, 0, 0, 0];
   for (let i = 0; i < menu.length; i++) {
@@ -23,7 +22,7 @@ const getRemain = (target: number[], sum: number[]) => {
   return remain;
 };
 
-const getCategoryNum = (menu: IProductsData) => {
+const getCategoryNum = (menu: IProductData[]) => {
   // 카테고리 => 0: 도시락 | 1: 닭가슴살 | 2: 샐러드 | 3: 영양간식 | 4: 과자 | 5: 음료
   let cateogoryNum = [0, 0, 0, 0, 0, 0];
   for (let i = 0; i < menu.length; i++) {
@@ -40,12 +39,12 @@ const getCategoryNum = (menu: IProductsData) => {
 };
 
 const getLowestSum = (
-  availableFoods: IProductsData,
+  availableFoods: IProductData[],
   num: number,
   type: 'calorie' | 'carb' | 'protein' | 'fat' | 'price',
 ) => {
   let foodsToCheck = [...availableFoods];
-  const lowestCalFoods: IProductsData = [];
+  const lowestCalFoods: IProductData[] = [];
   for (let i = 0; i < num; i++) {
     const lowest = foodsToCheck.reduce((prev, curr) => {
       return parseInt(prev[type]) < parseInt(curr[type]) ? prev : curr;
@@ -145,8 +144,8 @@ const isLimitedCategory = (limitedCategory: number[], category: string) => {
 };
 
 interface IGetAvailableFoods {
-  foods: IProductsData;
-  currentMenu: IProductsData;
+  foods: IProductData[];
+  currentMenu: IProductData[];
   target: number[];
   selectedCategoryIdx?: number[];
   targetNum: number;
@@ -270,19 +269,19 @@ const shuffle = (arr: any) => {
   }
 };
 
-const getRandomFood = (availableFoods: IProductsData) => {
+const getRandomFood = (availableFoods: IProductData[]) => {
   const randomIdx = Math.floor(Math.random() * availableFoods.length);
   return availableFoods[randomIdx];
 };
 
-const getRandomMenu = (menu: Array<IProductsData>) => {
+const getRandomMenu = (menu: Array<IProductData[]>) => {
   const randomIdx = Math.floor(Math.random() * menu.length);
   return menu[randomIdx];
 };
 
 const getErrorMinMenu = (
   menuWithErr: Array<{
-    menu: IProductsData;
+    menu: IProductData[];
     isInErrRange: boolean;
     err: number[];
     errScore: number;
@@ -296,7 +295,7 @@ const getErrorMinMenu = (
 
 const printValidMenuWithErr = (
   validMenu: Array<{
-    menu: IProductsData;
+    menu: IProductData[];
     isInErrRange: boolean;
     err: number[];
     errScore: number;
@@ -318,7 +317,7 @@ const printValidMenuWithErr = (
   }
 };
 
-const printMenu = (menu: IProductsData) => {
+const printMenu = (menu: IProductData[]) => {
   console.log('-------------------------------------');
   for (let i = 0; i < menu.length; i++) {
     console.log(
@@ -333,8 +332,8 @@ const printMenu = (menu: IProductsData) => {
 
 // 이미 들어가있던 식품들 제외
 const excludeInitialMenu = (
-  initialMenu: IProductsData,
-  recommendedFoods: IProductsData,
+  initialMenu: IProductData[],
+  recommendedFoods: IProductData[],
 ) => {
   const filteredRecommendedFoods = recommendedFoods.filter(
     food => !initialMenu.some(iMenu => iMenu.productNo === food.productNo),
@@ -344,7 +343,10 @@ const excludeInitialMenu = (
   return filteredRecommendedFoods;
 };
 
-const convertMenuToMenuWithErrObj = (menu: IProductsData, target: number[]) => {
+const convertMenuToMenuWithErrObj = (
+  menu: IProductData[],
+  target: number[],
+) => {
   const sum = getSum(menu);
   let err = [];
   let isInErrRange = true;
@@ -369,7 +371,7 @@ const convertMenuToMenuWithErrObj = (menu: IProductsData, target: number[]) => {
 
 interface IInitialize {
   initialMenu: Array<IProductData>;
-  baseLine: IBaseLine;
+  baseLine: IBaseLineData;
   priceTarget: number[];
   totalFoodList: Array<IProductData>;
 }
@@ -413,7 +415,7 @@ const initialize = ({
 interface IAutoMenu {
   totalFoodList: Array<IProductData>;
   initialMenu: Array<IProductData>;
-  baseLine: IBaseLine | undefined;
+  baseLine: IBaseLineData | undefined;
   selectedCategoryIdx: number[];
   priceTarget: number[];
 }
@@ -425,7 +427,7 @@ export const makeAutoMenu2 = ({
   priceTarget,
 }: IAutoMenu): Promise<{
   sum: number[];
-  recommendedFoods: IProductsData;
+  recommendedFoods: IProductData[];
 }> => {
   return new Promise((resolve, reject) => {
     try {

@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {FILTER_BTN_RANGE, NUTR_ERROR_RANGE} from '../../constants/constants';
 import {IDietDetailData} from '../../query/types/diet';
-import {IBaseLine} from '../../query/types/baseLine';
+import {IBaseLineData} from '../../query/types/baseLine';
 import {sumUpNutrients} from '../../util/sumUp';
 
 const sortTextSeq = ['', 'ASC', 'DESC'];
@@ -174,7 +174,7 @@ const sortFilterSlice = createSlice({
     setFilterByRemainNutr: (
       state,
       action: PayloadAction<{
-        baseLineData: IBaseLine | undefined;
+        baseLineData: IBaseLineData | undefined;
         dietDetailData: IDietDetailData | undefined;
       }>,
     ) => {

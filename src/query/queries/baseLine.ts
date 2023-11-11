@@ -1,7 +1,11 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
 
 import {queryClient} from '../store';
-import {IBaseLine, IBaseLineCreate, IBaseLineUpdate} from '../types/baseLine';
+import {
+  IBaseLineData,
+  IBaseLineCreate,
+  IBaseLineUpdate,
+} from '../types/baseLine';
 import {BASE_LINE} from '../keys';
 import {IQueryOptions} from '../types/common';
 import {queryFn, mutationFn} from './requestFn';
@@ -33,7 +37,7 @@ export const useCreateBaseLine = () => {
 
 export const useGetBaseLine = (options?: IQueryOptions) => {
   const enabled = options?.enabled ?? true;
-  return useQuery<IBaseLine>({
+  return useQuery<IBaseLineData>({
     queryKey: [BASE_LINE],
     queryFn: () => queryFn(GET_BASE_LINE),
     enabled,
@@ -42,7 +46,7 @@ export const useGetBaseLine = (options?: IQueryOptions) => {
 
 export const useGetGuestLogin = (options?: IQueryOptions) => {
   const enabled = options?.enabled ?? true;
-  return useQuery<IBaseLine>({
+  return useQuery<IBaseLineData>({
     queryKey: [BASE_LINE],
     queryFn: () => queryFn(GET_GUEST),
     enabled,

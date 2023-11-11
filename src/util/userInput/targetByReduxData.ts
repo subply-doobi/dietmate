@@ -3,14 +3,14 @@ import {
   SPORTS_STRENGTH_CD,
   SPORTS_TIME_CD,
 } from '../../constants/constants';
-import {ICode} from '../../query/types/code';
+import {ICodeData} from '../../query/types/code';
 import {UserInputState} from '../../stores/slices/userInputSlice';
 import {calculateBMR, calculateNutrTarget} from '../targetCalculation';
 
 export const getRecommendedNutr = (
-  seqCode: ICode | undefined,
-  timeCode: ICode | undefined,
-  strengthCode: ICode | undefined,
+  seqCode: ICodeData | undefined,
+  timeCode: ICodeData | undefined,
+  strengthCode: ICodeData | undefined,
   userInputState: UserInputState,
 ) => {
   const {

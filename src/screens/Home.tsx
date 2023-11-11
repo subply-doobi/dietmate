@@ -12,7 +12,7 @@ import {
   FOOD_LIST_ITEM_HEIGHT,
   HOME_FILTER_HEADER_HEIGHT,
 } from '../constants/constants';
-import {IProductData, IProductsData} from '../query/types/product';
+import {IProductData} from '../query/types/product';
 import {SCREENWIDTH} from '../constants/constants';
 import colors from '../styles/colors';
 import {icons} from '../assets/icons/iconSource';
@@ -86,7 +86,7 @@ const Home = () => {
     },
     {
       enabled: currentDietNo ? true : false,
-      onSuccess: (data: IProductsData) => {
+      onSuccess: (data: IProductData[]) => {
         if (data.length === 0) setProductAlertShow(true);
         // 처음 앱 켰을 때 totalFoodList를 redux에 저장해놓고 끼니 자동구성에 사용
         if (totalFoodListIsLoaded) return;

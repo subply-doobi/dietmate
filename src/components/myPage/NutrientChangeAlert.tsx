@@ -1,6 +1,4 @@
-import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
-import {Controller} from 'react-hook-form';
 
 import {
   Col,
@@ -11,30 +9,9 @@ import {
   TextSub,
   UserInfoTextInput,
 } from '../../styles/StyledConsts';
-import {validationRules} from '../../constants/constants';
-import {IFormField} from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../stores/store';
 import {setValue} from '../../stores/slices/userInputSlice';
-
-const renderNutrInput = (
-  {field: {onChange, value}}: IFormField,
-  nutrText: string,
-) => {
-  return (
-    <>
-      <InputHeader isActivated={value ? true : false}>{nutrText}</InputHeader>
-      <Input
-        placeholder={nutrText}
-        value={value}
-        onChangeText={onChange}
-        isActivated={value ? true : false}
-        keyboardType="numeric"
-        maxLength={3}
-      />
-    </>
-  );
-};
 
 const nutrTextByNutr: {[key: string]: string} = {
   carbChange: '탄수화물 (g)',

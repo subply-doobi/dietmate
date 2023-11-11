@@ -2,35 +2,28 @@ import React, {useState} from 'react';
 import {FlatList} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {useForm, useWatch} from 'react-hook-form';
 
 import {RootState} from '../../../stores/store';
 import colors from '../../../styles/colors';
-import {NavigationProps, SCREENWIDTH} from '../../../constants/constants';
+import {SCREENWIDTH} from '../../../constants/constants';
 import {changeNutrByWeight} from '../../../util/alertActions';
 import {BtnBottomCTA, BtnText} from '../../../styles/StyledConsts';
 
 import DAlert from '../../../components/common/alert/DAlert';
 import WeightChangeAlert from '../../../components/myPage/WeightChangeAlert';
+import {useNavigation} from '@react-navigation/native';
 
-const History = ({navigation: {navigate}}: NavigationProps) => {
-  const {userInfo} = useSelector((state: RootState) => state.userInfo);
-  const [alertShow, setAlertShow] = useState(false);
+const History = () => {
+  // navigation
+  const {navigate} = useNavigation();
+
+  // redux
   const dispatch = useDispatch();
 
-  // react-hook-form
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: {errors, isValid},
-  } = useForm<{weight: string}>({
-    defaultValues: {
-      weight: userInfo.weight,
-    },
-  });
+  // useState
+  const [alertShow, setAlertShow] = useState(false);
   const [autoCalculate, setAutoCalculate] = useState(false);
-  const weightValue = useWatch({control, name: 'weight'});
+
   const testArr = [
     {id: 0},
     {id: 1},
@@ -44,10 +37,6 @@ const History = ({navigation: {navigate}}: NavigationProps) => {
   const renderAlertContent = () => {
     return (
       <WeightChangeAlert
-        type="weight"
-        control={control}
-        handleSubmit={handleSubmit}
-        errors={errors}
         autoCalculate={autoCalculate}
         setAutoCalculate={setAutoCalculate}
       />
@@ -55,7 +44,6 @@ const History = ({navigation: {navigate}}: NavigationProps) => {
   };
 
   const onAlertConfirm = () => {
-    const res = changeNutrByWeight(userInfo, weightValue);
     if (autoCalculate) {
       // TBD | store, 서버에 weight, 바뀐 target정보 Put
       // dispatch(updateUserInfo(res));
@@ -79,7 +67,7 @@ const History = ({navigation: {navigate}}: NavigationProps) => {
             onPress={() => {
               console.log('해당 기록으로 이동');
             }}>
-            <HistoryImage />
+            {/* <HistoryImage /> */}
           </HistoryBox>
         )}
         horizontal={false}

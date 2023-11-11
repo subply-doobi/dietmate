@@ -3,7 +3,6 @@ import React, {useRef, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
-import {useForm, useWatch} from 'react-hook-form';
 import Accordion from 'react-native-collapsible/Accordion';
 import {useNavigation, useRoute} from '@react-navigation/native';
 //doobi util, redux, etc

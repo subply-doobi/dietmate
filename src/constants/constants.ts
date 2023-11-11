@@ -1,4 +1,5 @@
 import {Dimensions, Platform} from 'react-native';
+import {UserInputState, initialState} from '../stores/slices/userInputSlice';
 
 // RN constants
 export const {width, height} = Dimensions.get('screen');
@@ -159,6 +160,11 @@ export const FILTER_BTN_RANGE = [
     ],
   },
 ];
+export const ENTRANCE_TYPE = [
+  '공동현관 없음(자유출입)',
+  '공동현관 비밀번호',
+  '기타',
+];
 
 interface ITimeToMinutes {
   [key: string]: number;
@@ -235,108 +241,20 @@ export const ratioCdToValue: IRatioCdValue = {
   },
 };
 
-// validationRules => react-hook-form 을 redux로 변경하고 삭제예정!!!
-interface IValidationRules {
-  [key: string]: {
-    [key: string]: any;
-  };
-}
-const regex = /^[ㄱ-ㅎ|가-힣]+$/; //문자열에 한글만 있는지 확인
+// 정규식
+// 한글만 포함
+const REGEX_KOR = /^[ㄱ-ㅎ|가-힣]+$/; //문자열에 한글만 있는지 확인
+// 핸드폰
+const REGEX_PHONE = /01[016789]-[^0][0-9]{2,3}-[0-9]{3,4}/;
 
-export const validationRules: IValidationRules = {
-  age: {
-    required: '필수 정보입니다',
-    maxLength: 3,
-    validate: {
-      range: (v: string) =>
-        (parseInt(v) >= 10 && parseInt(v) <= 100) ||
-        '10~100세 안으로 입력해주세요',
-    },
-  },
-  orderer: {
-    required: '필수 정보입니다',
-    // validate: {
-    // isValid: v => regex.test(v) || '한글로 입력',
-    // },
-  },
-  ordererContact: {
-    required: '필수 정보입니다',
-  },
-  height: {
-    required: '필수 정보입니다',
-    maxLength: 3,
-    validate: {
-      range: (v: string) =>
-        (parseFloat(v) >= 120 && parseFloat(v) <= 230) ||
-        '정확한 신장을 입력해주세요',
-    },
-  },
-  weight: {
-    required: '필수 정보입니다',
-    maxLength: 3,
-    validate: {
-      range: (v: string) =>
-        (parseInt(v) >= 30 && parseInt(v) <= 130) ||
-        '정확한 몸무게를 입력해주세요',
-    },
-  },
-  bmrKnown: {
-    maxlength: 4,
-    validate: {
-      range: (v: string) =>
-        (parseFloat(v) >= 500 && parseFloat(v) <= 3000) ||
-        v === '' ||
-        '정확한 기초대사량을 입력해주세요',
-    },
-  },
-  caloriePerMeal: {
-    maxlength: 4,
-    validate: {
-      range: (v: string) =>
-        (parseFloat(v) >= 300 && parseFloat(v) <= 1400) ||
-        '300~1400 kcal 사이로 입력해주세요',
-    },
-  },
-  carbManual: {
-    maxlength: 3,
-    validate: {
-      range: (v: string) =>
-        !v
-          ? '탄수화물 양을 입력해주세요'
-          : (parseFloat(v) >= 10 && parseFloat(v) <= 375) ||
-            `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
-    },
-  },
-  proteinManual: {
-    maxlength: 3,
-    validate: {
-      range: (v: string) =>
-        !v
-          ? '단백질 양을 입력해주세요'
-          : (parseFloat(v) >= 10 && parseFloat(v) <= 375) ||
-            `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
-    },
-  },
-  fatManual: {
-    maxlength: 3,
-    validate: {
-      range: (v: string) =>
-        !v
-          ? '지방 양을 입력해주세요'
-          : (parseFloat(v) >= 5 && parseFloat(v) <= 100) ||
-            `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
-    },
-  },
-};
-
-// baseLine validation
-interface IValidateBaseLine {
+//  validation
+interface IValidateInput {
   [key: string]: (v: string) => {
     isValid: boolean;
     errMsg: string;
   };
 }
-export const validateBaseLine: IValidateBaseLine = {
+export const validateInput: IValidateInput = {
   // FirstInput
   gender: (v: string) => {
     if (!v)
@@ -563,26 +481,65 @@ export const validateBaseLine: IValidateBaseLine = {
       errMsg: '',
     };
   },
+
+  // Order input
+  buyerName: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '이름을 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
+  buyerTel: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '휴대폰 번호를 입력해주세요',
+      };
+    if (!REGEX_PHONE.test(v))
+      return {
+        isValid: false,
+        errMsg: '올바른 휴대폰 번호를 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
+  receiver: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '이름을 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
+  receiverContact: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '휴대폰 번호를 입력해주세요',
+      };
+    if (!REGEX_PHONE.test(v))
+      return {
+        isValid: false,
+        errMsg: '올바른 휴대폰 번호를 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
 };
 
 // bootpay consts
 export const kakaoAppAdminKey = 'f1fddabbeb50a2054c9b82ced4017b11';
 
 // type
-export interface NavigationProps {
-  navigation?: {
-    navigate: Function;
-    goBack: Function;
-    setOptions: Function;
-    reset: Function;
-  };
-  route?: any;
-}
-
-export interface IFormField {
-  field: {
-    onChange: () => void;
-    onBlur: () => void;
-    value: string;
-  };
-}

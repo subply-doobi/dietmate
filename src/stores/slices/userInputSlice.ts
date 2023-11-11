@@ -1,13 +1,16 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {
   DIET_PURPOSE_CD,
+  ENTRANCE_TYPE,
   NUTR_RATIO_CD,
   SPORTS_SEQ_CD,
   SPORTS_STRENGTH_CD,
   SPORTS_TIME_CD,
-  validateBaseLine,
+  validateInput,
 } from '../../constants/constants';
-import {IBaseLine} from '../../query/types/baseLine';
+import {IBaseLineData} from '../../query/types/baseLine';
+import {IAddressCreate, IAddressData} from '../../query/types/address';
+import {formatPhone} from '../../util/format';
 
 export interface UserInputState {
   // FirstInput
@@ -112,9 +115,64 @@ export interface UserInputState {
     isValid: boolean;
     errMsg: string;
   };
+
+  // Order input
+
+  buyerName: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  buyerTel: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  addr1: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  addr2: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  zipCode: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  receiver: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  receiverContact: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  entranceType: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  entranceNote: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  paymentMethod: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
 }
 
-const initialState: UserInputState = {
+// 선택사항 input의 경우는 isValid를 true로 설정, errMsg는 빈 문자열로 설정
+// validation이 필요한 경우는 validateInput에 추가
+export const initialState: UserInputState = {
   // FirstInput
   gender: {
     value: 'M',
@@ -217,6 +275,58 @@ const initialState: UserInputState = {
     isValid: false,
     errMsg: '몸무게를 입력해주세요',
   },
+
+  // Order input
+  buyerName: {
+    value: '',
+    isValid: false,
+    errMsg: '이름을 입력해주세요',
+  },
+  buyerTel: {
+    value: '',
+    isValid: false,
+    errMsg: '연락처를 입력해주세요',
+  },
+  addr1: {
+    value: '',
+    isValid: false,
+    errMsg: '주소를 입력해주세요',
+  },
+  addr2: {
+    value: '',
+    isValid: false,
+    errMsg: '상세주소를 입력해주세요',
+  },
+  zipCode: {
+    value: '',
+    isValid: false,
+    errMsg: '우편번호를 입력해주세요',
+  },
+  receiver: {
+    value: '',
+    isValid: false,
+    errMsg: '이름을 입력해주세요',
+  },
+  receiverContact: {
+    value: '',
+    isValid: false,
+    errMsg: '연락처를 입력해주세요',
+  },
+  entranceType: {
+    value: ENTRANCE_TYPE[0],
+    isValid: true,
+    errMsg: '',
+  },
+  entranceNote: {
+    value: '',
+    isValid: true,
+    errMsg: '',
+  },
+  paymentMethod: {
+    value: 'kakao',
+    isValid: true,
+    errMsg: '',
+  },
 };
 
 const userInputSlice = createSlice({
@@ -226,7 +336,7 @@ const userInputSlice = createSlice({
     initializeInput: state => {
       state = initialState;
     },
-    loadBaseLineData: (state, action: PayloadAction<IBaseLine>) => {
+    loadBaseLineData: (state, action: PayloadAction<IBaseLineData>) => {
       // FirstInput
       state.gender.value = action.payload.gender;
       state.age.value = action.payload.age;
@@ -265,6 +375,14 @@ const userInputSlice = createSlice({
       state.weightChange.isValid = true;
       state.weightChange.errMsg = '';
     },
+    loadAddressData: (state, action: PayloadAction<IAddressCreate>) => {
+      state.addr1.value = action.payload.addr1;
+      state.addr2.value = action.payload.addr2;
+      state.zipCode.value = action.payload.zipCode;
+      state.addr1.isValid = true;
+      state.addr2.isValid = true;
+      state.zipCode.isValid = true;
+    },
     setValue: (
       state,
       action: PayloadAction<{
@@ -272,28 +390,49 @@ const userInputSlice = createSlice({
         value: UserInputState[keyof UserInputState]['value'];
       }>,
     ) => {
-      const {name, value} = action.payload;
+      const name = action.payload.name;
+      // 핸드폰 번호 input은 입력시 자동으로 하이픈 추가
+      const value =
+        name === 'buyerTel' || name === 'receiverContact'
+          ? formatPhone(action.payload.value)
+          : action.payload.value;
+
+      // value update
       state[name].value = value;
-      // 운동 "안함" => 운동시간, 강도도 첫번째 선택지로
+
+      // 운동 "안함" 선택했을 때는 운동시간, 강도도 첫번째 선택지로
       if (name === 'sportsSeqCd' && value === SPORTS_SEQ_CD[0].cd) {
         state.sportsTimeCd.value = SPORTS_TIME_CD[0].cd;
         state.sportsStrengthCd.value = SPORTS_STRENGTH_CD[0].cd;
       }
 
       // validation
-      if (!validateBaseLine[name]) {
+      if (!validateInput[name]) {
         state[name].isValid = true;
         state[name].errMsg = '';
         return;
       }
-      const {errMsg, isValid} = validateBaseLine[name](value);
+      const {errMsg, isValid} = validateInput[name](value);
       state[name].errMsg = errMsg;
       state[name].isValid = isValid;
+    },
+    setAddrBase: (
+      state,
+      action: PayloadAction<{zipCode: string; addr1: string}>,
+    ) => {
+      state.zipCode.value = action.payload.zipCode;
+      state.addr1.value = action.payload.addr1;
+      state.addr2.value = '';
     },
   },
 });
 
-export const {setValue, loadBaseLineData, initializeInput} =
-  userInputSlice.actions;
+export const {
+  setValue,
+  loadBaseLineData,
+  initializeInput,
+  loadAddressData,
+  setAddrBase,
+} = userInputSlice.actions;
 
 export default userInputSlice.reducer;

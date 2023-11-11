@@ -1,4 +1,4 @@
-export interface IBaseLine {
+export interface IBaseLineData {
   companyCd: string;
   userId: string;
   nickNm: string;

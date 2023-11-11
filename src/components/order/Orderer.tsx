@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import {Controller} from 'react-hook-form';
 
 import {
   AccordionContentContainer,
@@ -8,70 +7,47 @@ import {
   InputHeaderText,
   UserInfoTextInput,
 } from '../../styles/StyledConsts';
-import {IFormField, validationRules} from '../../constants/constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {setValue} from '../../stores/slices/userInputSlice';
+import {RootState} from '../../stores/store';
 
-interface IAddress {
-  control: any;
-  handleSubmit: Function;
-  errors: any;
-}
-const Orderer = ({control, handleSubmit, errors}: IAddress) => {
-  const renderOrdererInput = ({field: {onChange, value}}: IFormField) => {
-    return (
-      <>
-        <InputHeader style={{marginTop: 0}} isActivated={value ? true : false}>
-          주문자
-        </InputHeader>
-        <Input
-          placeholder={'주문자'}
-          value={value}
-          onChangeText={onChange}
-          isActivated={value ? true : false}
-          keyboardType="default"
-        />
-      </>
-    );
-  };
-  const renderOrdererContactInput = ({
-    field: {onChange, value},
-  }: IFormField) => {
-    return (
-      <>
-        <InputHeader isActivated={value ? true : false}>휴대전화</InputHeader>
-        <Input
-          placeholder={'휴대전화'}
-          value={value}
-          onChangeText={onChange}
-          isActivated={value ? true : false}
-          keyboardType="number-pad"
-        />
-      </>
-    );
-  };
+const Orderer = () => {
+  const dispatch = useDispatch();
+  const {buyerName, buyerTel} = useSelector(
+    (state: RootState) => state.userInput,
+  );
   return (
     <AccordionContentContainer>
       {/* orderer */}
-      <Controller
-        control={control}
-        render={field => renderOrdererInput(field)}
-        name={'orderer'}
-        rules={validationRules.orderer}
+      <InputHeader style={{marginTop: 0}} isActivated={!!buyerName.value}>
+        주문자
+      </InputHeader>
+      <Input
+        placeholder={'주문자'}
+        value={buyerName.value}
+        onChangeText={v => dispatch(setValue({name: 'buyerName', value: v}))}
+        isActivated={!!buyerName.value}
+        keyboardType="default"
       />
-      {errors.orderer && (
+      {buyerName.errMsg && (
         <ErrorBox>
-          <ErrorText>{errors.orderer.message}</ErrorText>
+          <ErrorText>{buyerName.errMsg}</ErrorText>
         </ErrorBox>
       )}
+
       {/* ordererContact */}
-      <Controller
-        control={control}
-        render={field => renderOrdererContactInput(field)}
-        name={'ordererContact'}
-        rules={validationRules.ordererContact}
+      <InputHeader isActivated={!!buyerTel.value}>휴대전화</InputHeader>
+      <Input
+        placeholder={'휴대전화'}
+        value={buyerTel.value}
+        onChangeText={v => dispatch(setValue({name: 'buyerTel', value: v}))}
+        isActivated={!!buyerTel.value}
+        maxLength={13}
+        keyboardType="number-pad"
       />
-      {errors.ordererContact && (
+      {buyerTel.errMsg && (
         <ErrorBox>
-          <ErrorText>{errors.ordererContact.message}</ErrorText>
+          <ErrorText>{buyerTel.errMsg}</ErrorText>
         </ErrorBox>
       )}
     </AccordionContentContainer>

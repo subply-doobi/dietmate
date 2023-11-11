@@ -10,10 +10,6 @@ export interface IMenu {
 }
 export type IDietData = Array<IMenu>;
 
-export interface IListDietDetailParams {
-  dietNo: string;
-}
-
 export interface IDietDetailProductData extends IProductData {
   qty: string;
   dietNo: string;

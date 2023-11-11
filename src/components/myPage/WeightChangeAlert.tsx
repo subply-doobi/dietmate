@@ -1,9 +1,7 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
-import {Controller} from 'react-hook-form';
 
 import {icons} from '../../assets/icons/iconSource';
-import {IFormField, validationRules} from '../../constants/constants';
 import {
   Col,
   ErrorBox,

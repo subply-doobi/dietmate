@@ -1,4 +1,4 @@
-import {IBaseLine} from '../../query/types/baseLine';
+import {IBaseLineData} from '../../query/types/baseLine';
 import {IProductData} from '../../query/types/product';
 import colors from '../../styles/colors';
 
@@ -18,7 +18,7 @@ interface TableItem {
 
 export const makeTableData = (
   food: IProductData | undefined,
-  baseLineData: IBaseLine | undefined,
+  baseLineData: IBaseLineData | undefined,
 ) => {
   if (!food) return [];
   const table: TableItem[] = [

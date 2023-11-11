@@ -3,7 +3,7 @@ import {
   ratioCdToValue,
   timeCdToMinutes,
 } from '../constants/constants';
-import {IBaseLine} from '../query/types/baseLine';
+import {IBaseLineData} from '../query/types/baseLine';
 
 /** gender, age, height, weight  => BMR */
 export const calculateBMR = (
@@ -195,7 +195,7 @@ export const convertNutr: {
 
 export const convertNutrByWeight = (
   weight: string,
-  baseLine: IBaseLine,
+  baseLine: IBaseLineData,
 ): {calorie: string; carb: string; protein: string; fat: string} => {
   const bmr = calculateBMR(
     baseLine.gender,

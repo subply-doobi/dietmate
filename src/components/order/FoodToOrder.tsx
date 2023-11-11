@@ -48,8 +48,7 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
   const {data: listDietDetail, isLoading} = useListDietDetail(dietNo);
   const {data: listDiet} = useListDiet();
   //redux
-  const {orderInfo} = useSelector((state: RootState) => state.order);
-  const {foodToOrder} = orderInfo;
+  const {foodToOrder} = useSelector((state: RootState) => state.order);
   //useEffect
 
   if (isLoading) {

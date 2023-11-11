@@ -1,4 +1,4 @@
-import {ActivityIndicator, Linking} from 'react-native';
+import {ActivityIndicator, Linking, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 
 import {
@@ -18,20 +18,11 @@ import {SCREENWIDTH} from '../../constants/constants';
 
 import {BASE_URL} from '../../query/queries/urls';
 import {useListDiet, useListDietDetail} from '../../query/queries/diet';
-import {ScrollView} from 'react-native-gesture-handler';
-import {useKakaoPayReady, useCreateOrder} from '../../query/queries/order';
+import {useCreateOrder} from '../../query/queries/order';
 import {useUpdateDiet, useCreateDiet} from '../../query/queries/diet';
 import {useUpdateOrder, useDeleteOrder} from '../../query/queries/order';
 import {useNavigation} from '@react-navigation/native';
-
-//판매사별로 묶어주기 => util sumUp regroupBySeller 함수에 reduce적용해보기
-// const groupBySeller = (arg: any) => {
-//   const group = arg.reduce((acc, cur) => {
-//     acc[cur.platformNm] = [...(acc[cur.platformNm] || []), cur];
-//     return acc;
-//   }, {});
-//   return group;
-// };
+import {useState} from 'react';
 
 interface IProductInfo {
   group: IProductData[];
@@ -116,11 +107,15 @@ const SelfOrder = () => {
   const updateOrderMutation = useUpdateOrder();
   const createDietMutation = useCreateDiet();
 
+  // useState
+  const [isOrderWaiting, setIsOrderWaiting] = useState(false);
+
   if (isListDietLoading) {
     return <ActivityIndicator />;
   }
 
   const onHandleSelfOrder = async () => {
+    setIsOrderWaiting(true);
     const orderNumber = await createOrderMutation.mutateAsync({
       // 두비서버 자체정보
       orderTypeCd: 'SP011001',
@@ -152,7 +147,7 @@ const SelfOrder = () => {
       statusCd: 'SP006005',
     });
     await createDietMutation.mutateAsync();
-
+    setIsOrderWaiting(false);
     reset({
       index: 0,
       routes: [
@@ -165,25 +160,31 @@ const SelfOrder = () => {
   return (
     <Container>
       <HorizontalSpace height={4} />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 80}}>
-        {listDiet?.map(diet => (
-          <MenuCard
-            key={diet.dietNo}
-            dietNo={diet.dietNo}
-            dietSeq={diet.dietSeq}
-          />
-        ))}
-      </ScrollView>
+      {isOrderWaiting ? (
+        <ActivityIndicator />
+      ) : (
+        <>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{paddingBottom: 80}}>
+            {listDiet?.map(diet => (
+              <MenuCard
+                key={diet.dietNo}
+                dietNo={diet.dietNo}
+                dietSeq={diet.dietSeq}
+              />
+            ))}
+          </ScrollView>
 
-      {/* 주문내역 저장하기 버튼 */}
-      <BtnBottomCTA
-        width={SCREENWIDTH - 32}
-        btnStyle={'activated'}
-        onPress={async () => onHandleSelfOrder()}>
-        <BtnText>주문내역에 저장하기</BtnText>
-      </BtnBottomCTA>
+          {/* 주문내역 저장하기 버튼 */}
+          <BtnBottomCTA
+            width={SCREENWIDTH - 32}
+            btnStyle={'activated'}
+            onPress={async () => onHandleSelfOrder()}>
+            <BtnText>주문내역에 저장하기</BtnText>
+          </BtnBottomCTA>
+        </>
+      )}
     </Container>
   );
 };

@@ -1,10 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
-import {IProductsData} from '../../query/types/product';
+import {IProductData} from '../../query/types/product';
 
 export interface ICartState {
   currentDietNo: string;
-  totalFoodList: IProductsData;
+  totalFoodList: IProductData[];
   totalFoodListIsLoaded: boolean;
   nutrTooltipText: string;
   menuActiveSection: number[];
@@ -26,7 +26,7 @@ export const cartSlice = createSlice({
       state.currentDietNo = action.payload;
       // queryClient.invalidateQueries([PRODUCTS]);
     },
-    setTotalFoodList: (state, action: PayloadAction<IProductsData>) => {
+    setTotalFoodList: (state, action: PayloadAction<IProductData[]>) => {
       state.totalFoodList = action.payload;
       state.totalFoodListIsLoaded = true;
     },

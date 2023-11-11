@@ -1,14 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import {useState} from 'react';
 import styled from 'styled-components/native';
-import {Controller} from 'react-hook-form';
 
 import {icons} from '../../assets/icons/iconSource';
-import {
-  DALERT_WIDTH,
-  IFormField,
-  purposeCdToValue,
-  validationRules,
-} from '../../constants/constants';
+import {purposeCdToValue} from '../../constants/constants';
 import {
   Col,
   ErrorBox,

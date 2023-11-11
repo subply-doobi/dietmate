@@ -50,8 +50,6 @@ export interface IProductData {
   link2: string;
 }
 
-export type IProductsData = IProductData[];
-
 export interface IProductDetailData {
   imageLink: string;
   productNo: string;

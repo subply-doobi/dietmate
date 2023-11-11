@@ -1,12 +1,12 @@
 import {UseQueryResult} from 'react-query';
 import {NUTR_ERROR_RANGE} from '../constants/constants';
-import {IBaseLine} from '../query/types/baseLine';
+import {IBaseLineData} from '../query/types/baseLine';
 import {
   IDietDetailAllData,
   IDietDetailData,
   IDietTotalData,
 } from '../query/types/diet';
-import {IProductData, IProductsData} from '../query/types/product';
+import {IProductData} from '../query/types/product';
 import {IOrderData, IOrderedProduct} from '../query/types/order';
 
 export const sumUpNutrients = (dietDetail: IDietDetailData | undefined) => {
@@ -61,7 +61,7 @@ export const sumUpDietTotal = (dietTotalData: IDietTotalData | undefined) => {
 };
 
 export const getExceedIdx = (
-  baseLineData: IBaseLine | undefined,
+  baseLineData: IBaseLineData | undefined,
   cal: number,
   carb: number,
   protein: number,
@@ -80,7 +80,7 @@ export const getExceedIdx = (
 };
 
 export const checkNutrSatisfied = (
-  baseLineData: IBaseLine | undefined,
+  baseLineData: IBaseLineData | undefined,
   cal: number,
   carb: number,
   protein: number,

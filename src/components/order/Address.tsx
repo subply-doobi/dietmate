@@ -3,14 +3,8 @@ import {Alert, TextInput} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import {Controller, useWatch} from 'react-hook-form';
 
 import {RootState} from '../../stores/store';
-import {
-  setOrderer,
-  setReceiver,
-  setSelectedAddressId,
-} from '../../stores/slices/orderSlice';
 import {icons} from '../../assets/icons/iconSource';
 import {
   AccordionContentContainer,
@@ -25,60 +19,33 @@ import {
   TextMain,
   TextSub,
 } from '../../styles/StyledConsts';
-import {IFormField, validationRules} from '../../constants/constants';
-import {useListAddress, useGetAddress} from '../../query/queries/address';
+import {ENTRANCE_TYPE} from '../../constants/constants';
+import {useListAddress} from '../../query/queries/address';
+import {loadAddressData, setValue} from '../../stores/slices/userInputSlice';
+import {setselectedAddrIdx} from '../../stores/slices/orderSlice';
+import {IAddressData} from '../../query/types/address';
 
-interface IAddress {
-  control: any;
-  handleSubmit: any;
-  errors: any;
-  setValue: any;
-}
-interface IListAddressData {
-  addr1: string;
-  addr2: string;
-  addrNo?: string;
-  companyCd?: string;
-  useYn?: string;
-  userId?: string;
-  zipCode: string;
-}
-
-const renderEntranceInput = ({field: {onChange, value}}: IFormField) => {
-  return (
-    <>
-      <InputHeader isActivated={value ? true : false}>
-        배송 참고사항
-      </InputHeader>
-      <Input
-        placeholder={'예) 3847*'}
-        value={value}
-        onChangeText={onChange}
-        isActivated={value ? true : false}
-        keyboardType="default"
-      />
-    </>
+const EntranceMethodContainer = () => {
+  // redux
+  const dispatch = useDispatch();
+  const {entranceType, entranceNote} = useSelector(
+    (state: RootState) => state.userInput,
   );
-};
-const entranceType = ['공동현관 없음(자유출입)', '공동현관 비밀번호', '기타'];
-const EntranceMethodContainer = ({control}) => {
-  // 공동형관 출입 checkBox
-  const [isEntranceChecked, setIsEntranceChecked] =
-    useState('공동현관 없음(자유출입)');
+
   return (
     <>
       <ContentTitle style={{marginTop: 30}}>공동현관 출입</ContentTitle>
       <Col style={{marginTop: 30}} />
-      {entranceType.map((e, i) => {
+      {ENTRANCE_TYPE.map((e, i) => {
         return (
           <Row key={i} style={{marginBottom: 28}}>
             <EntranceCheckBox
-              onPress={() => {
-                setIsEntranceChecked(e);
-              }}>
+              onPress={() =>
+                dispatch(setValue({name: 'entranceType', value: e}))
+              }>
               <CheckIcon
                 source={
-                  isEntranceChecked === e
+                  entranceType.value === e
                     ? icons.checkboxCheckedPurple_24
                     : icons.checkbox_24
                 }
@@ -90,89 +57,102 @@ const EntranceMethodContainer = ({control}) => {
         );
       })}
 
-      <Controller
-        control={control}
-        render={field => renderEntranceInput(field)}
-        name="entrance"
+      <InputHeader isActivated={!!entranceNote.value}>
+        배송 참고사항
+      </InputHeader>
+      <Input
+        placeholder={'예) 3847*'}
+        value={entranceNote.value}
+        onChangeText={v => dispatch(setValue({name: 'entranceNote', value: v}))}
+        isActivated={!!entranceNote.value}
+        keyboardType="default"
       />
     </>
   );
 };
-const Address = ({
-  control,
-  handleSubmit,
-  errors,
-  setValue: setReceiverValue,
-}: IAddress) => {
+
+const Address = () => {
   // redux
   const dispatch = useDispatch();
-  const {orderInfo, selectedAddressId} = useSelector(
-    (state: RootState) => state.order,
+  const {selectedAddrIdx} = useSelector((state: RootState) => state.order);
+  const {buyerName, buyerTel, receiver, receiverContact} = useSelector(
+    (state: RootState) => state.userInput,
   );
-  // 렌더링이 6번되는데....
+
+  // react-query
   const {data: listAddressData} = useListAddress();
+
+  // useState
+  const [isSameInfo, setIsSameInfo] = useState(false);
+
   // navigation
-  const navigation = useNavigation();
+  const {navigate} = useNavigation();
+
   // useRef (받는 분 -> 휴대폰 focus)
   const receiverContactRef = useRef<TextInput>(null);
 
-  // checkbox 주문자정보와 동일
-  const [isChecked, setIsChecked] = useState(false);
-
-  // react-hook-form 주문자정보와 동일 체크한 경우 필요
-  // + 페이지 이동 전에 Order 스크린에서 default값 남겨주기 위해 필요
-  const ordererValue = useWatch({control, name: 'orderer'});
-  const ordererContactValue = useWatch({control, name: 'ordererContact'});
-  const receiverValue = useWatch({control, name: 'receiver'});
-  const receiverContactValue = useWatch({control, name: 'receiverContact'});
-
-  const renderReceiverInput = ({field: {onChange, value}}: IFormField) => {
-    return (
-      <>
-        <InputHeader isActivated={value ? true : false}>받는 분</InputHeader>
-        <Input
-          placeholder={'받는 분'}
-          value={value}
-          onChangeText={onChange}
-          isActivated={value ? true : false}
-          keyboardType="default"
-          onSubmitEditing={() => {
-            receiverContactRef?.current?.focus();
-          }}
-        />
-      </>
+  // etc
+  // 주문자 정보와 동일 체크박스 action
+  const onIsSameCheckPress = () => {
+    dispatch(
+      setValue({
+        name: 'receiver',
+        value: isSameInfo ? '' : buyerName.value,
+      }),
     );
+    dispatch(
+      setValue({
+        name: 'receiverContact',
+        value: isSameInfo ? '' : buyerTel.value,
+      }),
+    );
+    setIsSameInfo(v => !v);
   };
-  const renderReceiverContactInput = ({
-    field: {onChange, value},
-  }: IFormField) => {
-    return (
-      <>
-        <InputHeader isActivated={value ? true : false}>휴대폰</InputHeader>
-        <Input
-          placeholder={'휴대폰'}
-          value={value}
-          onChangeText={onChange}
-          isActivated={value ? true : false}
-          keyboardType="numeric"
-          ref={receiverContactRef}
-        />
-      </>
+
+  // 배송지 수정 버튼 action
+  const onAddrEditPress = (ads: IAddressData) => {
+    dispatch(
+      loadAddressData({
+        addr1: ads.addr1,
+        addr2: ads.addr2,
+        zipCode: ads.zipCode,
+      }),
     );
+    navigate('AddressEdit', {
+      addrNo: ads.addrNo,
+      addr1: ads.addr1,
+      addr2: ads.addr2,
+      zipCode: ads.zipCode,
+    });
+  };
+
+  // 배송지 추가 버튼 action
+  const onAddrAddPress = () => {
+    if (listAddressData && listAddressData?.length >= 5) {
+      Alert.alert('주소는 5개 까지만 추가 가능합니다');
+      return;
+    }
+    dispatch(
+      loadAddressData({
+        addr1: '',
+        addr2: '',
+        zipCode: '',
+      }),
+    );
+    navigate('AddressEdit', {currentAddrLength: listAddressData?.length});
   };
 
   return (
     <AccordionContentContainer>
-      {listAddressData?.map((ads: any, index: number) => (
+      {/* 각 주소 리스트 */}
+      {listAddressData?.map((ads, index: number) => (
         <Col style={{width: '100%'}} key={index}>
           <AddressBox>
             <SelectContainer
-              onPress={() => {
-                dispatch(setSelectedAddressId(index));
-              }}>
+              onPress={() => dispatch(setselectedAddrIdx(index))}>
               <CheckIcon
                 source={
-                  selectedAddressId === index
+                  selectedAddrIdx === index
                     ? icons.checkboxCheckedPurple_24
                     : icons.checkbox_24
                 }
@@ -182,46 +162,20 @@ const Address = ({
                 <AddressDetail>{ads.addr2}</AddressDetail>
               </Col>
             </SelectContainer>
-            <EditBtn
-              onPress={() => {
-                navigation.navigate('AddressEdit', {
-                  currentAddressId: index,
-                  addressNo: ads.addrNo,
-                  addr1: ads.addr1,
-                  addr2: ads.addr2,
-                  zipCode: ads.zipCode,
-                });
-              }}>
+
+            {/* 배송지 수정 버튼 */}
+            <EditBtn onPress={() => onAddrEditPress(ads)}>
               <EditIcon source={icons.edit_24} />
             </EditBtn>
           </AddressBox>
           <HorizontalLine style={{marginTop: 16}} />
         </Col>
       ))}
+
+      {/* 배송지 추가 버튼 */}
       <AddressAddBtn
         btnStyle={listAddressData?.length === 0 ? 'borderActivated' : 'border'}
-        onPress={() => {
-          // TBD | 5개 넘으면 안된다 안내 팝업
-          if (listAddressData?.length >= 5) {
-            Alert.alert('주소는 5개 까지만 추가 가능합니다');
-            return;
-          }
-          // 배송지 추가할 때 페이지 변경되기 때문에
-          // 주문자, 수령인 정보 남아있으려면 페이지 이동 전에 리덕스에 저장해줘야함
-          dispatch(
-            setOrderer({
-              orderer: ordererValue,
-              ordererContact: ordererContactValue,
-            }),
-          );
-          dispatch(
-            setReceiver({
-              receiver: receiverValue,
-              receiverContact: receiverContactValue,
-            }),
-          );
-          navigation.navigate('AddressEdit');
-        }}>
+        onPress={() => onAddrAddPress()}>
         <Row>
           <PlusSquareIcon
             source={
@@ -233,55 +187,61 @@ const Address = ({
           <AddressAddBtnText>배송지 추가</AddressAddBtnText>
         </Row>
       </AddressAddBtn>
+
+      {/* 받는 분 정보 입력 부분 */}
       <Row style={{justifyContent: 'space-between', marginTop: 32}}>
         <ContentTitle>받는 분 정보</ContentTitle>
         <Row>
           <GuideText>주문자 정보와 동일</GuideText>
-          <Checkbox
-            onPress={() => {
-              if (!isChecked) {
-                setReceiverValue('receiver', ordererValue);
-                setReceiverValue('receiverContact', ordererContactValue);
-              } else {
-                setReceiverValue('receiver', '');
-                setReceiverValue('receiverContact', '');
-              }
-              setIsChecked(v => !v);
-              handleSubmit(() => {})();
-            }}>
+          <Checkbox onPress={() => onIsSameCheckPress()}>
             <CheckIcon
               source={
-                isChecked ? icons.checkboxCheckedPurple_24 : icons.checkbox_24
+                isSameInfo ? icons.checkboxCheckedPurple_24 : icons.checkbox_24
               }
             />
           </Checkbox>
         </Row>
       </Row>
+
       {/* receiver */}
-      <Controller
-        control={control}
-        rules={validationRules.receiver}
-        render={field => renderReceiverInput(field)}
-        name="receiver"
+      <InputHeader isActivated={!!receiver.value}>받는 분</InputHeader>
+      <Input
+        placeholder={'받는 분'}
+        value={receiver.value}
+        onChangeText={v => dispatch(setValue({name: 'receiver', value: v}))}
+        isActivated={!!receiver.value}
+        keyboardType="default"
+        onSubmitEditing={() => {
+          receiverContactRef?.current?.focus();
+        }}
       />
-      {errors.receiver && (
+      {receiver.errMsg && (
         <ErrorBox>
-          <ErrorText>{errors.receiver.message}</ErrorText>
+          <ErrorText>{receiver.errMsg}</ErrorText>
         </ErrorBox>
       )}
+
       {/* receiverContact */}
-      <Controller
-        control={control}
-        rules={validationRules.receiverContact}
-        render={field => renderReceiverContactInput(field)}
-        name="receiverContact"
+      <InputHeader isActivated={!!receiverContact.value}>휴대폰</InputHeader>
+      <Input
+        placeholder={'휴대폰'}
+        value={receiverContact.value}
+        onChangeText={v =>
+          dispatch(setValue({name: 'receiverContact', value: v}))
+        }
+        isActivated={!!receiverContact.value}
+        keyboardType="numeric"
+        maxLength={13}
+        ref={receiverContactRef}
       />
-      <EntranceMethodContainer control={control} />
-      {errors.receiverContact && (
+      {receiverContact.errMsg && (
         <ErrorBox>
-          <ErrorText>{errors.receiverContact.message}</ErrorText>
+          <ErrorText>{receiverContact.errMsg}</ErrorText>
         </ErrorBox>
       )}
+
+      {/* 현관 출입방법 */}
+      <EntranceMethodContainer />
     </AccordionContentContainer>
   );
 };

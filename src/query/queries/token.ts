@@ -11,7 +11,6 @@ import {GET_TOKEN, GET_AUTH, RE_ISSUE_TOKEN, GET_GUEST} from './urls';
 export const getDoobiToken = async (kakaoAccessToken: string | null) => {
   try {
     const result = await axios.get(`${GET_TOKEN}/${kakaoAccessToken}`);
-    console.log('getDoobiToken: ', result?.data);
     return result?.status === 200 ? result.data : undefined;
   } catch (e) {
     console.log('getDoobiToken error: ', e);
@@ -32,11 +31,6 @@ export const kakaoLogin = async () => {
     const kakaoAccessToken = kakaoToken?.accessToken;
 
     const {accessToken, refreshToken} = await getDoobiToken(kakaoAccessToken);
-    console.log(
-      'getDoobiToken accessToken,refreshToken :',
-      accessToken,
-      refreshToken,
-    );
     if (accessToken && refreshToken)
       await storeToken(accessToken, refreshToken);
     return accessToken;

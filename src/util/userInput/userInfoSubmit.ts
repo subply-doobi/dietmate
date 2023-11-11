@@ -1,6 +1,4 @@
-import {IBaseLineCreate} from '../../query/types/baseLine';
-import {ICode} from '../../query/types/code';
-import {IUserInfo, IUserTarget} from '../../stores/slices/userInfoSlice';
+import {ICodeData} from '../../query/types/code';
 import {UserInputState} from '../../stores/slices/userInputSlice';
 import {calculateCaloriesToNutr} from '../targetCalculation';
 import {getRecommendedNutr} from './targetByReduxData';
@@ -8,9 +6,9 @@ import {getRecommendedNutr} from './targetByReduxData';
 // 자동계산
 export const setSubmitDataByAuto = (
   userInputState: UserInputState,
-  seqCodeData: ICode | undefined,
-  timeCodeData: ICode | undefined,
-  strengthCodeData: ICode | undefined,
+  seqCodeData: ICodeData | undefined,
+  timeCodeData: ICodeData | undefined,
+  strengthCodeData: ICodeData | undefined,
 ) => {
   console.log('autoMethodSubmit!');
   const {calorie, carb, protein, fat} = getRecommendedNutr(

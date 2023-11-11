@@ -67,7 +67,7 @@ export interface IOrderedProduct {
 export type IOrderData = IOrderedProduct[];
 export type IOrderDetailData = IOrderedProduct[];
 
-export interface ICreateOrderParams {
+export interface IOrderCreate {
   // 두비서버 자체 정보
   orderTypeCd: string;
   shippingPrice: string;

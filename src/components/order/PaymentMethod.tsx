@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import {Controller, useWatch} from 'react-hook-form';
 
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
@@ -9,39 +8,27 @@ import {
   Row,
   TextMain,
 } from '../../styles/StyledConsts';
-import {IFormField, validationRules} from '../../constants/constants';
+import {useDispatch} from 'react-redux';
+import {setValue} from '../../stores/slices/userInputSlice';
 
-interface IPaymentMethod {
-  control: any;
-  setValue: any;
-}
-const PaymentMethod = ({control, setValue}: IPaymentMethod) => {
-  // const paymentMethodValue = useWatch({control, name: 'paymentMethod'});
-  const renderKakaoPayBtn = ({field: {onChange, value}}: IFormField) => {
-    return (
+const PaymentMethod = () => {
+  // redux
+  const dispatch = useDispatch();
+
+  return (
+    <AccordionContentContainer>
+      {/* 다른 결제방법은 추후 추가 */}
       <KakaoPayBtn
         btnStyle="border"
         isActivated={true}
-        onPress={() => {
-          // setValue('paymentMethod', paymentMethodValue ? '' : 'kakao');
-          setValue('paymentMethod', 'kakao');
-        }}>
+        onPress={() =>
+          dispatch(setValue({name: 'paymentMethod', value: 'kakao'}))
+        }>
         <Row>
           <KakaoLogo source={icons.kakaoPay} />
           <KakaoPayBtnText>카카오페이</KakaoPayBtnText>
         </Row>
       </KakaoPayBtn>
-    );
-  };
-
-  return (
-    <AccordionContentContainer>
-      <Controller
-        control={control}
-        name="paymentMethod"
-        render={renderKakaoPayBtn}
-        rules={validationRules.paymentMethod}
-      />
 
       <GuideText>
         다른 결제수단은 <BoldText>정식출시</BoldText>를 조금만 기다려주세요

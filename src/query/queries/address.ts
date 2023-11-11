@@ -11,21 +11,12 @@ import {
   GET_ADDRESS,
   DELETE_ADDRESS,
 } from '../queries/urls';
-
-export interface IAddress {
-  addrNo: string;
-  zipCode: string;
-  addr1: string;
-  addr2: string;
-  companyCd: string;
-  userId: string;
-  useYn: string;
-}
+import {IAddressData, IAddressCreate, IAddressUpdate} from '../types/address';
 
 //PUT
 export const useCreateAddress = () => {
   const mutation = useMutation({
-    mutationFn: (address: IAddress) =>
+    mutationFn: (address: IAddressCreate) =>
       mutationFn(CREATE_ADDRESS, 'put', address),
     onSuccess: () => {
       console.log('주소생성');
@@ -39,7 +30,7 @@ export const useCreateAddress = () => {
 
 //
 export const useListAddress = () => {
-  return useQuery({
+  return useQuery<IAddressData[]>({
     queryKey: [LIST_ADDRESS],
     queryFn: () => queryFn(LIST_ADDRESS),
     onSuccess: () => {
@@ -50,7 +41,7 @@ export const useListAddress = () => {
 
 //
 export const useGetAddress = () => {
-  return useQuery({
+  return useQuery<IAddressData>({
     queryKey: [GET_ADDRESS],
     queryFn: () => queryFn(GET_ADDRESS),
     onSuccess: () => console.log('GET_ADDRESS 성공'),
@@ -59,8 +50,8 @@ export const useGetAddress = () => {
 //POST
 export const useUpdateAddress = () => {
   const mutation = useMutation({
-    mutationFn: (requestBody: IAddress) =>
-      mutationFn<IAddress>(UPDATE_ADDRESS, 'post', requestBody),
+    mutationFn: (requestBody: IAddressUpdate) =>
+      mutationFn<IAddressUpdate>(UPDATE_ADDRESS, 'post', requestBody),
     onSuccess: () => {
       console.log('주소 업데이트 성공!');
       queryClient.invalidateQueries({queryKey: [LIST_ADDRESS]});
@@ -72,8 +63,8 @@ export const useUpdateAddress = () => {
 export const useDeleteAddress = () => {
   const handleError = useHandleError();
   const mutation = useMutation({
-    mutationFn: addrNo =>
-      mutationFn(`${DELETE_ADDRESS}/${addrNo?.addressNo}`, 'delete'),
+    mutationFn: (addrNo: string) =>
+      mutationFn(`${DELETE_ADDRESS}/${addrNo}`, 'delete'),
     onSuccess: () => {
       console.log('주소 삭제 성공');
       queryClient.invalidateQueries({queryKey: [LIST_ADDRESS]});

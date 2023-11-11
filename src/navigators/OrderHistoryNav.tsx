@@ -1,7 +1,6 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import colors from '../styles/colors';
-import {NavigationProps} from '../constants/constants';
 
 import OrderHistoryDetail from '../screens/myPageScreen/orderHistory/OrderHistoryDetail';
 import OrderHistory from '../screens/myPageScreen/orderHistory/OrderHistory';

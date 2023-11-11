@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import colors from '../styles/colors';
 import {kakaoLogin, validateToken, guestLogin} from '../query/queries/token';
-import {IBaseLine} from '../query/types/baseLine';
+import {IBaseLineData} from '../query/types/baseLine';
 
 // doobi util, redux, etc
 import {checkNotShowAgain} from '../util/asyncStorage';
@@ -15,7 +15,7 @@ import {useGetBaseLine} from '../query/queries/baseLine';
 //doobi Component
 import {BtnCTA, BtnText} from '../styles/StyledConsts';
 const navigateByUserInfo = async (
-  data: IBaseLine | any,
+  data: IBaseLineData | any,
   navigation: NavigationProp<any>,
 ) => {
   const hasBaseLine = Object.keys(data).length === 0 ? false : true;

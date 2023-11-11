@@ -1,14 +1,15 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import colors from '../styles/colors';
-import {NavigationProps} from '../constants/constants';
 
 import History from '../screens/myPageScreen/history/History';
 import HistoryDetail from '../screens/myPageScreen/history/HistoryDetail';
 import BackArrow from '../components/common/navigation/BackArrow';
+import {useNavigation} from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
-const HistoryNav = ({navigation: {navigate, goBack}}: NavigationProps) => {
+const HistoryNav = () => {
+  const {navigate} = useNavigation();
   return (
     <Stack.Navigator
       screenOptions={{

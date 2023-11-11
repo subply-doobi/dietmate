@@ -10,7 +10,6 @@ import {
   DELETE_PRODUCT_MARK,
   CREATE_PRODUCT_AUTO,
   LIST_PRODUCT,
-  FILTER,
   GET_PRODUCT,
   LIST_PRODUCT_MARK,
   LIST_PRODUCT_DETAIL,
@@ -19,7 +18,6 @@ import {
   IListProductParams,
   IProductData,
   IProductDetailData,
-  IProductsData,
 } from '../types/product';
 
 // PUT //
@@ -105,7 +103,7 @@ export const useListProduct = (
   const fatParam = fat.length === 2 ? `Fat,${fat[0]},${fat[1]}` : '';
   const priceParam = price.length === 2 ? `Price,${price[0]},${price[1]}` : '';
 
-  return useQuery<IProductsData>({
+  return useQuery<IProductData[]>({
     queryKey: [PRODUCTS, dietNo],
     queryFn: () =>
       queryFn(
@@ -133,19 +131,9 @@ export const useListProductDetail = (
   });
 };
 
-export const useFilterRange = (filterType, options?: IQueryOptions) => {
-  const enabled = options?.enabled ?? true;
-  return useQuery({
-    queryKey: ['filterRange', filterType],
-    queryFn: () => queryFn(`${FILTER}/${filterType}`),
-    onSuccess: data => {},
-    enabled,
-  });
-};
-
 export const useListProductMark = (options?: IQueryOptions) => {
   const enabled = options?.enabled ?? true;
-  return useQuery<IProductsData>({
+  return useQuery<IProductData[]>({
     queryKey: [MARK],
     queryFn: () => queryFn(`${LIST_PRODUCT_MARK}`),
     onSuccess: data => {
