@@ -6,7 +6,6 @@ import {
   BtnText,
   Col,
   HorizontalSpace,
-  Row,
   TextMain,
 } from '../../styles/StyledConsts';
 import colors from '../../styles/colors';

@@ -1,36 +1,26 @@
-import React from 'react';
-import {Text, SafeAreaView, StyleSheet} from 'react-native';
+import {SafeAreaView} from 'react-native';
 
-import {HorizontalSpace} from '../../styles/StyledConsts';
+import {HorizontalSpace, TextMain} from '../../styles/StyledConsts';
 import colors from '../../styles/colors';
+import styled from 'styled-components/native';
 
 const ShippingPart = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.explain}>[두비] 서비스는 현재</Text>
-      <Text style={styles.explain}>테스트 버전입니다.</Text>
-      <HorizontalSpace height={10} />
-      <Text style={styles.explain}>식단 주문을 원하시는 경우</Text>
-      <Text style={styles.explain}>식품들을 추가하고</Text>
-      <HorizontalSpace height={10} />
-      <Text style={styles.explain}>장바구니에서</Text>
-      <Text style={styles.explain}>주문하기 버튼을 눌러</Text>
-      <HorizontalSpace height={10} />
-      <Text style={styles.explain}>체험단 신청을 해주세요</Text>
-      <HorizontalSpace height={20} />
+    <SafeAreaView>
+      <Desc>
+        다이어트메이트는 여러 업체들의 식품들로 {`\n`}
+        고객님이 구성한 식단을 {`\n`}한 번에 결제할 수 있도록 도와드립니다.{' '}
+        {`\n`}
+        {`\n`}
+        결제된 식품들은 해당 식품사에서 배송을 보내드리므로 {`\n`}각 식품사의
+        배송정책이 적용됩니다. {`\n`}
+        {`\n`}
+        배송정책이 궁금하시다면 {`\n`}
+        식품사의 공식 쇼핑몰을 방문해보세요
+      </Desc>
     </SafeAreaView>
   );
 };
 export default ShippingPart;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: colors.backgroundLight,
-  },
-  explain: {
-    fontSize: 20,
-    textAlign: 'center',
-  },
-});
+const Desc = styled(TextMain)``;

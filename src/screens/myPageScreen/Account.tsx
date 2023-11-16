@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import DAlert from '../../components/common/alert/DAlert';
 import {queryClient} from '../../query/store';
 import {initializeInput} from '../../stores/slices/userInputSlice';
+import {PRIVACY_POLICY_URL} from '../../constants/constants';
 
 const WithdrawalContent = ({deleteText}: {deleteText: string}) => {
   return (
@@ -36,11 +37,7 @@ const Account = () => {
   const {reset} = useNavigation();
   const deleteUser = useDeleteProfile();
 
-  // PRIVACY URL
-  const PRIVACY_URL = 'https://sites.google.com/view/dietmate-privacypolicy/';
-  const link = () => {
-    Linking.openURL(PRIVACY_URL);
-  };
+  const link = () => Linking.openURL(PRIVACY_POLICY_URL);
   // logout Fn
   const onLogout = async () => {
     try {

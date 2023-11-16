@@ -29,13 +29,13 @@ import {
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {useDeleteDiet, useListDiet} from '../../query/queries/diet';
 import {IDietDetailData} from '../../query/types/diet';
+import {current} from '@reduxjs/toolkit';
 
 interface IAccordionInactiveHeader {
   idx: number;
   dietNo: string;
   dietSeq: string;
   dietDetailData: IDietDetailData;
-  // setActiveSections: React.Dispatch<SetStateAction<number[]>>;
   setDietNoToNumControl: React.Dispatch<SetStateAction<string>>;
   setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
 }
@@ -45,13 +45,11 @@ const AccordionInactiveHeader = ({
   dietNo,
   dietSeq,
   dietDetailData,
-  // setActiveSections,
   setDietNoToNumControl,
   setNumberPickerShow,
 }: IAccordionInactiveHeader) => {
   // redux
   const dispatch = useDispatch();
-  const {menuActiveSection} = useSelector((state: RootState) => state.cart);
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
 
   // react-query
@@ -73,21 +71,7 @@ const AccordionInactiveHeader = ({
     ? parseInt(dietDetailData[0].qty, 10)
     : 1;
   const totalPrice = priceSum * currentQty;
-
-  // const barColor = colors.dark;
-  const barColor = !dietDetailData
-    ? colors.dark
-    : dietDetailData.length === 0
-    ? colors.dark
-    : idx % 5 === 0
-    ? colors.main
-    : idx % 5 === 1
-    ? colors.blue
-    : idx % 5 === 2
-    ? colors.green
-    : idx % 5 === 3
-    ? colors.orange
-    : colors.warning;
+  const barColor = colors.dark;
 
   const onDeleteDiet = () => {
     deleteDietMutation.mutate({dietNo});

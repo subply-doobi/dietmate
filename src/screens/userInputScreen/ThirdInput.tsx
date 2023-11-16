@@ -97,6 +97,7 @@ const ThirdInput = () => {
     setActiveSections(actives);
   };
 
+  // etc
   const btnIsActive =
     activeSections[0] === 0 ||
     (activeSections[0] === 1 && userInputState.calorie.isValid) ||
@@ -131,7 +132,6 @@ const ThirdInput = () => {
     });
   };
 
-  // TBD | 스크롤뷰 ref를 Manual에 넘겨서 단백질입력 활성화시 스크롤 내려주기
   return (
     <Container>
       <Title>

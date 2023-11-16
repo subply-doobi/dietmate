@@ -13,6 +13,7 @@ import {
 import {
   commaToNum,
   reGroupByDietNo,
+  reGroupBySeller,
   sumUpDietTotal,
   sumUpPrice,
 } from '../../util/sumUp';
@@ -31,6 +32,9 @@ const CartSummary = () => {
   const dietTotalData = reGroupByDietNo(dietDetailAllData);
   const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
 
+  const regroupedDDAData =
+    dietDetailAllData && reGroupBySeller(dietDetailAllData);
+  console.log('CartSummary: regroupedDDAData', regroupedDDAData);
   return (
     <TotalSummaryContainer>
       <Row style={{marginTop: 24, justifyContent: 'space-between'}}>

@@ -59,22 +59,15 @@ export interface TableItem {
 }
 
 interface IShowPart {
-  index: number;
+  clicked: string;
   table: TableItem[];
   data: IProductData;
 }
-const ShowPart = ({index, table, data}: IShowPart) => {
-  return index === 0 ? (
-    <NutrientPart table={table} />
-  ) : index === 1 ? (
-    <FoodPart productData={data} />
-  ) : index === 2 ? (
-    <ReviewPart />
-  ) : index === 3 ? (
-    <ShippingPart />
-  ) : (
-    <NutrientPart table={table} />
-  );
+const ShowPart = ({clicked, table, data}: IShowPart) => {
+  if (clicked === '영양성분') return <NutrientPart table={table} />;
+  if (clicked === '식품상세') return <FoodPart productData={data} />;
+  if (clicked === '배송정책') return <ShippingPart />;
+  return <NutrientPart table={table} />;
 };
 
 const FoodDetail = () => {
@@ -105,8 +98,8 @@ const FoodDetail = () => {
   const deleteDietDetailMutation = useDeleteDietDetail();
 
   //state
-  const [clicked, setClicked] = useState(0);
-  const detailMenu = ['영양성분', '식품상세', '후기', '배송정책'];
+  const [clicked, setClicked] = useState('식품상세');
+  const detailMenu = ['영양성분', '식품상세', '배송정책'];
 
   // etc
   const isIncludedInLike =
@@ -183,7 +176,7 @@ const FoodDetail = () => {
         </InnerContainer>
         <ScrollView
           style={{flex: 1, zIndex: -1}}
-          contentContainerStyle={{paddingBottom: 64}}
+          contentContainerStyle={{paddingBottom: 80}}
           showsVerticalScrollIndicator={false}>
           <View>
             <FoodImageContainer
@@ -232,8 +225,8 @@ const FoodDetail = () => {
                 return (
                   <React.Fragment key={`${el}-${index}`}>
                     <DetailMenu
-                      onPress={() => setClicked(index)}
-                      selected={index === clicked}>
+                      onPress={() => setClicked(el)}
+                      selected={el === clicked}>
                       <DetailMenuText>{el}</DetailMenuText>
                     </DetailMenu>
                   </React.Fragment>
@@ -241,7 +234,7 @@ const FoodDetail = () => {
               })}
             </Row>
             <PartContainer>
-              <ShowPart index={clicked} table={table} data={productData} />
+              <ShowPart clicked={clicked} table={table} data={productData} />
             </PartContainer>
           </InnerContainer>
         </ScrollView>
@@ -313,8 +306,8 @@ const DetailMenu = styled.TouchableOpacity<DetailMenuProps>`
   width: 74px;
   height: 32px;
   margin-top: 20px;
-  margin-right: 5px;
-  margin-bottom: 10px;
+  margin-right: 4px;
+  margin-bottom: 24px;
   border: 1px;
   border-radius: 5px;
   border-color: ${colors.inactivated};

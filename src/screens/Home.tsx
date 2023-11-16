@@ -146,6 +146,7 @@ const Home = () => {
     initializeDiet();
   }, []);
 
+  // "식단 고민하기 싫다면 장바구니페이지의 자동구성을 이용하세요" 툴팁
   useEffect(() => {
     //tooltip 관련
     const initializeTooltip = async () => {

@@ -15,9 +15,12 @@ export const HOME_FILTER_HEADER_HEIGHT = 120;
 // service constants
 export const SHIPPING_PRICE = 4000;
 export const FREE_SHIPPING_PRICE = 30000;
+export const PRIVACY_POLICY_URL =
+  'https://sites.google.com/view/dietmate-pvpolicy/';
+export const TERMS_OF_USE_URL =
+  'https://sites.google.com/view/dietmate-useterm';
 
 // Doobi server category etc.
-
 //주간 운동 횟수
 export const SPORTS_SEQ_CD = [
   {cdNm: '안함', cd: 'SP008001'},

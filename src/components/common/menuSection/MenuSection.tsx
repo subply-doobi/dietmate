@@ -16,6 +16,9 @@ import DAlert from '../alert/DAlert';
 import MenuSelectCard from './MenuSelectCard';
 import DeleteAlertContent from '../alert/DeleteAlertContent';
 import NutrientsProgress from '../nutrient/NutrientsProgress';
+import DBottomSheet from '../bottomsheet/DBottomSheet';
+import NumberPickerContent from '../../cart/NumberPickerContent';
+import Menu from '../../cart/Menu';
 
 // react-query
 import {
@@ -23,11 +26,6 @@ import {
   useListDiet,
   useListDietDetail,
 } from '../../../query/queries/diet';
-import {scrollTo} from 'react-native-reanimated';
-import CartFoodList from '../../cart/CartFoodList';
-import DBottomSheet from '../bottomsheet/DBottomSheet';
-import NumberPickerContent from '../../cart/NumberPickerContent';
-import Menu from '../../cart/Menu';
 
 const MenuSection = () => {
   // redux
