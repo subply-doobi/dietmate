@@ -16,7 +16,7 @@ import {
   BtnCTA,
   HorizontalSpace,
   Col,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import DTooltip from '../common/tooltip/DTooltip';
 import {
   applySortFilter,

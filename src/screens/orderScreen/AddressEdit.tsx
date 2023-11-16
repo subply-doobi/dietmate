@@ -20,7 +20,7 @@ import {
   TextMain,
   TextSub,
   UserInfoTextInput,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 
 import DAlert from '../../components/common/alert/DAlert';

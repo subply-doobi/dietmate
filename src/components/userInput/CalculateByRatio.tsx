@@ -11,7 +11,7 @@ import {
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 
 import Dropdown from './Dropdown';
 import {getRecommendedNutr} from '../../util/userInput/targetByReduxData';

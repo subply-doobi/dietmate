@@ -18,7 +18,7 @@ import {
   HorizontalSpace,
   StyledProps,
   TextMain,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 
 import Auto from '../../components/userInput/Auto';
 import CalculateByRatio from '../../components/userInput/CalculateByRatio';

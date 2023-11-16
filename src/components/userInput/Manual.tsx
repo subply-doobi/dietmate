@@ -8,7 +8,7 @@ import {
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import {calculateManualCalorie} from '../../util/targetCalculation';
 import colors from '../../styles/colors';
 import {getRecommendedNutr} from '../../util/userInput/targetByReduxData';

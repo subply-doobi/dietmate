@@ -18,7 +18,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import DSlider from '../common/slider/DSlider';
 // react-query
 import {useListCategory} from '../../query/queries/category';

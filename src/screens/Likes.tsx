@@ -7,7 +7,7 @@ import {FlatList} from 'react-native';
 import styled from 'styled-components/native';
 
 // doobi Component
-import {HorizontalLine, Row, TextMain, TextSub} from '../styles/StyledConsts';
+import {HorizontalLine, Row, TextMain, TextSub} from '../styles/styledConsts';
 import FoodList from '../components/home/FoodList';
 import MenuSection from '../components/common/menuSection/MenuSection';
 

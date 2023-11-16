@@ -14,7 +14,7 @@ import {icons} from '../assets/icons/iconSource';
 import {SCREENWIDTH} from '../constants/constants';
 
 // doobi Component
-import {BtnCTA, Container, Row, Col, StyledProps} from '../styles/StyledConsts';
+import {BtnCTA, Container, Row, Col, StyledProps} from '../styles/styledConsts';
 import {checkNotShowAgain, updateNotShowAgain} from '../util/asyncStorage';
 import {join} from '@sentry/utils';
 

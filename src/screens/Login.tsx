@@ -13,7 +13,7 @@ import {checkNotShowAgain} from '../util/asyncStorage';
 //react-query
 import {useGetBaseLine} from '../query/queries/baseLine';
 //doobi Component
-import {BtnCTA, BtnText} from '../styles/StyledConsts';
+import {BtnCTA, BtnText} from '../styles/styledConsts';
 const navigateByUserInfo = async (
   data: IBaseLineData | any,
   navigation: NavigationProp<any>,

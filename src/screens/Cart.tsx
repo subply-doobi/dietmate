@@ -1,5 +1,5 @@
 // react, RN, 3rd
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {ScrollView, TouchableOpacity, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -16,7 +16,7 @@ import {getDietAddStatus} from '../util/getDietAddStatus';
 import {RootState} from '../stores/store';
 
 // doobi Component
-import {BtnBottomCTA, BtnText, Row, TextSub} from '../styles/StyledConsts';
+import {BtnBottomCTA, BtnText, Row, TextSub} from '../styles/styledConsts';
 import CartSummary from '../components/cart/CartSummary';
 import DAlert from '../components/common/alert/DAlert';
 import CreateLimitAlertContent from '../components/common/alert/CreateLimitAlertContent';
@@ -179,9 +179,13 @@ const Cart = () => {
     }
   }, [isFocused]);
 
+  const scrollRef = useRef<ScrollView>(null);
+  const onScrollToTop = () => {
+    scrollRef.current?.scrollTo({x: 0, y: 0, animated: true});
+  };
   return (
     <Container>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} ref={scrollRef}>
         <ContentContainer>
           {totalStatus === 'isInitialLoading' ? (
             <ActivityIndicator style={{marginTop: 16}} />
@@ -222,7 +226,7 @@ const Cart = () => {
 
         {/* 끼니 정보 요약 */}
         <SummaryContainer>
-          <CartSummary />
+          <CartSummary onScrollToTop={onScrollToTop} />
         </SummaryContainer>
       </ScrollView>
 

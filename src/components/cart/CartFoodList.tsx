@@ -12,7 +12,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import {commaToNum} from '../../util/sumUp';
 
 import DAlert from '../common/alert/DAlert';

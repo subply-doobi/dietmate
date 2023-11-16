@@ -7,7 +7,7 @@ import {
   Container,
   TextMain,
   TextSub,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 
 const getDeliveryDate = () => {

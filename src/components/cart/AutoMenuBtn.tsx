@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 // doobi util, redux, etc
 import {icons} from '../../assets/icons/iconSource';
 // doobi Component
-import {BtnCTA, Row, TextSub} from '../../styles/StyledConsts';
+import {BtnCTA, Row, TextSub} from '../../styles/styledConsts';
 
 const AutoMenuBtn = ({
   status,

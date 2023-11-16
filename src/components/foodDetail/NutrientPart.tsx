@@ -1,7 +1,7 @@
 import {Text, StyleSheet, View} from 'react-native';
 
 import colors from '../../styles/colors';
-import {Dot} from '../../styles/StyledConsts';
+import {Dot} from '../../styles/styledConsts';
 import {useGetProfile} from '../../query/queries/member';
 import {TableItem} from '../../screens/FoodDetail';
 

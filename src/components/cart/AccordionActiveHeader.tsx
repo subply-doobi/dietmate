@@ -8,7 +8,7 @@ import colors from '../../styles/colors';
 import {commaToNum, sumUpPrice} from '../../util/sumUp';
 
 // doobi Component
-import {Row, StyledProps} from '../../styles/StyledConsts';
+import {Row, StyledProps} from '../../styles/styledConsts';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 

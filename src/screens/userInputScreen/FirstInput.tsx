@@ -21,7 +21,7 @@ import {
   TextMain,
   UserInfoTextInput,
   VerticalSpace,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 
 import Dropdown from '../../components/userInput/Dropdown';
 //react-query

@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import {Container, TextMain} from '../../styles/StyledConsts';
+import {Container, TextMain} from '../../styles/styledConsts';
 import {SCREENWIDTH} from '../../constants/constants';
 
 const SelfOrderGuide = () => {

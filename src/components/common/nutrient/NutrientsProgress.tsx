@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import * as Progress from 'react-native-progress';
 
 import colors from '../../../styles/colors';
-import {Col, Row, VerticalSpace} from '../../../styles/StyledConsts';
+import {Col, Row, VerticalSpace} from '../../../styles/styledConsts';
 import {
   checkNutrSatisfied,
   getExceedIdx,

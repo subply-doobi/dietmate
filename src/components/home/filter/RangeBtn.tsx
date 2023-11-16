@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import {Col, TextMain} from '../../../styles/StyledConsts';
+import {Col, TextMain} from '../../../styles/styledConsts';
 import colors from '../../../styles/colors';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../stores/store';

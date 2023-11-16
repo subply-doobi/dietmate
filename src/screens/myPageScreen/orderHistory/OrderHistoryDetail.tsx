@@ -22,7 +22,7 @@ import {
   Row,
   TextSub,
   HorizontalSpace,
-} from '../../../styles/StyledConsts';
+} from '../../../styles/styledConsts';
 import {BASE_URL} from '../../../query/queries/urls';
 import MenuSection from '../../../components/common/menuSection/MenuSection';
 import {icons} from '../../../assets/icons/iconSource';

@@ -9,7 +9,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import {
   commaToNum,
   reGroupByDietNo,
@@ -23,14 +23,54 @@ import {
   useListDietDetailAll,
   useListDietTotal,
 } from '../../query/queries/diet';
+import {useDispatch} from 'react-redux';
+import {
+  setCurrentDiet,
+  setMenuActiveSection,
+} from '../../stores/slices/cartSlice';
 
-const CartSummary = () => {
+const CartSummary = (props: any) => {
+  const {onScrollToTop} = props;
+  //redux
+  const dispatch = useDispatch();
   // react-query
   const {data: dietDetailAllData} = useListDietDetailAll();
 
   // 총 끼니 수, 상품 수, 금액 계산
   const dietTotalData = reGroupByDietNo(dietDetailAllData);
   const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
+  // 식품사: platformNm
+  // 식품: productNm
+  // 갯수: qty
+  //끼니별로 나눠져있는 productData 하나의 배열로 합치기
+  const newDietDetailAllData = dietDetailAllData?.reduce((acc, cur) => {
+    return acc.concat(cur);
+  }, []);
+  // //newDietDetailAllData에서 platformNm이 같은 것들끼리 묶기
+  const groupByPlatformNm = newDietDetailAllData?.reduce((acc, cur) => {
+    const key = cur.platformNm;
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(cur);
+    return acc;
+  }, {});
+  // groupByPlatformNmArray에서 같은 platformNm별로 총 price 구하기
+  const groupByPlatformNmArray = Object.keys(groupByPlatformNm).map(key => {
+    return groupByPlatformNm[key];
+  });
+  const getPriceFromPlatformNm = groupByPlatformNmArray.map(item => {
+    return item.reduce((acc, cur) => {
+      return acc + parseInt(cur.price * cur.qty);
+    }, 0);
+  });
+  //groupByPlatformNmArray에 platformNm의 dietSeq 구하기
+  const getDietSeq = i =>
+    groupByPlatformNmArray[i].map(item => {
+      return item.dietSeq;
+    });
+
+  let getResult = i => [...new Set(getDietSeq(i))];
 
   const regroupedDDAData =
     dietDetailAllData && reGroupBySeller(dietDetailAllData);
@@ -45,6 +85,36 @@ const CartSummary = () => {
         </SummaryValue>
       </Row>
       <HorizontalLine style={{marginTop: 8}} />
+      {groupByPlatformNmArray.map((item, index) => {
+        return (
+          <>
+            <SummaryValue style={{marginTop: 24}}>
+              {item[0].platformNm}
+            </SummaryValue>
+            <SummaryText style={{marginTop: 12}}>
+              식품: {commaToNum(getPriceFromPlatformNm[index])}원
+            </SummaryText>
+            <TextSub style={{marginTop: 2}}>배송비:3000원</TextSub>
+            <Row style={{marginTop: 16}}>
+              {getResult(index).map((item: any, index) => {
+                let activeSections = [item.replace(/[^0-9]/g, '') - 1];
+                return (
+                  <SmallButton
+                    onPress={() => {
+                      dispatch(setMenuActiveSection(activeSections));
+                      onScrollToTop();
+                    }}>
+                    <TextSub>{item}</TextSub>
+                  </SmallButton>
+                );
+              })}
+            </Row>
+          </>
+        );
+      })}
+
+      <HorizontalLine style={{marginTop: 8}} />
+
       <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
         <SummaryText>상품 가격 (총 {productNum} 개)</SummaryText>
         <SummaryValue>{commaToNum(priceTotal)} 원</SummaryValue>
@@ -71,4 +141,14 @@ const SummaryText = styled(TextMain)`
 const SummaryValue = styled(TextMain)`
   font-size: 14px;
   font-weight: bold;
+`;
+
+const SmallButton = styled.TouchableOpacity`
+  width: 46px;
+  height: 32px;
+  border-radius: 5px;
+  border: 1px solid ${colors.lineLight};
+  justify-content: center;
+  align-items: center;
+  margin-right: 12px;
 `;

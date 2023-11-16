@@ -13,7 +13,7 @@ import {
 } from '../../util/sumUp';
 
 // doobi Component
-import {BtnSmall, BtnSmallText, Row, TextMain} from '../../styles/StyledConsts';
+import {BtnSmall, BtnSmallText, Row, TextMain} from '../../styles/styledConsts';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import AutoDietModal from './AutoDietModal';

@@ -4,7 +4,7 @@ import {Linking} from 'react-native';
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {HorizontalLine, TextMain, Col} from '../../styles/StyledConsts';
+import {HorizontalLine, TextMain, Col} from '../../styles/styledConsts';
 import {removeToken, resetGuide} from '../../util/asyncStorage';
 import {useDeleteProfile} from '../../query/queries/member';
 

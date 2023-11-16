@@ -23,7 +23,7 @@ import {
   TextSub,
   VerticalLine,
   StyledProps,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 
 // react-query
 import {useGetBaseLine} from '../../query/queries/baseLine';

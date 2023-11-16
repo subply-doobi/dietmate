@@ -6,7 +6,7 @@ import {
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import {useDispatch, useSelector} from 'react-redux';
 import {setValue} from '../../stores/slices/userInputSlice';
 import {RootState} from '../../stores/store';

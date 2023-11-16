@@ -1,7 +1,7 @@
 import React, {SetStateAction, useState} from 'react';
 import styled from 'styled-components/native';
 
-import {Row, StyledProps, TextMain} from '../../styles/StyledConsts';
+import {Row, StyledProps, TextMain} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 import {RootState} from '../../stores/store';
 import {useListDietDetail} from '../../query/queries/diet';

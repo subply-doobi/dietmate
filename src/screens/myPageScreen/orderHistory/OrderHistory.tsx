@@ -9,7 +9,7 @@ import {
   TextSub,
   VerticalLine,
   Container,
-} from '../../../styles/StyledConsts';
+} from '../../../styles/styledConsts';
 import colors from '../../../styles/colors';
 import {useNavigation} from '@react-navigation/native';
 import {useListOrder, useUpdateOrder} from '../../../query/queries/order';

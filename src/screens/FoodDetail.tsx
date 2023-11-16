@@ -22,7 +22,7 @@ import {
   TextSub,
   StickyFooter,
   Dot,
-} from '../styles/StyledConsts';
+} from '../styles/styledConsts';
 import colors from '../styles/colors';
 import {IProductData} from '../query/types/product';
 

@@ -7,7 +7,7 @@ import {
   setCurrentDiet,
   setMenuActiveSection,
 } from '../../../stores/slices/cartSlice';
-import {Col, Row, StyledProps} from '../../../styles/StyledConsts';
+import {Col, Row, StyledProps} from '../../../styles/styledConsts';
 import colors from '../../../styles/colors';
 import {getDietAddStatus} from '../../../util/getDietAddStatus';
 import DAlert from '../alert/DAlert';

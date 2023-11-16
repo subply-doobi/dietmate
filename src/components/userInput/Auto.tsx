@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 //doobi util, redux, etc
 import {RootState} from '../../stores/store';
 import colors from '../../styles/colors';
-import {Col} from '../../styles/StyledConsts';
+import {Col} from '../../styles/styledConsts';
 import {purposeCdToValue} from '../../constants/constants';
 import {calculateNutrTarget} from '../../util/targetCalculation';
 import {useListCode} from '../../query/queries/code';

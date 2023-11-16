@@ -16,7 +16,7 @@ import {
   Col,
   StyledProps,
   HorizontalSpace,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import {calculateNutrTarget} from '../../util/targetCalculation';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {useNavigation, useRoute} from '@react-navigation/native';

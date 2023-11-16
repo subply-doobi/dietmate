@@ -7,7 +7,7 @@ import {
   Col,
   HorizontalSpace,
   TextMain,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 import {icons} from '../../assets/icons/iconSource';
 import {FILTER_LIST, SCREENWIDTH} from '../../constants/constants';

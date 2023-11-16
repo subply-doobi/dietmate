@@ -9,7 +9,7 @@ import {
   Row,
   HorizontalLine,
   HorizontalSpace,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 import {IProductData} from '../../query/types/product';
 import {commaToNum, reGroupBySeller} from '../../util/sumUp';

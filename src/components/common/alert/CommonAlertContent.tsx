@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-import {Col, TextMain} from '../../../styles/StyledConsts';
+import {Col, TextMain} from '../../../styles/styledConsts';
 
 const CommonAlertContent = ({text}: {text: string}) => {
   return (

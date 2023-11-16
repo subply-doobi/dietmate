@@ -5,7 +5,7 @@ import {
   HorizontalLine,
   TextMain,
   TextSub,
-} from '../../../styles/StyledConsts';
+} from '../../../styles/styledConsts';
 import styled from 'styled-components/native';
 import colors from '../../../styles/colors';
 import {ICategoryCnt} from '../../../query/types/category';

@@ -7,7 +7,7 @@ import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../stores/store';
 import {icons} from '../../../assets/icons/iconSource';
-import {Row} from '../../../styles/StyledConsts';
+import {Row} from '../../../styles/styledConsts';
 import {findDietSeq} from '../../../util/findDietSeq';
 import colors from '../../../styles/colors';
 

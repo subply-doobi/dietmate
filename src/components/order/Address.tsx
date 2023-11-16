@@ -18,7 +18,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import {ENTRANCE_TYPE} from '../../constants/constants';
 import {useListAddress} from '../../query/queries/address';
 import {loadAddressData, setValue} from '../../stores/slices/userInputSlice';

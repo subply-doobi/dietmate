@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import {Slider} from '@miblanchard/react-native-slider';
 
 import colors from '../../../styles/colors';
-import {StyledProps, TextMain} from '../../../styles/StyledConsts';
+import {StyledProps, TextMain} from '../../../styles/styledConsts';
 
 interface IDSlider {
   sliderValue: number[];

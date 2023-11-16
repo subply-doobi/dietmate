@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import colors from '../../../styles/colors';
 import {icons} from '../../../assets/icons/iconSource';
 import {Image} from 'react-native';
-import {Col} from '../../../styles/StyledConsts';
+import {Col} from '../../../styles/styledConsts';
 
 interface IDtooltip {
   tooltipShow: boolean;

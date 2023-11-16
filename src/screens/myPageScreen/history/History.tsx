@@ -7,7 +7,7 @@ import {RootState} from '../../../stores/store';
 import colors from '../../../styles/colors';
 import {SCREENWIDTH} from '../../../constants/constants';
 import {changeNutrByWeight} from '../../../util/alertActions';
-import {BtnBottomCTA, BtnText} from '../../../styles/StyledConsts';
+import {BtnBottomCTA, BtnText} from '../../../styles/styledConsts';
 
 import DAlert from '../../../components/common/alert/DAlert';
 import WeightChangeAlert from '../../../components/myPage/WeightChangeAlert';

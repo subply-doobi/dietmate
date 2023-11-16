@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import colors from '../../styles/colors';
-import {InputHeaderText} from '../../styles/StyledConsts';
+import {InputHeaderText} from '../../styles/styledConsts';
 
 interface CategoryObject {
   label: string;

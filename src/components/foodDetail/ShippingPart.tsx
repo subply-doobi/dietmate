@@ -1,6 +1,6 @@
 import {SafeAreaView} from 'react-native';
 
-import {HorizontalSpace, TextMain} from '../../styles/StyledConsts';
+import {HorizontalSpace, TextMain} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 import styled from 'styled-components/native';
 
