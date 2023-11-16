@@ -3,7 +3,8 @@
   // "name": "DietMate",
 
   // 안드로이드 빌드 설정
-  "name": "dietmate",
+  //dietmate
+  "name": "DietMate",
 
   "displayName": "DietMate"
 }
