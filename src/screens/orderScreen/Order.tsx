@@ -56,7 +56,6 @@ const Order = () => {
   const {priceTotal, menuNum, productNum} = sumUpDietTotal(
     orderInfo.foodToOrder,
   );
-
   // react-query
   const {data: getAddressData} = useGetAddress();
   const {data: listAddressData, isLoading: listAddressDataLoading} =
