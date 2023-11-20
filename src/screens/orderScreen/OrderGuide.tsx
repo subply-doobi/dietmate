@@ -5,15 +5,15 @@ import {SCREENWIDTH} from '../../constants/constants';
 const OrderGuide = () => {
   return (
     <Container>
-      <SubTitle>각 식품을 해당 쇼핑몰마다 찾아 구매하기가 어렵다면</SubTitle>
-      <Title>끼니별 재포장 배송</Title>
+      <SubTitle>다이어트 메이트</SubTitle>
+      <Title>배송 안내</Title>
       <ExampleImage
         source={require('../../assets/img/OrderGuideImg.png')}
         resizeMode="contain"
       />
       <GuideText style={{marginTop: 64}}>
-        두비가 알아서 여러 식품사의 식품들을 {'\n'}
-        <GuideTextBold>끼니별로 재포장</GuideTextBold>하여 배송해드립니다.
+        식단에 포함된 여러 식품사의 식품들은 {'\n'}
+        <GuideTextBold>각 식품사에서 </GuideTextBold>배송이 진행됩니다.
       </GuideText>
       <GuideText>
         식품가격이 최저가는 아닙니다.{'\n'}

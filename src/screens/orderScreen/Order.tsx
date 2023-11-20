@@ -20,7 +20,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/StyledConsts';
+} from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 import {SCREENWIDTH, SHIPPING_PRICE} from '../../constants/constants';
 import {commaToNum} from '../../util/sumUp';

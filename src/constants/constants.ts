@@ -19,6 +19,7 @@ export const PRIVACY_POLICY_URL =
   'https://sites.google.com/view/dietmate-pvpolicy/';
 export const TERMS_OF_USE_URL =
   'https://sites.google.com/view/dietmate-useterm';
+export const INQUIRY_URL = 'http://pf.kakao.com/_DvmEG/chat';
 
 // Doobi server category etc.
 //주간 운동 횟수

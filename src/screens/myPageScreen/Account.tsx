@@ -1,20 +1,16 @@
-import {logout} from '@react-native-seoul/kakao-login';
 import styled from 'styled-components/native';
-import {Linking} from 'react-native';
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {HorizontalLine, TextMain, Col} from '../../styles/styledConsts';
+import {TextMain, Col} from '../../styles/styledConsts';
 import {removeToken, resetGuide} from '../../util/asyncStorage';
 import {useDeleteProfile} from '../../query/queries/member';
 
 import colors from '../../styles/colors';
-import {icons} from '../../assets/icons/iconSource';
 import {useNavigation} from '@react-navigation/native';
 import DAlert from '../../components/common/alert/DAlert';
-import {queryClient} from '../../query/store';
 import {initializeInput} from '../../stores/slices/userInputSlice';
-import {PRIVACY_POLICY_URL} from '../../constants/constants';
+import PageBtn from '../../components/myPage/PageBtn';
 
 const WithdrawalContent = ({deleteText}: {deleteText: string}) => {
   return (
@@ -37,7 +33,8 @@ const Account = () => {
   const {reset} = useNavigation();
   const deleteUser = useDeleteProfile();
 
-  const link = () => Linking.openURL(PRIVACY_POLICY_URL);
+  // etc
+
   // logout Fn
   const onLogout = async () => {
     try {
@@ -62,10 +59,21 @@ const Account = () => {
       routes: [{name: 'Login'}],
     });
   };
-  //개인정보처리방침 Fn
-  const onPrivacyPolicy = () => {
-    link();
-  };
+
+  // btns
+  const accountBtns = [
+    {
+      title: '로그아웃',
+      btnId: 'logout',
+      onPress: () => onLogout(),
+    },
+    {
+      title: '계정삭제',
+      btnId: 'withdrawal',
+      onPress: () => setIsAlert(true),
+    },
+  ];
+
   //회원탈퇴 alert
   const WithdrawalAlert = () => {
     return (
@@ -83,26 +91,10 @@ const Account = () => {
       />
     );
   };
+
   return (
     <Container>
-      <PageBtn onPress={onPrivacyPolicy}>
-        <PageBtnText>개인정보처리방침</PageBtnText>
-        <RightArrow source={icons.arrowRight_20} />
-      </PageBtn>
-      <HorizontalLine />
-      <PageBtn onPress={onLogout}>
-        <PageBtnText>로그아웃</PageBtnText>
-        <RightArrow source={icons.arrowRight_20} />
-      </PageBtn>
-      <HorizontalLine />
-      <PageBtn
-        onPress={() => {
-          setIsAlert(true);
-        }}>
-        <PageBtnText>계정삭제</PageBtnText>
-        <RightArrow source={icons.arrowRight_20} />
-      </PageBtn>
-      <HorizontalLine />
+      <PageBtn btns={accountBtns} />
       <WithdrawalAlert />
     </Container>
   );
@@ -117,23 +109,6 @@ const Container = styled.View`
 `;
 const WithdrawalContainer = styled.View`
   padding: 0px 16px 24px 16px;
-`;
-const PageBtn = styled.TouchableOpacity`
-  width: 100%;
-  height: 58px;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const PageBtnText = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-`;
-
-const RightArrow = styled.Image`
-  width: 20px;
-  height: 20px;
 `;
 
 const AlertText = styled(TextMain)`

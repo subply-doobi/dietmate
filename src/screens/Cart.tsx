@@ -242,9 +242,7 @@ const Cart = () => {
             return;
           }
           dispatch(setFoodToOrder(dietTotal));
-          navigate('OrderHeaderTabNav', {
-            screen: 'Order',
-          });
+          navigate('Order');
         }}>
         {priceUnder_30000 ? (
           <BtnText>

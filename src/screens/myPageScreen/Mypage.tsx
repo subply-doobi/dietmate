@@ -26,43 +26,26 @@ import {useGetBaseLine, useUpdateBaseLine} from '../../query/queries/baseLine';
 import {convertNutr, convertNutrByWeight} from '../../util/targetCalculation';
 import {loadBaseLineData} from '../../stores/slices/userInputSlice';
 import {RootState} from '../../stores/store';
+import PageBtn from '../../components/myPage/PageBtn';
+
+type IAlertType =
+  | 'calorieChange'
+  | 'carbChange'
+  | 'proteinChange'
+  | 'fatChange'
+  | 'weightChange';
 
 // FlatList Data
 type INutrFLdata = Array<{
   nutrient: string;
   value: number;
   color: string;
-  alertType:
-    | 'calorieChange'
-    | 'carbChange'
-    | 'proteinChange'
-    | 'fatChange'
-    | 'weightChange';
+  alertType: IAlertType;
 }>;
 // alert render fn
 interface IRenderAlert {
   [key: string]: () => React.ReactElement;
 }
-
-// consts for screens
-export const myPageBtns = [
-  {title: '몸무게변경', btnId: 'ChangeWeight'},
-  {title: '찜한식품', btnId: 'Likes'},
-  {title: '주문내역', btnId: 'OrderHistory'},
-  {title: '이용가이드', btnId: 'Guide'},
-  {title: '계정설정', btnId: 'Account'},
-];
-interface INavigateByBtnId {
-  [key: string]: (btnId: string, navigate: Function) => void;
-}
-
-const navigateByBtnId: INavigateByBtnId = {
-  Likes: (btnId, navigate) => navigate('BottomTabNav', {screen: btnId}),
-  OrderHistory: (btnId, navigate) =>
-    navigate('OrderHistoryNav', {screen: btnId}),
-  Account: (btnId, navigate) => navigate(btnId),
-  Guide: (btnId, navigate) => navigate(btnId, {from: 'Mypage'}),
-};
 
 const Mypage = () => {
   // navigation
@@ -79,13 +62,7 @@ const Mypage = () => {
   // useState
   const [autoCalculate, setAutoCalculate] = useState(false);
   const [alertShow, setAlertShow] = useState(false);
-  const [alertType, setAlertType] = useState<
-    | 'calorieChange'
-    | 'carbChange'
-    | 'proteinChange'
-    | 'fatChange'
-    | 'weightChange'
-  >('calorieChange');
+  const [alertType, setAlertType] = useState<IAlertType>('calorieChange');
 
   // useEffect
   useEffect(() => {
@@ -93,6 +70,31 @@ const Mypage = () => {
   }, [baseLineData]);
 
   // etc
+  // btns
+  const myPageBtns = [
+    {
+      title: '이용가이드',
+      btnId: 'Guide',
+      onPress: () => navigate('Guide', {from: 'Mypage'}),
+    },
+    {
+      title: '몸무게변경',
+      btnId: 'ChangeWeight',
+      onPress: () => {
+        baseLineData && dispatch(loadBaseLineData(baseLineData));
+        setAlertType('weightChange');
+        setAlertShow(true);
+      },
+    },
+    {
+      title: '주문내역',
+      btnId: 'OrderHistory',
+      onPress: () => navigate('OrderHistoryNav', {screen: 'OrderHistory'}),
+    },
+    {title: '공지사항', btnId: 'Notice', onPress: () => navigate('Notice')},
+    {title: '계정설정', btnId: 'Account', onPress: () => navigate('Account')},
+  ];
+
   // Flatlist Data
   const nutrTargetData: INutrFLdata = useMemo(
     () => [
@@ -250,26 +252,7 @@ const Mypage = () => {
 
       {/* 하단 메뉴 */}
       <Card style={{flex: 1}}>
-        {myPageBtns.map((item, index) => (
-          <Col key={item.btnId}>
-            <PageBtn
-              onPress={() => {
-                if (item.btnId === 'ChangeWeight') {
-                  baseLineData && dispatch(loadBaseLineData(baseLineData));
-                  setAlertType('weightChange');
-                  setAlertShow(true);
-                } else {
-                  navigateByBtnId[item.btnId](item.btnId, navigate);
-                }
-              }}>
-              <Row style={{justifyContent: 'space-between'}}>
-                <PageBtnText>{item.title}</PageBtnText>
-                <RightArrow source={icons.arrowRight_20} />
-              </Row>
-            </PageBtn>
-            {myPageBtns.length - 1 !== index && <HorizontalLine />}
-          </Col>
-        ))}
+        <PageBtn btns={myPageBtns} />
       </Card>
 
       {/* 변경 알럿창 */}
@@ -343,16 +326,6 @@ const TargetNutrContainer = styled.View`
   margin-top: 16px;
   /* flex-direction: row; */
   /* justify-content: center; */
-`;
-
-const PageBtn = styled.TouchableOpacity`
-  width: 100%;
-  height: 58px;
-  justify-content: center;
-`;
-const PageBtnText = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
 `;
 
 const RightArrow = styled.Image`
