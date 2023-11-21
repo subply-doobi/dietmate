@@ -379,9 +379,9 @@ const userInputSlice = createSlice({
       state.addr1.value = action.payload.addr1;
       state.addr2.value = action.payload.addr2;
       state.zipCode.value = action.payload.zipCode;
-      state.addr1.isValid = true;
+      state.addr1.isValid = state.addr1.value ? true : false;
       state.addr2.isValid = true;
-      state.zipCode.isValid = true;
+      state.zipCode.isValid = state.zipCode.value ? true : false;
     },
     setValue: (
       state,
@@ -422,6 +422,8 @@ const userInputSlice = createSlice({
     ) => {
       state.zipCode.value = action.payload.zipCode;
       state.addr1.value = action.payload.addr1;
+      state.zipCode.isValid = state.zipCode.value ? true : false;
+      state.addr1.isValid = state.addr1.value ? true : false;
       state.addr2.value = '';
     },
   },

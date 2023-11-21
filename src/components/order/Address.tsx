@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Alert, TextInput} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -149,7 +149,9 @@ const Address = () => {
         <Col style={{width: '100%'}} key={index}>
           <AddressBox>
             <SelectContainer
-              onPress={() => dispatch(setselectedAddrIdx(index))}>
+              onPress={() => {
+                dispatch(setselectedAddrIdx(index));
+              }}>
               <CheckIcon
                 source={
                   selectedAddrIdx === index

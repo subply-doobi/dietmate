@@ -75,6 +75,7 @@ const AddressEdit = () => {
 
   // 주소 update or create
   const onConfirmBtnPress = () => {
+    if (!addr1.value || !zipCode.value) return;
     if (isUpdate) {
       // addressUpdate
       updateAddressMutation.mutate({
@@ -109,13 +110,14 @@ const AddressEdit = () => {
 
   // 주소 삭제
   const onDeleteAlertConfirm = () => {
-    deleteAddressMutation.mutate(addrNo);
     const nextAddrIdx =
-      !addrIdx || selectedAddrIdx === 0
+      addrIdx === undefined || selectedAddrIdx === 0
         ? 0
         : selectedAddrIdx < addrIdx
         ? selectedAddrIdx
         : selectedAddrIdx - 1;
+
+    deleteAddressMutation.mutate(addrNo);
     dispatch(setselectedAddrIdx(nextAddrIdx));
     navigate('Order');
   };
@@ -199,7 +201,7 @@ const AddressEdit = () => {
         </ScrollView>
 
         {/* 1. 주소추가,변경 | 2. 확인 버튼 */}
-        <StickyFooter>
+        <BtnBox>
           <AddressEditBtn
             btnStyle="border"
             onPress={() => setPostModalVisible(true)}>
@@ -208,11 +210,12 @@ const AddressEdit = () => {
             </BtnText>
           </AddressEditBtn>
           <AddressConfirmBtn
-            btnStyle="activated"
+            btnStyle={hasAddrValue ? 'activated' : 'inactivated'}
+            disabled={!hasAddrValue}
             onPress={() => onConfirmBtnPress()}>
-            <BtnText>확인</BtnText>
+            <BtnText>{hasAddrValue ? '확인' : '주소를 추가해주세요'}</BtnText>
           </AddressConfirmBtn>
-        </StickyFooter>
+        </BtnBox>
       </SafeAreaView>
     </>
   );
@@ -268,3 +271,5 @@ const ModalBackground = styled.View`
   align-items: center;
   background-color: #000000a6;
 `;
+
+const BtnBox = styled(StickyFooter)``;

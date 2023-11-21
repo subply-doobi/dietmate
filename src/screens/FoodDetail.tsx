@@ -240,7 +240,7 @@ const FoodDetail = () => {
         </ScrollView>
       </Container>
       <View>
-        <StickyFooter>
+        <BtnBox>
           <LikeBtn onPress={handlePressLikeBtn}>
             <Image
               // 조건에 따라서 서로 다른 좋아요 버튼 갖게 할 것
@@ -258,7 +258,7 @@ const FoodDetail = () => {
               <BtnText>현재끼니에 추가</BtnText>
             )}
           </BtnCTA>
-        </StickyFooter>
+        </BtnBox>
       </View>
     </SafeAreaView>
   );
@@ -332,6 +332,10 @@ const NutritionInImage = styled.View`
   width: 100%;
   height: 24px;
   background-color: ${colors.blackOpacity50};
+`;
+
+const BtnBox = styled(StickyFooter)`
+  flex-direction: row;
 `;
 
 const LikeBtn = styled.Pressable`

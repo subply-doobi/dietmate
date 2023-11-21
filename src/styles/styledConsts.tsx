@@ -201,7 +201,6 @@ export const BtnBottomCTA = styled(BtnCTA)`
 
 export const StickyFooter = styled.View`
   position: absolute;
-  flex-direction: row;
   bottom: 8px;
   left: 0;
   right: 0;
