@@ -36,7 +36,13 @@ local.properties
 
 # node.js
 #
-node_modules/
+node_modules/**
+!node_modules/iamport-react-native/
+!node_modules/iamport-react-native/src
+!node_modules/iamport-react-native/src/components
+!node_modules/iamport-react-native/src/components/Loading
+!node_modules/iamport-react-native/src/components/Loading/index.tsx
+
 npm-debug.log
 yarn-error.log
 
