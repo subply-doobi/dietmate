@@ -24,6 +24,7 @@ import {
 } from '../../query/queries/diet';
 import {useDispatch} from 'react-redux';
 import {setMenuActiveSection} from '../../stores/slices/cartSlice';
+import {View} from 'react-native';
 
 const CartSummary = (props: any) => {
   const {onScrollToTop} = props;
@@ -83,7 +84,7 @@ const CartSummary = (props: any) => {
       <HorizontalLine style={{marginTop: 8}} />
       {groupByPlatformNmArray.map((item, index) => {
         return (
-          <>
+          <View key={index}>
             <SummaryValue style={{marginTop: 24}}>
               {item[0].platformNm}
             </SummaryValue>
@@ -96,6 +97,7 @@ const CartSummary = (props: any) => {
                 let activeSections = [item.replace(/[^0-9]/g, '') - 1];
                 return (
                   <SmallButton
+                    key={index}
                     onPress={() => {
                       dispatch(setMenuActiveSection(activeSections));
                       onScrollToTop();
@@ -105,7 +107,7 @@ const CartSummary = (props: any) => {
                 );
               })}
             </Row>
-          </>
+          </View>
         );
       })}
 
