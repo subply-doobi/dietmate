@@ -65,9 +65,6 @@ const Order = () => {
     (state: RootState) => state.order,
   );
   const {
-    addr1,
-    addr2,
-    zipCode,
     buyerName,
     buyerTel,
     receiver,
@@ -97,8 +94,13 @@ const Order = () => {
     buyer_name: buyerName.value,
     buyer_tel: buyerTel.value,
     buyer_email: userData?.email ? userData.email : '',
-    buyer_addr: addr1.value + addr2.value,
-    buyer_postcode: zipCode.value,
+    buyer_addr: listAddressData
+      ? listAddressData[selectedAddrIdx]?.addr1 +
+        listAddressData[selectedAddrIdx]?.addr2
+      : '',
+    buyer_postcode: listAddressData
+      ? listAddressData[selectedAddrIdx]?.zipCode
+      : '',
     app_scheme: 'example',
     customer_uid: 'customer_' + new Date().getTime(),
     // receiver, receiverContact, entranceType, entranceNote 추가
@@ -110,16 +112,14 @@ const Order = () => {
   };
 
   // validation
-  const isValidAll = [
-    addr1,
-    addr2,
-    zipCode,
-    buyerName,
-    buyerTel,
-    receiver,
-    receiverContact,
-    paymentMethod,
-  ].every(v => v.isValid);
+  const isValidAll =
+    [buyerName, buyerTel, receiver, receiverContact, paymentMethod].every(
+      v => v.isValid,
+    ) &&
+    !!listAddressData &&
+    !!listAddressData[selectedAddrIdx]?.addr1 &&
+    !!listAddressData[selectedAddrIdx]?.addr2 &&
+    !!listAddressData[selectedAddrIdx]?.zipCode;
 
   // accordion
   const [activeSections, setActiveSections] = useState<number[]>([]);

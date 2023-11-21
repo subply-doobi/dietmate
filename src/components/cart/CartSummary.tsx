@@ -70,7 +70,7 @@ const CartSummary = (props: any) => {
 
   const regroupedDDAData =
     dietDetailAllData && reGroupBySeller(dietDetailAllData);
-  console.log('CartSummary: regroupedDDAData', regroupedDDAData);
+
   return (
     <TotalSummaryContainer>
       <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
