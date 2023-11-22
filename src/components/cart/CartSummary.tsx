@@ -33,44 +33,29 @@ const CartSummary = (props: any) => {
   // react-query
   const {data: dietDetailAllData} = useListDietDetailAll();
 
+  //platformNm으로 그룹핑
+  const regroupedDDAData =
+    dietDetailAllData && reGroupBySeller(dietDetailAllData);
+
   // 총 끼니 수, 상품 수, 금액 계산
   const dietTotalData = reGroupByDietNo(dietDetailAllData);
   const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
-  // 식품사: platformNm
-  // 식품: productNm
-  // 갯수: qty
-  //끼니별로 나눠져있는 productData 하나의 배열로 합치기
-  const newDietDetailAllData = dietDetailAllData?.reduce((acc, cur) => {
-    return acc.concat(cur);
-  }, []);
-  // //newDietDetailAllData에서 platformNm이 같은 것들끼리 묶기
-  const groupByPlatformNm = newDietDetailAllData?.reduce((acc, cur) => {
-    const key = cur.platformNm;
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(cur);
-    return acc;
-  }, {});
-  // groupByPlatformNmArray에서 같은 platformNm별로 총 price 구하기
-  const groupByPlatformNmArray = Object.keys(groupByPlatformNm).map(key => {
-    return groupByPlatformNm[key];
-  });
-  const getPriceFromPlatformNm = groupByPlatformNmArray.map(item => {
+
+  // 식품사: platformNm 식품: productNm 갯수: qty
+
+  const getPriceFromPlatformNm = regroupedDDAData?.map(item => {
     return item.reduce((acc, cur) => {
       return acc + parseInt(cur.price * cur.qty);
     }, 0);
   });
-  //groupByPlatformNmArray에 platformNm의 dietSeq 구하기
-  const getDietSeq = i =>
-    groupByPlatformNmArray[i].map(item => {
+  //regroupedDDAData에서 platformNm의 dietSeq 구하기
+  const getDietSeq = (i: string) =>
+    regroupedDDAData[i]?.map(item => {
       return item.dietSeq;
     });
 
-  let getResult = i => [...new Set(getDietSeq(i))];
-
-  const regroupedDDAData =
-    dietDetailAllData && reGroupBySeller(dietDetailAllData);
+  //dietSeq 중복 제거
+  let getResult = (i: string) => [...new Set(getDietSeq(i))];
 
   return (
     <TotalSummaryContainer>
@@ -82,7 +67,7 @@ const CartSummary = (props: any) => {
         </SummaryValue>
       </Row>
       <HorizontalLine style={{marginTop: 8}} />
-      {groupByPlatformNmArray.map((item, index) => {
+      {regroupedDDAData?.map((item, index) => {
         return (
           <View key={index}>
             <SummaryValue style={{marginTop: 24}}>
