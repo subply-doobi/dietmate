@@ -10,6 +10,7 @@ import {useEffect, useMemo, useState} from 'react';
 import {SCREENWIDTH} from '../../constants/constants';
 import {ActivityIndicator} from 'react-native';
 import {icons} from '../../assets/icons/iconSource';
+import BusinessInfoContents from '../common/businessInfo/BusinessInfo';
 interface IFoodPart {
   productData: IProductData;
 }
