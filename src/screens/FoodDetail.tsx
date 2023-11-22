@@ -30,7 +30,7 @@ import NutrientsProgress from '../components/common/nutrient/NutrientsProgress';
 import NutrientPart from '../components/foodDetail/NutrientPart';
 import ShippingPart from '../components/foodDetail/ShippingPart';
 import FoodPart from '../components/foodDetail/FoodPart';
-import ReviewPart from '../components/foodDetail/ReviewPart';
+import BusinessInfoContents from '../components/common/businessInfo/BusinessInfo';
 
 import {BASE_URL} from '../query/queries/urls';
 import {
@@ -237,6 +237,7 @@ const FoodDetail = () => {
               <ShowPart clicked={clicked} table={table} data={productData} />
             </PartContainer>
           </InnerContainer>
+          <BusinessInfoContents />
         </ScrollView>
       </Container>
       <View>
