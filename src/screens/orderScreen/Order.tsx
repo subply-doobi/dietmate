@@ -33,6 +33,7 @@ import FoodToOrder from '../../components/order/FoodToOrder';
 import Orderer from '../../components/order/Orderer';
 import Address from '../../components/order/Address';
 import PaymentMethod from '../../components/order/PaymentMethod';
+import BusinessInfoContents from '../../components/common/businessInfo/BusinessInfo';
 
 import {useCreateOrder} from '../../query/queries/order';
 import {sumUpDietTotal} from '../../util/sumUp';
@@ -198,23 +199,6 @@ const Order = () => {
     return section.content;
   };
 
-  const renderFooter = () => {
-    return (
-      <Footer>
-        <FooterText>
-          {BusinessInfo.name}
-          {'\n'}
-          {'\n'}
-          대표자: {BusinessInfo.representative}
-          {'\n'}
-          사업자등록번호: {BusinessInfo.businessNumber}
-          {'\n'}
-          주소: {BusinessInfo.address}
-        </FooterText>
-      </Footer>
-    );
-  };
-
   const updateSections = (actives: Array<number>) => {
     setActiveSections(actives);
   };
@@ -271,7 +255,7 @@ const Order = () => {
           onChange={updateSections}
           renderFooter={() => <HorizontalSpace height={16} />}
         />
-        {renderFooter()}
+        <BusinessInfoContents />
       </ScrollView>
 
       {/* 결제버튼 */}
@@ -320,14 +304,4 @@ const UpDownArrow = styled.Image`
   width: 20px;
   height: 20px;
   margin-left: 8px;
-`;
-
-const Footer = styled.View`
-  flex: 1;
-`;
-const FooterText = styled(TextSub)`
-  font-size: 11px;
-  color: ${colors.textSub};
-  margin-left: 16px;
-  margin-top: 8px;
 `;

@@ -62,7 +62,7 @@ PODS:
   - hermes-engine/Pre-built (0.72.6)
   - iamport-react-native (2.0.7):
     - React-Core
-  - kakao-login (5.3.0):
+  - kakao-login (5.3.1):
     - KakaoSDKAuth (= 2.11.1)
     - KakaoSDKCommon (= 2.11.1)
     - KakaoSDKUser (= 2.11.1)
@@ -405,16 +405,12 @@ PODS:
     - glog
   - react-native-image-picker (4.10.3):
     - React-Core
-  - react-native-pager-view (6.1.2):
+  - react-native-pager-view (6.2.2):
     - React-Core
   - react-native-pinchable (0.2.1):
     - React-Core
-  - react-native-safe-area-context (4.5.0):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
+  - react-native-safe-area-context (4.7.4):
     - React-Core
-    - ReactCommon/turbomodule/core
   - react-native-splash-screen (3.3.0):
     - React-Core
   - react-native-webview (12.4.0):
@@ -529,7 +525,7 @@ PODS:
     - React-jsi (= 0.72.6)
     - React-logger (= 0.72.6)
     - React-perflogger (= 0.72.6)
-  - RNCAsyncStorage (1.17.11):
+  - RNCAsyncStorage (1.19.4):
     - React-Core
   - RNFastImage (8.6.3):
     - React-Core
@@ -543,7 +539,8 @@ PODS:
     - FirebaseCoreExtension (= 10.7.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.9.0):
+  - RNGestureHandler (2.13.4):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - RNReanimated (3.5.4):
     - DoubleConversion
@@ -574,10 +571,10 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.19.0):
+  - RNScreens (3.27.0):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
-    - React-RCTImage
-  - RNSVG (13.8.0):
+  - RNSVG (13.14.0):
     - React-Core
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
@@ -810,7 +807,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 13e2c67ede716b8741c7989e26893d151b2b2084
   hermes-engine: 8057e75cfc1437b178ac86c8654b24e7fead7f60
   iamport-react-native: e87777c89bd3cfa6556cbac2edcd149fb4830b88
-  kakao-login: 3d7afeb8d49d4fa9a3ee579edb1b68c65bf20dac
+  kakao-login: d3dad7a7bc1a3d187cedb4de83b1ec2e9b1cda30
   KakaoSDKAuth: bb2dfa7be30daa8403c9cfc8001aa6fde7a5b779
   KakaoSDKCommon: 555e1bb46595b842ded01cf7888cc17bbae4e113
   KakaoSDKUser: 08c0a4f40bebdebdf948a9e3d0e44ed5c2754f99
@@ -837,9 +834,9 @@ SPEC CHECKSUMS:
   React-jsinspector: 194e32c6aab382d88713ad3dd0025c5f5c4ee072
   React-logger: cebf22b6cf43434e471dc561e5911b40ac01d289
   react-native-image-picker: 60f4246eb5bb7187fc15638a8c1f13abd3820695
-  react-native-pager-view: 54bed894cecebe28cede54c01038d9d1e122de43
+  react-native-pager-view: 02a5c4962530f7efc10dd51ee9cdabeff5e6c631
   react-native-pinchable: b4381b0807d15c12b14bfacd927128f52d96f0f1
-  react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
+  react-native-safe-area-context: 2cd91d532de12acdb0a9cbc8d43ac72a8e4c897c
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-webview: 65f1143983cfeaedf02fd25b2621d3f4a37075de
   React-NativeModulesApple: 1802a680a4cd891d2ab97780771bcb2ff11fdc0b
@@ -859,19 +856,19 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 76eb364c37e6c20845cfe0cb049f883021bdfccf
   React-utils: 1dc03e6e55f56388b6fdde3768a66c885bacb627
   ReactCommon: cfe086d2e2ec9f2907c66666c856082608fba822
-  RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
+  RNCAsyncStorage: 3a8f7145d17cdd9f88e7b77666c94a09e4f759c8
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFBApp: 0d8bf86673bbad0524d1ceac3944d71ccf48a0e4
   RNFBCrashlytics: cd370021582bf4ba67cf0af1aa11955c59d4c6b7
-  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNGestureHandler: 6594263b1a123e43c23ff72c8d99080187e74bf9
   RNReanimated: ab2e96c6d5591c3dfbb38a464f54c8d17fb34a87
-  RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
-  RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
+  RNScreens: 3e56c56bd35436215a56f48a753e30e8ce018a09
+  RNSVG: d00c8f91c3cbf6d476451313a18f04d220d4f396
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: b76f1acfda8212aa16b7e26bcce3983230c82603
 
-PODFILE CHECKSUM: dc0010aa8d7d10214e00bfedeb13d4335b1f4b6e
+PODFILE CHECKSUM: fed7fff5d4c1fc9fe5d60ea51cf28fc557a3770d
 
 COCOAPODS: 1.13.0
