@@ -4,7 +4,8 @@
 
   // 안드로이드 빌드 설정
   //dietmate
-  "name": "DietMate",
+  "androidAppName": "dietmate",
+  "iosAppName": "DietMate",
 
   "displayName": "DietMate"
 }
