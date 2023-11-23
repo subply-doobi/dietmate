@@ -1,4 +1,4 @@
-import React, {SetStateAction, useState} from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
 
 import {Row, StyledProps, TextMain} from '../../styles/styledConsts';
@@ -16,7 +16,6 @@ import {
 import {
   changeSelectedFilter,
   copySortFilter,
-  initializeFilter,
   initializeSortFilter,
   setFilterByRemainNutr,
 } from '../../stores/slices/sortFilterSlice';

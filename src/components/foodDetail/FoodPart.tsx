@@ -1,16 +1,14 @@
-import {ScrollView, Text, Image} from 'react-native';
+import {Image} from 'react-native';
 import styled from 'styled-components/native';
 import FastImage from 'react-native-fast-image';
-import Pinchable from 'react-native-pinchable';
 
 // react-query
 import {useListProductDetail} from '../../query/queries/product';
 import {IProductData} from '../../query/types/product';
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {SCREENWIDTH} from '../../constants/constants';
 import {ActivityIndicator} from 'react-native';
-import {icons} from '../../assets/icons/iconSource';
-import BusinessInfoContents from '../common/businessInfo/BusinessInfo';
+
 interface IFoodPart {
   productData: IProductData;
 }
@@ -25,7 +23,7 @@ const FoodPart = ({productData}: IFoodPart) => {
     {imageLink: string; width: number; height: number}[]
   >([]);
   const [imgLoading, setImgLoading] = useState(true);
-  const [test, setTest] = useState('');
+
   // useEffect
   useEffect(() => {
     const getImageData = async () => {
@@ -68,7 +66,7 @@ const FoodPart = ({productData}: IFoodPart) => {
             }
           }}
           resizeMode={FastImage.resizeMode.contain}
-          onLoadEnd={() => console.log('FoodPart: onLoadEnd')}
+          // onLoadEnd={() => console.log('FoodPart: onLoadEnd')}
         />
       ))}
     </>

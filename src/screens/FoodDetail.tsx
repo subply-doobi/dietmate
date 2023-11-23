@@ -169,16 +169,20 @@ const FoodDetail = () => {
   ) : (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <Container>
+        {/* 영양성분 그래프 */}
         <InnerContainer>
           {!!dietDetailData && (
             <NutrientsProgress dietDetailData={dietDetailData} />
           )}
         </InnerContainer>
+
+        {/* 식품상세정보 */}
         <ScrollView
           style={{flex: 1, zIndex: -1}}
           contentContainerStyle={{paddingBottom: 80}}
           showsVerticalScrollIndicator={false}>
           <View>
+            {/* 식품 썸네일 */}
             <FoodImageContainer
               source={{
                 uri: `${BASE_URL}${productData.mainAttUrl}`,
@@ -209,6 +213,8 @@ const FoodDetail = () => {
               })}
             </NutritionInImage>
           </View>
+
+          {/* 식품 정보 텍스트 */}
           <InnerContainer>
             <SellerText style={{marginTop: 20}}>
               [{productData.platformNm}]
@@ -217,6 +223,8 @@ const FoodDetail = () => {
             <Row style={{marginTop: 16, justifyContent: 'flex-start'}}>
               <Price>{commaToNum(productData.price)}원</Price>
             </Row>
+
+            {/* 영양성분 - 식품상세 - 배송정책 */}
             <Row
               style={{
                 justifyContent: 'flex-start',
@@ -233,14 +241,19 @@ const FoodDetail = () => {
                 );
               })}
             </Row>
+
+            {/* 영양성분 - 식품상세 - 배송정책에 따른 내용 */}
             <PartContainer>
               <ShowPart clicked={clicked} table={table} data={productData} />
             </PartContainer>
           </InnerContainer>
+
+          {/* 사업자정보 */}
           <BusinessInfoContents />
         </ScrollView>
       </Container>
       <View>
+        {/* 하단 CTA버튼, like 버튼 */}
         <BtnBox>
           <LikeBtn onPress={handlePressLikeBtn}>
             <Image
