@@ -25,6 +25,7 @@ import {
 import {useDispatch} from 'react-redux';
 import {setMenuActiveSection} from '../../stores/slices/cartSlice';
 import {View} from 'react-native';
+import {SERVICE_PRICE_PER_PRODUCT} from '../../constants/constants';
 
 const CartSummary = (props: any) => {
   const {onScrollToTop} = props;
@@ -42,12 +43,15 @@ const CartSummary = (props: any) => {
   const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
 
   // 식품사: platformNm 식품: productNm 갯수: qty
-
-  const getPriceFromPlatformNm = regroupedDDAData?.map(item => {
+  const priceFromPlatformNm = regroupedDDAData?.map(item => {
     return item.reduce((acc, cur) => {
-      return acc + parseInt(cur.price * cur.qty);
+      return (
+        acc +
+        (parseInt(cur.price) + SERVICE_PRICE_PER_PRODUCT) * parseInt(cur.qty)
+      );
     }, 0);
   });
+
   //regroupedDDAData에서 platformNm의 dietSeq 구하기
   const getDietSeq = (i: string) =>
     regroupedDDAData[i]?.map(item => {
@@ -74,7 +78,9 @@ const CartSummary = (props: any) => {
               {item[0].platformNm}
             </SummaryValue>
             <SummaryText style={{marginTop: 12}}>
-              식품: {commaToNum(getPriceFromPlatformNm[index])}원
+              식품:{' '}
+              {!!priceFromPlatformNm && commaToNum(priceFromPlatformNm[index])}
+              원
             </SummaryText>
             <TextSub style={{marginTop: 2}}>배송비:3000원</TextSub>
             <Row style={{marginTop: 16}}>

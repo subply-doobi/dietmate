@@ -19,6 +19,7 @@ import {
   IProductData,
   IProductDetailData,
 } from '../types/product';
+import {SERVICE_PRICE_PER_PRODUCT} from '../../constants/constants';
 
 // PUT //
 export const useCreateProductMark = () => {
@@ -101,7 +102,12 @@ export const useListProduct = (
   const proteinParam =
     protein.length === 2 ? `Protein,${protein[0]},${protein[1]}|` : '';
   const fatParam = fat.length === 2 ? `Fat,${fat[0]},${fat[1]}|` : '';
-  const priceParam = price.length === 2 ? `Price,${price[0]},${price[1]}|` : '';
+  const priceParam =
+    price.length === 2
+      ? `Price,${price[0] - SERVICE_PRICE_PER_PRODUCT},${
+          price[1] - SERVICE_PRICE_PER_PRODUCT
+        }|`
+      : '';
 
   return useQuery<IProductData[]>({
     queryKey: [PRODUCTS, dietNo],

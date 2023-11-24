@@ -37,10 +37,11 @@ import {
   useCreateDietDetail,
   useDeleteDietDetail,
   useListDietDetail,
+  useListDietDetailAll,
 } from '../query/queries/diet';
-import {SCREENWIDTH} from '../constants/constants';
+import {SCREENWIDTH, SERVICE_PRICE_PER_PRODUCT} from '../constants/constants';
 import {useGetBaseLine} from '../query/queries/baseLine';
-import {commaToNum} from '../util/sumUp';
+import {commaToNum, sumUpPriceOfSeller} from '../util/sumUp';
 import {
   useCreateProductMark,
   useDeleteProductMark,
@@ -92,6 +93,7 @@ const FoodDetail = () => {
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {
     enabled: currentDietNo ? true : false,
   });
+  const {data: dietDetailAllData} = useListDietDetailAll();
   const createProductMarkMutation = useCreateProductMark();
   const deleteProductMarkMutation = useDeleteProductMark();
   const createDietDetailMutation = useCreateDietDetail();
@@ -220,9 +222,32 @@ const FoodDetail = () => {
               [{productData.platformNm}]
             </SellerText>
             <ProductName>{productData.productNm}</ProductName>
-            <Row style={{marginTop: 16, justifyContent: 'flex-start'}}>
-              <Price>{commaToNum(productData.price)}원</Price>
+            <Row style={{marginTop: 8, justifyContent: 'space-between'}}>
+              <Col>
+                <ShippingText numberOfLines={1} ellipsizeMode="tail">
+                  배송비: {commaToNum(productData.shippingPrice)} 원 (
+                  {commaToNum(productData.freeShippingPrice)}원 이상 무료)
+                </ShippingText>
+                <ShippingText numberOfLines={1} ellipsizeMode="tail">
+                  현재 장바구니 {productData.platformNm} 상품 :{' '}
+                  <ShippingText style={{color: colors.textMain}}>
+                    {commaToNum(
+                      sumUpPriceOfSeller(
+                        dietDetailAllData,
+                        productData.platformNm,
+                      ),
+                    )}
+                    원
+                  </ShippingText>
+                </ShippingText>
+              </Col>
             </Row>
+            <Price>
+              {commaToNum(
+                parseInt(productData.price) + SERVICE_PRICE_PER_PRODUCT,
+              )}
+              원
+            </Price>
 
             {/* 영양성분 - 식품상세 - 배송정책 */}
             <Row
@@ -303,13 +328,13 @@ const ProductName = styled(TextMain)`
   font-size: 20px;
   font-weight: bold;
 `;
-const ShippingText = styled(TextMain)`
-  margin-top: 4px;
+const ShippingText = styled(TextSub)`
   font-size: 14px;
 `;
 const Price = styled(TextMain)`
   font-size: 28px;
   font-weight: bold;
+  margin-top: 16px;
 `;
 interface DetailMenuProps {
   onPress: () => void;

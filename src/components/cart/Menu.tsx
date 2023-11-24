@@ -131,6 +131,8 @@ const Menu = ({
           </BtnSmall>
         </SelectedDeleteRow>
       )}
+
+      {/* 삭제 알럿 */}
       <DAlert
         alertShow={deleteModalShow}
         confirmLabel="삭제"

@@ -241,7 +241,7 @@ const Cart = () => {
             setCreateAlertShow(true);
             return;
           }
-          dispatch(setFoodToOrder(dietTotal));
+          !!dietTotal && dispatch(setFoodToOrder(dietTotal));
           navigate('Order');
         }}>
         {priceUnder_30000 ? (

@@ -36,12 +36,20 @@ import {IProductData} from '../../../query/types/product';
 import {useListOrderDetail} from '../../../query/queries/order';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {IOrderedProduct} from '../../../query/types/order';
-import {SHIPPING_PRICE} from '../../../constants/constants';
+import {
+  SERVICE_PRICE_PER_PRODUCT,
+  SHIPPING_PRICE,
+} from '../../../constants/constants';
 
 const OrderHistoryDetail = () => {
   // navigation
   const route = useRoute();
   const navigation = useNavigation();
+
+  // redux
+  const {applied: appliedSortFilter} = useSelector(
+    (state: RootState) => state.sortFilter,
+  );
 
   // orderDetailData => 주문한 상품들 끼니별 내역
   const {
@@ -55,6 +63,7 @@ const OrderHistoryDetail = () => {
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
   const {data: useListProductData} = useListProduct({
     dietNo: currentDietNo,
+    appliedSortFilter,
   });
 
   const isSelfOrder = orderDetailData[0][0]?.orderTypeCd === 'SP011001';
@@ -133,7 +142,10 @@ const OrderHistoryDetail = () => {
   //groupByPlatformNmArray에서 같은 platformNm별로 총 price 구하기
   const getPriceFromPlatformNm = groupByPlatformNmArray.map(item => {
     return item.reduce((acc, cur) => {
-      return acc + parseInt(cur.price * cur.qty);
+      return (
+        acc +
+        (parseInt(cur.price) + SERVICE_PRICE_PER_PRODUCT) * parseInt(cur.qty)
+      );
     }, 0);
   });
 
@@ -221,7 +233,12 @@ const OrderHistoryDetail = () => {
                       <OrderLinkText>구매링크</OrderLinkText>
                     </OrderLinkBtn>
                   ) : (
-                    <ProductPrice>{commaToNum(item.price)}원</ProductPrice>
+                    <ProductPrice>
+                      {commaToNum(
+                        parseInt(item.price) + SERVICE_PRICE_PER_PRODUCT,
+                      )}
+                      원
+                    </ProductPrice>
                   )}
 
                   <HorizontalLine />
