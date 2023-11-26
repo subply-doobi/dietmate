@@ -1,5 +1,8 @@
 import {UseQueryResult} from 'react-query';
-import {NUTR_ERROR_RANGE} from '../constants/constants';
+import {
+  NUTR_ERROR_RANGE,
+  SERVICE_PRICE_PER_PRODUCT,
+} from '../constants/constants';
 import {IBaseLineData} from '../query/types/baseLine';
 import {
   IDietDetailAllData,
@@ -37,7 +40,7 @@ export const sumUpPrice = (
   let price = 0;
   for (let i = 0; i < dietDetail.length; i++) {
     let qty = qtyConsidered ? parseInt(dietDetail[i].qty) : 1;
-    price += parseInt(dietDetail[i].price) * qty;
+    price += (parseInt(dietDetail[i].price) + SERVICE_PRICE_PER_PRODUCT) * qty;
   }
   return price;
 };
@@ -53,7 +56,8 @@ export const sumUpDietTotal = (dietTotalData: IDietTotalData | undefined) => {
     menuNum += 1 * parseInt(dietTotalData[i][0].qty, 10);
     for (let j = 0; j < dietTotalData[i].length; j++) {
       priceTotal +=
-        parseInt(dietTotalData[i][j].price) * parseInt(dietTotalData[i][j].qty);
+        (parseInt(dietTotalData[i][j].price) + SERVICE_PRICE_PER_PRODUCT) *
+        parseInt(dietTotalData[i][j].qty);
       productNum += parseInt(dietTotalData[i][j].qty);
     }
   }
@@ -171,6 +175,20 @@ export const reGroupBySeller = (dietDetailData: IDietDetailData) => {
   return reGroupedProducts;
 };
 
+export const sumUpPriceOfSeller = (
+  dietDetailAllData: IDietDetailAllData | undefined,
+  seller: string,
+) => {
+  if (!dietDetailAllData) return 0;
+  // get sum of price by seller with reduce function
+  return dietDetailAllData.reduce((acc, cur) => {
+    return cur.platformNm === seller
+      ? (parseInt(cur.price) + SERVICE_PRICE_PER_PRODUCT) * parseInt(cur.qty) +
+          acc
+      : acc;
+  }, 0);
+};
+
 export const reGroupByDietNo = (
   dietDetailAllData: IDietDetailAllData | undefined,
 ) => {
@@ -199,7 +217,7 @@ export const reGroupByDietNo = (
 };
 
 export const commaToNum = (num: number | string | undefined) => {
-  if (!num) return 0;
+  if (!num) return '0';
   const n = typeof num === 'number' ? num.toString() : num;
   return n.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
 };

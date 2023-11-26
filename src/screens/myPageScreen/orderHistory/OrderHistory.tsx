@@ -1,4 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
+import {ActivityIndicator, ScrollView} from 'react-native';
+
 import styled from 'styled-components/native';
 import {icons} from '../../../assets/icons/iconSource';
 import {
@@ -13,8 +15,7 @@ import {
 import colors from '../../../styles/colors';
 import {useNavigation} from '@react-navigation/native';
 import {useListOrder, useUpdateOrder} from '../../../query/queries/order';
-import {ScrollView} from 'react-native-gesture-handler';
-import {ActivityIndicator} from 'react-native';
+
 import {BASE_URL} from '../../../query/queries/urls';
 import {commaToNum, sumUpNutrients, sumUpPrice} from '../../../util/sumUp';
 import {isSearchBarAvailableForCurrentPlatform} from 'react-native-screens';

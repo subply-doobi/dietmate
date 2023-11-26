@@ -31,7 +31,10 @@ import {
   useListDietDetail,
 } from '../../query/queries/diet';
 import {useGetBaseLine} from '../../query/queries/baseLine';
-import {NUTR_ERROR_RANGE} from '../../constants/constants';
+import {
+  NUTR_ERROR_RANGE,
+  SERVICE_PRICE_PER_PRODUCT,
+} from '../../constants/constants';
 import {useDeleteProductMark} from '../../query/queries/product';
 
 interface IFoodList {
@@ -175,6 +178,7 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
       {/* 전체 범위 클릭하면 식품 상세정보로 이동 */}
       <Button
         onPress={() => navigate('FoodDetail', {productNo: item.productNo})}>
+        {/* 썸네일 이미지 */}
         <Thumbnail
           source={{
             uri: `${BASE_URL}${item?.mainAttUrl}`,
@@ -222,7 +226,11 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
             </NutrSummaryBtn>
           </Col>
           <Row style={{justifyContent: 'space-between'}}>
-            {!!item.price && <Price>{commaToNum(item.price)}원</Price>}
+            {!!item.price && (
+              <Price>
+                {commaToNum(parseInt(item.price) + SERVICE_PRICE_PER_PRODUCT)}원
+              </Price>
+            )}
             {screen === 'LikeScreen' && (
               <DeleteLikeFoodBtn onPress={onLikeDelete}>
                 {/* <LikeImg source={icons.likeSmall_20} /> */}

@@ -49,7 +49,7 @@ const Home = () => {
   const {currentDietNo, totalFoodListIsLoaded} = useSelector(
     (state: RootState) => state.cart,
   );
-  const {applied: appliedSortFilter, copied: copiedSortFilter} = useSelector(
+  const {applied: appliedSortFilter} = useSelector(
     (state: RootState) => state.sortFilter,
   );
 

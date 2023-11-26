@@ -24,6 +24,7 @@ import {
   useListDiet,
   useListDietDetail,
 } from '../../query/queries/diet';
+import {SERVICE_PRICE_PER_PRODUCT} from '../../constants/constants';
 
 interface ICartFoodList {
   selectedFoods: {[key: string]: string[]};
@@ -133,7 +134,10 @@ const CartFoodList = ({
                 {'    '}지 <NutrientValue>{parseInt(food.fat)}g </NutrientValue>
               </NutrientText>
               <Row style={{marginTop: 12, justifyContent: 'space-between'}}>
-                <ProductPrice>{commaToNum(food.price)}원</ProductPrice>
+                <ProductPrice>
+                  {commaToNum(parseInt(food.price) + SERVICE_PRICE_PER_PRODUCT)}
+                  원
+                </ProductPrice>
               </Row>
             </Col>
           </Row>

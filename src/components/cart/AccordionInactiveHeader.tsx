@@ -90,6 +90,8 @@ const AccordionInactiveHeader = ({
       />
       <Col style={{width: 80, alignItems: 'center'}}>
         <MenuSeq>{dietSeq}</MenuSeq>
+
+        {/* 칼로리 기준 그래프 */}
         {calTarget && (
           <Progress.Bar
             style={{marginTop: 6}}
@@ -104,6 +106,8 @@ const AccordionInactiveHeader = ({
         )}
       </Col>
       <VerticalLine height={48} width={2} />
+
+      {/* 메뉴삭제 버튼 */}
       <MenuDeleteBtn
         onPress={() => setDeleteAlertShow(true)}
         disabled={dietData && dietData?.length > 1 ? false : true}>
@@ -113,9 +117,12 @@ const AccordionInactiveHeader = ({
       </MenuDeleteBtn>
       {numOfFoods !== 0 ? (
         <Col style={{flex: 1, height: '100%'}}>
+          {/* 메뉴 가격 */}
           <FoodNoAndPrice>
             {numOfFoods}가지 식품: {commaToNum(priceSum)}원
           </FoodNoAndPrice>
+
+          {/* 끼니수량 - 수량선택버튼 - 가격 */}
           <Row3>
             <Row>
               <MenuNoBox>
@@ -144,6 +151,8 @@ const AccordionInactiveHeader = ({
           </AutoMenuBtn>
         </Col>
       )}
+
+      {/* 자동구성 모달 */}
       <AutoDietModal
         modalVisible={autoDietModalShow}
         setModalVisible={setAutoDietModalShow}
@@ -151,6 +160,8 @@ const AccordionInactiveHeader = ({
         dietDetailData={dietDetailData}
         openCurrentSection={() => dispatch(setMenuActiveSection([idx]))}
       />
+
+      {/* 메뉴삭제 알럿 */}
       <DAlert
         alertShow={deleteAlertShow}
         renderContent={() => <DeleteAlertContent deleteText={dietSeq} />}

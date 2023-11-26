@@ -1,4 +1,7 @@
-import {NUTR_ERROR_RANGE} from '../../constants/constants';
+import {
+  NUTR_ERROR_RANGE,
+  SERVICE_PRICE_PER_PRODUCT,
+} from '../../constants/constants';
 import {IBaseLineData} from '../../query/types/baseLine';
 import {IProductData} from '../../query/types/product';
 
@@ -10,7 +13,7 @@ const getSum = (menu: IProductData[]) => {
     sum[1] += parseInt(menu[i].carb);
     sum[2] += parseInt(menu[i].protein);
     sum[3] += parseInt(menu[i].fat);
-    sum[4] += parseInt(menu[i].price);
+    sum[4] += parseInt(menu[i].price) + SERVICE_PRICE_PER_PRODUCT;
   }
   return sum;
 };
@@ -199,7 +202,7 @@ const getAvailableFoods = ({
           remain[2] + NUTR_ERROR_RANGE.protein[1] - minProtein &&
         parseInt(foods[i].fat) <=
           remain[3] + NUTR_ERROR_RANGE.fat[1] - minFat &&
-        parseInt(foods[i].price) <= remain[4]
+        parseInt(foods[i].price) + SERVICE_PRICE_PER_PRODUCT <= remain[4]
       )
         availableFoods.push(foods[i]);
     }
@@ -213,7 +216,9 @@ const getAvailableFoods = ({
         isLimitedCategory(limitedCategory, foods[i].categoryCd)
       )
         continue;
-      if (parseInt(foods[i].price) <= remain[4]) tempFoods.push(foods[i]);
+      if (parseInt(foods[i].price) + SERVICE_PRICE_PER_PRODUCT <= remain[4])
+        tempFoods.push(foods[i]);
+
       if (
         parseInt(foods[i].calorie) >= remain[0] + NUTR_ERROR_RANGE.calorie[0] &&
         parseInt(foods[i].calorie) <= remain[0] + NUTR_ERROR_RANGE.calorie[1] &&
@@ -223,7 +228,7 @@ const getAvailableFoods = ({
         parseInt(foods[i].protein) <= remain[2] + NUTR_ERROR_RANGE.protein[1] &&
         parseInt(foods[i].fat) >= remain[3] + NUTR_ERROR_RANGE.fat[0] &&
         parseInt(foods[i].fat) <= remain[3] + NUTR_ERROR_RANGE.fat[1] &&
-        parseInt(foods[i].price) <= remain[4]
+        parseInt(foods[i].price) + SERVICE_PRICE_PER_PRODUCT <= remain[4]
       )
         availableFoods.push(foods[i]);
     }
@@ -435,7 +440,6 @@ export const makeAutoMenu2 = ({
         return reject(new Error('앱을 다시 실행해 주세요'));
       // (도시락 닭가슴살 샐러드 영양간식 과자 음료)
       // 식품 칼로리 최대+최소 = 457 kcal | 탄수화물 최대+최소 = 77 g | 단백질 최대+최소 = 41 g | 지방 최대+최소 = 19 g
-
       // initialize
       let {target, targetNumArr, currentMenu, availableFoods} = initialize({
         initialMenu,
