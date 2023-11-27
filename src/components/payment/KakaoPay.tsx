@@ -54,7 +54,7 @@ const KakaoPay = () => {
       data={kakaopayData}
       callback={response => {
         // success가 아닌 경우 1. 아임포트 자체오류 || 2. 사용자 취소 구분은 아직 없음
-        response.imp_success === true ? onPaymentSuccess() : onPaymentFail();
+        response.imp_success === 'true' ? onPaymentSuccess() : onPaymentFail();
       }}
     />
   );
