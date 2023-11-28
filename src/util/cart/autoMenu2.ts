@@ -436,7 +436,7 @@ export const makeAutoMenu2 = ({
 }> => {
   return new Promise((resolve, reject) => {
     try {
-      if (!baseLine || !initialMenu || !totalFoodList)
+      if (!baseLine || !initialMenu || totalFoodList.length === 0)
         return reject(new Error('앱을 다시 실행해 주세요'));
       // (도시락 닭가슴살 샐러드 영양간식 과자 음료)
       // 식품 칼로리 최대+최소 = 457 kcal | 탄수화물 최대+최소 = 77 g | 단백질 최대+최소 = 41 g | 지방 최대+최소 = 19 g
@@ -478,6 +478,8 @@ export const makeAutoMenu2 = ({
         }
         if (NO_FOOD_AVAILABLE) {
           NO_FOOD_AVAILABLE = false;
+          currentMenu = [...initialMenu];
+          availableFoods = [...totalFoodList];
           continue;
         }
 
