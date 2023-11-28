@@ -27,6 +27,8 @@ import {convertNutr, convertNutrByWeight} from '../../util/targetCalculation';
 import {loadBaseLineData} from '../../stores/slices/userInputSlice';
 import {RootState} from '../../stores/store';
 import PageBtn from '../../components/myPage/PageBtn';
+import {link} from '../../util/common/linking';
+import {INQUIRY_URL} from '../../constants/constants';
 
 type IAlertType =
   | 'calorieChange'
@@ -93,6 +95,11 @@ const Mypage = () => {
     },
     {title: '공지사항', btnId: 'Notice', onPress: () => navigate('Notice')},
     {title: '계정설정', btnId: 'Account', onPress: () => navigate('Account')},
+    {
+      title: '문의하기',
+      btnId: 'Inquiry',
+      onPress: () => link(INQUIRY_URL),
+    },
   ];
 
   // Flatlist Data
@@ -222,7 +229,7 @@ const Mypage = () => {
             numberOfLines={1}
             ellipsizeMode="clip"
             style={{fontWeight: '400'}}>
-            계획과 다르게 진행된다면 아래 목표를 수정해보세요
+            계획과 다르게 진행된다면 목표를 수정해보세요
           </Recommendation>
         </RecommendationContainer>
 

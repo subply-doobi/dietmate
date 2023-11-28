@@ -181,7 +181,6 @@ const FoodDetail = () => {
         {/* 식품상세정보 */}
         <ScrollView
           style={{flex: 1, zIndex: -1}}
-          contentContainerStyle={{paddingBottom: 80}}
           showsVerticalScrollIndicator={false}>
           <View>
             {/* 식품 썸네일 */}
@@ -274,7 +273,7 @@ const FoodDetail = () => {
           </InnerContainer>
 
           {/* 사업자정보 */}
-          <BusinessInfoContents />
+          <BusinessInfoContents bgColor={colors.backgroundLight} />
         </ScrollView>
       </Container>
       <View>

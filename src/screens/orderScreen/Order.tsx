@@ -241,9 +241,7 @@ const Order = () => {
     <ActivityIndicator />
   ) : (
     <SafeAreaView style={{flex: 1}}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 80}}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Accordion
           containerStyle={{marginTop: 16}}
           activeSections={activeSections}

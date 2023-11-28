@@ -253,16 +253,11 @@ export const REGEX_KOR = /^[ㄱ-ㅎ|가-힣]+$/; //문자열에 한글만 있는
 export const REGEX_PHONE = /01[016789]-[^0][0-9]{2,3}-[0-9]{3,4}/;
 
 //사업자 정보 (ex. 대표자, 주소, 사업자 등록번호)
-export interface IBusinessInfo {
-  name: string;
-  representative: string;
-  address: string;
-  businessNumber: string;
-}
-
-export const BusinessInfo: IBusinessInfo = {
-  name: '(주)SUBPLY',
+export const BUSINESS_INFO = {
+  name: '(주) SUBPLY',
   representative: '신희섭',
   address: '서울 용산구 이촌로 248 38-504',
   businessNumber: '395-81-03151',
+  email: 'subply.skpk@gmail.com',
+  phone: '010-2874-2935',
 };
