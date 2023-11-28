@@ -22,6 +22,8 @@ import {
   Row,
   TextSub,
   HorizontalSpace,
+  BtnSmall,
+  BtnSmallText,
 } from '../../../styles/styledConsts';
 import {BASE_URL} from '../../../query/queries/urls';
 import MenuSection from '../../../components/common/menuSection/MenuSection';
@@ -37,9 +39,11 @@ import {useListOrderDetail} from '../../../query/queries/order';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {IOrderedProduct} from '../../../query/types/order';
 import {
+  INQUIRY_URL,
   SERVICE_PRICE_PER_PRODUCT,
   SHIPPING_PRICE,
 } from '../../../constants/constants';
+import {link} from '../../../util/common/linking';
 
 const OrderHistoryDetail = () => {
   // navigation
@@ -153,6 +157,9 @@ const OrderHistoryDetail = () => {
     <Container>
       <MenuSection />
       <ScrollView>
+        <InquireBtn onPress={() => link(INQUIRY_URL)}>
+          <BtnSmallText>문의하기</BtnSmallText>
+        </InquireBtn>
         <ContentContainer>
           {orderDetailData.map((menu: IOrderedProduct[], menuIdx: number) => (
             <Card key={menuIdx}>
@@ -324,9 +331,10 @@ const Container = styled.View`
   background-color: ${colors.backgroundLight2};
 `;
 
-const ProgressBox = styled.View`
-  background-color: ${colors.white};
-  padding: 0px 16px 0px 16px;
+const InquireBtn = styled(BtnSmall)`
+  align-self: flex-end;
+  margin-right: 10px;
+  margin-bottom: -8px;
 `;
 
 const ContentContainer = styled.View`

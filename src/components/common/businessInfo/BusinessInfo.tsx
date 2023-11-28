@@ -1,34 +1,38 @@
-import React from 'react';
 import styled from 'styled-components/native';
-import {BusinessInfo} from '../../../constants/constants';
+import {BUSINESS_INFO} from '../../../constants/constants';
+import {HorizontalSpace, TextSub} from '../../../styles/styledConsts';
 import colors from '../../../styles/colors';
-import {TextSub} from '../../../styles/styledConsts';
 
-const BusinessInfoContents = () => {
+const BUSINESS_INFOContents = ({bgColor}: {bgColor?: string}) => {
   return (
-    <Container>
+    <Container style={{backgroundColor: bgColor && bgColor}}>
+      <BusinessNm>{BUSINESS_INFO.name}</BusinessNm>
+
+      <HorizontalSpace height={8} />
+      <ContentsText>대표자: {BUSINESS_INFO.representative}</ContentsText>
       <ContentsText>
-        {BusinessInfo.name}
-        {'\n'}
-        {'\n'}
-        대표자: {BusinessInfo.representative}
-        {'\n'}
-        사업자등록번호: {BusinessInfo.businessNumber}
-        {'\n'}
-        주소: {BusinessInfo.address}
+        사업자등록번호: {BUSINESS_INFO.businessNumber}
       </ContentsText>
+      <ContentsText>주소: {BUSINESS_INFO.address}</ContentsText>
+
+      <HorizontalSpace height={8} />
+      <ContentsText>이메일: {BUSINESS_INFO.email}</ContentsText>
+      <ContentsText>대표번호: {BUSINESS_INFO.phone}</ContentsText>
     </Container>
   );
 };
 
-export default BusinessInfoContents;
+export default BUSINESS_INFOContents;
 
 const Container = styled.View`
   flex: 1;
+  margin-top: 64px;
+  padding: 8px 16px 80px 16px;
+`;
+const BusinessNm = styled(TextSub)`
+  font-size: 12px;
 `;
 const ContentsText = styled(TextSub)`
+  margin-top: 2px;
   font-size: 11px;
-  color: ${colors.textSub};
-  margin-left: 16px;
-  margin-top: 8px;
 `;
