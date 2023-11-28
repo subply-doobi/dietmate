@@ -60,22 +60,29 @@ const OrderComplete = () => {
         1차 테스트에 참여해주셔서 감사합니다
       </Desc>
       <Desc>
+        <Desc>구매한 상품들은{'\n'}</Desc>
         <Desc style={{fontWeight: 'bold', color: colors.textMain}}>
-          스스로 구매하실 분들도{'\n'}
+          각 식품사에서 직접 배송
         </Desc>
-        <Desc style={{fontWeight: 'bold', color: colors.textMain}}>
-          주문내역
-        </Desc>
-        에서 식단을 확인할 수 있어요
+        이 진행됩니다
       </Desc>
+      
+      {/* <Box>
+        <BoxTitle>식단 예상 도착일</BoxTitle>
+        <DateText>{getDeliveryDate()}</DateText>
+      </Box> */}
+      <Desc>
+        배송 문의는 <Desc style={{fontWeight: 'bold', color: colors.textMain}}>
+        카톡 1:1 채팅
+        </Desc>을 이용해주세요{'\n'} 
+        [마이페이지] > [문의하기]
+      </Desc>
+
       <Desc>
         초기 서비스라 불편한 점이 많지만{'\n'}
         빠른 시일 내에 서비스를 개선할게요
       </Desc>
-      <Box>
-        <BoxTitle>식단 예상 도착일</BoxTitle>
-        <DateText>{getDeliveryDate()}</DateText>
-      </Box>
+
       <BtnBox>
         <BtnCTA btnStyle="border" onPress={goToOrderHistory}>
           <BtnText style={{color: colors.textSub}}>주문내역 바로가기</BtnText>
