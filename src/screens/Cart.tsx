@@ -44,6 +44,7 @@ const Cart = () => {
   const {currentDietNo, menuActiveSection} = useSelector(
     (state: RootState) => state.cart,
   );
+  const {shippingPrice} = useSelector((state: RootState) => state.order);
 
   // react-query
   const {data: dietData} = useListDiet();
@@ -58,7 +59,6 @@ const Cart = () => {
   const [createAlertShow, setCreateAlertShow] = useState(false);
   const [numberPickerShow, setNumberPickerShow] = useState(false);
   const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
-
   // navigation
   const {navigate} = useNavigation();
   // const {navigate} = navigation;
@@ -87,8 +87,7 @@ const Cart = () => {
     const dietTotal = dietTotalData
       ? dietTotalData?.map((d, idx) => (d.data ? d.data : []))
       : undefined;
-
-    // 끼니수량, 상품수량, 총 가격
+    // 끼니수량, 상품수량, 총 가격, 배송비
     const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotal);
 
     // 비어있는 끼니 확인
@@ -246,10 +245,13 @@ const Cart = () => {
         }}>
         {priceUnder_30000 ? (
           <BtnText>
-            30,000원 이상 주문 가능 (현재 : {commaToNum(priceTotal)}원)
+            30,000원 이상 주문 가능 (현재 :{' '}
+            {commaToNum(priceTotal + shippingPrice)}원)
           </BtnText>
         ) : (
-          <BtnText>주문하기 ({commaToNum(priceTotal)}원)</BtnText>
+          <BtnText>
+            주문하기 ({commaToNum(priceTotal + shippingPrice)}원)
+          </BtnText>
         )}
       </BtnBottomCTA>
 

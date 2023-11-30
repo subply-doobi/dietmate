@@ -26,6 +26,10 @@ import {useDispatch} from 'react-redux';
 import {setMenuActiveSection} from '../../stores/slices/cartSlice';
 import {View} from 'react-native';
 import {SERVICE_PRICE_PER_PRODUCT} from '../../constants/constants';
+import {icons} from '../../assets/icons/iconSource';
+import {CurrentRenderContext} from '@react-navigation/native';
+import {useEffect} from 'react';
+import {setFoodToOrder, setShippingPrice} from '../../stores/slices/orderSlice';
 
 const CartSummary = (props: any) => {
   const {onScrollToTop} = props;
@@ -61,7 +65,31 @@ const CartSummary = (props: any) => {
   //dietSeq 중복 제거
   let getResult = (i: string) => [...new Set(getDietSeq(i))];
 
+  //배송비 합계
+  const getShippingPriceTotal = () => {
+    return priceFromPlatformNm?.reduce(
+      (acc: number, cur: number, index: any) => {
+        const itemPrice = parseInt(cur);
+        const freeShippingPrice = parseInt(
+          regroupedDDAData[index][0]?.freeShippingPrice,
+        );
+        const shippingPrice =
+          itemPrice > freeShippingPrice
+            ? 0
+            : parseInt(regroupedDDAData[index][0].shippingPrice);
+        return acc + shippingPrice;
+      },
+      0,
+    );
+  };
+  const totalShippingPrice = getShippingPriceTotal();
+
+  // 배송비 redux에 저장
+  useEffect(() => {
+    dispatch(setShippingPrice(totalShippingPrice));
+  }, [totalShippingPrice]);
   return (
+    //장바구니 하단에 보여지는 총 끼니 수, 상품 수, 금액
     <TotalSummaryContainer>
       <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
         <SummaryText>총 끼니 ({menuNum} 개)</SummaryText>
@@ -71,18 +99,34 @@ const CartSummary = (props: any) => {
         </SummaryValue>
       </Row>
       <HorizontalLine style={{marginTop: 8}} />
+
+      {/* //식품사별로 그룹핑 */}
       {regroupedDDAData?.map((item, index) => {
         return (
           <View key={index}>
-            <SummaryValue style={{marginTop: 24}}>
-              {item[0].platformNm}
-            </SummaryValue>
+            <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
+              <SummaryValue style={{marginTop: 8}}>
+                {item[0].platformNm}
+              </SummaryValue>
+              <SearchBtn onPress={() => console.log('추후 추가')}>
+                <SearchImage source={icons.search_18} />
+              </SearchBtn>
+            </Row>
             <SummaryText style={{marginTop: 12}}>
               식품:{' '}
               {!!priceFromPlatformNm && commaToNum(priceFromPlatformNm[index])}
               원
             </SummaryText>
-            <TextSub style={{marginTop: 2}}>배송비:3000원</TextSub>
+            <TextSub style={{marginTop: 2}}>
+              배송비:
+              {!!priceFromPlatformNm && item[0].freeShippingPrice === '0'
+                ? '무료'
+                : item[0].freeShippingPrice - priceFromPlatformNm[index] < 0
+                ? '무료'
+                : `${commaToNum(item[0].shippingPrice)}(${commaToNum(
+                    item[0].freeShippingPrice - priceFromPlatformNm[index],
+                  )}원 더 담으면 무료배송)`}
+            </TextSub>
             <Row style={{marginTop: 16}}>
               {getResult(index).map((item: any, index) => {
                 let activeSections = [item.replace(/[^0-9]/g, '') - 1];
@@ -109,8 +153,8 @@ const CartSummary = (props: any) => {
         <SummaryValue>{commaToNum(priceTotal)} 원</SummaryValue>
       </Row>
       <Row style={{marginTop: 8, justifyContent: 'space-between'}}>
-        <SummaryText>배송비 </SummaryText>
-        <SummaryValue>{'4,000원'}</SummaryValue>
+        <SummaryText>배송비 합계</SummaryText>
+        <SummaryValue>{commaToNum(totalShippingPrice)}원</SummaryValue>
       </Row>
     </TotalSummaryContainer>
   );
@@ -140,4 +184,18 @@ const SmallButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   margin-right: 12px;
+`;
+
+const SearchImage = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const SearchBtn = styled.TouchableOpacity`
+  width: 32px;
+  height: 32px;
+  background-color: ${colors.backgroundLight2};
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
 `;

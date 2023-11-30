@@ -62,7 +62,7 @@ const Order = () => {
   const {navigate} = useNavigation();
 
   // redux
-  const {foodToOrder, selectedAddrIdx} = useSelector(
+  const {foodToOrder, selectedAddrIdx, shippingPrice} = useSelector(
     (state: RootState) => state.order,
   );
   const {
@@ -83,7 +83,6 @@ const Order = () => {
 
   // etc
   const {priceTotal, menuNum, productNum} = sumUpDietTotal(foodToOrder);
-
   // payment data
   const kakaopayData: IIamportPayment = {
     pg: 'kakaopay',
@@ -109,7 +108,8 @@ const Order = () => {
       receiver.value +
       receiverContact.value +
       entranceType.value +
-      entranceNote.value,
+      entranceNote.value +
+      shippingPrice,
   };
 
   // validation
@@ -171,7 +171,7 @@ const Order = () => {
       subTitle: (
         <HeaderSubTitle>
           식품가격: {commaToNum(priceTotal)}원 | 배송비:{' '}
-          {commaToNum(SHIPPING_PRICE)}원
+          {commaToNum(shippingPrice)}원
         </HeaderSubTitle>
       ),
       content: <></>,

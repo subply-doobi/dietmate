@@ -49,8 +49,9 @@ export const sumUpDietTotal = (dietTotalData: IDietTotalData | undefined) => {
   let menuNum = 0;
   let productNum = 0;
   let priceTotal = 0;
+  let shippingTotal = 0;
   if (!dietTotalData || dietTotalData.length === 0)
-    return {menuNum, productNum, priceTotal};
+    return {menuNum, productNum, priceTotal, shippingTotal};
   for (let i = 0; i < dietTotalData.length; i++) {
     if (dietTotalData[i].length === 0) continue;
     menuNum += 1 * parseInt(dietTotalData[i][0].qty, 10);
@@ -59,9 +60,10 @@ export const sumUpDietTotal = (dietTotalData: IDietTotalData | undefined) => {
         (parseInt(dietTotalData[i][j].price) + SERVICE_PRICE_PER_PRODUCT) *
         parseInt(dietTotalData[i][j].qty);
       productNum += parseInt(dietTotalData[i][j].qty);
+      shippingTotal += parseInt(dietTotalData[i][j].shippingPrice);
     }
   }
-  return {menuNum, productNum, priceTotal};
+  return {menuNum, productNum, priceTotal, shippingTotal};
 };
 
 export const getExceedIdx = (
