@@ -89,8 +89,8 @@ android {
         applicationId "com.subply.dietmate"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 7
-        versionName "1.0.0"
+        versionCode 8
+        versionName "1.0.2"
     }
 
    
