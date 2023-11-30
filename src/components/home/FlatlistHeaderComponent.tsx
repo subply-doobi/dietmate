@@ -40,28 +40,30 @@ interface IFlatlistHeaderComponent {
   searchedNum: number | undefined;
   setFilterModalShow: React.Dispatch<React.SetStateAction<boolean>>;
   setSortModalShow: React.Dispatch<React.SetStateAction<boolean>>;
+  param: boolean;
 }
 const FlatlistHeaderComponent = ({
   translateY,
   searchedNum,
   setSortModalShow,
   setFilterModalShow,
+  param,
 }: IFlatlistHeaderComponent) => {
   // redux
   const dispatch = useDispatch();
   const {copied: sortFilterCopied, applied: sortFilterApplied} = useSelector(
     (state: RootState) => state.sortFilter,
   );
-
   //state
   const [searchBarFocus, setSearchBarFocus] = useState(false);
-
   // ref
   const searchInputRef = useRef<TextInput | null>(null);
   useEffect(() => {
     searchInputRef.current?.focus();
   }, [searchBarFocus]);
-
+  useEffect(() => {
+    param && setSearchBarFocus(true);
+  }, [param]);
   // etc
   // 현재 정렬 value, label
   const sortKey = Object.keys(sortFilterApplied.sort).find(
@@ -138,7 +140,10 @@ const FlatlistHeaderComponent = ({
       <HorizontalSpace height={8} />
 
       {/* 필터 (검색 제외) */}
-      <Filter setFilterModalShow={setFilterModalShow} />
+      <Filter
+        setFilterModalShow={setFilterModalShow}
+        setSearchBarFocus={setSearchBarFocus}
+      />
 
       <HorizontalSpace height={16} />
     </Animated.View>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 
 import {Row, StyledProps, TextMain} from '../../styles/styledConsts';
@@ -23,14 +23,13 @@ import {checkisFiltered} from '../../util/home/filterUtils';
 
 interface IFilter {
   setFilterModalShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setSearchBarFocus: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Filter = ({setFilterModalShow}: IFilter) => {
+const Filter = ({setFilterModalShow, setSearchBarFocus}: IFilter) => {
   // redux
   const dispatch = useDispatch();
-  const {currentDietNo, totalFoodList} = useSelector(
-    (state: RootState) => state.cart,
-  );
+  const {currentDietNo} = useSelector((state: RootState) => state.cart);
   const {applied} = useSelector((state: RootState) => state.sortFilter);
 
   // react-query
@@ -72,6 +71,7 @@ const Filter = ({setFilterModalShow}: IFilter) => {
       <InitializeBtn
         onPress={() => {
           dispatch(initializeSortFilter());
+          setSearchBarFocus(false);
         }}>
         <InitializeImg source={icons.initialize_24} />
       </InitializeBtn>
