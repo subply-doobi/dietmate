@@ -38,7 +38,7 @@ import DAlert from '../components/common/alert/DAlert';
 import CommonAlertContent from '../components/common/alert/CommonAlertContent';
 
 import SortModalContent from '../components/home/SortModalContent';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import BusinessInfo from '../components/common/businessInfo/BusinessInfo';
 
 const Home = () => {
   // navigation
@@ -211,6 +211,10 @@ const Home = () => {
               );
             }}
             ref={flatListRef}
+            // 하단 사업자 정보
+            ListFooterComponent={() => (
+              <BusinessInfo bgColor={colors.backgroundLight} />
+            )}
           />
         )}
 
@@ -272,7 +276,6 @@ const Container = styled.SafeAreaView`
 
 const HomeContainer = styled.View`
   flex: 1;
-  padding: 0px 16px 0px 16px;
   background-color: ${colors.white};
 `;
 

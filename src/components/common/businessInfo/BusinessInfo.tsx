@@ -1,9 +1,8 @@
 import styled from 'styled-components/native';
 import {BUSINESS_INFO} from '../../../constants/constants';
 import {HorizontalSpace, TextSub} from '../../../styles/styledConsts';
-import colors from '../../../styles/colors';
 
-const BUSINESS_INFOContents = ({bgColor}: {bgColor?: string}) => {
+const BusinessInfo = ({bgColor}: {bgColor?: string}) => {
   return (
     <Container style={{backgroundColor: bgColor && bgColor}}>
       <BusinessNm>{BUSINESS_INFO.name}</BusinessNm>
@@ -22,7 +21,7 @@ const BUSINESS_INFOContents = ({bgColor}: {bgColor?: string}) => {
   );
 };
 
-export default BUSINESS_INFOContents;
+export default BusinessInfo;
 
 const Container = styled.View`
   flex: 1;

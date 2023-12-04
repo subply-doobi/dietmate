@@ -22,18 +22,14 @@ import {
   TextSub,
 } from '../../styles/styledConsts';
 import colors from '../../styles/colors';
-import {
-  BusinessInfo,
-  SCREENWIDTH,
-  SHIPPING_PRICE,
-} from '../../constants/constants';
+import {SCREENWIDTH, SHIPPING_PRICE} from '../../constants/constants';
 import {commaToNum} from '../../util/sumUp';
 
 import FoodToOrder from '../../components/order/FoodToOrder';
 import Orderer from '../../components/order/Orderer';
 import Address from '../../components/order/Address';
 import PaymentMethod from '../../components/order/PaymentMethod';
-import BusinessInfoContents from '../../components/common/businessInfo/BusinessInfo';
+import BusinessInfo from '../../components/common/businessInfo/BusinessInfo';
 
 import {useCreateOrder} from '../../query/queries/order';
 import {sumUpDietTotal} from '../../util/sumUp';
@@ -253,7 +249,7 @@ const Order = () => {
           onChange={updateSections}
           renderFooter={() => <HorizontalSpace height={16} />}
         />
-        <BusinessInfoContents />
+        <BusinessInfo />
       </ScrollView>
 
       {/* 결제버튼 */}

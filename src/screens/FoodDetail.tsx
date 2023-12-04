@@ -30,7 +30,7 @@ import NutrientsProgress from '../components/common/nutrient/NutrientsProgress';
 import NutrientPart from '../components/foodDetail/NutrientPart';
 import ShippingPart from '../components/foodDetail/ShippingPart';
 import FoodPart from '../components/foodDetail/FoodPart';
-import BusinessInfoContents from '../components/common/businessInfo/BusinessInfo';
+import BusinessInfo from '../components/common/businessInfo/BusinessInfo';
 
 import {BASE_URL} from '../query/queries/urls';
 import {
@@ -273,7 +273,7 @@ const FoodDetail = () => {
           </InnerContainer>
 
           {/* 사업자정보 */}
-          <BusinessInfoContents bgColor={colors.backgroundLight} />
+          <BusinessInfo bgColor={colors.backgroundLight} />
         </ScrollView>
       </Container>
       <View>

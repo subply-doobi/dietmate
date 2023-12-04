@@ -76,13 +76,11 @@ const FlatlistHeaderComponent = ({
     <Animated.View
       style={{
         position: 'absolute',
+        left: 16,
+        right: 16,
         transform: [{translateY: translateY}],
         zIndex: 10000,
         backgroundColor: 'white',
-        width: '100%',
-        marginLeft: 16,
-        // paddingLeft: 16,
-        // paddingRight: 16,
       }}>
       <Row
         style={{
