@@ -190,6 +190,32 @@ export const sumUpPriceOfSeller = (
       : acc;
   }, 0);
 };
+export const priceByPlatform = (
+  dietDetailAllData: IDietDetailAllData,
+  seller: string,
+) => {
+  let sellerPrice = 0;
+  let sellerShippingText;
+  let sellerShippingPrice = 0;
+  for (let i = 0; i < dietDetailAllData.length; i++) {
+    if (dietDetailAllData[i].platformNm === seller) {
+      sellerPrice +=
+        (parseInt(dietDetailAllData[i].price) + SERVICE_PRICE_PER_PRODUCT) *
+        parseInt(dietDetailAllData[i].qty);
+      sellerPrice >= parseInt(dietDetailAllData[i].freeShippingPrice)
+        ? (sellerShippingText = '무료')
+        : (sellerShippingText = `${commaToNum(
+            commaToNum(parseInt(dietDetailAllData[i].shippingPrice)),
+          )}원(${commaToNum(
+            parseInt(dietDetailAllData[i].freeShippingPrice) - sellerPrice,
+          )}원 더 담으면 무료배송)`);
+      sellerPrice >= parseInt(dietDetailAllData[i].freeShippingPrice)
+        ? (sellerShippingPrice = 0)
+        : (sellerShippingPrice = parseInt(dietDetailAllData[i].shippingPrice));
+    }
+  }
+  return {sellerPrice, sellerShippingText, sellerShippingPrice};
+};
 
 export const reGroupByDietNo = (
   dietDetailAllData: IDietDetailAllData | undefined,
@@ -222,4 +248,20 @@ export const commaToNum = (num: number | string | undefined) => {
   if (!num) return '0';
   const n = typeof num === 'number' ? num.toString() : num;
   return n.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+};
+
+//배송비합계 구하기
+export const getTotalShippingPrice = (
+  data: any,
+  dietDetailAllData: IDietDetailAllData,
+) => {
+  let shippingPriceTotal = 0;
+  for (let i = 0; i < data.length; i++) {
+    const {sellerShippingPrice} = priceByPlatform(
+      dietDetailAllData,
+      data[i][0].platformNm,
+    );
+    shippingPriceTotal += sellerShippingPrice;
+  }
+  return shippingPriceTotal;
 };

@@ -231,9 +231,8 @@ const Cart = () => {
 
       {/* 주문 버튼 */}
       <BtnBottomCTA
-        btnStyle={priceUnder_30000 ? 'inactivated' : 'activated'}
+        btnStyle={'activated'}
         width={SCREENWIDTH - 16}
-        disabled={priceUnder_30000}
         onPress={() => {
           if (addAlertStatus === 'empty') {
             // 비어있을 때 끼니 추가 안되는 것 방지하는 코드랑 중복
@@ -243,16 +242,7 @@ const Cart = () => {
           !!dietTotal && dispatch(setFoodToOrder(dietTotal));
           navigate('Order');
         }}>
-        {priceUnder_30000 ? (
-          <BtnText>
-            30,000원 이상 주문 가능 (현재 :{' '}
-            {commaToNum(priceTotal + shippingPrice)}원)
-          </BtnText>
-        ) : (
-          <BtnText>
-            주문하기 ({commaToNum(priceTotal + shippingPrice)}원)
-          </BtnText>
-        )}
+        <BtnText>주문하기 ({commaToNum(priceTotal + shippingPrice)}원)</BtnText>
       </BtnBottomCTA>
 
       {/* CreateDiet 알럿 */}

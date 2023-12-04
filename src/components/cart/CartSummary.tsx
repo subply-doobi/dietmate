@@ -15,6 +15,8 @@ import {
   reGroupByDietNo,
   reGroupBySeller,
   sumUpDietTotal,
+  getTotalShippingPrice,
+  priceByPlatform,
 } from '../../util/sumUp';
 
 import {
@@ -27,11 +29,17 @@ import {setMenuActiveSection} from '../../stores/slices/cartSlice';
 import {View} from 'react-native';
 import {SERVICE_PRICE_PER_PRODUCT} from '../../constants/constants';
 import {icons} from '../../assets/icons/iconSource';
-import {CurrentRenderContext} from '@react-navigation/native';
+import {CurrentRenderContext, useNavigation} from '@react-navigation/native';
 import {useEffect} from 'react';
 import {setFoodToOrder, setShippingPrice} from '../../stores/slices/orderSlice';
+import {
+  applySortFilter,
+  updateSearch,
+} from '../../stores/slices/sortFilterSlice';
 
 const CartSummary = (props: any) => {
+  // navigation
+  const {navigate} = useNavigation();
   const {onScrollToTop} = props;
   //redux
   const dispatch = useDispatch();
@@ -46,48 +54,17 @@ const CartSummary = (props: any) => {
   const dietTotalData = reGroupByDietNo(dietDetailAllData);
   const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
 
-  // 식품사: platformNm 식품: productNm 갯수: qty
-  const priceFromPlatformNm = regroupedDDAData?.map(item => {
-    return item.reduce((acc, cur) => {
-      return (
-        acc +
-        (parseInt(cur.price) + SERVICE_PRICE_PER_PRODUCT) * parseInt(cur.qty)
-      );
-    }, 0);
-  });
-
-  //regroupedDDAData에서 platformNm의 dietSeq 구하기
-  const getDietSeq = (i: string) =>
-    regroupedDDAData[i]?.map(item => {
-      return item.dietSeq;
-    });
-
-  //dietSeq 중복 제거
-  let getResult = (i: string) => [...new Set(getDietSeq(i))];
-
-  //배송비 합계
-  const getShippingPriceTotal = () => {
-    return priceFromPlatformNm?.reduce(
-      (acc: number, cur: number, index: any) => {
-        const itemPrice = parseInt(cur);
-        const freeShippingPrice = parseInt(
-          regroupedDDAData[index][0]?.freeShippingPrice,
-        );
-        const shippingPrice =
-          itemPrice > freeShippingPrice
-            ? 0
-            : parseInt(regroupedDDAData[index][0].shippingPrice);
-        return acc + shippingPrice;
-      },
-      0,
-    );
-  };
-  const totalShippingPrice = getShippingPriceTotal();
+  //총 배송비 계산
+  let shippingPriceTotal = getTotalShippingPrice(
+    regroupedDDAData,
+    dietDetailAllData,
+  );
 
   // 배송비 redux에 저장
   useEffect(() => {
-    dispatch(setShippingPrice(totalShippingPrice));
-  }, [totalShippingPrice]);
+    dispatch(setShippingPrice(shippingPriceTotal));
+  }, [shippingPriceTotal]);
+
   return (
     //장바구니 하단에 보여지는 총 끼니 수, 상품 수, 금액
     <TotalSummaryContainer>
@@ -102,42 +79,55 @@ const CartSummary = (props: any) => {
 
       {/* //식품사별로 그룹핑 */}
       {regroupedDDAData?.map((item, index) => {
+        //식품사별 가격, 배송비 합계
+        const {sellerPrice, sellerShippingText} = priceByPlatform(
+          dietDetailAllData,
+          item[0].platformNm,
+        );
         return (
           <View key={index}>
             <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
               <SummaryValue style={{marginTop: 8}}>
                 {item[0].platformNm}
               </SummaryValue>
-              <SearchBtn onPress={() => console.log('추후 추가')}>
+              <SearchBtn
+                onPress={() => (
+                  dispatch(updateSearch(item[0].platformNm)),
+                  dispatch(applySortFilter()),
+                  navigate('Home')
+                )}>
                 <SearchImage source={icons.search_18} />
               </SearchBtn>
             </Row>
             <SummaryText style={{marginTop: 12}}>
-              식품:{' '}
-              {!!priceFromPlatformNm && commaToNum(priceFromPlatformNm[index])}
-              원
+              식품: {commaToNum(sellerPrice)}원
             </SummaryText>
             <TextSub style={{marginTop: 2}}>
               배송비:
-              {!!priceFromPlatformNm && item[0].freeShippingPrice === '0'
-                ? '무료'
-                : item[0].freeShippingPrice - priceFromPlatformNm[index] < 0
-                ? '무료'
-                : `${commaToNum(item[0].shippingPrice)}(${commaToNum(
-                    item[0].freeShippingPrice - priceFromPlatformNm[index],
-                  )}원 더 담으면 무료배송)`}
+              {sellerShippingText}
             </TextSub>
             <Row style={{marginTop: 16}}>
-              {getResult(index).map((item: any, index) => {
-                let activeSections = [item.replace(/[^0-9]/g, '') - 1];
+              {item.map((dietItem: any, dietIndex) => {
+                //dietItem.dietSeq가 중복일 경우 하나만 가져오기
+                const isDietSeq = item.findIndex(
+                  (i: any) => i.dietSeq === dietItem.dietSeq,
+                );
+                if (isDietSeq !== dietIndex) {
+                  return null;
+                }
+                //dietItem.dietSeq에서 숫자만 가져오기
+                const getNumber = parseInt(
+                  dietItem.dietSeq.replace(/[^0-9]/g, ''),
+                  10,
+                );
                 return (
                   <SmallButton
-                    key={index}
+                    key={dietIndex}
                     onPress={() => {
-                      dispatch(setMenuActiveSection(activeSections));
+                      dispatch(setMenuActiveSection([getNumber - 1]));
                       onScrollToTop();
                     }}>
-                    <TextSub>{item}</TextSub>
+                    <TextMain>{dietItem.dietSeq}</TextMain>
                   </SmallButton>
                 );
               })}
@@ -154,7 +144,7 @@ const CartSummary = (props: any) => {
       </Row>
       <Row style={{marginTop: 8, justifyContent: 'space-between'}}>
         <SummaryText>배송비 합계</SummaryText>
-        <SummaryValue>{commaToNum(totalShippingPrice)}원</SummaryValue>
+        <SummaryValue>{commaToNum(shippingPriceTotal)}원</SummaryValue>
       </Row>
     </TotalSummaryContainer>
   );
