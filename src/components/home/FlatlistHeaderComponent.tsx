@@ -54,8 +54,10 @@ const FlatlistHeaderComponent = ({
   const {copied: sortFilterCopied, applied: sortFilterApplied} = useSelector(
     (state: RootState) => state.sortFilter,
   );
+
   //state
   const [searchBarFocus, setSearchBarFocus] = useState(false);
+
   // ref
   const searchInputRef = useRef<TextInput | null>(null);
   useEffect(() => {
@@ -64,6 +66,7 @@ const FlatlistHeaderComponent = ({
   useEffect(() => {
     param && setSearchBarFocus(true);
   }, [param]);
+
   // etc
   // 현재 정렬 value, label
   const sortKey = Object.keys(sortFilterApplied.sort).find(

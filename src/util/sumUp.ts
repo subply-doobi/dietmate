@@ -195,8 +195,12 @@ export const priceByPlatform = (
   seller: string,
 ) => {
   let sellerPrice = 0;
-  let sellerShippingText;
+  let sellerShippingText = '';
   let sellerShippingPrice = 0;
+
+  if (dietDetailAllData === undefined)
+    return {sellerPrice, sellerShippingText, sellerShippingPrice};
+
   for (let i = 0; i < dietDetailAllData.length; i++) {
     if (dietDetailAllData[i].platformNm === seller) {
       sellerPrice +=
@@ -206,7 +210,7 @@ export const priceByPlatform = (
         ? (sellerShippingText = '무료')
         : (sellerShippingText = `${commaToNum(
             commaToNum(parseInt(dietDetailAllData[i].shippingPrice)),
-          )}원(${commaToNum(
+          )}원 (${commaToNum(
             parseInt(dietDetailAllData[i].freeShippingPrice) - sellerPrice,
           )}원 더 담으면 무료배송)`);
       sellerPrice >= parseInt(dietDetailAllData[i].freeShippingPrice)

@@ -79,7 +79,7 @@ const CartSummary = (props: any) => {
         );
         return (
           <View key={index}>
-            <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
+            <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
               <SummarySellerText>{item[0].platformNm}</SummarySellerText>
               <SearchBtn
                 onPress={() => (
@@ -130,15 +130,15 @@ const CartSummary = (props: any) => {
         );
       })}
 
-      <HorizontalLine style={{marginTop: 8}} />
+      <HorizontalLine style={{marginTop: 24}} />
 
-      <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
-        <SummaryText>상품 가격 (총 {productNum} 개)</SummaryText>
+      <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
+        <SummaryText>상품 가격 (총 {productNum}개)</SummaryText>
         <SummaryValue>{commaToNum(priceTotal)} 원</SummaryValue>
       </Row>
-      <Row style={{marginTop: 8, justifyContent: 'space-between'}}>
-        <SummaryText>배송비 합계</SummaryText>
-        <SummaryValue>{commaToNum(shippingPriceTotal)}원</SummaryValue>
+      <Row style={{marginTop: 2, justifyContent: 'space-between'}}>
+        <SummmaryTextSub>배송비 합계</SummmaryTextSub>
+        <SummaryValueSub>{commaToNum(shippingPriceTotal)}원</SummaryValueSub>
       </Row>
     </TotalSummaryContainer>
   );
@@ -155,7 +155,15 @@ const SummaryText = styled(TextMain)`
   font-size: 14px;
 `;
 
+const SummmaryTextSub = styled(TextSub)`
+  font-size: 14px;
+`;
+
 const SummaryValue = styled(TextMain)`
+  font-size: 14px;
+  font-weight: bold;
+`;
+const SummaryValueSub = styled(TextSub)`
   font-size: 14px;
   font-weight: bold;
 `;
@@ -181,6 +189,9 @@ const SearchImage = styled.Image`
 `;
 
 const SearchBtn = styled.TouchableOpacity`
+  position: absolute;
+  top: 0px;
+  right: 0px;
   width: 32px;
   height: 32px;
   background-color: ${colors.backgroundLight2};
