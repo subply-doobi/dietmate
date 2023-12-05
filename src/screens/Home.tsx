@@ -40,7 +40,7 @@ import CommonAlertContent from '../components/common/alert/CommonAlertContent';
 import SortModalContent from '../components/home/SortModalContent';
 import BusinessInfo from '../components/common/businessInfo/BusinessInfo';
 
-const Home = () => {
+const Home = (props: any) => {
   // navigation
   const {navigate} = useNavigation();
 
@@ -60,11 +60,7 @@ const Home = () => {
   const [tooltipShow, setTooltipShow] = useState(false);
 
   // react-query
-  const {
-    data: baseLineData,
-    isLoading: baseLineLoading,
-    isFetching: isBaseLineFetching,
-  } = useGetBaseLine(); // 미리 캐싱
+  const {isFetching: isBaseLineFetching} = useGetBaseLine(); // 미리 캐싱
   const {data: dietDetailData, isLoading: listDietLoading} = useListDietDetail(
     currentDietNo,
     {
@@ -181,6 +177,7 @@ const Home = () => {
           searchedNum={productData?.length}
           setFilterModalShow={setFilterModalShow}
           setSortModalShow={setSortModalShow}
+          param={props.route.params}
         />
 
         {/* 식품 리스트 */}

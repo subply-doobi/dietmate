@@ -4,31 +4,36 @@ import styled from 'styled-components/native';
 //doobi util, redux, etc
 import colors from '../../styles/colors';
 //doobi Component
-import {
-  HorizontalLine,
-  Row,
-  TextMain,
-  TextSub,
-} from '../../styles/styledConsts';
+import {HorizontalLine, TextMain, TextSub} from '../../styles/styledConsts';
 import {
   commaToNum,
   reGroupByDietNo,
   reGroupBySeller,
   sumUpDietTotal,
+  getTotalShippingPrice,
+  priceByPlatform,
 } from '../../util/sumUp';
 
-import {
-  useListDiet,
-  useListDietDetailAll,
-  useListDietTotal,
-} from '../../query/queries/diet';
+import {useListDietDetailAll} from '../../query/queries/diet';
 import {useDispatch} from 'react-redux';
 import {setMenuActiveSection} from '../../stores/slices/cartSlice';
 import {View} from 'react-native';
-import {SERVICE_PRICE_PER_PRODUCT} from '../../constants/constants';
+import {icons} from '../../assets/icons/iconSource';
+import {useNavigation} from '@react-navigation/native';
+import {useEffect, useState} from 'react';
+import {setShippingPrice} from '../../stores/slices/orderSlice';
+import {
+  applySortFilter,
+  updateSearch,
+} from '../../stores/slices/sortFilterSlice';
 
 const CartSummary = (props: any) => {
+  //state
+  const [searchOpen, setSearchOpen] = useState(false);
+  // navigation
+  const {navigate} = useNavigation();
   const {onScrollToTop} = props;
+
   //redux
   const dispatch = useDispatch();
   // react-query
@@ -42,26 +47,19 @@ const CartSummary = (props: any) => {
   const dietTotalData = reGroupByDietNo(dietDetailAllData);
   const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
 
-  // 식품사: platformNm 식품: productNm 갯수: qty
-  const priceFromPlatformNm = regroupedDDAData?.map(item => {
-    return item.reduce((acc, cur) => {
-      return (
-        acc +
-        (parseInt(cur.price) + SERVICE_PRICE_PER_PRODUCT) * parseInt(cur.qty)
-      );
-    }, 0);
-  });
+  //총 배송비 계산
+  let shippingPriceTotal = getTotalShippingPrice(
+    regroupedDDAData,
+    dietDetailAllData,
+  );
 
-  //regroupedDDAData에서 platformNm의 dietSeq 구하기
-  const getDietSeq = (i: string) =>
-    regroupedDDAData[i]?.map(item => {
-      return item.dietSeq;
-    });
-
-  //dietSeq 중복 제거
-  let getResult = (i: string) => [...new Set(getDietSeq(i))];
+  // 배송비 redux에 저장
+  useEffect(() => {
+    dispatch(setShippingPrice(shippingPriceTotal));
+  }, [shippingPriceTotal, dispatch]);
 
   return (
+    //장바구니 하단에 보여지는 총 끼니 수, 상품 수, 금액
     <TotalSummaryContainer>
       <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
         <SummaryText>총 끼니 ({menuNum} 개)</SummaryText>
@@ -71,29 +69,59 @@ const CartSummary = (props: any) => {
         </SummaryValue>
       </Row>
       <HorizontalLine style={{marginTop: 8}} />
+
+      {/* //식품사별로 그룹핑 */}
       {regroupedDDAData?.map((item, index) => {
+        //식품사별 가격, 배송비 합계
+        const {sellerPrice, sellerShippingText} = priceByPlatform(
+          dietDetailAllData,
+          item[0].platformNm,
+        );
         return (
           <View key={index}>
-            <SummaryValue style={{marginTop: 24}}>
-              {item[0].platformNm}
-            </SummaryValue>
+            <Row style={{marginTop: 16, justifyContent: 'space-between'}}>
+              <SummarySellerText>{item[0].platformNm}</SummarySellerText>
+              <SearchBtn
+                onPress={() => (
+                  dispatch(updateSearch(item[0].platformNm)),
+                  dispatch(applySortFilter()),
+                  setSearchOpen(true),
+                  navigate('Home', {param: searchOpen})
+                )}>
+                <SearchImage source={icons.search_18} />
+              </SearchBtn>
+            </Row>
             <SummaryText style={{marginTop: 12}}>
-              식품:{' '}
-              {!!priceFromPlatformNm && commaToNum(priceFromPlatformNm[index])}
-              원
+              식품: {commaToNum(sellerPrice)}원
             </SummaryText>
-            <TextSub style={{marginTop: 2}}>배송비:3000원</TextSub>
+            <TextSub style={{marginTop: 2}}>
+              배송비:
+              {sellerShippingText}
+            </TextSub>
+
+            {/* 끼니 버튼 렌더링 컴포넌트 */}
             <Row style={{marginTop: 16}}>
-              {getResult(index).map((item: any, index) => {
-                let activeSections = [item.replace(/[^0-9]/g, '') - 1];
+              {item.map((dietItem, dietIndex) => {
+                //dietItem.dietSeq가 중복일 경우 하나만 가져오기
+                const isDietSeq = item.findIndex(
+                  i => i.dietSeq === dietItem.dietSeq,
+                );
+                if (isDietSeq !== dietIndex) {
+                  return null;
+                }
+                //dietItem.dietSeq에서 숫자만 가져오기
+                const getNumber = parseInt(
+                  dietItem.dietSeq.replace(/[^0-9]/g, ''),
+                  10,
+                );
                 return (
                   <SmallButton
-                    key={index}
+                    key={dietIndex}
                     onPress={() => {
-                      dispatch(setMenuActiveSection(activeSections));
+                      dispatch(setMenuActiveSection([getNumber - 1]));
                       onScrollToTop();
                     }}>
-                    <TextSub>{item}</TextSub>
+                    <TextMain>{dietItem.dietSeq}</TextMain>
                   </SmallButton>
                 );
               })}
@@ -109,8 +137,8 @@ const CartSummary = (props: any) => {
         <SummaryValue>{commaToNum(priceTotal)} 원</SummaryValue>
       </Row>
       <Row style={{marginTop: 8, justifyContent: 'space-between'}}>
-        <SummaryText>배송비 </SummaryText>
-        <SummaryValue>{'4,000원'}</SummaryValue>
+        <SummaryText>배송비 합계</SummaryText>
+        <SummaryValue>{commaToNum(shippingPriceTotal)}원</SummaryValue>
       </Row>
     </TotalSummaryContainer>
   );
@@ -132,6 +160,11 @@ const SummaryValue = styled(TextMain)`
   font-weight: bold;
 `;
 
+const SummarySellerText = styled(TextMain)`
+  font-size: 14px;
+  font-weight: bold;
+`;
+
 const SmallButton = styled.TouchableOpacity`
   width: 46px;
   height: 32px;
@@ -140,4 +173,22 @@ const SmallButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   margin-right: 12px;
+`;
+
+const SearchImage = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
+const SearchBtn = styled.TouchableOpacity`
+  width: 32px;
+  height: 32px;
+  background-color: ${colors.backgroundLight2};
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+`;
+
+const Row = styled.View`
+  flex-direction: row;
 `;

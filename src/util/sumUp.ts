@@ -49,8 +49,9 @@ export const sumUpDietTotal = (dietTotalData: IDietTotalData | undefined) => {
   let menuNum = 0;
   let productNum = 0;
   let priceTotal = 0;
+  let shippingTotal = 0;
   if (!dietTotalData || dietTotalData.length === 0)
-    return {menuNum, productNum, priceTotal};
+    return {menuNum, productNum, priceTotal, shippingTotal};
   for (let i = 0; i < dietTotalData.length; i++) {
     if (dietTotalData[i].length === 0) continue;
     menuNum += 1 * parseInt(dietTotalData[i][0].qty, 10);
@@ -59,9 +60,10 @@ export const sumUpDietTotal = (dietTotalData: IDietTotalData | undefined) => {
         (parseInt(dietTotalData[i][j].price) + SERVICE_PRICE_PER_PRODUCT) *
         parseInt(dietTotalData[i][j].qty);
       productNum += parseInt(dietTotalData[i][j].qty);
+      shippingTotal += parseInt(dietTotalData[i][j].shippingPrice);
     }
   }
-  return {menuNum, productNum, priceTotal};
+  return {menuNum, productNum, priceTotal, shippingTotal};
 };
 
 export const getExceedIdx = (
@@ -188,6 +190,32 @@ export const sumUpPriceOfSeller = (
       : acc;
   }, 0);
 };
+export const priceByPlatform = (
+  dietDetailAllData: IDietDetailAllData | undefined,
+  seller: string,
+) => {
+  let sellerPrice = 0;
+  let sellerShippingText;
+  let sellerShippingPrice = 0;
+  for (let i = 0; i < dietDetailAllData.length; i++) {
+    if (dietDetailAllData[i].platformNm === seller) {
+      sellerPrice +=
+        (parseInt(dietDetailAllData[i].price) + SERVICE_PRICE_PER_PRODUCT) *
+        parseInt(dietDetailAllData[i].qty);
+      sellerPrice >= parseInt(dietDetailAllData[i].freeShippingPrice)
+        ? (sellerShippingText = '무료')
+        : (sellerShippingText = `${commaToNum(
+            commaToNum(parseInt(dietDetailAllData[i].shippingPrice)),
+          )}원(${commaToNum(
+            parseInt(dietDetailAllData[i].freeShippingPrice) - sellerPrice,
+          )}원 더 담으면 무료배송)`);
+      sellerPrice >= parseInt(dietDetailAllData[i].freeShippingPrice)
+        ? (sellerShippingPrice = 0)
+        : (sellerShippingPrice = parseInt(dietDetailAllData[i].shippingPrice));
+    }
+  }
+  return {sellerPrice, sellerShippingText, sellerShippingPrice};
+};
 
 export const reGroupByDietNo = (
   dietDetailAllData: IDietDetailAllData | undefined,
@@ -220,4 +248,20 @@ export const commaToNum = (num: number | string | undefined) => {
   if (!num) return '0';
   const n = typeof num === 'number' ? num.toString() : num;
   return n.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+};
+
+//배송비합계 구하기
+export const getTotalShippingPrice = (
+  data: IDietDetailData[] | undefined,
+  dietDetailAllData: IDietDetailAllData | undefined,
+) => {
+  let shippingPriceTotal = 0;
+  for (let i = 0; i < data.length; i++) {
+    const {sellerShippingPrice} = priceByPlatform(
+      dietDetailAllData,
+      data[i][0].platformNm,
+    );
+    shippingPriceTotal += sellerShippingPrice;
+  }
+  return shippingPriceTotal;
 };
