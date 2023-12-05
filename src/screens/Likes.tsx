@@ -7,7 +7,13 @@ import {FlatList} from 'react-native';
 import styled from 'styled-components/native';
 
 // doobi Component
-import {HorizontalLine, Row, TextMain, TextSub} from '../styles/styledConsts';
+import {
+  Col,
+  HorizontalLine,
+  Row,
+  TextMain,
+  TextSub,
+} from '../styles/styledConsts';
 import FoodList from '../components/home/FoodList';
 import MenuSection from '../components/common/menuSection/MenuSection';
 
@@ -51,29 +57,28 @@ const Likes = () => {
   return (
     <Container>
       <MenuSection />
-      <LikeContainer>
-        <Row style={{marginTop: 32}}>
+      <Col style={{marginTop: 32, paddingHorizontal: 16}}>
+        <Row>
           <ListTitle>찜한 상품 </ListTitle>
           <NoOfFoods>{!!likeData ? ` ${likeData.length}개` : ``}</NoOfFoods>
         </Row>
         <HorizontalLine style={{marginTop: 8}} />
-        <FlatList
-          data={likeData}
-          style={{marginTop: 16}}
-          keyExtractor={extractListKey}
-          renderItem={renderFoodList}
-          getItemLayout={getItemLayout}
-          // ItemSeparatorComponent={getSeperator}
-          initialNumToRender={5}
-          windowSize={2}
-          maxToRenderPerBatch={7}
-          removeClippedSubviews={true}
-          onEndReachedThreshold={0.4}
-          showsVerticalScrollIndicator={false}
-          refreshing={likeDataIsFetching}
-          onRefresh={refetchLikeData}
-        />
-      </LikeContainer>
+      </Col>
+      <FlatList
+        data={likeData}
+        style={{marginTop: 16}}
+        keyExtractor={extractListKey}
+        renderItem={renderFoodList}
+        getItemLayout={getItemLayout}
+        initialNumToRender={5}
+        windowSize={2}
+        maxToRenderPerBatch={7}
+        removeClippedSubviews={true}
+        onEndReachedThreshold={0.4}
+        showsVerticalScrollIndicator={false}
+        refreshing={likeDataIsFetching}
+        onRefresh={refetchLikeData}
+      />
     </Container>
   );
 };

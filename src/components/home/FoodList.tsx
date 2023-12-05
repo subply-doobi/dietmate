@@ -271,6 +271,7 @@ const AniContainer = styled(Animated.createAnimatedComponent(View))`
   width: 100%;
   flex-direction: row;
   height: 152px;
+  padding: 0px 16px;
 `;
 const Button = styled.Pressable`
   width: 100%;
