@@ -21,6 +21,8 @@ export const PRIVACY_POLICY_URL =
 export const TERMS_OF_USE_URL =
   'https://sites.google.com/view/dietmate-useterm';
 export const INQUIRY_URL = 'http://pf.kakao.com/_DvmEG/chat';
+export const KOREAN_NUTRITION_REFERENCE_URL =
+  'https://www.kns.or.kr/FileRoom/FileRoom_view.asp?idx=108&BoardID=Kdr';
 
 // Doobi server category etc.
 //주간 운동 횟수
