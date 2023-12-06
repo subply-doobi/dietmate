@@ -11,14 +11,17 @@ import Lottie from 'lottie-react-native';
 // doobi util, redux, etc
 import colors from '../styles/colors';
 import {icons} from '../assets/icons/iconSource';
-import {SCREENWIDTH} from '../constants/constants';
+import {
+  IS_ANDROID,
+  KOREAN_NUTRITION_REFERENCE_URL,
+  SCREENWIDTH,
+} from '../constants/constants';
 
 // doobi Component
 import {BtnCTA, Container, Row, Col, StyledProps} from '../styles/styledConsts';
-import {checkNotShowAgain, updateNotShowAgain} from '../util/asyncStorage';
-import {join} from '@sentry/utils';
-
-// react-query
+import {updateNotShowAgain} from '../util/asyncStorage';
+import {Pressable} from 'react-native';
+import {link} from '../util/common/linking';
 
 interface IGuidePage {
   step: number;
@@ -71,12 +74,29 @@ const Guide = () => {
         </GuideHeaderText>
       ),
       subText: (
-        <GuideHeaderSubText>
-          초보자는 두비에게 계산을 맡겨주세요
-          {'\n'}
-          <GuideHeaderSubTextBold>마이페이지</GuideHeaderSubTextBold>에서
-          목표섭취량을 변경할 수 있어요
-        </GuideHeaderSubText>
+        <>
+          <GuideHeaderSubText>
+            초보자는 저희에게 계산을 맡겨주세요
+          </GuideHeaderSubText>
+          <Pressable onPress={() => link(KOREAN_NUTRITION_REFERENCE_URL)}>
+            <GuideHeaderSubText
+              style={{
+                marginTop: 0,
+                fontStyle: 'italic',
+                color: colors.blue,
+                textDecorationLine: 'underline',
+              }}>
+              (보건복지부 한국인 영양소 섭취기준, 2020)
+            </GuideHeaderSubText>
+          </Pressable>
+          <GuideHeaderSubText style={{marginTop: 0}}>
+            을 기반으로 목표영양을 구해드려요
+          </GuideHeaderSubText>
+          <GuideHeaderSubText>
+            <GuideHeaderSubTextBold>마이페이지</GuideHeaderSubTextBold>에서
+            목표섭취량을 스스로 변경할 수도 있어요
+          </GuideHeaderSubText>
+        </>
       ),
       stepImage: icons.guide1_32,
       onboardingSourceType: 'img',
@@ -104,8 +124,10 @@ const Guide = () => {
         </GuideHeaderSubText>
       ),
       stepImage: icons.guide2_32,
-      onboardingSourceType: 'lottie',
-      onboardingSource: require('../assets/onboardingLottie/autoMenu1.json'),
+      onboardingSourceType: IS_ANDROID ? 'lottie' : 'img',
+      onboardingSource: IS_ANDROID
+        ? require('../assets/onboardingLottie/autoMenu1.json')
+        : require('../assets/onboardingImg/autoMenu1.png'),
     },
     {
       step: 4,
@@ -124,8 +146,10 @@ const Guide = () => {
         </GuideHeaderSubText>
       ),
       stepImage: icons.guide3_32,
-      onboardingSourceType: 'lottie',
-      onboardingSource: require('../assets/onboardingLottie/autoMenu2.json'),
+      onboardingSourceType: IS_ANDROID ? 'lottie' : 'img',
+      onboardingSource: IS_ANDROID
+        ? require('../assets/onboardingLottie/autoMenu2.json')
+        : require('../assets/onboardingImg/autoMenu2.png'),
     },
     {
       step: 5,
@@ -145,8 +169,10 @@ const Guide = () => {
         </GuideHeaderSubText>
       ),
       stepImage: icons.guide4_32,
-      onboardingSourceType: 'lottie',
-      onboardingSource: require('../assets/onboardingLottie/manualAddDelete.json'),
+      onboardingSourceType: IS_ANDROID ? 'lottie' : 'img',
+      onboardingSource: IS_ANDROID
+        ? require('../assets/onboardingLottie/manualAddDelete.json')
+        : require('../assets/onboardingImg/manualAddDelete.png'),
     },
     {
       step: 6,
@@ -186,8 +212,10 @@ const Guide = () => {
         </GuideHeaderSubText>
       ),
       stepImage: icons.guide6_32,
-      onboardingSourceType: 'lottie',
-      onboardingSource: require('../assets/onboardingLottie/remainNutrFilter.json'),
+      onboardingSourceType: IS_ANDROID ? 'lottie' : 'img',
+      onboardingSource: IS_ANDROID
+        ? require('../assets/onboardingLottie/remainNutrFilter.json')
+        : require('../assets/onboardingImg/remainNutrFilter.png'),
     },
   ];
 
@@ -214,10 +242,6 @@ const Guide = () => {
       routes: [{name: 'Login'}],
     });
   };
-
-  //건너뛰기 누르면 다시는 안보여줌
-  //다음 다 눌러도 다시는 안보여줌
-  //유일하게 myPage에서 다시보기 가능한데 다보면 myPage로 이동
 
   return (
     <Container>
