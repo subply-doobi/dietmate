@@ -49,15 +49,19 @@ const Account = () => {
   };
   //회원탈퇴 Fn
   const onWithdrawal = async () => {
-    await deleteUser.mutateAsync();
-    await removeToken();
-    await resetGuide();
-    dispatch(initializeInput());
-
-    reset({
-      index: 0,
-      routes: [{name: 'Login'}],
-    });
+    try {
+      setIsAlert(false);
+      await deleteUser.mutateAsync();
+      await resetGuide();
+      dispatch(initializeInput());
+      await removeToken();
+      reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   // btns

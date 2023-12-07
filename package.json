@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@actbase/react-daum-postcode": "^1.0.4",
+    "@invertase/react-native-apple-authentication": "^2.3.0",
     "@miblanchard/react-native-slider": "^2.3.0",
     "@react-native-async-storage/async-storage": "^1.17.11",
     "@react-native-community/cli-doctor": "^12.0.0",

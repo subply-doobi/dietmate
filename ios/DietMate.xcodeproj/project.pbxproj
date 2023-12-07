@@ -46,6 +46,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = DietMate/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB4285AA2FC3A5CFE3ABE930 /* Pods-DietMate-DietMateTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DietMate-DietMateTests.debug.xcconfig"; path = "Target Support Files/Pods-DietMate-DietMateTests/Pods-DietMate-DietMateTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E03E4BDD2AFCCAA20026BFC6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E0669D362B20448600BBB37B /* DietMate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DietMate.entitlements; path = DietMate/DietMate.entitlements; sourceTree = "<group>"; };
 		E0F19AA62AE8FEEB00187D25 /* DietMate-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DietMate-Bridging-Header.h"; sourceTree = "<group>"; };
 		E0F19AA72AE8FEEC00187D25 /* SwiftBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBridge.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -91,6 +92,7 @@
 		13B07FAE1A68108700A75B9A /* DietMate */ = {
 			isa = PBXGroup;
 			children = (
+				E0669D362B20448600BBB37B /* DietMate.entitlements */,
 				E03E4BDD2AFCCAA20026BFC6 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -526,6 +528,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = DietMate/DietMate.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -561,6 +564,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = DietMate/DietMate.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
