@@ -334,7 +334,7 @@ const userInputSlice = createSlice({
   initialState,
   reducers: {
     initializeInput: state => {
-      state = initialState;
+      Object.assign(state, initialState);
     },
     loadBaseLineData: (state, action: PayloadAction<IBaseLineData>) => {
       // FirstInput
