@@ -18,7 +18,7 @@ import {
 } from '../constants/constants';
 
 // doobi Component
-import {BtnCTA, Container, Row, Col, StyledProps} from '../styles/styledConsts';
+import {BtnCTA, Row, Col, StyledProps} from '../styles/styledConsts';
 import {updateNotShowAgain} from '../util/asyncStorage';
 import {Pressable} from 'react-native';
 import {link} from '../util/common/linking';
@@ -297,6 +297,10 @@ const Guide = () => {
 };
 export default Guide;
 
+const Container = styled.SafeAreaView`
+  flex: 1;
+  margin: 16px;
+`;
 const StepImage = styled.Image`
   width: 32px;
   height: 32px;

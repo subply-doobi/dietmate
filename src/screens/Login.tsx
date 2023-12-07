@@ -1,43 +1,21 @@
 // Description: 로그인 화면
 //RN, 3rd
 import React, {useEffect, useCallback} from 'react';
+import {Platform} from 'react-native';
 import styled from 'styled-components/native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import colors from '../styles/colors';
 import {kakaoLogin, validateToken, guestLogin} from '../query/queries/token';
 import {IBaseLineData} from '../query/types/baseLine';
+import AppleLogin from '../components/login/appleLogin';
 
 // doobi util, redux, etc
-import {checkNotShowAgain} from '../util/asyncStorage';
+import {navigateByUserInfo} from '../util/login/navigateByUserInfo';
 
 //react-query
 import {useGetBaseLine} from '../query/queries/baseLine';
 //doobi Component
 import {BtnCTA, BtnText} from '../styles/styledConsts';
-const navigateByUserInfo = async (
-  data: IBaseLineData | any,
-  navigation: NavigationProp<any>,
-) => {
-  const hasBaseLine = Object.keys(data).length === 0 ? false : true;
-  const canSkipOnboarding = await checkNotShowAgain('ONBOARDING');
-
-  if (!canSkipOnboarding) {
-    // canSkipOnboarding 아니면 가이드로
-    navigation.navigate('Guide');
-    return;
-  }
-  if (!hasBaseLine) {
-    // canSkipOnboarding 있는데 baseline 없으면 FirstInput으로
-    navigation.navigate('InputNav', {screen: 'FirstInput'});
-    return;
-  }
-
-  // baseline 있으면 홈으로
-  navigation.reset({
-    index: 0,
-    routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
-  });
-};
 
 const Login = () => {
   // navigation
@@ -72,6 +50,14 @@ const Login = () => {
     checkUser();
   }, []);
 
+  // check platform
+  const checkPlatform = useCallback(() => {
+    if (Platform.OS === 'ios') {
+      return 'ios';
+    } else {
+      return 'android';
+    }
+  }, []);
   return (
     <Container>
       <Box>
@@ -82,6 +68,7 @@ const Login = () => {
         <BtnGuestLogin onPress={signInWithGuest}>
           <BtnTextGuest>GUEST LOGIN</BtnTextGuest>
         </BtnGuestLogin>
+        {checkPlatform() === 'ios' ? <AppleLogin /> : <></>}
       </Box>
     </Container>
   );
