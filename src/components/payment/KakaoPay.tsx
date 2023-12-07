@@ -3,6 +3,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import {useUpdateDiet, useCreateDiet} from '../../query/queries/diet';
 import {useUpdateOrder, useDeleteOrder} from '../../query/queries/order';
+import Loading from './Loading';
 
 const KakaoPay = () => {
   const route = useRoute();
@@ -56,6 +57,7 @@ const KakaoPay = () => {
         // success가 아닌 경우 1. 아임포트 자체오류 || 2. 사용자 취소 구분은 아직 없음
         response.imp_success === 'true' ? onPaymentSuccess() : onPaymentFail();
       }}
+      loading={<Loading />}
     />
   );
 };
