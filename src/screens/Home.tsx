@@ -39,8 +39,9 @@ import CommonAlertContent from '../components/common/alert/CommonAlertContent';
 
 import SortModalContent from '../components/home/SortModalContent';
 import BusinessInfo from '../components/common/businessInfo/BusinessInfo';
+import {applySortFilter} from '../stores/slices/sortFilterSlice';
 
-const Home = (props: any) => {
+const Home = () => {
   // navigation
   const {navigate} = useNavigation();
 
@@ -177,7 +178,6 @@ const Home = (props: any) => {
           searchedNum={productData?.length}
           setFilterModalShow={setFilterModalShow}
           setSortModalShow={setSortModalShow}
-          param={props.route.params}
         />
 
         {/* 식품 리스트 */}
@@ -198,7 +198,10 @@ const Home = (props: any) => {
             onEndReachedThreshold={0.4}
             showsVerticalScrollIndicator={false}
             refreshing={productIsFetching}
-            onRefresh={refetchProduct}
+            onRefresh={() => {
+              dispatch(applySortFilter());
+              refetchProduct();
+            }}
             progressViewOffset={HOME_FILTER_HEADER_HEIGHT}
             onScroll={e => {
               scrollY.setValue(

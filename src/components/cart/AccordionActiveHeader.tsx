@@ -40,21 +40,6 @@ const AccordionActiveHeader = ({
   // etc
   const priceSum = sumUpPrice(dietDetailData);
 
-  const HeaderColor = colors.darker;
-  // const HeaderColor = !dietDetailData
-  //   ? colors.dark
-  //   : dietDetailData.length === 0
-  //   ? colors.dark
-  //   : idx % 5 === 0
-  //   ? colors.main
-  //   : idx % 5 === 1
-  //   ? colors.blue
-  //   : idx % 5 === 2
-  //   ? colors.green
-  //   : idx % 5 === 3
-  //   ? colors.orange
-  //   : colors.warning;
-
   const onDeleteDiet = () => {
     deleteDietMutation.mutate({dietNo});
     setDeleteAlertShow(false);
@@ -62,18 +47,15 @@ const AccordionActiveHeader = ({
   };
 
   return (
-    <Container backgroundColor={HeaderColor}>
+    <Container backgroundColor={colors.dark}>
       <MenuSeq>{dietSeq}</MenuSeq>
-      <Row>
-        <PriceSum>{commaToNum(priceSum)}원</PriceSum>
-        {dietData && dietData?.length > 1 && (
-          <DeleteBtn
-            onPress={() => setDeleteAlertShow(true)}
-            disabled={dietData && dietData?.length > 1 ? false : true}>
-            <DeleteImage source={icons.cancelRound_24} />
-          </DeleteBtn>
-        )}
-      </Row>
+      {dietData && dietData?.length > 1 && (
+        <DeleteBtn
+          onPress={() => setDeleteAlertShow(true)}
+          disabled={dietData && dietData?.length > 1 ? false : true}>
+          <DeleteImage source={icons.cancelRound_24} />
+        </DeleteBtn>
+      )}
       <DAlert
         alertShow={deleteAlertShow}
         renderContent={() => <DeleteAlertContent deleteText={dietSeq} />}
@@ -89,7 +71,7 @@ export default AccordionActiveHeader;
 const Container = styled.View`
   height: 48px;
   width: 100%;
-  margin-top: 16px;
+  margin-top: 24px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -103,7 +85,7 @@ const MenuSeq = styled.Text`
   font-size: 18px;
   font-weight: bold;
   color: ${colors.white};
-  margin-left: 16px;
+  margin-left: 8px;
 `;
 
 const PriceSum = styled.Text`

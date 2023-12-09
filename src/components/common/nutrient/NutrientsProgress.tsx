@@ -20,7 +20,13 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {icons} from '../../../assets/icons/iconSource';
 import {IDietDetailData} from '../../../query/types/diet';
 
-const indicatorColorsByTitle: {[key: string]: string} = {
+const indicatorColorsByTitle2: {[key: string]: string} = {
+  '칼로리(kcal)': colors.main,
+  '탄수화물(g)': colors.main,
+  '단백질(g)': colors.main,
+  '지방(g)': colors.main,
+};
+const indicatorColorsByTitle1: {[key: string]: string} = {
   '칼로리(kcal)': colors.main,
   '탄수화물(g)': colors.blue,
   '단백질(g)': colors.green,
@@ -47,7 +53,7 @@ const ProgressBar = ({title, numerator, denominator}: INutrientProgress) => {
   const indicatorColor =
     numerator > denominator + nutrUpperBoundByTitle[title]
       ? colors.warning
-      : indicatorColorsByTitle[title];
+      : indicatorColorsByTitle2[title];
   return (
     <ProgressBarContainer>
       <ProgressBarTitle>{title}</ProgressBarTitle>

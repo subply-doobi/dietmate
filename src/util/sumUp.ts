@@ -152,9 +152,9 @@ export const compareNutrToTarget = (
   return exceedNumber === 0 ? 'notEnough' : 'exceed';
 };
 
-export const reGroupBySeller = (dietDetailData: IDietDetailData) => {
+export const reGroupBySeller = (dietDetailData: IDietDetailData | undefined) => {
   let reGroupedProducts: Array<IDietDetailData> = [[]];
-  if (dietDetailData.length === 0) return undefined;
+  if (dietDetailData === undefined || dietDetailData.length === 0) return reGroupedProducts;
   for (let i = 0; i < dietDetailData.length; i++) {
     if (i === 0) {
       reGroupedProducts[0].push(dietDetailData[i]);

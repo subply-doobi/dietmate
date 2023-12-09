@@ -21,7 +21,7 @@ import CartSummary from '../components/cart/CartSummary';
 import DAlert from '../components/common/alert/DAlert';
 import CreateLimitAlertContent from '../components/common/alert/CreateLimitAlertContent';
 import CommonAlertContent from '../components/common/alert/CommonAlertContent';
-import NumberPickerContent from '../components/cart/NumberPickerContent';
+import MenuNumSelectContent from '../components/cart/MenuNumSelectContent';
 import DBottomSheet from '../components/common/bottomsheet/DBottomSheet';
 import AccordionContent from '../components/cart/AccordionContent';
 import AccordionInactiveHeader from '../components/cart/AccordionInactiveHeader';
@@ -32,7 +32,6 @@ import {
   useCreateDiet,
   useGetDietDetailEmptyYn,
   useListDiet,
-  useListDietDetailAll,
   useListDietTotal,
 } from '../query/queries/diet';
 import {findDietSeq, findEmptyDietSeq} from '../util/findDietSeq';
@@ -48,8 +47,6 @@ const Cart = () => {
 
   // react-query
   const {data: dietData} = useListDiet();
-  const {data: dietDetailAllData, isInitialLoading: dietDADIsLoading} =
-    useListDietDetailAll();
   const {data: dietEmptyData} = useGetDietDetailEmptyYn();
   const dietTotalData =
     !!dietData && useListDietTotal(dietData, {enabled: !!dietData});
@@ -57,7 +54,7 @@ const Cart = () => {
 
   // state
   const [createAlertShow, setCreateAlertShow] = useState(false);
-  const [numberPickerShow, setNumberPickerShow] = useState(false);
+  const [menuNumSelectShow, setMenuNumSelectShow] = useState(false);
   const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
   // navigation
   const {navigate} = useNavigation();
@@ -106,7 +103,7 @@ const Cart = () => {
                   dietDetailData={dietTotalData[idx].data ?? []}
                   // setActiveSections={setActiveSections}
                   setDietNoToNumControl={setDietNoToNumControl}
-                  setNumberPickerShow={setNumberPickerShow}
+                  setMenuNumSelectShow={setMenuNumSelectShow}
                 />
               ),
               content: (
@@ -114,7 +111,7 @@ const Cart = () => {
                   dietNo={menu.dietNo}
                   dietDetailData={dietTotalData[idx].data ?? []}
                   setDietNoToNumControl={setDietNoToNumControl}
-                  setNumberPickerShow={setNumberPickerShow}
+                  setMenuNumSelectShow={setMenuNumSelectShow}
                 />
               ),
               activeHeader: (
@@ -146,10 +143,6 @@ const Cart = () => {
     };
   }, [dietTotalData]);
 
-  // 추가된 식품 하나도 없으면 주문버튼 비활성
-  const isEmpty = dietDetailAllData ? dietDetailAllData.length === 0 : false;
-  const priceUnder_30000 = priceTotal < 30000;
-
   // Fn
   const updateSections = (activeSections: number[]) => {
     dispatch(setMenuActiveSection(activeSections));
@@ -178,13 +171,9 @@ const Cart = () => {
     }
   }, [isFocused]);
 
-  const scrollRef = useRef<ScrollView>(null);
-  const onScrollToTop = () => {
-    scrollRef.current?.scrollTo({x: 0, y: 0, animated: true});
-  };
   return (
     <Container>
-      <ScrollView showsVerticalScrollIndicator={false} ref={scrollRef}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <ContentContainer>
           {totalStatus === 'isInitialLoading' ? (
             <ActivityIndicator style={{marginTop: 16}} />
@@ -204,7 +193,6 @@ const Cart = () => {
 
               {/* 끼니 추가 버튼 */}
               <CreateDietBtn onPress={onCreateDiet}>
-                <LeftBar />
                 {createDietMutation.isLoading ? (
                   <ActivityIndicator />
                 ) : (
@@ -215,7 +203,7 @@ const Cart = () => {
                       marginLeft: -16,
                     }}>
                     <PlusImage source={icons.plusSquare_24} />
-                    <CreateDietText>끼니 추가하기</CreateDietText>
+                    <CreateDietText>끼니 추가</CreateDietText>
                   </Row>
                 )}
               </CreateDietBtn>
@@ -225,7 +213,10 @@ const Cart = () => {
 
         {/* 끼니 정보 요약 */}
         <SummaryContainer>
-          <CartSummary onScrollToTop={onScrollToTop} />
+          <CartSummary
+            setMenuNumSelectShow={setMenuNumSelectShow}
+            setDietNoToNumControl={setDietNoToNumControl}
+          />
         </SummaryContainer>
       </ScrollView>
 
@@ -268,15 +259,15 @@ const Cart = () => {
 
       {/* 끼니 수량 조절용 BottomSheet */}
       <DBottomSheet
-        alertShow={numberPickerShow}
-        setAlertShow={setNumberPickerShow}
+        alertShow={menuNumSelectShow}
+        setAlertShow={setMenuNumSelectShow}
         renderContent={() => (
-          <NumberPickerContent
-            setNumberPickerShow={setNumberPickerShow}
+          <MenuNumSelectContent
+            setMenuNumSelectShow={setMenuNumSelectShow}
             dietNoToNumControl={dietNoToNumControl}
           />
         )}
-        onCancel={() => setNumberPickerShow(false)}
+        onCancel={() => setMenuNumSelectShow(false)}
       />
     </Container>
   );
@@ -312,7 +303,7 @@ const LeftBar = styled.View`
   height: 48px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
-  background-color: ${colors.dark};
+  background-color: ${colors.inactivated};
 `;
 
 const PlusImage = styled.Image`
@@ -322,8 +313,7 @@ const PlusImage = styled.Image`
 
 const CreateDietText = styled(TextSub)`
   margin-left: 8px;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 14px;
 `;
 
 const SummaryContainer = styled.View`

@@ -40,14 +40,12 @@ interface IFlatlistHeaderComponent {
   searchedNum: number | undefined;
   setFilterModalShow: React.Dispatch<React.SetStateAction<boolean>>;
   setSortModalShow: React.Dispatch<React.SetStateAction<boolean>>;
-  param: boolean;
 }
 const FlatlistHeaderComponent = ({
   translateY,
   searchedNum,
   setSortModalShow,
   setFilterModalShow,
-  param,
 }: IFlatlistHeaderComponent) => {
   // redux
   const dispatch = useDispatch();
@@ -61,11 +59,14 @@ const FlatlistHeaderComponent = ({
   // ref
   const searchInputRef = useRef<TextInput | null>(null);
   useEffect(() => {
-    searchInputRef.current?.focus();
+    searchBarFocus &&
+      sortFilterCopied.filter.search === '' &&
+      searchInputRef.current?.focus();
   }, [searchBarFocus]);
+
   useEffect(() => {
-    param && setSearchBarFocus(true);
-  }, [param]);
+    sortFilterApplied.filter.search !== '' && setSearchBarFocus(true);
+  }, [sortFilterApplied]);
 
   // etc
   // 현재 정렬 value, label
@@ -117,11 +118,7 @@ const FlatlistHeaderComponent = ({
               </SearchCancelBtn>
             </SearchBox>
           ) : (
-            <SearchBtn
-              onPress={() => {
-                setSearchBarFocus(true);
-                searchInputRef.current?.focus();
-              }}>
+            <SearchBtn onPress={() => setSearchBarFocus(true)}>
               <SearchImage source={icons.search_18} />
             </SearchBtn>
           )}

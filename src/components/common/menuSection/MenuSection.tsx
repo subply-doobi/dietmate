@@ -7,7 +7,7 @@ import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../../stores/store';
 import {icons} from '../../../assets/icons/iconSource';
-import {Row} from '../../../styles/styledConsts';
+import {HorizontalSpace, Row, TextMain} from '../../../styles/styledConsts';
 import {findDietSeq} from '../../../util/findDietSeq';
 import colors from '../../../styles/colors';
 
@@ -17,7 +17,7 @@ import MenuSelectCard from './MenuSelectCard';
 import DeleteAlertContent from '../alert/DeleteAlertContent';
 import NutrientsProgress from '../nutrient/NutrientsProgress';
 import DBottomSheet from '../bottomsheet/DBottomSheet';
-import NumberPickerContent from '../../cart/NumberPickerContent';
+import MenuNumSelectContent from '../../cart/MenuNumSelectContent';
 import Menu from '../../cart/Menu';
 
 // react-query
@@ -26,6 +26,8 @@ import {
   useListDiet,
   useListDietDetail,
 } from '../../../query/queries/diet';
+import MenuNumSelect from '../../cart/MenuNumSelect';
+import {commaToNum, sumUpPrice} from '../../../util/sumUp';
 
 const MenuSection = () => {
   // redux
@@ -42,7 +44,7 @@ const MenuSection = () => {
   const [dietNoToDelete, setDietNoToDelete] = useState<string>();
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
   const [menuShow, setMenuShow] = useState(false);
-  const [numberPickerShow, setNumberPickerShow] = useState(false);
+  const [menuNumSelectShow, setMenuNumSelectShow] = useState(false);
   const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
 
   // etc
@@ -51,8 +53,20 @@ const MenuSection = () => {
     dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
     setDeleteAlertShow(false);
   };
+  const priceSum = sumUpPrice(dietDetailData);
+  const currentQty =
+    dietDetailData && dietDetailData.length > 0
+      ? parseInt(dietDetailData[0].qty)
+      : 0;
+
+  const onMenuNoSelectPress = () => {
+    setDietNoToNumControl(currentDietNo);
+    setMenuNumSelectShow(true);
+  };
+
   return (
     <Container>
+      {/* 끼니 선택 책갈피 */}
       <HeaderRow>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <MenuSelectCard />
@@ -84,6 +98,27 @@ const MenuSection = () => {
 
       {/* progressBar !!!!!!!!!! */}
       <ProgressContainer onPress={() => setMenuShow(v => !v)}>
+        {/* 끼니 수량조절 */}
+        {menuShow && dietDetailData && (
+          <>
+            <Row
+              style={{
+                marginTop: 24,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <PriceSum>{commaToNum(priceSum)}원</PriceSum>
+              <MenuNumSelect
+                disabled={!!dietDetailData && dietDetailData.length === 0}
+                isForOpenModal={true}
+                currentQty={currentQty}
+                openMenuNumSelect={onMenuNoSelectPress}
+              />
+            </Row>
+            <HorizontalSpace height={8} />
+          </>
+        )}
+
         {dietDetailData && (
           <NutrientsProgress dietDetailData={dietDetailData} />
         )}
@@ -97,22 +132,22 @@ const MenuSection = () => {
             dietNo={currentDietNo}
             dietDetailData={dietDetailData}
             setDietNoToNumControl={setDietNoToNumControl}
-            setNumberPickerShow={setNumberPickerShow}
+            setMenuNumSelectShow={setMenuNumSelectShow}
           />
         </MenuContainer>
       )}
 
       {/* 끼니 수량 조절용 BottomSheet */}
       <DBottomSheet
-        alertShow={numberPickerShow}
-        setAlertShow={setNumberPickerShow}
+        alertShow={menuNumSelectShow}
+        setAlertShow={setMenuNumSelectShow}
         renderContent={() => (
-          <NumberPickerContent
-            setNumberPickerShow={setNumberPickerShow}
+          <MenuNumSelectContent
+            setMenuNumSelectShow={setMenuNumSelectShow}
             dietNoToNumControl={dietNoToNumControl}
           />
         )}
-        onCancel={() => setNumberPickerShow(false)}
+        onCancel={() => setMenuNumSelectShow(false)}
       />
     </Container>
   );
@@ -122,7 +157,7 @@ export default MenuSection;
 
 const Container = styled.View`
   background-color: ${colors.backgroundLight2};
-  padding: 0 0 8px;
+  padding: 0px 0px 16px 0px;
   width: 100%;
   z-index: 1000;
 `;
@@ -145,10 +180,7 @@ const DeleteImg = styled.Image`
 `;
 
 const ProgressContainer = styled.Pressable`
-  padding-top: 0px;
-  padding-bottom: 0px;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding: 0px 16px 8px 16px;
   background-color: ${colors.white};
 `;
 
@@ -157,6 +189,11 @@ const Arrow = styled.Image`
   height: 20px;
   align-self: center;
   z-index: -1;
+`;
+
+const PriceSum = styled(TextMain)`
+  font-size: 18px;
+  font-weight: bold;
 `;
 
 const MenuContainer = styled.View`
