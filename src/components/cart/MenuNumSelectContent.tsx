@@ -76,7 +76,7 @@ const MenuNumSelectContent = ({
         contentContainerStyle={{paddingBottom: 168}}
         showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback>
-          <>
+          <Col>
             <HorizontalSpace height={12} />
             <TitleText>{dietSeq}</TitleText>
 
@@ -137,7 +137,7 @@ const MenuNumSelectContent = ({
                   </Col>
                 );
               })}
-          </>
+          </Col>
         </TouchableWithoutFeedback>
       </ScrollView>
 
