@@ -63,7 +63,7 @@ const OrderHistoryDetail = () => {
   const addMutation = useCreateDietDetail();
   const deleteMutation = useDeleteDietDetail();
   const nutrientType = ['calorie', 'carb', 'protein', 'fat'];
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+  const {currentDietNo} = useSelector((state: RootState) => state.common);
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
   const {data: useListProductData} = useListProduct({
     dietNo: currentDietNo,

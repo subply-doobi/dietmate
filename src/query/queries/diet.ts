@@ -6,7 +6,7 @@ import {queryClient} from '../store';
 import {
   setCurrentDiet,
   setMenuActiveSection,
-} from '../../stores/slices/cartSlice';
+} from '../../stores/slices/commonSlice';
 import {useHandleError} from '../../util/handleError';
 import {
   DIET,
@@ -275,7 +275,7 @@ export const useUpdateDiet = (options?: IMutationOptions) => {
 };
 // DELETE //
 export const useDeleteDiet = () => {
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+  const {currentDietNo} = useSelector((state: RootState) => state.common);
   const dispatch = useDispatch();
   const handleError = useHandleError();
   const mutation = useMutation({

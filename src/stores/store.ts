@@ -2,7 +2,7 @@ import {configureStore} from '@reduxjs/toolkit';
 
 import userInputReducer from './slices/userInputSlice';
 import sortFilterReducer from './slices/sortFilterSlice';
-import cartReducer from './slices/cartSlice';
+import commonReducer from './slices/commonSlice';
 import orderReducer from './slices/orderSlice';
 import commonAlertReducer from './slices/commonAlertSlice';
 
@@ -10,7 +10,7 @@ export const store = configureStore({
   reducer: {
     userInput: userInputReducer,
     sortFilter: sortFilterReducer,
-    cart: cartReducer,
+    common: commonReducer,
     order: orderReducer,
     commonAlert: commonAlertReducer,
   },

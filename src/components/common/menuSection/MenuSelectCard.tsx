@@ -6,7 +6,7 @@ import {RootState} from '../../../stores/store';
 import {
   setCurrentDiet,
   setMenuActiveSection,
-} from '../../../stores/slices/cartSlice';
+} from '../../../stores/slices/commonSlice';
 import {Col, Row, StyledProps} from '../../../styles/styledConsts';
 import colors from '../../../styles/colors';
 import {getDietAddStatus} from '../../../util/getDietAddStatus';
@@ -22,7 +22,7 @@ import {
 
 const MenuSelectCard = () => {
   // redux
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+  const {currentDietNo} = useSelector((state: RootState) => state.common);
   const dispatch = useDispatch();
 
   // react-query

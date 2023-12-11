@@ -9,7 +9,7 @@ import {icons} from '../../assets/icons/iconSource';
 import {RootState} from '../../stores/store';
 import colors from '../../styles/colors';
 import {commaToNum, sumUpNutrients, sumUpPrice} from '../../util/sumUp';
-import {setMenuActiveSection} from '../../stores/slices/cartSlice';
+import {setMenuActiveSection} from '../../stores/slices/commonSlice';
 
 // doobi Component
 import DAlert from '../common/alert/DAlert';
@@ -51,7 +51,7 @@ const AccordionInactiveHeader = ({
 }: IAccordionInactiveHeader) => {
   // redux
   const dispatch = useDispatch();
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+  const {currentDietNo} = useSelector((state: RootState) => state.common);
 
   // react-query
   const {data: dietData} = useListDiet();

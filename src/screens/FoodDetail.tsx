@@ -73,7 +73,7 @@ const ShowPart = ({clicked, table, data}: IShowPart) => {
 
 const FoodDetail = () => {
   // redux
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+  const {currentDietNo} = useSelector((state: RootState) => state.common);
 
   // navigation
   const navigation = useNavigation();
@@ -314,8 +314,8 @@ const InnerContainer = styled.View`
 `;
 
 const FoodImageContainer = styled.Image`
-  width: 100%;
-  height: 240px;
+  width: ${SCREENWIDTH}px;
+  height: ${SCREENWIDTH}px;
   background-color: ${colors.inactivated};
 `;
 const SellerText = styled(TextSub)`

@@ -31,7 +31,7 @@ import {commaToNum, sumUpPrice} from '../../../util/sumUp';
 
 const MenuSection = () => {
   // redux
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+  const {currentDietNo} = useSelector((state: RootState) => state.common);
 
   // react-query
   const {data: dietData} = useListDiet();

@@ -29,7 +29,7 @@ interface IFilter {
 const Filter = ({setFilterModalShow, setSearchBarFocus}: IFilter) => {
   // redux
   const dispatch = useDispatch();
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+  const {currentDietNo} = useSelector((state: RootState) => state.common);
   const {applied} = useSelector((state: RootState) => state.sortFilter);
 
   // react-query

@@ -8,7 +8,7 @@ import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {useAsync} from '../../util/cart/cartCustomHooks';
-import {setCurrentDiet} from '../../stores/slices/cartSlice';
+import {setCurrentDiet} from '../../stores/slices/commonSlice';
 // doobi Component
 import {
   BtnCTA,
@@ -27,6 +27,7 @@ import {IDietDetailData} from '../../query/types/diet';
 import {IProductData} from '../../query/types/product';
 import {useCreateDietDetail, useListDietDetail} from '../../query/queries/diet';
 import {makeAutoMenu2} from '../../util/cart/autoMenu2';
+import Dropdown from '../userInput/Dropdown';
 
 interface IAutoDietModal {
   modalVisible: boolean;
@@ -44,7 +45,9 @@ const AutoDietModal = ({
 }: IAutoDietModal) => {
   // redux
   const dispatch = useDispatch();
-  const {totalFoodList} = useSelector((state: RootState) => state.cart);
+  const {totalFoodList, platformDDItems} = useSelector(
+    (state: RootState) => state.common,
+  );
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
@@ -56,6 +59,7 @@ const AutoDietModal = ({
   const [selectedCategory, setSelectedCategory] = useState<boolean[]>([]);
   const [sliderValue, setSliderValue] = useState<number[]>([4000, 12000]);
   const [autoFailedNum, setAutoFailedNum] = useState<number>(0);
+  const [wantedPlatform, setWantedPlatform] = useState<string>('');
 
   useEffect(() => {
     categoryData &&
@@ -105,10 +109,11 @@ const AutoDietModal = ({
     asyncFunction: async () => {
       const data = await makeAutoMenu2({
         totalFoodList,
-        initialMenu: dietDetailData, // !!!!!!!!!!!!! 바뀜 !!!!!!!!!!
+        initialMenu: dietDetailData,
         baseLine: baseLineData,
         selectedCategoryIdx,
         priceTarget: sliderValue,
+        wantedPlatform,
       }).then(res => res);
       return data;
     },
@@ -200,7 +205,8 @@ const AutoDietModal = ({
   const renderBaseContent = () => {
     return (
       <ModalContainer>
-        <ModalTitle>
+        {/* 식품유형은 일단 생략 */}
+        {/* <ModalTitle>
           {'추천받을 식품 유형 \n3가지 이상 선택해 주세요'}
         </ModalTitle>
         <CategoryBox>
@@ -225,10 +231,19 @@ const AutoDietModal = ({
         </CategoryBox>
         <HorizontalSpace height={12} />
 
-        <HorizontalLine />
+        <HorizontalLine /> */}
+
+        {/* 해당 판매자 식품을 하나 이상 포함 */}
+        <OptionTitle>{'해당 식품사를 포함해서 자동구성'}</OptionTitle>
+        <Dropdown
+          placeholder="식품사"
+          value={wantedPlatform}
+          setValue={setWantedPlatform}
+          items={platformDDItems}
+        />
 
         {/* 한 끼 가격 슬라이더 */}
-        <SliderTitle>한 끼 가격</SliderTitle>
+        <OptionTitle>한 끼 가격</OptionTitle>
         <DSlider
           sliderValue={sliderValue}
           setSliderValue={setSliderValue}
@@ -358,7 +373,7 @@ const CategoryText = styled(TextMain)`
   font-size: 14px;
 `;
 
-const SliderTitle = styled(TextMain)`
+const OptionTitle = styled(TextMain)`
   font-size: 16px;
   font-weight: bold;
   margin-top: 40px;

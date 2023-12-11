@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 // doobi util, redux, etc
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../stores/store';
-import {setCurrentDiet, setTotalFoodList} from '../stores/slices/cartSlice';
+import {setCurrentDiet, setTotalFoodList} from '../stores/slices/commonSlice';
 import {
   FOOD_LIST_ITEM_HEIGHT,
   HOME_FILTER_HEADER_HEIGHT,
@@ -48,7 +48,7 @@ const Home = () => {
   // redux
   const dispatch = useDispatch();
   const {currentDietNo, totalFoodListIsLoaded} = useSelector(
-    (state: RootState) => state.cart,
+    (state: RootState) => state.common,
   );
   const {applied: appliedSortFilter} = useSelector(
     (state: RootState) => state.sortFilter,

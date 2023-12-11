@@ -25,7 +25,7 @@ import {useCallback} from 'react';
 
 const Likes = () => {
   // redux
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+  const {currentDietNo} = useSelector((state: RootState) => state.common);
 
   // react-query
   const {
