@@ -25,8 +25,8 @@ export default BusinessInfo;
 
 const Container = styled.View`
   flex: 1;
-  margin-top: 64px;
-  padding: 8px 16px 80px 16px;
+  margin-top: 40px;
+  padding: 64px 16px 80px 16px;
 `;
 const BusinessNm = styled(TextSub)`
   font-size: 12px;

@@ -11,28 +11,60 @@ import NutrientsProgress from '../common/nutrient/NutrientsProgress';
 import {IDietDetailData} from '../../query/types/diet';
 import Menu from './Menu';
 import {SetStateAction} from 'react';
+import {commaToNum, sumUpPrice} from '../../util/sumUp';
+import {
+  HorizontalLine,
+  HorizontalSpace,
+  Row,
+  TextMain,
+} from '../../styles/styledConsts';
+import MenuNumSelect from './MenuNumSelect';
 
 interface IAccordionContent {
   dietNo: string;
   dietDetailData: IDietDetailData;
   setDietNoToNumControl: React.Dispatch<SetStateAction<string>>;
-  setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
+  setMenuNumSelectShow: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const AccordionContent = ({
   dietNo,
   dietDetailData,
   setDietNoToNumControl,
-  setNumberPickerShow,
+  setMenuNumSelectShow,
 }: IAccordionContent) => {
+  const dietPrice = sumUpPrice(dietDetailData);
+  const currentQty = dietDetailData[0]?.qty
+    ? parseInt(dietDetailData[0].qty, 10)
+    : 1;
+
+  const onMenuNoSelectPress = () => {
+    setDietNoToNumControl(dietNo);
+    setMenuNumSelectShow(true);
+  };
   return (
     <ContentBody>
+      <Row
+        style={{
+          marginTop: 24,
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+        <PriceSum>{commaToNum(dietPrice)}원</PriceSum>
+        <MenuNumSelect
+          disabled={dietDetailData.length === 0}
+          isForOpenModal={true}
+          currentQty={currentQty}
+          openMenuNumSelect={onMenuNoSelectPress}
+        />
+      </Row>
+      <HorizontalSpace height={8} />
       <NutrientsProgress dietDetailData={dietDetailData} />
       <Menu
         dietNo={dietNo}
         dietDetailData={dietDetailData}
         setDietNoToNumControl={setDietNoToNumControl}
-        setNumberPickerShow={setNumberPickerShow}
+        setMenuNumSelectShow={setMenuNumSelectShow}
       />
     </ContentBody>
   );
@@ -41,8 +73,13 @@ const AccordionContent = ({
 export default AccordionContent;
 
 const ContentBody = styled.View`
-  padding: 0px 8px 16px 8px;
+  padding: 0px 8px 24px 8px;
   background-color: ${colors.white};
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+`;
+
+const PriceSum = styled(TextMain)`
+  font-size: 18px;
+  font-weight: bold;
 `;

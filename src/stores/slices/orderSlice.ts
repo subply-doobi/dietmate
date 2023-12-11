@@ -3,7 +3,7 @@ import type {PayloadAction} from '@reduxjs/toolkit';
 
 import {IDietDetailData} from '../../query/types/diet';
 
-interface IOrderState {
+export interface IOrderState {
   // 제조사별 식품리스트
   foodToOrder: IDietDetailData[];
   selectedAddrIdx: number;

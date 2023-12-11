@@ -3,7 +3,6 @@ import styled from 'styled-components/native';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 // doobi util, redux, etc
-import colors from '../../styles/colors';
 import {icons} from '../../assets/icons/iconSource';
 import {
   commaToNum,
@@ -13,7 +12,13 @@ import {
 } from '../../util/sumUp';
 
 // doobi Component
-import {BtnSmall, BtnSmallText, Row, TextMain} from '../../styles/styledConsts';
+import {
+  BtnSmall,
+  BtnSmallText,
+  HorizontalLine,
+  Row,
+  TextMain,
+} from '../../styles/styledConsts';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import AutoDietModal from './AutoDietModal';
@@ -24,19 +29,20 @@ import CartFoodList from './CartFoodList';
 import {IDietDetailData} from '../../query/types/diet';
 import {useGetBaseLine} from '../../query/queries/baseLine';
 import {useDeleteDietDetail} from '../../query/queries/diet';
+import MenuNumSelect from './MenuNumSelect';
 
 interface IMenu {
   dietNo: string;
   dietDetailData: IDietDetailData;
   setDietNoToNumControl: React.Dispatch<SetStateAction<string>>;
-  setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
+  setMenuNumSelectShow: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const Menu = ({
   dietNo,
   dietDetailData,
   setDietNoToNumControl,
-  setNumberPickerShow,
+  setMenuNumSelectShow,
 }: IMenu) => {
   // react-query
   const {data: baseLineData} = useGetBaseLine();
@@ -131,15 +137,7 @@ const Menu = ({
           </BtnSmall>
         </SelectedDeleteRow>
       )}
-
-      {/* 삭제 알럿 */}
-      <DAlert
-        alertShow={deleteModalShow}
-        confirmLabel="삭제"
-        onConfirm={deleteSelected}
-        onCancel={() => setDeleteModalShow(false)}
-        renderContent={() => <DeleteAlertContent deleteText="선택된 식품을" />}
-      />
+      <HorizontalLine style={{marginTop: 16}} />
 
       {/* 현재 끼니 식품들 */}
       <CartFoodList
@@ -148,33 +146,25 @@ const Menu = ({
         dietNo={dietNo}
       />
 
-      {/* 자동구성 버튼 */}
+      {/* 자동구성 버튼, 모달 */}
       <AutoMenuBtn
         status={menuStatus}
         onPress={() => setAutoDietModalShow(true)}
       />
-
-      {/* 식품 없을 때는 끼니수량 및 가격 보이지 않도록 함 */}
-      {totalPrice !== 0 && (
-        <Row style={{marginTop: 24, justifyContent: 'flex-end'}}>
-          <MenuNoText>끼니 수량</MenuNoText>
-          <MenuNoSelect
-            onPress={() => {
-              setDietNoToNumControl(dietNo);
-              setNumberPickerShow(true);
-            }}>
-            <MenuNo>{currentQty}개</MenuNo>
-            <UpDownImage source={icons.upDown_24} />
-          </MenuNoSelect>
-          <MenuTotalPrice>합계 {commaToNum(totalPrice)}원</MenuTotalPrice>
-        </Row>
-      )}
-
       <AutoDietModal
         modalVisible={autoDietModalShow}
         setModalVisible={setAutoDietModalShow}
         dietNo={dietNo}
         dietDetailData={dietDetailData}
+      />
+
+      {/* 삭제 알럿 */}
+      <DAlert
+        alertShow={deleteModalShow}
+        confirmLabel="삭제"
+        onConfirm={deleteSelected}
+        onCancel={() => setDeleteModalShow(false)}
+        renderContent={() => <DeleteAlertContent deleteText="선택된 식품을" />}
       />
     </Container>
   );
@@ -187,8 +177,9 @@ const Container = styled.View`
 `;
 
 const SelectedDeleteRow = styled(Row)`
-  height: 52px;
   justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 24px;
 `;
 
 const SelectAllBox = styled(Row)``;
@@ -203,35 +194,4 @@ const CheckboxImage = styled.Image`
 const SelectAllText = styled(TextMain)`
   margin-left: 10px;
   font-size: 14px;
-`;
-
-const MenuNoText = styled(TextMain)`
-  font-size: 14px;
-`;
-
-const MenuNoSelect = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
-  width: 64px;
-  height: 32px;
-  margin-left: 8px;
-  background-color: ${colors.backgroundLight};
-  justify-content: space-between;
-`;
-
-const MenuNo = styled(TextMain)`
-  font-size: 14px;
-  font-weight: bold;
-  margin-left: 8px;
-`;
-
-const UpDownImage = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const MenuTotalPrice = styled(TextMain)`
-  margin-left: 16px;
-  font-size: 16px;
-  font-weight: bold;
 `;

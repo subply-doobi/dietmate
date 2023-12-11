@@ -1,9 +1,8 @@
-import {configureStore, Store} from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 
 import userInputReducer from './slices/userInputSlice';
 import sortFilterReducer from './slices/sortFilterSlice';
 import cartReducer from './slices/cartSlice';
-import likeReducer from './slices/likeSlice';
 import orderReducer from './slices/orderSlice';
 import commonAlertReducer from './slices/commonAlertSlice';
 
@@ -12,7 +11,6 @@ export const store = configureStore({
     userInput: userInputReducer,
     sortFilter: sortFilterReducer,
     cart: cartReducer,
-    like: likeReducer,
     order: orderReducer,
     commonAlert: commonAlertReducer,
   },

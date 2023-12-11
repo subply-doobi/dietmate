@@ -20,43 +20,55 @@ import {setMenuActiveSection} from '../../stores/slices/cartSlice';
 import {View} from 'react-native';
 import {icons} from '../../assets/icons/iconSource';
 import {useNavigation} from '@react-navigation/native';
-import {useEffect, useState} from 'react';
+import {SetStateAction, useEffect, useState} from 'react';
 import {setShippingPrice} from '../../stores/slices/orderSlice';
 import {
   applySortFilter,
   updateSearch,
 } from '../../stores/slices/sortFilterSlice';
 
-const CartSummary = (props: any) => {
-  //state
-  const [searchOpen, setSearchOpen] = useState(false);
+const CartSummary = ({
+  setMenuNumSelectShow,
+  setDietNoToNumControl,
+}: {
+  setMenuNumSelectShow: React.Dispatch<SetStateAction<boolean>>;
+  setDietNoToNumControl: React.Dispatch<SetStateAction<string>>;
+}) => {
   // navigation
   const {navigate} = useNavigation();
-  const {onScrollToTop} = props;
+
+  //state
+  const [searchOpen, setSearchOpen] = useState(false);
 
   //redux
   const dispatch = useDispatch();
+
   // react-query
   const {data: dietDetailAllData} = useListDietDetailAll();
 
-  //platformNm으로 그룹핑
+  // etc
+  // 판매자별 상품 데이터
   const regroupedDDAData =
     dietDetailAllData && reGroupBySeller(dietDetailAllData);
-
   // 총 끼니 수, 상품 수, 금액 계산
   const dietTotalData = reGroupByDietNo(dietDetailAllData);
   const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
-
-  //총 배송비 계산
+  //총 배송비
   let shippingPriceTotal = getTotalShippingPrice(
     regroupedDDAData,
     dietDetailAllData,
   );
-
+  // useEffect
   // 배송비 redux에 저장
   useEffect(() => {
     dispatch(setShippingPrice(shippingPriceTotal));
   }, [shippingPriceTotal, dispatch]);
+
+  const onSearchBtnPress = (platformNm: string) => {
+    dispatch(updateSearch(platformNm));
+    dispatch(applySortFilter());
+    navigate('Home');
+  };
 
   return (
     //장바구니 하단에 보여지는 총 끼니 수, 상품 수, 금액
@@ -81,13 +93,7 @@ const CartSummary = (props: any) => {
           <View key={index}>
             <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
               <SummarySellerText>{item[0].platformNm}</SummarySellerText>
-              <SearchBtn
-                onPress={() => (
-                  dispatch(updateSearch(item[0].platformNm)),
-                  dispatch(applySortFilter()),
-                  setSearchOpen(true),
-                  navigate('Home', {param: searchOpen})
-                )}>
+              <SearchBtn onPress={() => onSearchBtnPress(item[0].platformNm)}>
                 <SearchImage source={icons.search_18} />
               </SearchBtn>
             </Row>
@@ -118,8 +124,8 @@ const CartSummary = (props: any) => {
                   <SmallButton
                     key={dietIndex}
                     onPress={() => {
-                      dispatch(setMenuActiveSection([getNumber - 1]));
-                      onScrollToTop();
+                      setDietNoToNumControl(dietItem.dietNo);
+                      setMenuNumSelectShow(true);
                     }}>
                     <TextMain>{dietItem.dietSeq}</TextMain>
                   </SmallButton>

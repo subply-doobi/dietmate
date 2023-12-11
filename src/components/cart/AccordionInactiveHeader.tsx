@@ -30,6 +30,7 @@ import {useGetBaseLine} from '../../query/queries/baseLine';
 import {useDeleteDiet, useListDiet} from '../../query/queries/diet';
 import {IDietDetailData} from '../../query/types/diet';
 import {current} from '@reduxjs/toolkit';
+import MenuNumSelect from './MenuNumSelect';
 
 interface IAccordionInactiveHeader {
   idx: number;
@@ -37,7 +38,7 @@ interface IAccordionInactiveHeader {
   dietSeq: string;
   dietDetailData: IDietDetailData;
   setDietNoToNumControl: React.Dispatch<SetStateAction<string>>;
-  setNumberPickerShow: React.Dispatch<SetStateAction<boolean>>;
+  setMenuNumSelectShow: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const AccordionInactiveHeader = ({
@@ -46,14 +47,13 @@ const AccordionInactiveHeader = ({
   dietSeq,
   dietDetailData,
   setDietNoToNumControl,
-  setNumberPickerShow,
+  setMenuNumSelectShow,
 }: IAccordionInactiveHeader) => {
   // redux
   const dispatch = useDispatch();
   const {currentDietNo} = useSelector((state: RootState) => state.cart);
 
   // react-query
-  const {data: baseLineData} = useGetBaseLine();
   const {data: dietData} = useListDiet();
   const deleteDietMutation = useDeleteDiet();
 
@@ -63,24 +63,28 @@ const AccordionInactiveHeader = ({
   const [autoDietModalShow, setAutoDietModalShow] = useState(false);
 
   // etc
-  const {cal} = sumUpNutrients(dietDetailData);
-  const calTarget = baseLineData?.calorie;
   const numOfFoods = dietDetailData ? dietDetailData.length : 0;
   const priceSum = sumUpPrice(dietDetailData);
   const currentQty = dietDetailData[0]?.qty
     ? parseInt(dietDetailData[0].qty, 10)
     : 1;
-  const totalPrice = priceSum * currentQty;
-  const barColor = colors.dark;
+  const barColor = currentDietNo === dietNo ? colors.dark : colors.inactivated;
 
   const onDeleteDiet = () => {
     deleteDietMutation.mutate({dietNo});
     setDeleteAlertShow(false);
   };
 
+  const onMenuNoSelectPress = () => {
+    setDietNoToNumControl(dietNo);
+    setMenuNumSelectShow(true);
+  };
+
   return (
     <Container>
       <LeftBar backgroundColor={barColor} />
+
+      {/* 현재 구성중인 끼니 툴팁 */}
       <DTooltip
         tooltipShow={currentDietNo === dietNo}
         text="현재 구성중인 끼니"
@@ -88,24 +92,27 @@ const AccordionInactiveHeader = ({
         boxLeft={22}
         triangleLeft={18}
       />
-      <Col style={{width: 80, alignItems: 'center'}}>
-        <MenuSeq>{dietSeq}</MenuSeq>
 
-        {/* 칼로리 기준 그래프 */}
-        {calTarget && (
-          <Progress.Bar
-            style={{marginTop: 6}}
-            progress={cal / parseInt(calTarget)}
-            width={56}
-            height={4}
-            color={colors.dark}
-            unfilledColor={colors.bgBox}
-            borderWidth={0}
-            borderRadius={5}
-          />
-        )}
+      {/* accordionInactiveHeader Content */}
+      <Col style={{flex: 1, marginLeft: 16}}>
+        {/* 끼니, 가격, 식품 수 */}
+        <MenuSeq>{dietSeq}</MenuSeq>
+        <FoodNoAndPrice>
+          {numOfFoods !== 0
+            ? `${commaToNum(priceSum)}원 (${numOfFoods}가지 식품)`
+            : `식품을 담아보세요`}
+        </FoodNoAndPrice>
       </Col>
-      <VerticalLine height={48} width={2} />
+
+      {/* 끼니수량 - 수량선택버튼 */}
+      <Col style={{position: 'absolute', right: 8, bottom: 8}}>
+        <MenuNumSelect
+          disabled={dietDetailData.length === 0}
+          isForOpenModal={true}
+          currentQty={currentQty}
+          openMenuNumSelect={onMenuNoSelectPress}
+        />
+      </Col>
 
       {/* 메뉴삭제 버튼 */}
       <MenuDeleteBtn
@@ -115,42 +122,6 @@ const AccordionInactiveHeader = ({
           <DeleteIcon source={icons.cancelRound_24} />
         )}
       </MenuDeleteBtn>
-      {numOfFoods !== 0 ? (
-        <Col style={{flex: 1, height: '100%'}}>
-          {/* 메뉴 가격 */}
-          <FoodNoAndPrice>
-            {numOfFoods}가지 식품: {commaToNum(priceSum)}원
-          </FoodNoAndPrice>
-
-          {/* 끼니수량 - 수량선택버튼 - 가격 */}
-          <Row3>
-            <Row>
-              <MenuNoBox>
-                <MenuNoText>끼니 수량</MenuNoText>
-              </MenuNoBox>
-              <MenuNoSelect
-                onPress={() => {
-                  setDietNoToNumControl(dietNo);
-                  setNumberPickerShow(true);
-                }}>
-                <MenuNo>{currentQty}개</MenuNo>
-                <UpDownImage source={icons.upDown_24} />
-              </MenuNoSelect>
-            </Row>
-            <PriceSum>{commaToNum(totalPrice)}원</PriceSum>
-          </Row3>
-        </Col>
-      ) : (
-        // 끼니 자동구성 btn - modal
-        <Col style={{flex: 1, paddingRight: 16, paddingLeft: 16}}>
-          <AutoMenuBtn onPress={() => setAutoDietModalShow(true)}>
-            <Row>
-              <PlusBtnImage source={icons.plusSquareActivated_24} />
-              <AutoMenuText>귀찮을 땐 자동구성</AutoMenuText>
-            </Row>
-          </AutoMenuBtn>
-        </Col>
-      )}
 
       {/* 자동구성 모달 */}
       <AutoDietModal
@@ -197,28 +168,9 @@ const MenuSeq = styled(TextMain)`
   font-weight: bold;
 `;
 
-const AutoMenuBtn = styled.TouchableOpacity`
-  width: 100%;
-  height: 48px;
-  margin-left: -16px;
-  justify-content: center;
-  align-items: center;
-`;
-
-const PlusBtnImage = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const AutoMenuText = styled(TextSub)`
-  margin-left: 8px;
+const FoodNoAndPrice = styled(TextSub)`
   font-size: 14px;
-`;
-
-const FoodNoAndPrice = styled(TextMain)`
-  margin-left: 16px;
-  margin-top: 16px;
-  font-size: 14px;
+  margin-top: 4px;
 `;
 
 const MenuDeleteBtn = styled.TouchableOpacity`
@@ -234,46 +186,4 @@ const MenuDeleteBtn = styled.TouchableOpacity`
 const DeleteIcon = styled.Image`
   width: 24px;
   height: 24px;
-`;
-
-const Row3 = styled(Row)`
-  margin-top: 8px;
-  padding: 0px 16px 0px 16px;
-  width: 100%;
-  justify-content: space-between;
-`;
-
-const MenuNoBox = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-const MenuNoText = styled(TextMain)`
-  font-size: 14px;
-`;
-
-const MenuNoSelect = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
-  width: 64px;
-  height: 24px;
-  margin-left: 8px;
-  background-color: ${colors.backgroundLight};
-  justify-content: space-between;
-`;
-
-const MenuNo = styled(TextMain)`
-  font-size: 14px;
-  font-weight: bold;
-  margin-left: 4px;
-`;
-
-const UpDownImage = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const PriceSum = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
 `;
