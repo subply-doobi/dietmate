@@ -1,4 +1,4 @@
-import {IProduct} from '../stores/slices/cartSlice';
+import {IProduct} from '../stores/slices/commonSlice';
 
 export const hasProduct = (menu: Array<IProduct>, productNo: string) => {
   const arrOfProductNo = menu.map(product => product.productNo);

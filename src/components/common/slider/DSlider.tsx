@@ -4,6 +4,7 @@ import {Slider} from '@miblanchard/react-native-slider';
 
 import colors from '../../../styles/colors';
 import {StyledProps, TextMain} from '../../../styles/styledConsts';
+import {commaToNum} from '../../../util/sumUp';
 
 interface IDSlider {
   sliderValue: number[];
@@ -44,8 +45,7 @@ const DSlider = ({
           renderAboveThumbComponent={index => (
             <AboveThumbComponent thumbIdx={index}>
               <ThumbText>
-                {sliderValue[index]}
-                {text}
+                {commaToNum(sliderValue[index])}원{text}
               </ThumbText>
             </AboveThumbComponent>
           )}
@@ -74,7 +74,7 @@ const AboveThumbComponent = styled.View`
   width: 56px;
   height: 20px;
   position: absolute;
-  left: -${(56 - THUMB_SIZE) / 2}px;
+  left: -28px;
   top: ${({thumbIdx}: StyledProps) =>
     thumbIdx === 0 ? (THUMB_SIZE / 2) * 3 + 6 : -(THUMB_SIZE / 2 + 6)}px;
   align-items: center;

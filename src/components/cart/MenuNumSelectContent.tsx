@@ -20,7 +20,10 @@ import {commaToNum, reGroupBySeller, sumUpPrice} from '../../util/sumUp';
 import colors from '../../styles/colors';
 import {findDietSeq} from '../../util/findDietSeq';
 import {BASE_URL} from '../../query/queries/urls';
-import {SCREENWIDTH} from '../../constants/constants';
+import {
+  SCREENWIDTH,
+  SERVICE_PRICE_PER_PRODUCT,
+} from '../../constants/constants';
 
 // react-query
 import {
@@ -80,30 +83,31 @@ const MenuNumSelectContent = ({
             {/* 현재 끼니 식품 리스트 */}
             <HorizontalSpace height={8} />
             {dietDetailData &&
-              dietDetailData.map(
-                (food, idx) =>
-                  idx < 2 && (
-                    <Row key={idx} style={{marginTop: 16}}>
-                      <ThumbnailImg
-                        source={{uri: `${BASE_URL}${food.mainAttUrl}`}}
-                      />
-                      <Col
-                        style={{
-                          flex: 1,
-                          marginLeft: 8,
-                        }}>
-                        <TextGrey>{food.platformNm}</TextGrey>
-                        <Row style={{justifyContent: 'space-between'}}>
-                          <Text numberOfLines={1} ellipsizeMode="tail">
-                            {food.productNm}
-                          </Text>
-                          <TextGrey>{commaToNum(food.price)}원</TextGrey>
-                        </Row>
-                      </Col>
+              dietDetailData.map((food, idx) => (
+                <Row key={idx} style={{marginTop: 16}}>
+                  <ThumbnailImg
+                    source={{uri: `${BASE_URL}${food.mainAttUrl}`}}
+                  />
+                  <Col
+                    style={{
+                      flex: 1,
+                      marginLeft: 8,
+                    }}>
+                    <TextGrey>{food.platformNm}</TextGrey>
+                    <Row style={{justifyContent: 'space-between'}}>
+                      <Text numberOfLines={1} ellipsizeMode="tail">
+                        {food.productNm}
+                      </Text>
+                      <TextGrey>
+                        {commaToNum(
+                          parseInt(food.price) + SERVICE_PRICE_PER_PRODUCT,
+                        )}
+                        원
+                      </TextGrey>
                     </Row>
-                  ),
-              )}
-            <PlusNum>외 {productNum - 2}개 상품</PlusNum>
+                  </Col>
+                </Row>
+              ))}
             <HorizontalLine style={{marginTop: 24}} />
 
             {/* 전체 끼니 중 현재 끼니 상품들 판매자별로 보여주기 */}
@@ -194,13 +198,6 @@ const TextGrey = styled(TextSub)`
 `;
 const Text = styled(TextMain)`
   font-size: 14px;
-`;
-
-const PlusNum = styled(TextSub)`
-  font-size: 12px;
-
-  margin-top: 24px;
-  align-self: center;
 `;
 
 const BtnBox = styled.View`

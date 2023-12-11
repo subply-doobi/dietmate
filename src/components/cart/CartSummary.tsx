@@ -16,7 +16,7 @@ import {
 
 import {useListDietDetailAll} from '../../query/queries/diet';
 import {useDispatch} from 'react-redux';
-import {setMenuActiveSection} from '../../stores/slices/cartSlice';
+import {setMenuActiveSection} from '../../stores/slices/commonSlice';
 import {View} from 'react-native';
 import {icons} from '../../assets/icons/iconSource';
 import {useNavigation} from '@react-navigation/native';
@@ -153,7 +153,7 @@ const CartSummary = ({
 export default CartSummary;
 
 const TotalSummaryContainer = styled.View`
-  padding: 0px 16px 24px 16px;
+  padding: 0px 16px 80px 16px;
   background-color: ${colors.white};
 `;
 

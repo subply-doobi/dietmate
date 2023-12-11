@@ -9,7 +9,10 @@ import Accordion from 'react-native-collapsible/Accordion';
 // doobi util, redux, etc
 import colors from '../styles/colors';
 import {commaToNum, sumUpDietTotal} from '../util/sumUp';
-import {setCurrentDiet, setMenuActiveSection} from '../stores/slices/cartSlice';
+import {
+  setCurrentDiet,
+  setMenuActiveSection,
+} from '../stores/slices/commonSlice';
 import {SCREENWIDTH} from '../constants/constants';
 import {icons} from '../assets/icons/iconSource';
 import {getDietAddStatus} from '../util/getDietAddStatus';
@@ -41,7 +44,7 @@ const Cart = () => {
   // redux
   const dispatch = useDispatch();
   const {currentDietNo, menuActiveSection} = useSelector(
-    (state: RootState) => state.cart,
+    (state: RootState) => state.common,
   );
   const {shippingPrice} = useSelector((state: RootState) => state.order);
 
@@ -212,12 +215,10 @@ const Cart = () => {
         </ContentContainer>
 
         {/* 끼니 정보 요약 */}
-        <SummaryContainer>
-          <CartSummary
-            setMenuNumSelectShow={setMenuNumSelectShow}
-            setDietNoToNumControl={setDietNoToNumControl}
-          />
-        </SummaryContainer>
+        <CartSummary
+          setMenuNumSelectShow={setMenuNumSelectShow}
+          setDietNoToNumControl={setDietNoToNumControl}
+        />
       </ScrollView>
 
       {/* 주문 버튼 */}

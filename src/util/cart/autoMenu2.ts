@@ -423,6 +423,7 @@ interface IAutoMenu {
   baseLine: IBaseLineData | undefined;
   selectedCategoryIdx: number[];
   priceTarget: number[];
+  wantedPlatform: string;
 }
 export const makeAutoMenu2 = ({
   totalFoodList,
@@ -430,6 +431,7 @@ export const makeAutoMenu2 = ({
   baseLine,
   selectedCategoryIdx,
   priceTarget,
+  wantedPlatform,
 }: IAutoMenu): Promise<{
   sum: number[];
   recommendedFoods: IProductData[];
@@ -460,7 +462,6 @@ export const makeAutoMenu2 = ({
         // 추천할 식품 개수 정하기
         shuffle(targetNumArr);
         const targetNum = targetNumArr[0];
-
         for (let currentNum = 0; currentNum < targetNum; currentNum++) {
           availableFoods = getAvailableFoods({
             foods: availableFoods,
@@ -473,6 +474,19 @@ export const makeAutoMenu2 = ({
           if (availableFoods.length === 0) {
             NO_FOOD_AVAILABLE = true;
             break;
+          }
+
+          // 원하는 판매자가 있는 경우 첫 추천 식품에 적용
+          const wantedPlatformFoods = availableFoods.filter(
+            food => food.platformNm === wantedPlatform,
+          );
+          if (currentNum === 0 && wantedPlatform !== '') {
+            if (wantedPlatformFoods.length === 0) {
+              NO_FOOD_AVAILABLE = true;
+              break;
+            }
+            currentMenu.push(getRandomFood(wantedPlatformFoods));
+            continue;
           }
           currentMenu.push(getRandomFood(availableFoods));
         }

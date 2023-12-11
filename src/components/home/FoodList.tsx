@@ -45,7 +45,7 @@ interface IFoodList {
 const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
   const {navigate} = useNavigation();
   // redux
-  const {currentDietNo} = useSelector((state: RootState) => state.cart);
+  const {currentDietNo} = useSelector((state: RootState) => state.common);
 
   // react-query
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {

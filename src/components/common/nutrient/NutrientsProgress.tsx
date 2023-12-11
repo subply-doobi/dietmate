@@ -15,7 +15,7 @@ import DTooltip from '../tooltip/DTooltip';
 import {NUTR_ERROR_RANGE, SCREENWIDTH} from '../../../constants/constants';
 import {RootState} from '../../../stores/store';
 import {useDispatch, useSelector} from 'react-redux';
-import {setNutrTooltipText} from '../../../stores/slices/cartSlice';
+import {setNutrTooltipText} from '../../../stores/slices/commonSlice';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {icons} from '../../../assets/icons/iconSource';
 import {IDietDetailData} from '../../../query/types/diet';
@@ -81,7 +81,7 @@ const NutrientsProgress = ({
   const route = useRoute();
 
   // redux
-  const {nutrTooltipText} = useSelector((state: RootState) => state.cart);
+  const {nutrTooltipText} = useSelector((state: RootState) => state.common);
   const dispatch = useDispatch();
 
   // react-query
