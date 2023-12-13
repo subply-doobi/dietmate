@@ -22,7 +22,7 @@ import {
   TextSub,
 } from '../../styles/styledConsts';
 import colors from '../../styles/colors';
-import {SCREENWIDTH, SHIPPING_PRICE} from '../../constants/constants';
+import {SCREENWIDTH} from '../../constants/constants';
 import {commaToNum} from '../../util/sumUp';
 
 import FoodToOrder from '../../components/order/FoodToOrder';
@@ -86,7 +86,7 @@ const Order = () => {
     pay_method: 'card',
     name: `총 ${menuNum}개 끼니 (${productNum}개 식품)`,
     merchant_uid: `mid_${new Date().getTime()}`,
-    amount: String(priceTotal + SHIPPING_PRICE),
+    amount: String(priceTotal + shippingPrice),
     buyer_name: buyerName.value,
     buyer_tel: buyerTel.value,
     buyer_email: userData?.email ? userData.email : '',
@@ -207,7 +207,7 @@ const Order = () => {
     const orderNumber = await createOrderMutation.mutateAsync({
       // 두비서버 자체정보
       orderTypeCd: 'SP011002',
-      shippingPrice: '4000',
+      shippingPrice,
       orderPrice: kakaopayData.amount,
 
       // 아임포트 결제 정보 ,
@@ -263,7 +263,7 @@ const Order = () => {
         onPress={async () => onHandleOrder()}>
         <BtnText>
           {isValidAll && listAddressData?.length !== 0
-            ? `총 ${commaToNum(priceTotal + SHIPPING_PRICE)}원 결제하기`
+            ? `총 ${commaToNum(priceTotal + shippingPrice)}원 결제하기`
             : '정보를 모두 입력해주세요'}
         </BtnText>
       </BtnBottomCTA>

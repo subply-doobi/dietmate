@@ -75,19 +75,6 @@ const OrderHistory = () => {
     return productData;
   }, [orderData]);
 
-  //주문별 총합
-  const totalPrice = (productDataIdx: number) =>
-    regroupedData &&
-    regroupedData[productDataIdx]?.reduce((acc: any, cur: any) => {
-      if (cur[0]?.price === undefined) return acc;
-      return (
-        acc +
-        cur.reduce((acc: any, cur: any) => {
-          return acc + parseInt(cur?.price);
-        }, 0)
-      );
-    }, 0);
-
   // useEffect
   // 주문정보 비어있는지 확인
   useEffect(() => {
@@ -103,7 +90,7 @@ const OrderHistory = () => {
         {regroupedData?.map((order, orderIdx) => {
           return (
             <OrderBox key={orderIdx}>
-              <Row style={{justifyContent: 'space-between'}}>
+              <Row style={{justifyContent: 'space-between', marginTop: 24}}>
                 <OrderDate>{order[0][0].buyDate}</OrderDate>
                 <DetailBtn
                   onPress={() =>
@@ -222,7 +209,6 @@ const ArrowImage = styled.Image`
 `;
 const TotalPrice = styled(TextMain)`
   margin-top: 8px;
-  margin-bottom: 24px;
   font-size: 16px;
   font-weight: bold;
   align-self: flex-end;
