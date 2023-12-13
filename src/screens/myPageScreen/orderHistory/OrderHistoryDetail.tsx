@@ -41,7 +41,6 @@ import {IOrderedProduct} from '../../../query/types/order';
 import {
   INQUIRY_URL,
   SERVICE_PRICE_PER_PRODUCT,
-  SHIPPING_PRICE,
 } from '../../../constants/constants';
 import {link} from '../../../util/common/linking';
 
@@ -70,9 +69,9 @@ const OrderHistoryDetail = () => {
     appliedSortFilter,
   });
 
-  const isSelfOrder = orderDetailData[0][0]?.orderTypeCd === 'SP011001';
+  console.log(orderDetailData);
 
-  // const {data: orderDetailData, isLoading} = useListOrderDetail(orderNo);
+  const isSelfOrder = orderDetailData[0][0]?.orderTypeCd === 'SP011001';
   const isAdded = useListProductData?.filter(
     item => item.productChoiceYn === 'Y',
   );
@@ -93,17 +92,7 @@ const OrderHistoryDetail = () => {
     }
     return nutrient;
   };
-  const getTotalPrice = (arg: any) => {
-    let dietTotalPrice = [];
-    for (let i = 0; i < orderDetailData?.length; i++) {
-      let priceSum = 0;
-      for (let j = 0; j < arg[i]?.length; j++) {
-        priceSum += parseInt(arg[i][j]?.price);
-      }
-      dietTotalPrice.push(priceSum);
-    }
-    return dietTotalPrice;
-  };
+
   const nutrientTypeToKorean = (arg: String) => {
     switch (arg) {
       case 'calorie':
@@ -302,7 +291,7 @@ const OrderHistoryDetail = () => {
                 </Col>
               ))}
               <ShippingPriceText>
-                배송비: {commaToNum(SHIPPING_PRICE)}원
+                배송비: {commaToNum(3000)}원
               </ShippingPriceText>
               <PriceTotal style={{alignSelf: 'flex-end'}}>
                 전체 합계: {commaToNum(totalPrice)}원

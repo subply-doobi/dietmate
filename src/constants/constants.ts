@@ -14,8 +14,6 @@ export const HOME_FILTER_HEADER_HEIGHT = 120;
 
 // service constants
 export const SERVICE_PRICE_PER_PRODUCT = 300;
-export const SHIPPING_PRICE = 4000;
-export const FREE_SHIPPING_PRICE = 30000;
 export const PRIVACY_POLICY_URL =
   'https://sites.google.com/view/dietmate-pvpolicy/';
 export const TERMS_OF_USE_URL =

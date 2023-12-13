@@ -1,10 +1,19 @@
 // Description: 장바구니 페이지에서 총 끼니 수, 상품 수, 금액을 보여주는 컴포넌트
 //RN, 3rd
+import {SetStateAction, useEffect, useState} from 'react';
+import {View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import styled from 'styled-components/native';
+
 //doobi util, redux, etc
+import {useDispatch} from 'react-redux';
 import colors from '../../styles/colors';
-//doobi Component
-import {HorizontalLine, TextMain, TextSub} from '../../styles/styledConsts';
+import {setShippingPrice} from '../../stores/slices/orderSlice';
+import {
+  applySortFilter,
+  updateSearch,
+} from '../../stores/slices/sortFilterSlice';
+import {icons} from '../../assets/icons/iconSource';
 import {
   commaToNum,
   reGroupByDietNo,
@@ -14,18 +23,11 @@ import {
   priceByPlatform,
 } from '../../util/sumUp';
 
+//doobi Component
+import {HorizontalLine, TextMain, TextSub} from '../../styles/styledConsts';
+
+// react-query
 import {useListDietDetailAll} from '../../query/queries/diet';
-import {useDispatch} from 'react-redux';
-import {setMenuActiveSection} from '../../stores/slices/commonSlice';
-import {View} from 'react-native';
-import {icons} from '../../assets/icons/iconSource';
-import {useNavigation} from '@react-navigation/native';
-import {SetStateAction, useEffect, useState} from 'react';
-import {setShippingPrice} from '../../stores/slices/orderSlice';
-import {
-  applySortFilter,
-  updateSearch,
-} from '../../stores/slices/sortFilterSlice';
 
 const CartSummary = ({
   setMenuNumSelectShow,
@@ -36,9 +38,6 @@ const CartSummary = ({
 }) => {
   // navigation
   const {navigate} = useNavigation();
-
-  //state
-  const [searchOpen, setSearchOpen] = useState(false);
 
   //redux
   const dispatch = useDispatch();
