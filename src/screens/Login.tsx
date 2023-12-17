@@ -1,25 +1,26 @@
 // Description: 로그인 화면
-//RN, 3rd
-import React, {useEffect, useCallback} from 'react';
-import {Platform} from 'react-native';
+// RN, 3rd
+import {useEffect} from 'react';
 import styled from 'styled-components/native';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import colors from '../styles/colors';
 import {kakaoLogin, validateToken, guestLogin} from '../query/queries/token';
-import {IBaseLineData} from '../query/types/baseLine';
 import AppleLogin from '../components/login/appleLogin';
 
 // doobi util, redux, etc
 import {navigateByUserInfo} from '../util/login/navigateByUserInfo';
 
-//react-query
+// react-query
 import {useGetBaseLine} from '../query/queries/baseLine';
-//doobi Component
+
+// doobi Component
 import {BtnCTA, BtnText} from '../styles/styledConsts';
+import {IS_IOS} from '../constants/constants';
 
 const Login = () => {
   // navigation
   const navigation = useNavigation();
+
   // react-query
   const {refetch} = useGetBaseLine({enabled: false});
 
@@ -31,7 +32,7 @@ const Login = () => {
     baseLineData && navigateByUserInfo(baseLineData, navigation);
   };
 
-  //guest login
+  // guest login
   const signInWithGuest = async (): Promise<void> => {
     const GLdata = await guestLogin();
     if (GLdata === undefined) return;
@@ -39,6 +40,7 @@ const Login = () => {
     baseLineData && navigateByUserInfo(baseLineData, navigation);
   };
 
+  // useeffect
   useEffect(() => {
     const checkUser = async () => {
       const {isValidated} = await validateToken();
@@ -46,18 +48,9 @@ const Login = () => {
       const baseLineData = await refetch().then(res => res.data);
       baseLineData && navigateByUserInfo(baseLineData, navigation);
     };
-
     checkUser();
   }, []);
 
-  // check platform
-  const checkPlatform = useCallback(() => {
-    if (Platform.OS === 'ios') {
-      return 'ios';
-    } else {
-      return 'android';
-    }
-  }, []);
   return (
     <Container>
       <Box>
@@ -68,7 +61,7 @@ const Login = () => {
         <BtnGuestLogin onPress={signInWithGuest}>
           <BtnTextGuest>GUEST LOGIN</BtnTextGuest>
         </BtnGuestLogin>
-        {checkPlatform() === 'ios' ? <AppleLogin /> : <></>}
+        {IS_IOS ? <AppleLogin /> : <></>}
       </Box>
     </Container>
   );
@@ -101,6 +94,7 @@ const TitleText = styled.Text`
 const BtnKakaoLogin = styled(BtnCTA)`
   align-self: center;
 `;
+
 const BtnGuestLogin = styled(BtnCTA)`
   align-self: center;
   margin-top: 20px;
@@ -109,6 +103,7 @@ const BtnGuestLogin = styled(BtnCTA)`
 const BtnTextKakao = styled(BtnText)`
   color: ${colors.textMain};
 `;
+
 const BtnTextGuest = styled(BtnText)`
   color: ${colors.textMain};
 `;
