@@ -1,4 +1,3 @@
-import {UseQueryResult} from 'react-query';
 import {
   NUTR_ERROR_RANGE,
   SERVICE_PRICE_PER_PRODUCT,
@@ -12,7 +11,9 @@ import {
 import {IProductData} from '../query/types/product';
 import {IOrderData, IOrderedProduct} from '../query/types/order';
 
-export const sumUpNutrients = (dietDetail: IDietDetailData | undefined) => {
+export const sumUpNutrients = (
+  dietDetail: IDietDetailData | IOrderData | undefined,
+) => {
   let cal = 0;
   let carb = 0;
   let protein = 0;
@@ -152,31 +153,6 @@ export const compareNutrToTarget = (
   return exceedNumber === 0 ? 'notEnough' : 'exceed';
 };
 
-export const reGroupBySeller = (dietDetailData: IDietDetailData | undefined) => {
-  let reGroupedProducts: Array<IDietDetailData> = [[]];
-  if (dietDetailData === undefined || dietDetailData.length === 0) return reGroupedProducts;
-  for (let i = 0; i < dietDetailData.length; i++) {
-    if (i === 0) {
-      reGroupedProducts[0].push(dietDetailData[i]);
-      continue;
-    }
-    let isNewSeller = true;
-    for (let j = 0; j < reGroupedProducts.length; j++) {
-      if (
-        reGroupedProducts[j][0]?.platformNm === dietDetailData[i]?.platformNm
-      ) {
-        reGroupedProducts[j].push(dietDetailData[i]);
-        isNewSeller = false;
-        break;
-      }
-    }
-    if (isNewSeller) {
-      reGroupedProducts.push([dietDetailData[i]]);
-    }
-  }
-  return reGroupedProducts;
-};
-
 export const sumUpPriceOfSeller = (
   dietDetailAllData: IDietDetailAllData | undefined,
   seller: string,
@@ -219,33 +195,6 @@ export const priceByPlatform = (
     }
   }
   return {sellerPrice, sellerShippingText, sellerShippingPrice};
-};
-
-export const reGroupByDietNo = (
-  dietDetailAllData: IDietDetailAllData | undefined,
-) => {
-  let reGroupedProducts: Array<IDietDetailData> = [[]];
-  if (!dietDetailAllData || dietDetailAllData.length === 0)
-    return reGroupedProducts;
-
-  for (let i = 0; i < dietDetailAllData.length; i++) {
-    if (i === 0) {
-      reGroupedProducts[0].push(dietDetailAllData[i]);
-      continue;
-    }
-    let isNewDietNo = true;
-    for (let j = 0; j < reGroupedProducts.length; j++) {
-      if (reGroupedProducts[j][0]?.dietNo === dietDetailAllData[i]?.dietNo) {
-        reGroupedProducts[j].push(dietDetailAllData[i]);
-        isNewDietNo = false;
-        break;
-      }
-    }
-    if (isNewDietNo) {
-      reGroupedProducts.push([dietDetailAllData[i]]);
-    }
-  }
-  return reGroupedProducts;
 };
 
 export const commaToNum = (num: number | string | undefined) => {

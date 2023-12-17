@@ -12,7 +12,7 @@ import {
 } from '../../styles/styledConsts';
 import colors from '../../styles/colors';
 import {IProductData} from '../../query/types/product';
-import {commaToNum, reGroupBySeller} from '../../util/sumUp';
+import {commaToNum} from '../../util/sumUp';
 import {icons} from '../../assets/icons/iconSource';
 import {SCREENWIDTH} from '../../constants/constants';
 
@@ -23,6 +23,7 @@ import {useUpdateDiet, useCreateDiet} from '../../query/queries/diet';
 import {useUpdateOrder, useDeleteOrder} from '../../query/queries/order';
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
+import {reGroupBySeller} from '../../util/common/regroup';
 
 interface IProductInfo {
   group: IProductData[];

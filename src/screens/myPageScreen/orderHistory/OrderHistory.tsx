@@ -1,8 +1,10 @@
+// react, RN, 3rd
 import React, {useEffect, useMemo, useState} from 'react';
 import {ActivityIndicator, ScrollView} from 'react-native';
-
 import styled from 'styled-components/native';
-import {icons} from '../../../assets/icons/iconSource';
+import {useNavigation} from '@react-navigation/native';
+
+// Components
 import {
   Col,
   HorizontalLine,
@@ -12,30 +14,59 @@ import {
   VerticalLine,
   Container,
 } from '../../../styles/styledConsts';
-import colors from '../../../styles/colors';
-import {useNavigation} from '@react-navigation/native';
-import {useListOrder, useUpdateOrder} from '../../../query/queries/order';
-
-import {BASE_URL} from '../../../query/queries/urls';
-import {commaToNum, sumUpNutrients, sumUpPrice} from '../../../util/sumUp';
-import {isSearchBarAvailableForCurrentPlatform} from 'react-native-screens';
 import DAlert from '../../../components/common/alert/DAlert';
 import CommonAlertContent from '../../../components/common/alert/CommonAlertContent';
-interface IOrderData {
-  buyDate: string;
-  calorie: string;
-}
-interface IOrderDataGroupedByBuyDate {
-  [key: string]: IOrderData[];
-}
-interface IProductData {
-  buyDate: string;
-  calorie: string;
-  crb: string;
-  mainAttUrl: string;
-  price: string;
-  dietNo: string;
-}
+
+// util
+import colors from '../../../styles/colors';
+import {icons} from '../../../assets/icons/iconSource';
+
+// react-query
+import {useListOrder} from '../../../query/queries/order';
+import {BASE_URL} from '../../../query/queries/urls';
+import {commaToNum, sumUpNutrients, sumUpPrice} from '../../../util/sumUp';
+import {regroupByBuyDateAndDietNo} from '../../../util/common/regroup';
+import {IOrderedProduct} from '../../../query/types/order';
+
+const OrderedMenu = ({order}: {order: IOrderedProduct[][]}) => {
+  return (
+    <Row>
+      <ArrowImage source={icons.arrowLeft_20} />
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+        {/* 주문 내 끼니 별 반복 */}
+        {order.map((menu, menuIdx) => (
+          <Col key={menuIdx}>
+            <CaloriesText>
+              {commaToNum(sumUpNutrients(menu).cal)} kcal
+            </CaloriesText>
+            <Row
+              style={{
+                marginTop: 8,
+                columnGap: 8,
+              }}>
+              {/* 끼니 내 식품 별 반복 */}
+              {menu.map((product: any, productIdx: number) => (
+                <ThumbnailImage
+                  key={productIdx}
+                  source={{
+                    uri: `${BASE_URL}${product.mainAttUrl}`,
+                  }}
+                />
+              ))}
+              <VerticalLine
+                style={{
+                  backgroundColor: colors.line,
+                  marginRight: 8,
+                }}
+              />
+            </Row>
+          </Col>
+        ))}
+      </ScrollView>
+      <ArrowImage source={icons.arrowRight_20} />
+    </Row>
+  );
+};
 
 const OrderHistory = () => {
   // navigation
@@ -45,41 +76,14 @@ const OrderHistory = () => {
   // useState
   const [emptyAlertShow, setEmptyAlertShow] = useState(false);
 
-  //dietNo별로 새로 만든 배열
-  const regroupedData = useMemo(() => {
-    if (!orderData) return;
-    const orderDataGroupedByDietNo = orderData?.reduce((acc, cur) => {
-      if (acc[cur.dietNo]) {
-        acc[cur.dietNo].push(cur);
-      } else {
-        acc[cur.dietNo] = [cur];
-      }
-      return acc;
-    }, {});
-    //orderDataGroupedByDietNo key제거
-    const orderDataGroupedByDietNoWithoutKey = Object.values(
-      orderDataGroupedByDietNo,
-    );
-    //날짜별로 구매내역
-    const orderDataGroupedByBuyDate: IOrderDataGroupedByBuyDate =
-      orderDataGroupedByDietNoWithoutKey?.reduce((acc: any, cur: any) => {
-        if (acc[cur[0].buyDate]) {
-          acc[cur[0].buyDate].push(cur);
-        } else {
-          acc[cur[0].buyDate] = [cur];
-        }
-        return acc;
-      }, {});
-
-    const productData = Object.values(orderDataGroupedByBuyDate);
-    return productData;
-  }, [orderData]);
-
   // useEffect
   // 주문정보 비어있는지 확인
   useEffect(() => {
     orderData?.length === 0 && setEmptyAlertShow(true);
   }, [orderData]);
+
+  // 구매날짜, dietNo로 식단 묶기
+  const regroupedData = regroupByBuyDateAndDietNo(orderData);
 
   return isLoading ? (
     <ActivityIndicator />
@@ -106,44 +110,12 @@ const OrderHistory = () => {
                 </DetailBtn>
               </Row>
               <HorizontalLine />
-              <Row>
-                <ArrowImage source={icons.arrowLeft_20} />
-                <ScrollView
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}>
-                  {/* 주문 내 끼니 별 반복 */}
-                  {order.map((menu: any, menuIdx: number) => (
-                    <Col key={menuIdx}>
-                      <CaloriesText>
-                        {commaToNum(sumUpNutrients(menu).cal)} kcal
-                      </CaloriesText>
-                      <Row
-                        style={{
-                          marginTop: 8,
-                          columnGap: 8,
-                        }}>
-                        {/* 끼니 내 식품 별 반복 */}
-                        {menu.map((product: any, productIdx: number) => (
-                          <ThumbnailImage
-                            key={productIdx}
-                            source={{
-                              uri: `${BASE_URL}${product.mainAttUrl}`,
-                            }}
-                          />
-                        ))}
-                        <VerticalLine
-                          style={{
-                            backgroundColor: colors.line,
-                            marginRight: 8,
-                          }}
-                        />
-                      </Row>
-                    </Col>
-                  ))}
-                </ScrollView>
-                <ArrowImage source={icons.arrowRight_20} />
-              </Row>
+
+              {/* 해당 주문에 구매한 끼니들 */}
+              <OrderedMenu order={order} />
               <HorizontalLine style={{marginTop: 8}} />
+
+              {/* 해당 주문 금액 or 스스로구매 */}
               {order[0][0].orderTypeCd === 'SP011001' ? (
                 <SelfOrderTextBox>
                   <SelfOrderText>직접 구매한 식단</SelfOrderText>
@@ -155,6 +127,8 @@ const OrderHistory = () => {
           );
         })}
       </ScrollView>
+
+      {/* 주문내역 없을 때 알럿 */}
       <DAlert
         alertShow={emptyAlertShow}
         NoOfBtn={1}
