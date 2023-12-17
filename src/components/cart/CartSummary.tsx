@@ -16,8 +16,6 @@ import {
 import {icons} from '../../assets/icons/iconSource';
 import {
   commaToNum,
-  reGroupByDietNo,
-  reGroupBySeller,
   sumUpDietTotal,
   getTotalShippingPrice,
   priceByPlatform,
@@ -28,6 +26,7 @@ import {HorizontalLine, TextMain, TextSub} from '../../styles/styledConsts';
 
 // react-query
 import {useListDietDetailAll} from '../../query/queries/diet';
+import {reGroupByDietNo, reGroupBySeller} from '../../util/common/regroup';
 
 const CartSummary = ({
   setMenuNumSelectShow,

@@ -16,7 +16,7 @@ import {
 import MenuNumSelect from './MenuNumSelect';
 
 // util, constants
-import {commaToNum, reGroupBySeller, sumUpPrice} from '../../util/sumUp';
+import {commaToNum, sumUpPrice} from '../../util/sumUp';
 import colors from '../../styles/colors';
 import {findDietSeq} from '../../util/findDietSeq';
 import {BASE_URL} from '../../query/queries/urls';
@@ -31,6 +31,7 @@ import {
   useListDietDetail,
   useUpdateDietDetail,
 } from '../../query/queries/diet';
+import {reGroupBySeller} from '../../util/common/regroup';
 
 const MenuNumSelectContent = ({
   setMenuNumSelectShow,
