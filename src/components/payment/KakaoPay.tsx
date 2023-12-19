@@ -23,6 +23,13 @@ const KakaoPay = () => {
    *  3. navigate('Order')
    */
   const onPaymentSuccess = async () => {
+    reset({
+      index: 0,
+      routes: [
+        {name: 'BottomTabNav', params: {screen: 'Home'}},
+        {name: 'OrderComplete'},
+      ],
+    });
     await updateDietMutation.mutateAsync({
       statusCd: 'SP006005',
       orderNo: orderNumber.orderNo,
@@ -32,13 +39,6 @@ const KakaoPay = () => {
       statusCd: 'SP006005',
     });
     await createDietMutation.mutateAsync();
-    reset({
-      index: 0,
-      routes: [
-        {name: 'BottomTabNav', params: {screen: 'Home'}},
-        {name: 'OrderComplete'},
-      ],
-    });
   };
   const onPaymentFail = async () => {
     await updateDietMutation.mutateAsync({

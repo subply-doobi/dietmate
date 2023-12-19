@@ -91,41 +91,39 @@ const OrderHistory = () => {
     <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* 주문날짜 별로 반복*/}
-        {regroupedData?.map((order, orderIdx) => {
-          return (
-            <OrderBox key={orderIdx}>
-              <Row style={{justifyContent: 'space-between', marginTop: 24}}>
-                <OrderDate>{order[0][0].buyDate}</OrderDate>
-                <DetailBtn
-                  onPress={() =>
-                    navigate('OrderHistoryNav', {
-                      screen: 'OrderHistoryDetail',
-                      params: {
-                        orderDetailData: order,
-                        totalPrice: order[0][0].orderPrice,
-                      },
-                    })
-                  }>
-                  <DetailBtnText>상세보기</DetailBtnText>
-                </DetailBtn>
-              </Row>
-              <HorizontalLine />
+        {regroupedData?.map((order, orderIdx) => (
+          <OrderBox key={orderIdx}>
+            <Row style={{justifyContent: 'space-between', marginTop: 16}}>
+              <OrderDate>{order[0][0].buyDate}</OrderDate>
+              <DetailBtn
+                onPress={() =>
+                  navigate('OrderHistoryNav', {
+                    screen: 'OrderHistoryDetail',
+                    params: {
+                      orderDetailData: order,
+                      totalPrice: order[0][0].orderPrice,
+                    },
+                  })
+                }>
+                <DetailBtnText>상세보기</DetailBtnText>
+              </DetailBtn>
+            </Row>
+            {/* <HorizontalLine /> */}
 
-              {/* 해당 주문에 구매한 끼니들 */}
-              <OrderedMenu order={order} />
-              <HorizontalLine style={{marginTop: 8}} />
+            {/* 해당 주문에 구매한 끼니들 */}
+            <OrderedMenu order={order} />
 
-              {/* 해당 주문 금액 or 스스로구매 */}
-              {order[0][0].orderTypeCd === 'SP011001' ? (
-                <SelfOrderTextBox>
-                  <SelfOrderText>직접 구매한 식단</SelfOrderText>
-                </SelfOrderTextBox>
-              ) : (
-                <TotalPrice>{commaToNum(order[0][0].orderPrice)} 원</TotalPrice>
-              )}
-            </OrderBox>
-          );
-        })}
+            {/* 해당 주문 금액 or 스스로구매 */}
+            {order[0][0].orderTypeCd === String(`SP011001`) ? (
+              <SelfOrderTextBox>
+                <SelfOrderText>직접 구매한 식단</SelfOrderText>
+              </SelfOrderTextBox>
+            ) : (
+              <TotalPrice>{commaToNum(order[0][0].orderPrice)} 원</TotalPrice>
+            )}
+            <HorizontalLine style={{marginTop: 16}} />
+          </OrderBox>
+        ))}
       </ScrollView>
 
       {/* 주문내역 없을 때 알럿 */}
@@ -182,7 +180,7 @@ const ArrowImage = styled.Image`
   height: 20px;
 `;
 const TotalPrice = styled(TextMain)`
-  margin-top: 8px;
+  margin-top: 16px;
   font-size: 16px;
   font-weight: bold;
   align-self: flex-end;
@@ -196,7 +194,7 @@ const SelfOrderTextBox = styled.View`
   justify-content: center;
   align-items: flex-end;
 
-  margin-top: 8px;
+  margin-top: 16px;
   padding: 0px 8px 0px 0px;
 `;
 

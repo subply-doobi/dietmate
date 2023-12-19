@@ -2,7 +2,7 @@ import {IDietDetailAllData, IDietDetailData} from '../../query/types/diet';
 import {IOrderData, IOrderedProduct} from '../../query/types/order';
 
 export const reGroupBySeller = (
-  dietDetailData: IDietDetailData | undefined,
+  dietDetailData: IDietDetailData | IOrderedProduct[] | undefined,
 ) => {
   let reGroupedProducts: Array<IDietDetailData> = [[]];
   if (dietDetailData === undefined || dietDetailData.length === 0)
