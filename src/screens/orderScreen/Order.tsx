@@ -79,6 +79,7 @@ const Order = () => {
 
   // etc
   const {priceTotal, menuNum, productNum} = sumUpDietTotal(foodToOrder);
+
   // payment data
   const kakaopayData: IIamportPayment = {
     pg: 'kakaopay',
@@ -207,7 +208,7 @@ const Order = () => {
     const orderNumber = await createOrderMutation.mutateAsync({
       // 두비서버 자체정보
       orderTypeCd: 'SP011002',
-      shippingPrice,
+      shippingPrice: String(shippingPrice),
       orderPrice: kakaopayData.amount,
 
       // 아임포트 결제 정보 ,

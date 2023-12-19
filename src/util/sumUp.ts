@@ -30,7 +30,7 @@ export const sumUpNutrients = (
   return {cal, carb, protein, fat};
 };
 
-/** 수량 상관없는 가격합계만 */
+/** true | false 는 수량 고려할 것인지 */
 export const sumUpPrice = (
   dietDetail: IDietDetailData | IOrderedProduct[] | undefined,
   qtyConsidered?: boolean | undefined,
@@ -166,55 +166,49 @@ export const sumUpPriceOfSeller = (
       : acc;
   }, 0);
 };
-export const priceByPlatform = (
-  dietDetailAllData: IDietDetailAllData | undefined,
-  seller: string,
+export const getSellerShippingPrice = (
+  data: IDietDetailData | IOrderedProduct[] | undefined,
 ) => {
   let sellerPrice = 0;
   let sellerShippingText = '';
   let sellerShippingPrice = 0;
-
-  if (dietDetailAllData === undefined)
+  if (data === undefined)
     return {sellerPrice, sellerShippingText, sellerShippingPrice};
 
-  for (let i = 0; i < dietDetailAllData.length; i++) {
-    if (dietDetailAllData[i].platformNm === seller) {
-      sellerPrice +=
-        (parseInt(dietDetailAllData[i].price) + SERVICE_PRICE_PER_PRODUCT) *
-        parseInt(dietDetailAllData[i].qty);
-      sellerPrice >= parseInt(dietDetailAllData[i].freeShippingPrice)
-        ? (sellerShippingText = '무료')
-        : (sellerShippingText = `${commaToNum(
-            commaToNum(parseInt(dietDetailAllData[i].shippingPrice)),
-          )}원 (${commaToNum(
-            parseInt(dietDetailAllData[i].freeShippingPrice) - sellerPrice,
-          )}원 더 담으면 무료배송)`);
-      sellerPrice >= parseInt(dietDetailAllData[i].freeShippingPrice)
-        ? (sellerShippingPrice = 0)
-        : (sellerShippingPrice = parseInt(dietDetailAllData[i].shippingPrice));
-    }
+  for (let i = 0; i < data.length; i++) {
+    sellerPrice +=
+      (parseInt(data[i].price) + SERVICE_PRICE_PER_PRODUCT) *
+      parseInt(data[i].qty);
+    sellerPrice >= parseInt(data[i].freeShippingPrice)
+      ? (sellerShippingText = '무료')
+      : (sellerShippingText = `${commaToNum(
+          commaToNum(parseInt(data[i].shippingPrice)),
+        )}원 (${commaToNum(
+          parseInt(data[i].freeShippingPrice) - sellerPrice,
+        )}원 더 담으면 무료배송)`);
+    sellerPrice >= parseInt(data[i].freeShippingPrice)
+      ? (sellerShippingPrice = 0)
+      : (sellerShippingPrice = parseInt(data[i].shippingPrice));
   }
   return {sellerPrice, sellerShippingText, sellerShippingPrice};
+};
+
+/** 배송비 전체 합계. seller별로 regrouped된 데이터를 parameter로 받음 */
+export const getTotalShippingPrice = (
+  data: IDietDetailData[] | IOrderedProduct[][] | undefined,
+) => {
+  let shippingPriceTotal = 0;
+  if (data === undefined) return shippingPriceTotal;
+
+  for (let i = 0; i < data.length; i++) {
+    const {sellerShippingPrice} = getSellerShippingPrice(data[i]);
+    shippingPriceTotal += sellerShippingPrice;
+  }
+  return shippingPriceTotal;
 };
 
 export const commaToNum = (num: number | string | undefined) => {
   if (!num) return '0';
   const n = typeof num === 'number' ? num.toString() : num;
   return n.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
-};
-
-//배송비합계 구하기
-export const getTotalShippingPrice = (
-  data: IDietDetailData[] | undefined,
-  dietDetailAllData: IDietDetailAllData | undefined,
-) => {
-  let shippingPriceTotal = 0;
-  for (let i = 0; i < data.length; i++) {
-    const {sellerShippingPrice} = priceByPlatform(
-      dietDetailAllData,
-      data[i][0].platformNm,
-    );
-    shippingPriceTotal += sellerShippingPrice;
-  }
-  return shippingPriceTotal;
 };

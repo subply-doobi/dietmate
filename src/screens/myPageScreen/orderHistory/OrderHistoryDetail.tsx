@@ -1,19 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Linking,
-  ScrollView,
-  Text,
-} from 'react-native';
+import {useEffect} from 'react';
+import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 
 import {RootState} from '../../../stores/store';
 import colors from '../../../styles/colors';
-import {commaToNum, sumUpPrice} from '../../../util/sumUp';
-import DeleteAlertContent from '../../../components/common/alert/DeleteAlertContent';
-import DAlert from '../../../components/common/alert/DAlert';
+import {
+  commaToNum,
+  getTotalShippingPrice,
+  sumUpNutrients,
+  sumUpPrice,
+} from '../../../util/sumUp';
 import {
   TextMain,
   VerticalLine,
@@ -33,9 +30,7 @@ import {
   useDeleteDietDetail,
   useListDietDetail,
 } from '../../../query/queries/diet';
-import {useListProduct} from '../../../query/queries/product';
 import {IProductData} from '../../../query/types/product';
-import {useListOrderDetail} from '../../../query/queries/order';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {IOrderedProduct} from '../../../query/types/order';
 import {
@@ -43,68 +38,25 @@ import {
   SERVICE_PRICE_PER_PRODUCT,
 } from '../../../constants/constants';
 import {link} from '../../../util/common/linking';
+import {reGroupBySeller} from '../../../util/common/regroup';
 
-const OrderHistoryDetail = () => {
-  // navigation
-  const route = useRoute();
-  const navigation = useNavigation();
+const NUTRIENT_TYPE = [
+  {id: 'calorie', label: '칼로리'},
+  {id: 'carb', label: '탄수화물'},
+  {id: 'protein', label: '단백질'},
+  {id: 'fat', label: '지방'},
+];
 
+const OrderedMenu = ({menu}: {menu: IOrderedProduct[]}) => {
   // redux
-  const {applied: appliedSortFilter} = useSelector(
-    (state: RootState) => state.sortFilter,
-  );
+  const {currentDietNo} = useSelector((state: RootState) => state.common);
 
-  // orderDetailData => 주문한 상품들 끼니별 내역
-  const {
-    orderDetailData,
-    totalPrice,
-  }: {orderDetailData: IOrderedProduct[][]; totalPrice: number} = route?.params;
+  // react-query
+  const {data: dietDetailData} = useListDietDetail(currentDietNo);
   const addMutation = useCreateDietDetail();
   const deleteMutation = useDeleteDietDetail();
-  const nutrientType = ['calorie', 'carb', 'protein', 'fat'];
-  const {currentDietNo} = useSelector((state: RootState) => state.common);
-  const [deleteAlertShow, setDeleteAlertShow] = useState(false);
-  const {data: useListProductData} = useListProduct({
-    dietNo: currentDietNo,
-    appliedSortFilter,
-  });
 
-  console.log(orderDetailData);
-
-  const isSelfOrder = orderDetailData[0][0]?.orderTypeCd === 'SP011001';
-  const isAdded = useListProductData?.filter(
-    item => item.productChoiceYn === 'Y',
-  );
-  useEffect(() => {
-    orderDetailData &&
-      navigation.setOptions({
-        title: orderDetailData[0][0]?.buyDate,
-      });
-  }, []);
-  const getNutrient = (arg: any, type: any) => {
-    let nutrient = [];
-    for (let i = 0; i < orderDetailData.length; i++) {
-      let nutrientSum = 0;
-      for (let j = 0; j < orderDetailData[i].length; j++) {
-        nutrientSum += parseInt(arg[i][j][type]);
-      }
-      nutrient.push(nutrientSum);
-    }
-    return nutrient;
-  };
-
-  const nutrientTypeToKorean = (arg: String) => {
-    switch (arg) {
-      case 'calorie':
-        return '칼로리';
-      case 'carb':
-        return '탄수화물';
-      case 'protein':
-        return '단백질';
-      case 'fat':
-        return '지방';
-    }
-  };
+  // etc
   const onAdd = (item: IProductData) => {
     addMutation.mutate({dietNo: currentDietNo, food: item});
   };
@@ -113,146 +65,148 @@ const OrderHistoryDetail = () => {
       dietNo: currentDietNo,
       productNo: item?.productNo,
     });
-    setDeleteAlertShow(false);
   };
-  //끼니별로 나눠져있는 productData 하나의 배열로 합치기
-  const newProductData = orderDetailData?.reduce((acc, cur) => {
+
+  return menu.map((item, thumbnailIndex: number) => (
+    <Col key={thumbnailIndex} style={{marginTop: 24}}>
+      <Row style={{alignItems: 'flex-start'}}>
+        <ThumbnailImage source={{uri: `${BASE_URL}${item?.mainAttUrl}`}} />
+        <Col
+          style={{
+            marginLeft: 8,
+            flex: 1,
+          }}>
+          <MakeVertical>
+            <SellerText>{item.platformNm}</SellerText>
+            <ProductNmText numberOfLines={1} ellipsizeMode="tail">
+              {item.productNm}
+            </ProductNmText>
+            <NutrientText numberOfLines={1} ellipsizeMode="tail">
+              칼 <NutrientValue>{parseInt(item.calorie)}kcal</NutrientValue>
+              {'    '}탄 <NutrientValue>{parseInt(item.carb)}g</NutrientValue>
+              {'    '}단{' '}
+              <NutrientValue>{parseInt(item.protein)}g</NutrientValue>
+              {'    '}지 <NutrientValue>{parseInt(item.fat)}g</NutrientValue>
+            </NutrientText>
+          </MakeVertical>
+          {dietDetailData?.find(
+            ({productNo}) => productNo === item.productNo,
+          ) ? (
+            <DeleteBtn
+              onPress={() => {
+                onDelete(item);
+              }}>
+              <DeleteImage source={icons.cancelRound_24} />
+            </DeleteBtn>
+          ) : (
+            <PlusBtn
+              onPress={() => {
+                onAdd(item);
+              }}>
+              <PlusImage source={icons.plusRoundSmall_24} />
+            </PlusBtn>
+          )}
+        </Col>
+      </Row>
+      <ProductPrice>
+        {commaToNum(parseInt(item.price) + SERVICE_PRICE_PER_PRODUCT)}원
+      </ProductPrice>
+
+      <HorizontalLine />
+    </Col>
+  ));
+};
+
+// main component
+const OrderHistoryDetail = () => {
+  // navigation
+  const route = useRoute();
+  const navigation = useNavigation();
+  const {
+    orderDetailData,
+    totalPrice,
+  }: {
+    orderDetailData: Readonly<IOrderedProduct[][]>;
+    totalPrice: Readonly<number>;
+  } = route.params;
+
+  // useEffect
+  useEffect(() => {
+    orderDetailData &&
+      navigation.setOptions({
+        title: orderDetailData[0][0]?.buyDate,
+      });
+  }, []);
+
+  // etc
+  const isSelfOrder = orderDetailData[0][0]?.orderTypeCd === String('SP011001');
+
+  // 판매자별 주문식품, 전체 배송비 합계
+  const orderedProductAll = orderDetailData?.reduce((acc, cur) => {
     return acc.concat(cur);
   }, []);
-  //newProductData에서 platformNm이 같은 것들끼리 묶기
-  const groupByPlatformNm = newProductData.reduce((acc, cur) => {
-    const key = cur.platformNm;
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(cur);
-    return acc;
-  }, {});
-  const groupByPlatformNmArray = Object.keys(groupByPlatformNm).map(key => {
-    return groupByPlatformNm[key];
-  });
-
-  //groupByPlatformNmArray에서 같은 platformNm별로 총 price 구하기
-  const getPriceFromPlatformNm = groupByPlatformNmArray.map(item => {
-    return item.reduce((acc, cur) => {
-      return (
-        acc +
-        (parseInt(cur.price) + SERVICE_PRICE_PER_PRODUCT) * parseInt(cur.qty)
-      );
-    }, 0);
-  });
+  const regroupedOrderedData = reGroupBySeller(orderedProductAll);
+  const totalShippingPrice = getTotalShippingPrice(regroupedOrderedData);
 
   return (
     <Container>
+      {/* 끼니선택, NutrientProgress 부분 */}
       <MenuSection />
       <ScrollView>
         <InquireBtn onPress={() => link(INQUIRY_URL)}>
           <BtnSmallText>문의하기</BtnSmallText>
         </InquireBtn>
+
+        {/* 각 끼니 카드 */}
         <ContentContainer>
-          {orderDetailData.map((menu: IOrderedProduct[], menuIdx: number) => (
-            <Card key={menuIdx}>
-              <CardTitle>
-                끼니 {menuIdx + 1}{' '}
-                <CardTitle style={{color: colors.textSub}}>
-                  (x{menu[0]?.qty}개)
+          {orderDetailData.map((menu: IOrderedProduct[], menuIdx: number) => {
+            const {cal, carb, protein, fat} = sumUpNutrients(menu);
+            return (
+              <Card key={menuIdx}>
+                <CardTitle>
+                  끼니 {menuIdx + 1}{' '}
+                  <CardTitle style={{color: colors.textSub}}>
+                    (x{menu[0]?.qty}개)
+                  </CardTitle>
                 </CardTitle>
-              </CardTitle>
-              <MenuNutrContainer>
-                {nutrientType.map((nutrient, index) => (
-                  <Row key={index} style={{flex: 1, height: '100%'}}>
-                    <Col style={{flex: 1, alignItems: 'center'}}>
-                      <MenuNutr>{nutrientTypeToKorean(nutrient)}</MenuNutr>
-                      <MenuNutrValue>
-                        {getNutrient(orderDetailData, nutrient)[menuIdx]}
-                        {nutrient === 'calorie' ? ' kcal' : ' g'}
-                      </MenuNutrValue>
-                    </Col>
-                    {nutrientType.length - 1 !== index && <VerticalLine />}
-                  </Row>
-                ))}
-              </MenuNutrContainer>
-              {menu.map((item, thumbnailIndex: number) => (
-                <Col key={thumbnailIndex} style={{marginTop: 24}}>
-                  <Row style={{alignItems: 'flex-start'}}>
-                    <ThumbnailImage
-                      source={{uri: `${BASE_URL}${item?.mainAttUrl}`}}
-                    />
-                    <Col
-                      style={{
-                        marginLeft: 8,
-                        flex: 1,
-                      }}>
-                      <MakeVertical>
-                        <SellerText>{item.platformNm}</SellerText>
-                        <ProductNmText numberOfLines={1} ellipsizeMode="tail">
-                          {item.productNm}
-                        </ProductNmText>
-                        <NutrientText numberOfLines={1} ellipsizeMode="tail">
-                          칼{' '}
-                          <NutrientValue>
-                            {parseInt(item.calorie)}kcal
-                          </NutrientValue>
-                          {'    '}탄{' '}
-                          <NutrientValue>{parseInt(item.carb)}g</NutrientValue>
-                          {'    '}단{' '}
-                          <NutrientValue>
-                            {parseInt(item.protein)}g
-                          </NutrientValue>
-                          {'    '}지{' '}
-                          <NutrientValue>{parseInt(item.fat)}g</NutrientValue>
-                        </NutrientText>
-                      </MakeVertical>
-                      {isAdded?.find(
-                        arg => arg.productNo === item.productNo,
-                      ) ? (
-                        <DeleteBtn
-                          onPress={() => {
-                            setDeleteAlertShow(true);
-                            onDelete(item);
-                          }}>
-                          <DeleteImage source={icons.cancelRound_24} />
-                        </DeleteBtn>
-                      ) : (
-                        <PlusBtn
-                          onPress={() => {
-                            onAdd(item);
-                          }}>
-                          <PlusImage source={icons.plusRoundSmall_24} />
-                        </PlusBtn>
-                      )}
-                    </Col>
-                  </Row>
 
-                  {isSelfOrder ? (
-                    <OrderLinkBtn onPress={() => Linking.openURL(item.link2)}>
-                      <OrderLinkText>구매링크</OrderLinkText>
-                    </OrderLinkBtn>
-                  ) : (
-                    <ProductPrice>
-                      {commaToNum(
-                        parseInt(item.price) + SERVICE_PRICE_PER_PRODUCT,
-                      )}
-                      원
-                    </ProductPrice>
-                  )}
+                {/* 해당 끼니 영양성분 */}
+                <MenuNutrContainer>
+                  {NUTRIENT_TYPE.map((nutrient, index) => (
+                    <Row key={index} style={{flex: 1, height: '100%'}}>
+                      <Col style={{flex: 1, alignItems: 'center'}}>
+                        <MenuNutr>{nutrient.label}</MenuNutr>
+                        <MenuNutrValue>
+                          {[cal, carb, protein, fat][index]}
+                          {nutrient.id === 'calorie' ? ' kcal' : ' g'}
+                        </MenuNutrValue>
+                      </Col>
+                      {NUTRIENT_TYPE.length - 1 !== index && <VerticalLine />}
+                    </Row>
+                  ))}
+                </MenuNutrContainer>
 
-                  <HorizontalLine />
-                </Col>
-              ))}
-              {isSelfOrder ? (
-                <SelfOrderTextBox>
-                  <SelfOrderText>직접 구매한 식단</SelfOrderText>
-                </SelfOrderTextBox>
-              ) : (
-                <TotalPrice>{commaToNum(sumUpPrice(menu, true))}원</TotalPrice>
-              )}
-            </Card>
-          ))}
+                {/* 해당 끼니 식품 */}
+                <OrderedMenu menu={menu} />
+
+                {isSelfOrder ? (
+                  <SelfOrderTextBox>
+                    <SelfOrderText>직접 구매한 식단</SelfOrderText>
+                  </SelfOrderTextBox>
+                ) : (
+                  <TotalPrice>
+                    {commaToNum(sumUpPrice(menu, true))}원
+                  </TotalPrice>
+                )}
+              </Card>
+            );
+          })}
         </ContentContainer>
 
+        {/* 전체주문요약 */}
         {isSelfOrder || (
           <Col>
+            {/* 배송지 */}
             <SummaryContainer>
               <SummaryTitle>배송지</SummaryTitle>
               <Row>
@@ -270,28 +224,31 @@ const OrderHistoryDetail = () => {
               </Row>
             </SummaryContainer>
 
+            {/* 결제수단 */}
             <SummaryContainer>
               <SummaryTitle>결제수단</SummaryTitle>
               <SummaryPMText style={{color: colors.textSub}}>
                 {orderDetailData[0][0]?.payMethod}
               </SummaryPMText>
             </SummaryContainer>
-            {/* xx */}
+
+            {/* 결제금액 */}
             <SummaryContainer style={{paddingBottom: 24}}>
               <SummaryTitle>결제금액</SummaryTitle>
               <HorizontalSpace height={16} />
-              {groupByPlatformNmArray.map((item, index) => (
+              {/* 각 판매자별 금액 */}
+              {regroupedOrderedData.map((item, index) => (
                 <Col key={index}>
                   <SummarySellerText>{item[0].platformNm}</SummarySellerText>
-                  {getPriceFromPlatformNm[index] && (
-                    <SummaryPriceText>
-                      {commaToNum(getPriceFromPlatformNm[index])}원
-                    </SummaryPriceText>
-                  )}
+                  <SummaryPriceText>
+                    {commaToNum(sumUpPrice(item, true))}원
+                  </SummaryPriceText>
                 </Col>
               ))}
+
+              {/* 배송비, 전체합계 */}
               <ShippingPriceText>
-                배송비: {commaToNum(3000)}원
+                배송비: {commaToNum(totalShippingPrice)}원
               </ShippingPriceText>
               <PriceTotal style={{alignSelf: 'flex-end'}}>
                 전체 합계: {commaToNum(totalPrice)}원
@@ -300,15 +257,6 @@ const OrderHistoryDetail = () => {
           </Col>
         )}
       </ScrollView>
-      {/* <DAlert
-        alertShow={deleteAlertShow}
-        confirmLabel="삭제"
-        onConfirm={item => onDelete(item)}
-        onCancel={() => {
-          setDeleteAlertShow(false);
-        }}
-        renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
-      /> */}
     </Container>
   );
 };

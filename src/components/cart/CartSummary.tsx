@@ -18,7 +18,7 @@ import {
   commaToNum,
   sumUpDietTotal,
   getTotalShippingPrice,
-  priceByPlatform,
+  getSellerShippingPrice,
 } from '../../util/sumUp';
 
 //doobi Component
@@ -52,10 +52,7 @@ const CartSummary = ({
   const dietTotalData = reGroupByDietNo(dietDetailAllData);
   const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
   //총 배송비
-  let shippingPriceTotal = getTotalShippingPrice(
-    regroupedDDAData,
-    dietDetailAllData,
-  );
+  let shippingPriceTotal = getTotalShippingPrice(regroupedDDAData);
   // useEffect
   // 배송비 redux에 저장
   useEffect(() => {
@@ -83,10 +80,7 @@ const CartSummary = ({
       {/* //식품사별로 그룹핑 */}
       {regroupedDDAData?.map((item, index) => {
         //식품사별 가격, 배송비 합계
-        const {sellerPrice, sellerShippingText} = priceByPlatform(
-          dietDetailAllData,
-          item[0].platformNm,
-        );
+        const {sellerPrice, sellerShippingText} = getSellerShippingPrice(item);
         return (
           <View key={index}>
             <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
