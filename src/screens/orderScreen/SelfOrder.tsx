@@ -23,7 +23,7 @@ import {useUpdateDiet, useCreateDiet} from '../../query/queries/diet';
 import {useUpdateOrder, useDeleteOrder} from '../../query/queries/order';
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
-import {reGroupBySeller} from '../../util/common/regroup';
+import {reGroupDietBySeller} from '../../util/common/regroup';
 
 interface IProductInfo {
   group: IProductData[];
@@ -58,7 +58,7 @@ const MenuCard = ({dietNo, dietSeq}: IMenuCard) => {
   const {data: dietDetailData, isLoading: isListDietDetailLoading} =
     useListDietDetail(dietNo);
   const reGroupedDataBySeller =
-    dietDetailData && reGroupBySeller(dietDetailData);
+    dietDetailData && reGroupDietBySeller(dietDetailData);
 
   if (isListDietDetailLoading) {
     return <ActivityIndicator />;

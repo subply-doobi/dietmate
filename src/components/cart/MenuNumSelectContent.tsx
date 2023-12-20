@@ -31,7 +31,7 @@ import {
   useListDietDetail,
   useUpdateDietDetail,
 } from '../../query/queries/diet';
-import {reGroupBySeller} from '../../util/common/regroup';
+import {reGroupDietBySeller} from '../../util/common/regroup';
 
 const MenuNumSelectContent = ({
   setMenuNumSelectShow,
@@ -62,7 +62,7 @@ const MenuNumSelectContent = ({
   // etc
   const {dietSeq} = findDietSeq(dietData, dietNoToNumControl);
   const productNum = dietDetailData ? dietDetailData.length : 0;
-  const regroupedDDData = reGroupBySeller(dietDetailData);
+  const regroupedDDData = reGroupDietBySeller(dietDetailData);
   const saveQty = () => {
     updateDietDetailMutation.mutate({
       dietNo: dietNoToNumControl,

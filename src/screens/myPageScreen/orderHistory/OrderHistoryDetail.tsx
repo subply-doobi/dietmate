@@ -5,12 +5,7 @@ import {useSelector} from 'react-redux';
 
 import {RootState} from '../../../stores/store';
 import colors from '../../../styles/colors';
-import {
-  commaToNum,
-  getTotalShippingPrice,
-  sumUpNutrients,
-  sumUpPrice,
-} from '../../../util/sumUp';
+import {commaToNum, sumUpNutrients, sumUpPrice} from '../../../util/sumUp';
 import {
   TextMain,
   VerticalLine,
@@ -38,7 +33,7 @@ import {
   SERVICE_PRICE_PER_PRODUCT,
 } from '../../../constants/constants';
 import {link} from '../../../util/common/linking';
-import {reGroupBySeller} from '../../../util/common/regroup';
+import {reGroupOrderBySeller} from '../../../util/common/regroup';
 
 const NUTRIENT_TYPE = [
   {id: 'calorie', label: '칼로리'},
@@ -145,8 +140,8 @@ const OrderHistoryDetail = () => {
   const orderedProductAll = orderDetailData?.reduce((acc, cur) => {
     return acc.concat(cur);
   }, []);
-  const regroupedOrderedData = reGroupBySeller(orderedProductAll);
-  const totalShippingPrice = getTotalShippingPrice(regroupedOrderedData);
+  const regroupedOrderedData = reGroupOrderBySeller(orderedProductAll);
+  const totalShippingPrice = orderedProductAll[0].shippingPrice;
 
   return (
     <Container>
