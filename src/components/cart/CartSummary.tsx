@@ -26,7 +26,7 @@ import {HorizontalLine, TextMain, TextSub} from '../../styles/styledConsts';
 
 // react-query
 import {useListDietDetailAll} from '../../query/queries/diet';
-import {reGroupByDietNo, reGroupBySeller} from '../../util/common/regroup';
+import {reGroupByDietNo, reGroupDietBySeller} from '../../util/common/regroup';
 
 const CartSummary = ({
   setMenuNumSelectShow,
@@ -47,12 +47,15 @@ const CartSummary = ({
   // etc
   // 판매자별 상품 데이터
   const regroupedDDAData =
-    dietDetailAllData && reGroupBySeller(dietDetailAllData);
+    dietDetailAllData && reGroupDietBySeller(dietDetailAllData);
+
   // 총 끼니 수, 상품 수, 금액 계산
   const dietTotalData = reGroupByDietNo(dietDetailAllData);
   const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
+
   //총 배송비
   let shippingPriceTotal = getTotalShippingPrice(regroupedDDAData);
+
   // useEffect
   // 배송비 redux에 저장
   useEffect(() => {
@@ -65,7 +68,7 @@ const CartSummary = ({
     navigate('Home');
   };
 
-  return (
+  return regroupedDDAData && regroupedDDAData[0].length === 0 ? null : (
     //장바구니 하단에 보여지는 총 끼니 수, 상품 수, 금액
     <TotalSummaryContainer>
       <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
@@ -84,7 +87,7 @@ const CartSummary = ({
         return (
           <View key={index}>
             <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
-              <SummarySellerText>{item[0].platformNm}</SummarySellerText>
+              <SummarySellerText>{item[0]?.platformNm}</SummarySellerText>
               <SearchBtn onPress={() => onSearchBtnPress(item[0].platformNm)}>
                 <SearchImage source={icons.search_18} />
               </SearchBtn>

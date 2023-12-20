@@ -1,8 +1,8 @@
 import {IDietDetailAllData, IDietDetailData} from '../../query/types/diet';
 import {IOrderData, IOrderedProduct} from '../../query/types/order';
 
-export const reGroupBySeller = (
-  dietDetailData: IDietDetailData | IOrderedProduct[] | undefined,
+export const reGroupDietBySeller = (
+  dietDetailData: IDietDetailData | undefined,
 ) => {
   let reGroupedProducts: Array<IDietDetailData> = [[]];
   if (dietDetailData === undefined || dietDetailData.length === 0)
@@ -24,6 +24,32 @@ export const reGroupBySeller = (
     }
     if (isNewSeller) {
       reGroupedProducts.push([dietDetailData[i]]);
+    }
+  }
+  return reGroupedProducts;
+};
+
+export const reGroupOrderBySeller = (
+  orderData: IOrderData | undefined,
+): IOrderedProduct[][] => {
+  let reGroupedProducts: Array<IOrderedProduct[]> = [[]];
+  if (orderData === undefined || orderData.length === 0)
+    return reGroupedProducts;
+  for (let i = 0; i < orderData.length; i++) {
+    if (i === 0) {
+      reGroupedProducts[0].push(orderData[i]);
+      continue;
+    }
+    let isNewSeller = true;
+    for (let j = 0; j < reGroupedProducts.length; j++) {
+      if (reGroupedProducts[j][0]?.platformNm === orderData[i]?.platformNm) {
+        reGroupedProducts[j].push(orderData[i]);
+        isNewSeller = false;
+        break;
+      }
+    }
+    if (isNewSeller) {
+      reGroupedProducts.push([orderData[i]]);
     }
   }
   return reGroupedProducts;

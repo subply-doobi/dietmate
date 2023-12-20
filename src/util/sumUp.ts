@@ -166,30 +166,36 @@ export const sumUpPriceOfSeller = (
       : acc;
   }, 0);
 };
+
 export const getSellerShippingPrice = (
   data: IDietDetailData | IOrderedProduct[] | undefined,
 ) => {
   let sellerPrice = 0;
   let sellerShippingText = '';
   let sellerShippingPrice = 0;
-  if (data === undefined)
+
+  if (data === undefined || data.length === 0)
     return {sellerPrice, sellerShippingText, sellerShippingPrice};
 
   for (let i = 0; i < data.length; i++) {
     sellerPrice +=
       (parseInt(data[i].price) + SERVICE_PRICE_PER_PRODUCT) *
       parseInt(data[i].qty);
-    sellerPrice >= parseInt(data[i].freeShippingPrice)
-      ? (sellerShippingText = '무료')
-      : (sellerShippingText = `${commaToNum(
-          commaToNum(parseInt(data[i].shippingPrice)),
-        )}원 (${commaToNum(
-          parseInt(data[i].freeShippingPrice) - sellerPrice,
-        )}원 더 담으면 무료배송)`);
-    sellerPrice >= parseInt(data[i].freeShippingPrice)
-      ? (sellerShippingPrice = 0)
-      : (sellerShippingPrice = parseInt(data[i].shippingPrice));
   }
+
+  if (sellerPrice >= parseInt(data[0].freeShippingPrice)) {
+    sellerShippingText = '무료';
+    sellerShippingPrice = 0;
+    return {sellerPrice, sellerShippingText, sellerShippingPrice};
+  }
+
+  sellerShippingPrice = parseInt(data[0].shippingPrice);
+  sellerShippingText = `${commaToNum(
+    commaToNum(parseInt(data[0].shippingPrice)),
+  )}원 (${commaToNum(
+    parseInt(data[0].freeShippingPrice) - sellerPrice,
+  )}원 더 담으면 무료배송)`;
+
   return {sellerPrice, sellerShippingText, sellerShippingPrice};
 };
 
@@ -202,6 +208,7 @@ export const getTotalShippingPrice = (
 
   for (let i = 0; i < data.length; i++) {
     const {sellerShippingPrice} = getSellerShippingPrice(data[i]);
+    console.log(i, sellerShippingPrice);
     shippingPriceTotal += sellerShippingPrice;
   }
   return shippingPriceTotal;
