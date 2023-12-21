@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import {TextMain, Col} from '../../styles/styledConsts';
 import {removeToken, resetGuide} from '../../util/asyncStorage';
-import {useDeleteProfile} from '../../query/queries/member';
+import {useDeleteUser} from '../../query/queries/member';
 
 import colors from '../../styles/colors';
 import {useNavigation} from '@react-navigation/native';
@@ -31,7 +31,7 @@ const Account = () => {
 
   // navigation
   const {reset} = useNavigation();
-  const deleteUser = useDeleteProfile();
+  const deleteUser = useDeleteUser();
 
   // etc
 

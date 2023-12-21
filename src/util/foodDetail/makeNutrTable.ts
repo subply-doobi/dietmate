@@ -2,7 +2,7 @@ import {IBaseLineData} from '../../query/types/baseLine';
 import {IProductData} from '../../query/types/product';
 import colors from '../../styles/colors';
 
-interface TableItem {
+export interface ITableItem {
   name: string;
   column1: string;
   column2: string;
@@ -21,7 +21,7 @@ export const makeTableData = (
   baseLineData: IBaseLineData | undefined,
 ) => {
   if (!food) return [];
-  const table: TableItem[] = [
+  const table: ITableItem[] = [
     {
       name: 'calorie',
       column1: '칼로리',
@@ -34,6 +34,14 @@ export const makeTableData = (
       color: colors.main,
     },
     {
+      name: 'sodium',
+      column1: '나트륨',
+      column2: `${food.sodium ? Math.ceil(Number(food.sodium)) : ''} mg`,
+      rate: baseLineData
+        ? `${Math.ceil((Number(food.sodium) / 2300) * 100)}%`
+        : '',
+    },
+    {
       name: 'carb',
       column1: '탄수화물',
       column2: `${food.carb ? Math.ceil(Number(food.carb)) : ''} g`,
@@ -43,6 +51,18 @@ export const makeTableData = (
           )}%`
         : '',
       color: colors.blue,
+    },
+    {
+      name: 'sugar',
+      column1: '  당류',
+      column2: `${food.sugar ? Math.ceil(Number(food.sugar)) : ''} g`,
+      rate: baseLineData
+        ? `${Math.ceil(
+            (Number(food.sugar) /
+              ((Number(baseLineData.calorie) / 4) * 3 * 0.2)) *
+              100,
+          )}%`
+        : '',
     },
     {
       name: 'protein',
@@ -66,30 +86,10 @@ export const makeTableData = (
         : '',
       color: colors.orange,
     },
-    {
-      name: 'sodium',
-      column1: '나트륨',
-      column2: `${food.sodium ? Math.ceil(Number(food.sodium)) : ''} mg`,
-      rate: baseLineData
-        ? `${Math.ceil((Number(food.sodium) / 2300) * 100)}%`
-        : '',
-    },
-    {
-      name: 'sugar',
-      column1: '당류',
-      column2: `${food.sugar ? Math.ceil(Number(food.sugar)) : ''} g`,
-      rate: baseLineData
-        ? `${Math.ceil(
-            (Number(food.sugar) /
-              ((Number(baseLineData.calorie) / 4) * 3 * 0.2)) *
-              100,
-          )}%`
-        : '',
-    },
 
     {
       name: 'transFat',
-      column1: '트랜스지방',
+      column1: '  트랜스지방',
       column2: `${food.transFat ? Math.ceil(Number(food.transFat)) : ''} g`,
       rate: baseLineData
         ? `${Math.ceil(
@@ -101,7 +101,7 @@ export const makeTableData = (
     },
     {
       name: 'saturatedFat',
-      column1: '포화지방',
+      column1: '  포화지방',
       column2: `${
         food.saturatedFat ? Math.ceil(Number(food.saturatedFat)) : ''
       } g`,
@@ -123,18 +123,17 @@ export const makeTableData = (
         ? `${Math.ceil((Number(food.cholesterol) / 300) * 100)}%`
         : '',
     },
-
-    {
-      name: 'itemReportNo',
-      column1: '품목보고번호',
-      // itemReportNo 데이터 없으면 '-' 표시
-      column2: `${food.manufacturerBizNo ? food.manufacturerBizNo : '-'}`,
-    },
-    {
-      name: 'manufacturerNm',
-      column1: '제조사',
-      column2: `${food.manufacturerNm ? food.manufacturerNm : '-'}`,
-    },
+    // {
+    //   name: 'itemReportNo',
+    //   column1: '품목보고번호',
+    //   // itemReportNo 데이터 없으면 '-' 표시
+    //   column2: `${food.manufacturerBizNo ? food.manufacturerBizNo : '-'}`,
+    // },
+    // {
+    //   name: 'manufacturerNm',
+    //   column1: '제조사',
+    //   column2: `${food.manufacturerNm ? food.manufacturerNm : '-'}`,
+    // },
   ];
   return table;
 };

@@ -1,15 +1,13 @@
 import {Text, StyleSheet, View} from 'react-native';
 
 import colors from '../../styles/colors';
-import {Dot} from '../../styles/styledConsts';
-import {useGetProfile} from '../../query/queries/member';
-import {TableItem} from '../../screens/FoodDetail';
+import {Dot, TextMain} from '../../styles/styledConsts';
+import {useGetUser} from '../../query/queries/member';
+import styled from 'styled-components/native';
+import {ITableItem} from '../../util/foodDetail/makeNutrTable';
 
-interface Props {
-  table: TableItem[];
-}
-const NutrientPart = ({table}: Props) => {
-  const userProfileQuery = useGetProfile();
+const NutrientPart = ({table}: {table: ITableItem[]}) => {
+  const userProfileQuery = useGetUser();
   const {isLoading, data, isError, error} = userProfileQuery;
   //userPriofileQuery 데이터별로 분기처리
 
@@ -21,86 +19,86 @@ const NutrientPart = ({table}: Props) => {
   }
 
   return (
-    <>
-      <View style={[styles.row, styles.firstItem]}>
-        <View style={[styles.rowLeftItem, styles.firstItem]}>
-          <Text style={styles.text}>총 내용량</Text>
-        </View>
-        <View style={[styles.rowRightItem, styles.firstItem]}>
-          <Text style={styles.text}>250g</Text>
+    <TableContainer>
+      <FirstRow>
+        <Column1>
+          <MainText>총 내용량</MainText>
+        </Column1>
+        <Column2>
+          <MainText>250g</MainText>
           <View>
-            <Text style={styles.subText}>{data.nickNm}님의 1일</Text>
-            <Text style={styles.subText}>목표섭취량에 대한 비율</Text>
+            <SubText>{data?.nickNm}님의 1일</SubText>
+            <SubText>목표섭취량에 대한 비율</SubText>
           </View>
-        </View>
-      </View>
-      {table.map(el => (
-        <RenderItem item={el} key={el.column1} />
-      ))}
-      <View style={{height: 60}} />
-    </>
+        </Column2>
+      </FirstRow>
+      <TableContent table={table} />
+    </TableContainer>
   );
 };
 
-interface RenderProps {
-  item: TableItem;
-}
-
-function RenderItem({item}: RenderProps) {
-  return (
-    <View style={styles.row}>
-      <View style={styles.rowLeftItem}>
-        <Text style={styles.text}>{item.column1}</Text>
+const TableContent = ({table}: {table: ITableItem[]}) => {
+  return table.map(item => (
+    <Row key={item.name}>
+      <Column1 style={{backgroundColor: item.color && colors.backgroundLight2}}>
+        <MainText>{item.column1}</MainText>
         {item.color ? <Dot backgroundColor={item.color} /> : null}
-      </View>
-      <View style={styles.rowRightItem}>
-        <Text style={styles.text}>{item.column2}</Text>
+      </Column1>
+      <Column2 style={{backgroundColor: item.color && colors.backgroundLight2}}>
+        <MainText>{item.column2}</MainText>
         <View>
-          <Text style={styles.text}>{item.rate}</Text>
+          <MainText>{item.rate}</MainText>
         </View>
-      </View>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  firstItem: {
-    height: 64,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.inactivated,
-    height: 36,
-  },
-  rowRightItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 8,
-    flex: 1,
-    height: 36,
-  },
-  rowLeftItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: 120,
-    paddingHorizontal: 8,
-    height: 36,
-    borderColor: colors.inactivated,
-    borderWidth: 1,
-  },
-  text: {
-    fontSize: 16,
-    color: colors.textMain,
-  },
-  subText: {
-    fontSize: 12,
-    color: colors.textMain,
-    textAlign: 'right',
-  },
-});
+      </Column2>
+    </Row>
+  ));
+};
 
 export default NutrientPart;
+
+const TableContainer = styled.View`
+  flex: 1;
+  border-color: ${colors.lineLight};
+  border-width: 1px;
+`;
+
+const SubText = styled(TextMain)`
+  font-size: 12px;
+  text-align: right;
+`;
+
+const MainText = styled(TextMain)`
+  font-size: 16px;
+`;
+const Row = styled.View`
+  flex-direction: row;
+  align-items: center;
+  border-top-width: 1px;
+  border-color: ${colors.lineLight};
+  height: 36px;
+`;
+const FirstRow = styled(Row)`
+  height: 64px;
+  border-top-width: 0px;
+`;
+
+const Column1 = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 120px;
+  padding: 0 8px;
+  height: 100%;
+`;
+
+const Column2 = styled.View`
+  flex: 1;
+  height: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 16px;
+  border-left-width: 1px;
+  border-color: ${colors.lineLight};
+`;

@@ -48,20 +48,12 @@ import {
   useGetProduct,
   useListProductMark,
 } from '../query/queries/product';
-import {makeTableData} from '../util/foodDetail/makeNutrTable';
+import {ITableItem, makeTableData} from '../util/foodDetail/makeNutrTable';
 import {ActivityIndicator} from 'react-native';
-
-export interface TableItem {
-  name: string;
-  column1: string;
-  column2: string;
-  rate?: string;
-  color?: string;
-}
 
 interface IShowPart {
   clicked: string;
-  table: TableItem[];
+  table: ITableItem[];
   data: IProductData;
 }
 const ShowPart = ({clicked, table, data}: IShowPart) => {
@@ -191,7 +183,8 @@ const FoodDetail = () => {
               style={{resizeMode: 'contain'}}
             />
             <NutritionInImage>
-              {table.slice(0, 4).map(el => {
+              {/* 테이블 중 칼탄단지 */}
+              {[table[0], table[2], table[4], table[5]].map(el => {
                 return (
                   <View
                     key={el.name}
@@ -374,6 +367,7 @@ const NutritionInImage = styled.View`
 
 const BtnBox = styled(StickyFooter)`
   flex-direction: row;
+  column-gap: 6px;
 `;
 
 const LikeBtn = styled.Pressable`
@@ -381,5 +375,4 @@ const LikeBtn = styled.Pressable`
   height: 52px;
   align-items: center;
   justify-content: center;
-  margin-right: 4px;
 `;
