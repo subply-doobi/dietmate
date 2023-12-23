@@ -216,6 +216,9 @@ const getAvailableFoods = ({
         isLimitedCategory(limitedCategory, foods[i].categoryCd)
       )
         continue;
+
+      // 오차범위 내 식품들이 없는 경우 일단 가격범위만 체크해서 임시로 보관
+      // -> 이후 오차범위 최소인 식품을 availableFood로 return 할 것
       if (parseInt(foods[i].price) + SERVICE_PRICE_PER_PRODUCT <= remain[4])
         tempFoods.push(foods[i]);
 
@@ -292,10 +295,12 @@ const getErrorMinMenu = (
     errScore: number;
   }>,
 ) => {
-  const minError = Math.min(...menuWithErr.map(m => m.errScore ?? 0));
+  const errScoreArr = menuWithErr.map(m => m.errScore);
+  const minError = Math.min(...errScoreArr);
   for (let i = 0; i < menuWithErr.length; i++) {
     if (menuWithErr[i].errScore === minError) return menuWithErr[i].menu;
   }
+  return [];
 };
 
 const printValidMenuWithErr = (
@@ -358,6 +363,7 @@ const convertMenuToMenuWithErrObj = (
   for (let i = 0; i < 4; i++) {
     err[i] = Math.abs(sum[i] - target[i]);
   }
+  // errScore는 단백질에 가중치
   let errScore = err[1] + err[2] * 2 + err[3];
   if (
     sum[0] - target[0] < NUTR_ERROR_RANGE.calorie[0] ||
@@ -408,13 +414,47 @@ const initialize = ({
   ];
 
   const availableFoods = [...totalFoodList];
-
   return {
     target,
     targetNumArr,
     currentMenu,
     availableFoods,
   };
+};
+
+const selectMenu = (
+  validMenuWithErrObj: {
+    menu: IProductData[];
+    isInErrRange: boolean;
+    err: number[];
+    errScore: number;
+  }[],
+) => {
+  let selectedMenu: IProductData[] = [];
+
+  // errRange 내 vs 외 메뉴 구분
+  let menuInErrRange = [];
+  let menuExceedErrRange = [];
+  for (let i = 0; i < validMenuWithErrObj.length; i++) {
+    if (validMenuWithErrObj[i].isInErrRange)
+      menuInErrRange.push(validMenuWithErrObj[i]);
+    else menuExceedErrRange.push(validMenuWithErrObj[i]);
+  }
+  // console.log('--------------- ⬇️ menuInErrRange ⬇️ ---------------');
+  // printValidMenuWithErr(menuInErrRange);
+  // console.log('--------------- ⬇️ menuExceedErrRange ⬇️ ---------------');
+  // printValidMenuWithErr(menuExceedErrRange);
+  // console.log('------------------------------------------------------');
+
+  // 오차범위 내 메뉴 있으면 그 중 하나 랜덤 선택
+  if (menuInErrRange.length > 0) {
+    selectedMenu = getRandomMenu(menuInErrRange.map(m => m.menu));
+  } else {
+    // 오차범위 내 메뉴 없으면 오차점수 최소인 메뉴 선택
+    selectedMenu = getErrorMinMenu(menuExceedErrRange);
+  }
+
+  return selectedMenu;
 };
 
 interface IAutoMenu {
@@ -451,17 +491,16 @@ export const makeAutoMenu2 = ({
       });
       if (availableFoods.length === 0) return reject('no availableFoods!');
 
+      // 20개 메뉴 뽑을 것
       const TRY_NUM = 20;
-      // 20개 메뉴 뽑기
-      // errorRange 내의 메뉴가 있다면 랜덤 선택
-      // 없으면 error 최소인 메뉴 선택
-
-      let validMenu = [];
+      let validMenuWithErrObj = [];
       let NO_FOOD_AVAILABLE = false;
       for (let i = 0; i < TRY_NUM; i++) {
         // 추천할 식품 개수 정하기
         shuffle(targetNumArr);
         const targetNum = targetNumArr[0];
+
+        // 추천할 식품 개수만큼 추가 가능한 식품 가져오기
         for (let currentNum = 0; currentNum < targetNum; currentNum++) {
           availableFoods = getAvailableFoods({
             foods: availableFoods,
@@ -477,10 +516,10 @@ export const makeAutoMenu2 = ({
           }
 
           // 원하는 판매자가 있는 경우 첫 추천 식품에 적용
-          const wantedPlatformFoods = availableFoods.filter(
-            food => food.platformNm === wantedPlatform,
-          );
           if (currentNum === 0 && wantedPlatform !== '') {
+            const wantedPlatformFoods = availableFoods.filter(
+              food => food.platformNm === wantedPlatform,
+            );
             if (wantedPlatformFoods.length === 0) {
               NO_FOOD_AVAILABLE = true;
               break;
@@ -488,8 +527,12 @@ export const makeAutoMenu2 = ({
             currentMenu.push(getRandomFood(wantedPlatformFoods));
             continue;
           }
+
+          // 추가 가능한 식품 추가
           currentMenu.push(getRandomFood(availableFoods));
         }
+
+        // 원하는 만큼 식품이 추천되지 않는 경우 초기화
         if (NO_FOOD_AVAILABLE) {
           NO_FOOD_AVAILABLE = false;
           currentMenu = [...initialMenu];
@@ -497,53 +540,27 @@ export const makeAutoMenu2 = ({
           continue;
         }
 
-        validMenu.push(convertMenuToMenuWithErrObj(currentMenu, target));
+        // menu와 errorScore를 가진 배열로 변환
+        validMenuWithErrObj.push(
+          convertMenuToMenuWithErrObj(currentMenu, target),
+        );
         currentMenu = [...initialMenu];
         availableFoods = [...totalFoodList];
       }
+      if (validMenuWithErrObj.length === 0) return reject('no validMenu!');
 
-      if (validMenu.length === 0) return reject('no validMenu!');
+      // errorScore를 기반으로 메뉴 선택
+      // (error 범위 내 식품 있으면 랜덤선택 or 오차최소 메뉴 선택)
+      const selectedMenu = selectMenu(validMenuWithErrObj);
+      if (!selectedMenu || selectedMenu.length === 0)
+        return reject('no recommendedFoods!');
 
-      // errRange 내 vs 외 메뉴 구분
-      let menuInErrRange = [];
-      let menuExceedErrRange = [];
-      for (let i = 0; i < validMenu.length; i++) {
-        if (validMenu[i].isInErrRange) menuInErrRange.push(validMenu[i]);
-        else menuExceedErrRange.push(validMenu[i]);
-      }
-      // console.log('--------------- ⬇️ menuInErrRange ⬇️ ---------------');
-      // printValidMenuWithErr(menuInErrRange);
-      // console.log('--------------- ⬇️ menuExceedErrRange ⬇️ ---------------');
-      // printValidMenuWithErr(menuExceedErrRange);
-      // console.log('------------------------------------------------------');
+      // 처음 추가되어 있던 식품들은 제외
+      const filteredMenu = excludeInitialMenu(initialMenu, selectedMenu);
 
-      // 오차범위 내 메뉴 있으면 그 중 하나 랜덤 선택
-      if (menuInErrRange.length > 0) {
-        const recommendedFoods = getRandomMenu(menuInErrRange.map(m => m.menu));
-        // console.log('오차범위 내 메뉴 있음');
-        // printMenu(recommendedFoods);
-        const filteredRecommendedFoods = excludeInitialMenu(
-          initialMenu,
-          recommendedFoods,
-        );
-        return resolve({
-          recommendedFoods: filteredRecommendedFoods,
-          sum: getSum(recommendedFoods),
-        });
-      }
-
-      // 오차범위 내 식품 없으면 오차점수 최소인 메뉴 선택
-      // console.log('오차범위 내 메뉴 없음');
-      const recommendedFoods = getErrorMinMenu(menuExceedErrRange);
-      if (!recommendedFoods) return reject('no recommendedFoods!');
-      // printMenu(recommendedFoods);
-      const filteredRecommendedFoods = excludeInitialMenu(
-        initialMenu,
-        recommendedFoods,
-      );
       return resolve({
-        recommendedFoods: filteredRecommendedFoods,
-        sum: getSum(recommendedFoods),
+        recommendedFoods: filteredMenu,
+        sum: getSum(selectedMenu),
       });
     } catch (error) {
       return reject(error);
