@@ -137,14 +137,18 @@ const Menu = ({
           </BtnSmall>
         </SelectedDeleteRow>
       )}
-      <HorizontalLine style={{marginTop: 16}} />
 
       {/* 현재 끼니 식품들 */}
-      <CartFoodList
-        selectedFoods={selectedFoods}
-        setSelectedFoods={setSelectedFoods}
-        dietNo={dietNo}
-      />
+      {dietDetailData.length > 0 && (
+        <>
+          <HorizontalLine style={{marginTop: 16}} />
+          <CartFoodList
+            selectedFoods={selectedFoods}
+            setSelectedFoods={setSelectedFoods}
+            dietNo={dietNo}
+          />
+        </>
+      )}
 
       {/* 자동구성 버튼, 모달 */}
       <AutoMenuBtn

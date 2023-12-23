@@ -85,23 +85,27 @@ const AccordionInactiveHeader = ({
       <LeftBar backgroundColor={barColor} />
 
       {/* 현재 구성중인 끼니 툴팁 */}
-      <DTooltip
+      {/* <DTooltip
         tooltipShow={currentDietNo === dietNo}
         text="현재 구성중인 끼니"
         boxTop={-14}
         boxLeft={22}
         triangleLeft={18}
-      />
+      /> */}
 
       {/* accordionInactiveHeader Content */}
       <Col style={{flex: 1, marginLeft: 16}}>
         {/* 끼니, 가격, 식품 수 */}
         <MenuSeq>{dietSeq}</MenuSeq>
-        <FoodNoAndPrice>
-          {numOfFoods !== 0
-            ? `${commaToNum(priceSum)}원 (${numOfFoods}가지 식품)`
-            : `식품을 담아보세요`}
-        </FoodNoAndPrice>
+        {numOfFoods === 0 ? (
+          <FoodNoAndPrice>
+            <AutoMenuText>자동구성을 이용해보세요</AutoMenuText>
+          </FoodNoAndPrice>
+        ) : (
+          <FoodNoAndPrice>
+            {commaToNum(priceSum)}원 ({numOfFoods}가지 식품)
+          </FoodNoAndPrice>
+        )}
       </Col>
 
       {/* 끼니수량 - 수량선택버튼 */}
@@ -171,6 +175,11 @@ const MenuSeq = styled(TextMain)`
 const FoodNoAndPrice = styled(TextSub)`
   font-size: 14px;
   margin-top: 4px;
+`;
+
+const AutoMenuText = styled(TextMain)`
+  font-size: 14px;
+  color: ${colors.main};
 `;
 
 const MenuDeleteBtn = styled.TouchableOpacity`
