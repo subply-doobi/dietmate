@@ -208,7 +208,6 @@ export const getTotalShippingPrice = (
 
   for (let i = 0; i < data.length; i++) {
     const {sellerShippingPrice} = getSellerShippingPrice(data[i]);
-    console.log(i, sellerShippingPrice);
     shippingPriceTotal += sellerShippingPrice;
   }
   return shippingPriceTotal;
