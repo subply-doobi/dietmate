@@ -78,7 +78,7 @@ const MenuNumSelectContent = ({
         showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback>
           <Col>
-            <HorizontalSpace height={12} />
+            <HorizontalSpace height={24} />
             <TitleText>{dietSeq}</TitleText>
 
             {/* 현재 끼니 식품 리스트 */}
@@ -111,9 +111,9 @@ const MenuNumSelectContent = ({
               ))}
             <HorizontalLine style={{marginTop: 24}} />
 
-            {/* 전체 끼니 중 현재 끼니 상품들 판매자별로 보여주기 */}
+            {/* 전체 끼니 중 현재 끼니 판매자별 금액 보여주기 */}
             <HorizontalSpace height={24} />
-            <TitleText>전체 끼니 중</TitleText>
+            <TitleText>해당 식품사 총 금액</TitleText>
             <HorizontalSpace height={8} />
             {dietDetailData &&
               dietDetailData?.length > 0 &&
