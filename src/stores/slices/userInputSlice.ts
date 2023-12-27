@@ -143,16 +143,6 @@ export interface UserInputState {
     isValid: boolean;
     errMsg: string;
   };
-  receiver: {
-    value: string;
-    isValid: boolean;
-    errMsg: string;
-  };
-  receiverContact: {
-    value: string;
-    isValid: boolean;
-    errMsg: string;
-  };
   entranceType: {
     value: string;
     isValid: boolean;
@@ -302,16 +292,6 @@ export const initialState: UserInputState = {
     isValid: false,
     errMsg: '우편번호를 입력해주세요',
   },
-  receiver: {
-    value: '',
-    isValid: false,
-    errMsg: '이름을 입력해주세요',
-  },
-  receiverContact: {
-    value: '',
-    isValid: false,
-    errMsg: '연락처를 입력해주세요',
-  },
   entranceType: {
     value: ENTRANCE_TYPE[0],
     isValid: true,
@@ -393,7 +373,7 @@ const userInputSlice = createSlice({
       const name = action.payload.name;
       // 핸드폰 번호 input은 입력시 자동으로 하이픈 추가
       const value =
-        name === 'buyerTel' || name === 'receiverContact'
+        name === 'buyerTel'
           ? formatPhone(action.payload.value)
           : action.payload.value;
 

@@ -21,6 +21,8 @@ export const TERMS_OF_USE_URL =
 export const INQUIRY_URL = 'http://pf.kakao.com/_DvmEG/chat';
 export const KOREAN_NUTRITION_REFERENCE_URL =
   'https://www.kns.or.kr/FileRoom/FileRoom_view.asp?idx=108&BoardID=Kdr';
+export const KAKAOPAY_CID = 'CAZ1OZBO5O';
+export const IAMPORT_USER_CODE = 'imp88778331';
 
 // Doobi server category etc.
 //주간 운동 횟수
