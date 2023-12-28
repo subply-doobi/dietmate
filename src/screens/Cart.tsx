@@ -281,7 +281,7 @@ const Container = styled.SafeAreaView`
   flex: 1;
   background-color: ${colors.white};
 `;
-const ContentContainer = styled.SafeAreaView`
+const ContentContainer = styled.View`
   flex: 1;
   padding: 0px 8px 16px 8px;
   background-color: ${colors.backgroundLight2};
