@@ -79,15 +79,22 @@ const Order = () => {
   const invalidateInput = [buyerName, buyerTel, paymentMethod].find(
     v => !v.isValid,
   );
-  let guideMsg = !!invalidateInput ? invalidateInput.errMsg : '';
-  if (guideMsg === '') {
-    guideMsg =
-      listAddressData && !listAddressData[selectedAddrIdx]?.addr1
-        ? '주소를 입력해주세요'
-        : listAddressData && !listAddressData[selectedAddrIdx]?.addr2
-        ? '상세주소를 입력해주세요'
-        : '';
-  }
+  const validationErrMsg = !listAddressData
+    ? '잠시만 기다려주세요'
+    : invalidateInput
+    ? invalidateInput.errMsg
+    : listAddressData.length === 0
+    ? '주소를 입력해주세요'
+    : listAddressData[selectedAddrIdx]?.addr1 === ''
+    ? '주소를 입력해주세요'
+    : listAddressData[selectedAddrIdx]?.addr2 === ''
+    ? '상세주소를 입력해주세요'
+    : ``;
+  const ctaBtnStyle = validationErrMsg === '' ? 'activated' : 'inactivated';
+  const ctaBtnText =
+    validationErrMsg === ''
+      ? `총 ${commaToNum(priceTotal + shippingPrice)}원 결제하기`
+      : validationErrMsg;
 
   // accordion
   const [activeSections, setActiveSections] = useState<number[]>([]);
@@ -170,9 +177,7 @@ const Order = () => {
 
   // order Btn action
   const onHandleOrder = async () => {
-    if (!(guideMsg === '' && listAddressData?.length !== 0)) {
-      return;
-    }
+    if (validationErrMsg !== '') return;
 
     // buyer_name, buyer_tel, buyer_email, buyer_addr, buyer_postcode
     const customData = {
@@ -278,17 +283,9 @@ const Order = () => {
       {/* 결제버튼 */}
       <BtnBottomCTA
         style={{width: SCREENWIDTH - 32}}
-        btnStyle={
-          guideMsg === '' && listAddressData?.length !== 0
-            ? 'activated'
-            : 'inactivated'
-        }
+        btnStyle={ctaBtnStyle}
         onPress={async () => onHandleOrder()}>
-        <BtnText>
-          {guideMsg === '' && listAddressData?.length !== 0
-            ? `총 ${commaToNum(priceTotal + shippingPrice)}원 결제하기`
-            : guideMsg}
-        </BtnText>
+        <BtnText>{ctaBtnText}</BtnText>
       </BtnBottomCTA>
     </SafeAreaView>
   );
