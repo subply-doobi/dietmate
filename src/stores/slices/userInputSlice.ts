@@ -317,54 +317,74 @@ const userInputSlice = createSlice({
       Object.assign(state, initialState);
     },
     loadBaseLineData: (state, action: PayloadAction<IBaseLineData>) => {
+      // data load
       // FirstInput
-      state.gender.value = action.payload.gender;
-      state.age.value = action.payload.age;
-      state.height.value = action.payload.height;
-      state.weight.value = action.payload.weight;
-      state.dietPurposeCd.value = action.payload.dietPurposeCd;
-      state.age.isValid = true;
-      state.height.isValid = true;
-      state.weight.isValid = true;
+      const {gender, age, height, weight, dietPurposeCd} = action.payload;
+      state.gender.value = gender;
+      state.age.value = age;
+      state.height.value = height;
+      state.weight.value = weight;
+      state.dietPurposeCd.value = dietPurposeCd;
       // SecondInput
-      state.sportsSeqCd.value = action.payload.sportsSeqCd;
-      state.sportsTimeCd.value = action.payload.sportsTimeCd;
-      state.sportsStrengthCd.value = action.payload.sportsStrengthCd;
+      const {sportsSeqCd, sportsTimeCd, sportsStrengthCd} = action.payload;
+      state.sportsSeqCd.value = sportsSeqCd;
+      state.sportsTimeCd.value = sportsTimeCd;
+      state.sportsStrengthCd.value = sportsStrengthCd;
       state.bmrKnown.value = '';
       state.bmrKnown.isValid = true;
-      // ThirdInput
+      // ThirdInput !!!! thirdInput의 칼탄단지는 baseLine값 불러오는게 아니라 항상 다시 계산하는 값
       state.ratio.value = NUTR_RATIO_CD[0].cd;
       state.calorie.value = '';
       state.carb.value = '';
       state.protein.value = '';
       state.fat.value = '';
-      // Mypage calorie, carb, protein, fat change input
-      state.calorieChange.value = String(parseInt(action.payload.calorie));
-      state.calorieChange.isValid = true;
-      state.calorieChange.errMsg = '';
-      state.carbChange.value = String(parseInt(action.payload.carb));
-      state.carbChange.isValid = true;
-      state.carbChange.errMsg = '';
-      state.proteinChange.value = String(parseInt(action.payload.protein));
-      state.proteinChange.isValid = true;
-      state.proteinChange.errMsg = '';
-      state.fatChange.value = String(parseInt(action.payload.fat));
-      state.fatChange.isValid = true;
-      state.fatChange.errMsg = '';
-      state.weightChange.value = action.payload.weight;
-      state.weightChange.isValid = true;
-      state.weightChange.errMsg = '';
+      // Mypage calorie, carb, protein, fat change input -> 마이페이지 변경 칼탄단지, 몸무게는 서버 baseLine 정보 불러오는 값
+      const {calorie, carb, protein, fat} = action.payload;
+      state.calorieChange.value = String(parseInt(calorie));
+      state.carbChange.value = String(parseInt(carb));
+      state.proteinChange.value = String(parseInt(protein));
+      state.fatChange.value = String(parseInt(fat));
+      state.weightChange.value = weight;
+
+      // validation
+      const loadList: {name: keyof UserInputState; value: string}[] = [
+        {name: 'gender', value: gender},
+        {name: 'age', value: age},
+        {name: 'height', value: height},
+        {name: 'weight', value: weight},
+        {name: 'dietPurposeCd', value: dietPurposeCd},
+        {name: 'sportsSeqCd', value: sportsSeqCd},
+        {name: 'sportsTimeCd', value: sportsTimeCd},
+        {name: 'sportsStrengthCd', value: sportsStrengthCd},
+        {name: 'calorie', value: String(parseInt(calorie))},
+        {name: 'carb', value: String(parseInt(carb))},
+        {name: 'protein', value: String(parseInt(protein))},
+        {name: 'fat', value: String(parseInt(fat))},
+      ];
+      loadList.forEach(({name, value}) => {
+        if (!validateInput[name]) {
+          state[name].isValid = true;
+          state[name].errMsg = '';
+        } else {
+          const {errMsg, isValid} = validateInput[name](value);
+          state[name].errMsg = errMsg;
+          state[name].isValid = isValid;
+        }
+      });
     },
     loadAddressData: (state, action: PayloadAction<IAddressCreate>) => {
-      state.addr1.value = action.payload.addr1;
-      state.addr1.isValid = action.payload.addr1 ? true : false;
-      state.addr1.errMsg = action.payload.addr1 ? '' : '주소를 입력해주세요';
-      state.addr2.value = action.payload.addr2;
-      state.addr2.isValid = action.payload.addr2 ? true : false;
-      state.addr2.errMsg = action.payload.addr2
-        ? ''
-        : '상세주소를 입력해주세요';
-      state.zipCode.value = action.payload.zipCode;
+      // data load
+      const {addr1, addr2, zipCode} = action.payload;
+      state.addr1.value = addr1;
+      state.addr2.value = addr2;
+      state.zipCode.value = zipCode;
+
+      //validation
+      state.addr1.isValid = addr1 ? true : false;
+      state.addr1.errMsg = addr1 ? '' : '주소를 입력해주세요';
+      const {errMsg, isValid} = validateInput['addr2'](addr2);
+      state.addr2.isValid = isValid;
+      state.addr2.errMsg = errMsg ? '' : '상세주소를 입력해주세요';
       state.zipCode.isValid = action.payload.zipCode ? true : false;
       state.zipCode.errMsg = action.payload.zipCode
         ? ''
@@ -407,11 +427,18 @@ const userInputSlice = createSlice({
       state,
       action: PayloadAction<{zipCode: string; addr1: string}>,
     ) => {
-      state.zipCode.value = action.payload.zipCode;
-      state.addr1.value = action.payload.addr1;
-      state.zipCode.isValid = state.zipCode.value ? true : false;
-      state.addr1.isValid = state.addr1.value ? true : false;
+      const {addr1, zipCode} = action.payload;
+      state.addr1.value = addr1;
       state.addr2.value = '';
+      state.zipCode.value = zipCode;
+
+      state.addr1.isValid = addr1 ? true : false;
+      state.addr2.isValid = false;
+      state.zipCode.isValid = zipCode ? true : false;
+
+      state.addr1.errMsg = addr1 ? '' : '주소를 입력해주세요';
+      state.addr2.errMsg = '상세주소를 입력해주세요';
+      state.zipCode.errMsg = zipCode ? '' : '주소를 입력해주세요';
     },
   },
 });

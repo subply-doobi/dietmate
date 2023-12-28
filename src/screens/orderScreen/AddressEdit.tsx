@@ -46,8 +46,6 @@ const AddressEdit = () => {
     (state: RootState) => state.userInput,
   );
 
-  console.log('AddressEdit: selector: ', addr1, addr2, zipCode);
-
   // navigation
   const {navigate, setOptions} = useNavigation();
   const route = useRoute();
@@ -74,7 +72,7 @@ const AddressEdit = () => {
   const addrIdx = listAddressData?.findIndex(v => v.addrNo === addrNo);
   const isUpdate = !!route.params?.addrNo;
   const hasAddrValue = !!addr1.value && !!zipCode.value;
-  let ctaBtnText = !hasAddrValue
+  const ctaBtnText = !hasAddrValue
     ? '주소를 입력해주세요'
     : addr2.value === ''
     ? '상세주소를 입력해주세요'
