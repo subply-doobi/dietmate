@@ -357,11 +357,18 @@ const userInputSlice = createSlice({
     },
     loadAddressData: (state, action: PayloadAction<IAddressCreate>) => {
       state.addr1.value = action.payload.addr1;
+      state.addr1.isValid = action.payload.addr1 ? true : false;
+      state.addr1.errMsg = action.payload.addr1 ? '' : '주소를 입력해주세요';
       state.addr2.value = action.payload.addr2;
+      state.addr2.isValid = action.payload.addr2 ? true : false;
+      state.addr2.errMsg = action.payload.addr2
+        ? ''
+        : '상세주소를 입력해주세요';
       state.zipCode.value = action.payload.zipCode;
-      state.addr1.isValid = state.addr1.value ? true : false;
-      state.addr2.isValid = true;
-      state.zipCode.isValid = state.zipCode.value ? true : false;
+      state.zipCode.isValid = action.payload.zipCode ? true : false;
+      state.zipCode.errMsg = action.payload.zipCode
+        ? ''
+        : '주소를 입력해주세요';
     },
     setValue: (
       state,

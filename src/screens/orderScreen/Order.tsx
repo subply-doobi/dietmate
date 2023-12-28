@@ -76,12 +76,18 @@ const Order = () => {
   const {priceTotal, menuNum, productNum} = sumUpDietTotal(foodToOrder);
 
   // validation
-  const isValidAll =
-    [buyerName, buyerTel, paymentMethod].every(v => v.isValid) &&
-    !!listAddressData &&
-    !!listAddressData[selectedAddrIdx]?.addr1 &&
-    !!listAddressData[selectedAddrIdx]?.addr2 &&
-    !!listAddressData[selectedAddrIdx]?.zipCode;
+  const invalidateInput = [buyerName, buyerTel, paymentMethod].find(
+    v => !v.isValid,
+  );
+  let guideMsg = !!invalidateInput ? invalidateInput.errMsg : '';
+  if (guideMsg === '') {
+    guideMsg =
+      listAddressData && !listAddressData[selectedAddrIdx]?.addr1
+        ? '주소를 입력해주세요'
+        : listAddressData && !listAddressData[selectedAddrIdx]?.addr2
+        ? '상세주소를 입력해주세요'
+        : '';
+  }
 
   // accordion
   const [activeSections, setActiveSections] = useState<number[]>([]);
@@ -164,7 +170,7 @@ const Order = () => {
 
   // order Btn action
   const onHandleOrder = async () => {
-    if (!(isValidAll && listAddressData?.length !== 0)) {
+    if (!(guideMsg === '' && listAddressData?.length !== 0)) {
       return;
     }
 
@@ -177,7 +183,9 @@ const Order = () => {
         ? listAddressData[selectedAddrIdx]?.addr1 +
           listAddressData[selectedAddrIdx]?.addr2
         : '',
-      buyerZipCode: listAddressData[selectedAddrIdx]?.zipCode,
+      buyerZipCode: listAddressData
+        ? listAddressData[selectedAddrIdx]?.zipCode
+        : '',
       receiver: buyerTel.value,
       receiverContact: buyerTel.value,
       entranceType: entranceType.value,
@@ -271,15 +279,15 @@ const Order = () => {
       <BtnBottomCTA
         style={{width: SCREENWIDTH - 32}}
         btnStyle={
-          isValidAll && listAddressData?.length !== 0
+          guideMsg === '' && listAddressData?.length !== 0
             ? 'activated'
             : 'inactivated'
         }
         onPress={async () => onHandleOrder()}>
         <BtnText>
-          {isValidAll && listAddressData?.length !== 0
+          {guideMsg === '' && listAddressData?.length !== 0
             ? `총 ${commaToNum(priceTotal + shippingPrice)}원 결제하기`
-            : '정보를 모두 입력해주세요'}
+            : guideMsg}
         </BtnText>
       </BtnBottomCTA>
     </SafeAreaView>
