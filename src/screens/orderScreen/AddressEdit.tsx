@@ -46,6 +46,8 @@ const AddressEdit = () => {
     (state: RootState) => state.userInput,
   );
 
+  console.log('AddressEdit: selector: ', addr1, addr2, zipCode);
+
   // navigation
   const {navigate, setOptions} = useNavigation();
   const route = useRoute();
@@ -72,6 +74,11 @@ const AddressEdit = () => {
   const addrIdx = listAddressData?.findIndex(v => v.addrNo === addrNo);
   const isUpdate = !!route.params?.addrNo;
   const hasAddrValue = !!addr1.value && !!zipCode.value;
+  let ctaBtnText = !hasAddrValue
+    ? '주소를 입력해주세요'
+    : addr2.value === ''
+    ? '상세주소를 입력해주세요'
+    : '확인';
 
   // 주소 update or create
   const onConfirmBtnPress = () => {
@@ -169,16 +176,7 @@ const AddressEdit = () => {
                 alignItems: 'center',
               }}>
               <ModalBackground>
-                <View
-                  style={{
-                    width: SCREENWIDTH - 32,
-                    flexDirection: 'row',
-                    justifyContent: 'flex-start',
-                  }}>
-                  <Pressable onPress={() => setPostModalVisible(false)}>
-                    <BackBtn source={icons.back_24} />
-                  </Pressable>
-                </View>
+                <ModalOutside onPress={() => setPostModalVisible(false)} />
                 {/* daum-post-code */}
                 <Postcode
                   style={{width: SCREENWIDTH - 32, height: 410}}
@@ -210,10 +208,10 @@ const AddressEdit = () => {
             </BtnText>
           </AddressEditBtn>
           <AddressConfirmBtn
-            btnStyle={hasAddrValue ? 'activated' : 'inactivated'}
-            disabled={!hasAddrValue}
+            btnStyle={ctaBtnText === '확인' ? 'activated' : 'inactivated'}
+            disabled={ctaBtnText !== '확인'}
             onPress={() => onConfirmBtnPress()}>
-            <BtnText>{hasAddrValue ? '확인' : '주소를 추가해주세요'}</BtnText>
+            <BtnText>{ctaBtnText}</BtnText>
           </AddressConfirmBtn>
         </BtnBox>
       </SafeAreaView>
@@ -233,11 +231,6 @@ const AddressDeleteBtn = styled.TouchableOpacity`
 `;
 
 const AddressDeleteIcon = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const BackBtn = styled.Image`
   width: 24px;
   height: 24px;
 `;
@@ -270,6 +263,12 @@ const ModalBackground = styled.View`
   justify-content: center;
   align-items: center;
   background-color: #000000a6;
+`;
+
+const ModalOutside = styled.Pressable`
+  width: 100%;
+  height: 100%;
+  position: absolute;
 `;
 
 const BtnBox = styled(StickyFooter)``;

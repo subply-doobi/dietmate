@@ -75,15 +75,9 @@ const Address = () => {
   // redux
   const dispatch = useDispatch();
   const {selectedAddrIdx} = useSelector((state: RootState) => state.order);
-  const {buyerName, buyerTel} = useSelector(
-    (state: RootState) => state.userInput,
-  );
 
   // react-query
   const {data: listAddressData} = useListAddress();
-
-  // useState
-  const [isSameInfo, setIsSameInfo] = useState(false);
 
   // navigation
   const {navigate} = useNavigation();
@@ -92,9 +86,9 @@ const Address = () => {
   const onAddrEditPress = (ads: IAddressData) => {
     dispatch(
       loadAddressData({
-        addr1: ads.addr1,
-        addr2: ads.addr2,
-        zipCode: ads.zipCode,
+        addr1: ads.addr1 || '',
+        addr2: ads.addr2 || '',
+        zipCode: ads.zipCode || '',
       }),
     );
     navigate('AddressEdit', {

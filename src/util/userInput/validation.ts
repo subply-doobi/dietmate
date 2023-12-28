@@ -262,4 +262,15 @@ export const validateInput: IValidateInput = {
       errMsg: '',
     };
   },
+  addr2: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '상세주소를 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
 };
