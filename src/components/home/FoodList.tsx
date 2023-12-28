@@ -140,41 +140,12 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
     duration: 100,
   });
 
-  const cancelAni = Animated.timing(aniPValue, {
-    toValue: initialP,
-    useNativeDriver: false,
-    duration: 100,
-  });
-
-  // 터치 감지
-  // 보통 panResponder에 useref().current 적용해서 사용하는데
-  // useRef 로 사용하면 onAdd/ onDelete 후 리렌더링 될 때
-  // initialP가 바뀌어도 panResponder의 값이 안변함.
-  // 우리는 식품이 추가되고 삭제되면 panResponder도 변겨되어야해서 useRef 안씀
-  const panResponder = PanResponder.create({
-    // onStartShouldSetPanResponder: (_, {dx}) => true,
-    onMoveShouldSetPanResponder: (_, gestureState) => {
-      return gestureState.dx < -5 || gestureState.dx > 5;
-    },
-    onPanResponderMove: (_, {dx}) => {
-      aniPValue.setValue(initialP + dx);
-    },
-    onPanResponderRelease: (_, {dx}) => {
-      if (isAdded) {
-        dx + initialP > 0 ? removeCartAni.start(onDelete) : cancelAni.start();
-      } else {
-        dx + initialP < 0 ? addCartAni.start(onAdd) : cancelAni.start();
-      }
-    },
-  });
-
   useEffect(() => {
     aniPValue.setValue(isAdded ? addedP : removedP);
   }, [item, isAdded]);
 
   return (
-    // 터치 애니메이션 필요하면 가장 상단이 애니메이션 컴포넌트여야함!
-    <AniContainer {...panResponder.panHandlers}>
+    <Container>
       {/* 전체 범위 클릭하면 식품 상세정보로 이동 */}
       <Button
         onPress={() => navigate('FoodDetail', {productNo: item.productNo})}>
@@ -261,18 +232,19 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
           renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
         />
       </Button>
-    </AniContainer>
+    </Container>
   );
 };
 
 export default FoodList;
 
-const AniContainer = styled(Animated.createAnimatedComponent(View))`
+const Container = styled.View`
   width: 100%;
   flex-direction: row;
   height: 152px;
   padding: 0px 16px;
 `;
+
 const Button = styled.Pressable`
   width: 100%;
   height: 100%;
