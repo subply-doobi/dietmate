@@ -34,7 +34,7 @@ const EntranceMethodContainer = () => {
 
   return (
     <>
-      <ContentTitle style={{marginTop: 30}}>공동현관 출입</ContentTitle>
+      <ContentTitle style={{marginTop: 64}}>배송 참고사항</ContentTitle>
       <Col style={{marginTop: 30}} />
       {ENTRANCE_TYPE.map((e, i) => {
         return (
@@ -75,7 +75,7 @@ const Address = () => {
   // redux
   const dispatch = useDispatch();
   const {selectedAddrIdx} = useSelector((state: RootState) => state.order);
-  const {buyerName, buyerTel, receiver, receiverContact} = useSelector(
+  const {buyerName, buyerTel} = useSelector(
     (state: RootState) => state.userInput,
   );
 
@@ -87,27 +87,6 @@ const Address = () => {
 
   // navigation
   const {navigate} = useNavigation();
-
-  // useRef (받는 분 -> 휴대폰 focus)
-  const receiverContactRef = useRef<TextInput>(null);
-
-  // etc
-  // 주문자 정보와 동일 체크박스 action
-  const onIsSameCheckPress = () => {
-    dispatch(
-      setValue({
-        name: 'receiver',
-        value: isSameInfo ? '' : buyerName.value,
-      }),
-    );
-    dispatch(
-      setValue({
-        name: 'receiverContact',
-        value: isSameInfo ? '' : buyerTel.value,
-      }),
-    );
-    setIsSameInfo(v => !v);
-  };
 
   // 배송지 수정 버튼 action
   const onAddrEditPress = (ads: IAddressData) => {
@@ -190,58 +169,6 @@ const Address = () => {
         </Row>
       </AddressAddBtn>
 
-      {/* 받는 분 정보 입력 부분 */}
-      <Row style={{justifyContent: 'space-between', marginTop: 32}}>
-        <ContentTitle>받는 분 정보</ContentTitle>
-        <Row>
-          <GuideText>주문자 정보와 동일</GuideText>
-          <Checkbox onPress={() => onIsSameCheckPress()}>
-            <CheckIcon
-              source={
-                isSameInfo ? icons.checkboxCheckedPurple_24 : icons.checkbox_24
-              }
-            />
-          </Checkbox>
-        </Row>
-      </Row>
-
-      {/* receiver */}
-      <InputHeader isActivated={!!receiver.value}>받는 분</InputHeader>
-      <Input
-        placeholder={'받는 분'}
-        value={receiver.value}
-        onChangeText={v => dispatch(setValue({name: 'receiver', value: v}))}
-        isActivated={!!receiver.value}
-        keyboardType="default"
-        onSubmitEditing={() => {
-          receiverContactRef?.current?.focus();
-        }}
-      />
-      {receiver.errMsg && (
-        <ErrorBox>
-          <ErrorText>{receiver.errMsg}</ErrorText>
-        </ErrorBox>
-      )}
-
-      {/* receiverContact */}
-      <InputHeader isActivated={!!receiverContact.value}>휴대폰</InputHeader>
-      <Input
-        placeholder={'휴대폰'}
-        value={receiverContact.value}
-        onChangeText={v =>
-          dispatch(setValue({name: 'receiverContact', value: v}))
-        }
-        isActivated={!!receiverContact.value}
-        keyboardType="numeric"
-        maxLength={13}
-        ref={receiverContactRef}
-      />
-      {receiverContact.errMsg && (
-        <ErrorBox>
-          <ErrorText>{receiverContact.errMsg}</ErrorText>
-        </ErrorBox>
-      )}
-
       {/* 현관 출입방법 */}
       <EntranceMethodContainer />
     </AccordionContentContainer>
@@ -305,16 +232,8 @@ const ContentTitle = styled(TextMain)`
   font-size: 18px;
   font-weight: bold;
 `;
-const GuideText = styled(TextMain)`
-  font-size: 16px;
-`;
+
 const EntranceCheckBoxText = styled(TextMain)`
   font-size: 14px;
 `;
 const EntranceCheckBox = styled.TouchableOpacity``;
-const Checkbox = styled.TouchableOpacity`
-  margin-left: 8px;
-`;
-const EntranceRow = styled(Row)`
-  margin-top: 28px;
-`;

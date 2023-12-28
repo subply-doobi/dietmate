@@ -16,8 +16,6 @@ export interface IPaymentProduct {
 export interface ICustomer {
   orderer: string;
   ordererContact: string;
-  receiver: string;
-  receiverContact: string;
   email: string;
   address: {base: string; addressDetail: string; postalCode: string};
   billingInfo: string;
@@ -42,7 +40,5 @@ export interface IFormData {
   orderer: string;
   ordererContact: string;
   addressDetail: string;
-  receiver: string;
-  receiverContact: string;
   paymentMethod: string;
 }

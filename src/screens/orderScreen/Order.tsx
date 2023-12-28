@@ -22,7 +22,7 @@ import {
   TextSub,
 } from '../../styles/styledConsts';
 import colors from '../../styles/colors';
-import {SCREENWIDTH} from '../../constants/constants';
+import {KAKAOPAY_CID, SCREENWIDTH} from '../../constants/constants';
 import {commaToNum} from '../../util/sumUp';
 
 import FoodToOrder from '../../components/order/FoodToOrder';
@@ -35,6 +35,7 @@ import {useCreateOrder} from '../../query/queries/order';
 import {sumUpDietTotal} from '../../util/sumUp';
 import {useListAddress} from '../../query/queries/address';
 import {useGetUser} from '../../query/queries/user';
+import {useListDietDetailAll} from '../../query/queries/diet';
 
 interface IIamportPayment {
   pg: string; //kakaopay, html5_inicis 등등
@@ -61,59 +62,22 @@ const Order = () => {
   const {foodToOrder, selectedAddrIdx, shippingPrice} = useSelector(
     (state: RootState) => state.order,
   );
-  const {
-    buyerName,
-    buyerTel,
-    receiver,
-    receiverContact,
-    entranceType,
-    entranceNote,
-    paymentMethod,
-  } = useSelector((state: RootState) => state.userInput);
+  const {buyerName, buyerTel, entranceType, entranceNote, paymentMethod} =
+    useSelector((state: RootState) => state.userInput);
 
   // react-query
   const {data: listAddressData, isLoading: listAddressDataLoading} =
     useListAddress();
   const {data: userData} = useGetUser();
+  const {data: dietDetailAllData} = useListDietDetailAll();
   const createOrderMutation = useCreateOrder();
 
   // etc
   const {priceTotal, menuNum, productNum} = sumUpDietTotal(foodToOrder);
 
-  // payment data
-  const kakaopayData: IIamportPayment = {
-    pg: 'kakaopay',
-    escrow: false,
-    pay_method: 'card',
-    name: `총 ${menuNum}개 끼니 (${productNum}개 식품)`,
-    merchant_uid: `mid_${new Date().getTime()}`,
-    amount: String(priceTotal + shippingPrice),
-    buyer_name: buyerName.value,
-    buyer_tel: buyerTel.value,
-    buyer_email: userData?.email ? userData.email : '',
-    buyer_addr: listAddressData
-      ? listAddressData[selectedAddrIdx]?.addr1 +
-        listAddressData[selectedAddrIdx]?.addr2
-      : '',
-    buyer_postcode: listAddressData
-      ? listAddressData[selectedAddrIdx]?.zipCode
-      : '',
-    app_scheme: 'example',
-    customer_uid: 'customer_' + new Date().getTime(),
-    // receiver, receiverContact, entranceType, entranceNote 추가
-    custom_data:
-      receiver.value +
-      receiverContact.value +
-      entranceType.value +
-      entranceNote.value +
-      shippingPrice,
-  };
-
   // validation
   const isValidAll =
-    [buyerName, buyerTel, receiver, receiverContact, paymentMethod].every(
-      v => v.isValid,
-    ) &&
+    [buyerName, buyerTel, paymentMethod].every(v => v.isValid) &&
     !!listAddressData &&
     !!listAddressData[selectedAddrIdx]?.addr1 &&
     !!listAddressData[selectedAddrIdx]?.addr2 &&
@@ -149,8 +113,6 @@ const Order = () => {
       subTitle: (
         <HeaderSubTitle numberOfLines={1} ellipsizeMode={'tail'}>
           <HeaderSubTitle>
-            {' '}
-            {receiver.value} |{' '}
             {listAddressData && listAddressData[selectedAddrIdx]?.addr1} |{' '}
             {listAddressData && listAddressData[selectedAddrIdx]?.addr2}
           </HeaderSubTitle>
@@ -205,6 +167,56 @@ const Order = () => {
     if (!(isValidAll && listAddressData?.length !== 0)) {
       return;
     }
+
+    // buyer_name, buyer_tel, buyer_email, buyer_addr, buyer_postcode
+    const customData = {
+      amount: String(priceTotal + shippingPrice),
+      buyerName: buyerName.value,
+      buyerTel: buyerTel.value,
+      buyerAddr: listAddressData
+        ? listAddressData[selectedAddrIdx]?.addr1 +
+          listAddressData[selectedAddrIdx]?.addr2
+        : '',
+      buyerZipCode: listAddressData[selectedAddrIdx]?.zipCode,
+      receiver: buyerTel.value,
+      receiverContact: buyerTel.value,
+      entranceType: entranceType.value,
+      entranceNote: entranceNote.value,
+      diet: dietDetailAllData?.map((food, idx) => {
+        return {
+          productNm: food.productNm,
+          platform: food.platformNm,
+          price: food.price,
+          qty: food.qty,
+          link: food.link2,
+        };
+      }),
+    };
+
+    // payment data
+    const kakaopayData: IIamportPayment = {
+      pg: `kakaopay.${KAKAOPAY_CID}`,
+      escrow: false,
+      pay_method: 'card',
+      name: `총 ${menuNum}개 끼니 (${productNum}개 식품)`,
+      merchant_uid: `mid_${new Date().getTime()}`,
+      amount: String(priceTotal + shippingPrice),
+      buyer_name: buyerName.value,
+      buyer_tel: buyerTel.value,
+      buyer_email: userData?.email ? userData.email : '',
+      buyer_addr: listAddressData
+        ? listAddressData[selectedAddrIdx]?.addr1 +
+          listAddressData[selectedAddrIdx]?.addr2
+        : '',
+      buyer_postcode: listAddressData
+        ? listAddressData[selectedAddrIdx]?.zipCode
+        : '',
+      app_scheme: 'example',
+      customer_uid: 'customer_' + new Date().getTime(),
+      // receiver, receiverContact, entranceType, entranceNote 추가
+      custom_data: customData,
+    };
+
     const orderNumber = await createOrderMutation.mutateAsync({
       // 두비서버 자체정보
       orderTypeCd: 'SP011002',
@@ -226,8 +238,10 @@ const Order = () => {
       appScheme: kakaopayData.app_scheme,
       customerUid: kakaopayData.customer_uid,
       // receiver, receiverContact, entranceType, entranceNote 추가
-      customData: kakaopayData.custom_data,
+      // customData: 'customData',
+      customData: entranceType.value + entranceNote.value + shippingPrice,
     });
+
     navigate('KakaoPay', {
       kakaopayData,
       orderNumber,

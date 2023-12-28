@@ -262,31 +262,4 @@ export const validateInput: IValidateInput = {
       errMsg: '',
     };
   },
-  receiver: (v: string) => {
-    if (!v)
-      return {
-        isValid: false,
-        errMsg: '이름을 입력해주세요',
-      };
-    return {
-      isValid: true,
-      errMsg: '',
-    };
-  },
-  receiverContact: (v: string) => {
-    if (!v)
-      return {
-        isValid: false,
-        errMsg: '휴대폰 번호를 입력해주세요',
-      };
-    if (!REGEX_PHONE.test(v))
-      return {
-        isValid: false,
-        errMsg: '올바른 휴대폰 번호를 입력해주세요',
-      };
-    return {
-      isValid: true,
-      errMsg: '',
-    };
-  },
 };
