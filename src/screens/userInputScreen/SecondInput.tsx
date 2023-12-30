@@ -23,6 +23,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import DTooltip from '../../components/common/tooltip/DTooltip';
 import {useListCode} from '../../query/queries/code';
 import {setValue} from '../../stores/slices/userInputSlice';
+import DTextInput from '../../components/common/textInput/DTextInput';
 
 const SecondInput = () => {
   // redux
@@ -157,7 +158,7 @@ const SecondInput = () => {
         <InputHeader isActivated={!!bmrKnown.value}>
           기초대사량(kcal)
         </InputHeader>
-        <Input
+        <DTextInput
           placeholder="기초대사량을 알고있다면 적어주세요 (kcal)"
           value={bmrKnown.value}
           onChangeText={v => dispatch(setValue({name: 'bmrKnown', value: v}))}
@@ -202,11 +203,6 @@ const SubText = styled(TextMain)`
 `;
 const InputHeader = styled(InputHeaderText)`
   margin-top: 48px;
-`;
-const Input = styled(UserInfoTextInput)``;
-
-const Nutr = styled(TextMain)`
-  font-size: 18px;
 `;
 
 const BtnContainer = styled.View`

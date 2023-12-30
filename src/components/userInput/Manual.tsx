@@ -14,6 +14,7 @@ import colors from '../../styles/colors';
 import {getRecommendedNutr} from '../../util/userInput/targetByReduxData';
 import {useListCode} from '../../query/queries/code';
 import {setValue} from '../../stores/slices/userInputSlice';
+import DTextInput from '../common/textInput/DTextInput';
 
 interface IManual {
   scrollRef?: any;
@@ -53,7 +54,7 @@ const Manual = ({scrollRef}: IManual) => {
     <ContentsContainer>
       {/* 탄수화물 직접 입력 */}
       <InputHeader isActivated={!!carb.value}>한 끼 탄수화물 (g)</InputHeader>
-      <Input
+      <DTextInput
         placeholder={`한 끼 탄수화물 입력 (권장: ${carbRecommended})`}
         onFocus={() =>
           setTimeout(() => {
@@ -77,10 +78,9 @@ const Manual = ({scrollRef}: IManual) => {
           <ErrorText>{carb.errMsg}</ErrorText>
         </ErrorBox>
       )}
-
       {/* 단백질 직접 입력 */}
       <InputHeader isActivated={!!protein.value}>한 끼 단백질 (g)</InputHeader>
-      <Input
+      <DTextInput
         placeholder={`한 끼 단백질 입력 (권장: ${proteinRecommended})`}
         onFocus={() =>
           setTimeout(() => {
@@ -107,7 +107,7 @@ const Manual = ({scrollRef}: IManual) => {
 
       {/* 지방 직접 입력 */}
       <InputHeader isActivated={!!fat.value}>한 끼 지방 (g)</InputHeader>
-      <Input
+      <DTextInput
         placeholder={`한 끼 지방 입력 (권장: ${fatRecommended})`}
         onFocus={() =>
           setTimeout(() => {
@@ -146,7 +146,6 @@ const ContentsContainer = styled.View``;
 const InputHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;
-const Input = styled(UserInfoTextInput)``;
 
 const SummaryContainer = styled.View`
   margin-top: 12px;

@@ -113,7 +113,6 @@ export const UserInfoTextInput = styled.TextInput`
 export const InputHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;
-export const Input = styled(UserInfoTextInput)``;
 
 export const ErrorText = styled.Text`
   font-size: 16px;
