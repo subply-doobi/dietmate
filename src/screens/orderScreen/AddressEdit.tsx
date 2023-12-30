@@ -30,6 +30,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {setAddrBase, setValue} from '../../stores/slices/userInputSlice';
 import {OnCompleteParams} from '@actbase/react-daum-postcode/lib/types';
+import DTextInput from '../../components/common/textInput/DTextInput';
 
 const renderDeleteAlertContent = () => (
   <AlertContentContainer>
@@ -149,7 +150,7 @@ const AddressEdit = () => {
 
                 {/* 상세주소 */}
                 <InputHeader isActivated={!!addr2.value}>상세주소</InputHeader>
-                <Input
+                <DTextInput
                   placeholder={'상세주소'}
                   value={addr2.value}
                   onChangeText={v =>
@@ -241,7 +242,6 @@ const AddressBase = styled(TextMain)`
 const InputHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;
-const Input = styled(UserInfoTextInput)``;
 
 const AddressEditBtn = styled(BtnCTA)`
   height: 48px;

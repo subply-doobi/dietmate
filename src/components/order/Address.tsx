@@ -13,7 +13,6 @@ import {
   ErrorBox,
   ErrorText,
   HorizontalLine,
-  Input,
   InputHeader,
   Row,
   TextMain,
@@ -24,6 +23,7 @@ import {useListAddress} from '../../query/queries/address';
 import {loadAddressData, setValue} from '../../stores/slices/userInputSlice';
 import {setselectedAddrIdx} from '../../stores/slices/orderSlice';
 import {IAddressData} from '../../query/types/address';
+import DTextInput from '../common/textInput/DTextInput';
 
 const EntranceMethodContainer = () => {
   // redux
@@ -60,7 +60,7 @@ const EntranceMethodContainer = () => {
       <InputHeader isActivated={!!entranceNote.value}>
         배송 참고사항
       </InputHeader>
-      <Input
+      <DTextInput
         placeholder={'예) 3847*'}
         value={entranceNote.value}
         onChangeText={v => dispatch(setValue({name: 'entranceNote', value: v}))}

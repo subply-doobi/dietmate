@@ -21,6 +21,7 @@ import {useListCode} from '../../query/queries/code';
 import {useEffect, useState} from 'react';
 import {setValue} from '../../stores/slices/userInputSlice';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import DTextInput from '../common/textInput/DTextInput';
 
 const CalculateByRatio = () => {
   // redux
@@ -79,7 +80,7 @@ const CalculateByRatio = () => {
       <InputHeader isActivated={!!userInputState.calorie}>
         한 끼 칼로리 (kcal)
       </InputHeader>
-      <Input
+      <DTextInput
         placeholder={`한 끼 칼로리 입력 (권장: ${recommendedCalorie})`}
         value={userInputState.calorie.value}
         onChangeText={v => dispatch(setValue({name: 'calorie', value: v}))}
@@ -121,7 +122,6 @@ const ContentContainer = styled.View`
 const InputHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;
-const Input = styled(UserInfoTextInput)``;
 
 const SummaryContainer = styled.View`
   margin-top: 12px;

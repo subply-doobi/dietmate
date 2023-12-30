@@ -30,6 +30,7 @@ import {useListCode} from '../../query/queries/code';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {loadBaseLineData, setValue} from '../../stores/slices/userInputSlice';
 import colors from '../../styles/colors';
+import DTextInput from '../../components/common/textInput/DTextInput';
 
 const genderBtnItem = [
   {label: '남성', value: 'M'},
@@ -118,7 +119,7 @@ const FirstInput = () => {
 
         {/* age */}
         <InputHeader isActivated={!!age.value}>만 나이</InputHeader>
-        <Input
+        <DTextInput
           placeholder="만 나이를 입력해주세요"
           value={age.value}
           onChangeText={v => dispatch(setValue({name: 'age', value: v}))}
@@ -140,7 +141,7 @@ const FirstInput = () => {
 
         {/* height */}
         <InputHeader isActivated={!!height.value}>신장(cm)</InputHeader>
-        <Input
+        <DTextInput
           placeholder="신장을 입력해주세요"
           onFocus={() => {
             scrollRef?.current.scrollTo({y: 80, animated: true});
@@ -165,7 +166,7 @@ const FirstInput = () => {
 
         {/* weight */}
         <InputHeader isActivated={!!weight.value}>몸무게(kg)</InputHeader>
-        <Input
+        <DTextInput
           placeholder="몸무게를 입력해주세요"
           onFocus={() => {
             scrollRef?.current.scrollToEnd();
@@ -240,4 +241,3 @@ const ToggleText = styled.Text`
 const InputHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;
-const Input = styled(UserInfoTextInput)``;

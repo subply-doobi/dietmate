@@ -15,6 +15,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {setValue} from '../../stores/slices/userInputSlice';
 import {RootState} from '../../stores/store';
+import DTextInput from '../common/textInput/DTextInput';
 
 const WeightChangeAlert = ({
   autoCalculate,
@@ -31,7 +32,7 @@ const WeightChangeAlert = ({
     <Container>
       {/* 몸무게 변경 input */}
       <InputHeader isActivated={!!weightChange.value}>몸무게 (kg)</InputHeader>
-      <Input
+      <DTextInput
         placeholder="몸무게 (kg)"
         value={weightChange.value}
         onChangeText={v => dispatch(setValue({name: 'weightChange', value: v}))}
@@ -72,7 +73,6 @@ const Container = styled.View`
 const InputHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;
-const Input = styled(UserInfoTextInput)``;
 
 const CheckboxContainer = styled.TouchableOpacity``;
 const Checkbox = styled.Image`

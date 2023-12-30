@@ -12,6 +12,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../stores/store';
 import {setValue} from '../../stores/slices/userInputSlice';
+import DTextInput from '../common/textInput/DTextInput';
 
 const nutrTextByNutr: {[key: string]: string} = {
   carbChange: '탄수화물 (g)',
@@ -55,7 +56,7 @@ const NutrChangeAlert = ({
       <InputHeader isActivated={!!userInputState[type].value}>
         {nutrText}
       </InputHeader>
-      <Input
+      <DTextInput
         placeholder={nutrText}
         value={userInputState[type].value}
         onChangeText={v => dispatch(setValue({name: type, value: v}))}
@@ -88,4 +89,3 @@ const GuideTextSub = styled(TextSub)`
 const InputHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;
-const Input = styled(UserInfoTextInput)``;

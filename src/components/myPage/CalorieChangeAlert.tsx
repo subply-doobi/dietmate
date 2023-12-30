@@ -20,6 +20,7 @@ import colors from '../../styles/colors';
 import {RootState} from '../../stores/store';
 import {setValue} from '../../stores/slices/userInputSlice';
 import {useDispatch, useSelector} from 'react-redux';
+import DTextInput from '../common/textInput/DTextInput';
 
 //mutation 넣고 계산까지
 const CalChangeAlert = () => {
@@ -89,7 +90,7 @@ const CalChangeAlert = () => {
       <InputHeader isActivated={!!calorieChange.value}>
         칼로리 (kcal)
       </InputHeader>
-      <Input
+      <DTextInput
         placeholder="칼로리(kcal)"
         value={calorieChange.value}
         onChangeText={v =>
@@ -152,7 +153,6 @@ const GuideText = styled(TextSub)`
 const InputHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;
-const Input = styled(UserInfoTextInput)``;
 
 const TooltipText = styled(TextMain)`
   font-size: 14px;
