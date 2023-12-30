@@ -26,9 +26,6 @@ export const useCreateBaseLine = () => {
       queryClient.invalidateQueries({queryKey: [BASE_LINE]});
       console.log('생성');
     },
-    onError: error => {
-      console.log(error);
-    },
   });
   return mutation;
 };
@@ -60,9 +57,6 @@ export const useUpdateBaseLine = () => {
     onSuccess: res => {
       queryClient.invalidateQueries({queryKey: [BASE_LINE]});
       console.log('수정', res);
-    },
-    onError: error => {
-      console.log(error);
     },
   });
   return mutation;

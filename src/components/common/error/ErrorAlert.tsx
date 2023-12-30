@@ -5,27 +5,30 @@ import {RootState} from '../../../stores/store';
 import {errorActionByCode} from '../../../util/handleError';
 import DAlert from '../alert/DAlert';
 import RequestAlertContent from '../alert/RequestAlertContent';
-import {useQueryErrorResetBoundary} from '@tanstack/react-query';
-const ErrorAlert = props => {
+import {queryClient} from '../../../query/store';
+
+const ErrorAlert = () => {
   // navigation
-  const {navigate} = useNavigation();
+  const {reset} = useNavigation();
   const {errorCode} = useSelector((state: RootState) => state.commonAlert);
   const dispatch = useDispatch();
-  const {reset} = useQueryErrorResetBoundary();
   return (
     <>
       <DAlert
         alertShow={errorCode ? true : false}
         onConfirm={() => {
-          errorCode === 500
-            ? reset()
-            : errorCode &&
-              errorActionByCode[errorCode] &&
-              errorActionByCode[errorCode](navigate);
+          errorCode && errorActionByCode[errorCode]
+            ? errorActionByCode[errorCode](reset)
+            : reset({
+                index: 0,
+                routes: [{name: 'Login'}],
+              });
           dispatch(closeCommonAlert());
+          queryClient.invalidateQueries();
         }}
         onCancel={() => {
           dispatch(closeCommonAlert());
+          queryClient.invalidateQueries();
         }}
         NoOfBtn={1}
         renderContent={() => <RequestAlertContent />}
