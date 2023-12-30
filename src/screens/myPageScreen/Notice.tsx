@@ -3,15 +3,13 @@ import {Container} from '../../styles/styledConsts';
 import {link} from '../../util/common/linking';
 import {
   INQUIRY_URL,
+  KOREAN_NUTRITION_REFERENCE_URL,
   PRIVACY_POLICY_URL,
   TERMS_OF_USE_URL,
 } from '../../constants/constants';
 import PageBtn from '../../components/myPage/PageBtn';
 
 const Notice = () => {
-  // navigation
-  const {navigate} = useNavigation();
-
   // etc
   // notice btns
   const noticeBtns = [
@@ -26,9 +24,9 @@ const Notice = () => {
       onPress: () => link(TERMS_OF_USE_URL),
     },
     {
-      title: '문의하기',
-      btnId: 'Inquiry',
-      onPress: () => link(INQUIRY_URL),
+      title: '참고문헌 (한국인영양섭취기준, 2020)',
+      btnId: 'reference',
+      onPress: () => link(KOREAN_NUTRITION_REFERENCE_URL),
     },
   ];
 
