@@ -5,7 +5,7 @@ export const queryFn = async <T>(url: string): Promise<T> => {
   const {accessToken} = await getStoredToken();
   const requestConfig = {
     headers: {authorization: `Bearer ${accessToken}`},
-    timeout: 4000,
+    timeout: 2000,
   };
   const res = await axios.get(url, requestConfig);
   return res.data;
@@ -22,6 +22,7 @@ export const mutationFn = async <T>(
     method,
     headers: {authorization: `Bearer ${accessToken}`},
     data: requestBody,
+    timeout: 2000,
   };
   return axios(requestConfig).then(res => res.data);
 };

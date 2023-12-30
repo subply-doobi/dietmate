@@ -61,7 +61,6 @@ export const useUpdateAddress = () => {
 };
 //DELETE
 export const useDeleteAddress = () => {
-  const handleError = useHandleError();
   const mutation = useMutation({
     mutationFn: (addrNo: string) =>
       mutationFn(`${DELETE_ADDRESS}/${addrNo}`, 'delete'),
@@ -69,7 +68,6 @@ export const useDeleteAddress = () => {
       console.log('주소 삭제 성공');
       queryClient.invalidateQueries({queryKey: [LIST_ADDRESS]});
     },
-    onError: error => handleError(error),
   });
   return mutation;
 };

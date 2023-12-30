@@ -20,9 +20,6 @@ export const useDeleteUser = () => {
       queryClient.removeQueries([]);
       // queryClient.invalidateQueries([]);
     },
-    onError: e => {
-      console.log('delete error', e);
-    },
   });
 
   return mutation;

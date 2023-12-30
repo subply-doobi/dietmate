@@ -41,6 +41,7 @@ const RootStackNav = () => {
       onError: handleError,
     },
     mutations: {
+      retry: 0,
       onError: handleError,
     },
   });
