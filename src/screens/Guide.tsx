@@ -78,17 +78,16 @@ const Guide = () => {
           <GuideHeaderSubText>
             초보자는 저희에게 계산을 맡겨주세요
           </GuideHeaderSubText>
-          <Pressable onPress={() => link(KOREAN_NUTRITION_REFERENCE_URL)}>
-            <GuideHeaderSubText
-              style={{
-                marginTop: 0,
-                fontStyle: 'italic',
-                color: colors.blue,
-                textDecorationLine: 'underline',
-              }}>
-              (보건복지부 한국인 영양소 섭취기준, 2020)
-            </GuideHeaderSubText>
-          </Pressable>
+          <GuideHeaderSubText
+            style={{
+              marginTop: 0,
+              fontStyle: 'italic',
+              color: colors.blue,
+              textDecorationLine: 'underline',
+            }}
+            onPress={() => link(KOREAN_NUTRITION_REFERENCE_URL)}>
+            (보건복지부 한국인 영양소 섭취기준, 2020)
+          </GuideHeaderSubText>
           <GuideHeaderSubText style={{marginTop: 0}}>
             을 기반으로 목표영양을 구해드려요
           </GuideHeaderSubText>

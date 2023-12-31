@@ -5,10 +5,14 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../stores/store';
 import colors from '../../styles/colors';
 import {Col} from '../../styles/styledConsts';
-import {purposeCdToValue} from '../../constants/constants';
+import {
+  KOREAN_NUTRITION_REFERENCE_URL,
+  purposeCdToValue,
+} from '../../constants/constants';
 import {calculateNutrTarget} from '../../util/targetCalculation';
 import {useListCode} from '../../query/queries/code';
 import {getRecommendedNutr} from '../../util/userInput/targetByReduxData';
+import {link} from '../../util/common/linking';
 
 const Auto = () => {
   // redux
@@ -49,9 +53,11 @@ const Auto = () => {
           {` ${purposeText}을 위해 하루에 ${calorieModText}를 제한하여 한 끼기준${calorie}kcal를 추천드립니다.`}
         </NutrientSummaryText>
         <NutrientSummaryText style={{marginTop: 4}}>
-          {
-            ' 탄수화물, 단백질, 지방 비율 은 보건복지부 한국인 영양섭취기준(2020)에서 권장하는 비율로 설정했습니다.'
-          }
+          탄수화물, 단백질, 지방 비율은{' '}
+          <LinkText onPress={() => link(KOREAN_NUTRITION_REFERENCE_URL)}>
+            보건복지부 한국인 영양섭취기준(2020)
+          </LinkText>
+          에서 권장하는 비율로 설정했습니다.
         </NutrientSummaryText>
       </Col>
     </ContentsContainer>
@@ -72,3 +78,24 @@ const NutrientSummaryText = styled.Text`
   font-size: 12px;
   color: ${colors.textMain};
 `;
+
+const LinkText = styled.Text`
+  font-size: 12px;
+  font-style: italic;
+  color: ${colors.blue};
+  text-decoration-line: underline;
+`;
+
+{
+  /* <Pressable onPress={() => link(KOREAN_NUTRITION_REFERENCE_URL)}>
+            <GuideHeaderSubText
+              style={{
+                marginTop: 0,
+                fontStyle: 'italic',
+                color: colors.blue,
+                textDecorationLine: 'underline',
+              }}>
+              (보건복지부 한국인 영양소 섭취기준, 2020)
+            </GuideHeaderSubText>
+          </Pressable> */
+}
