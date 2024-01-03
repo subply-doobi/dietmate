@@ -33,12 +33,12 @@ const Login = () => {
   };
 
   // guest login
-  const signInWithGuest = async (): Promise<void> => {
-    const GLdata = await guestLogin();
-    if (GLdata === undefined) return;
-    const baseLineData = await refetch().then(res => res.data);
-    baseLineData && navigateByUserInfo(baseLineData, navigation);
-  };
+  // const signInWithGuest = async (): Promise<void> => {
+  //   const GLdata = await guestLogin();
+  //   if (GLdata === undefined) return;
+  //   const baseLineData = await refetch().then(res => res.data);
+  //   baseLineData && navigateByUserInfo(baseLineData, navigation);
+  // };
 
   // useeffect
   useEffect(() => {
@@ -58,9 +58,9 @@ const Login = () => {
         <BtnKakaoLogin btnStyle="kakao" onPress={signInWithKakao}>
           <BtnTextKakao>카카오 로그인</BtnTextKakao>
         </BtnKakaoLogin>
-        <BtnGuestLogin onPress={signInWithGuest}>
+        {/* <BtnGuestLogin onPress={signInWithGuest}>
           <BtnTextGuest>GUEST LOGIN</BtnTextGuest>
-        </BtnGuestLogin>
+        </BtnGuestLogin> */}
         {IS_IOS ? <AppleLogin /> : <></>}
       </Box>
     </Container>
@@ -95,15 +95,15 @@ const BtnKakaoLogin = styled(BtnCTA)`
   align-self: center;
 `;
 
-const BtnGuestLogin = styled(BtnCTA)`
-  align-self: center;
-  margin-top: 20px;
-`;
-
 const BtnTextKakao = styled(BtnText)`
   color: ${colors.textMain};
 `;
 
-const BtnTextGuest = styled(BtnText)`
-  color: ${colors.textMain};
-`;
+// const BtnGuestLogin = styled(BtnCTA)`
+//   align-self: center;
+//   margin-top: 20px;
+// `;
+
+// const BtnTextGuest = styled(BtnText)`
+//   color: ${colors.textMain};
+// `;
