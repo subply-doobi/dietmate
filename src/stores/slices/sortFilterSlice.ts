@@ -244,6 +244,9 @@ const sortFilterSlice = createSlice({
     updateSearch: (state, action: PayloadAction<string>) => {
       state.copied.filter.search = action.payload;
     },
+    initializeSearch: state => {
+      state.copied.filter.search = initialState.copied.filter.search;
+    },
 
     // 영양성분
     updateSelectedBtn: (
@@ -345,6 +348,7 @@ export const {
   initializePrice,
 
   updateSearch,
+  initializeSearch,
 
   initializeFilter,
   initializeSortFilter,
