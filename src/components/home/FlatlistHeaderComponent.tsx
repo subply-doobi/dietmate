@@ -17,6 +17,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   applySortFilter,
   copySortFilter,
+  initializeSearch,
   updateSearch,
 } from '../../stores/slices/sortFilterSlice';
 import {RootState} from '../../stores/store';
@@ -111,7 +112,8 @@ const FlatlistHeaderComponent = ({
               />
               <SearchCancelBtn
                 onPress={() => {
-                  dispatch(updateSearch(''));
+                  dispatch(initializeSearch());
+                  dispatch(applySortFilter());
                   setSearchBarFocus(false);
                 }}>
                 <SearchCancelImage source={icons.cancelRound_24} />
