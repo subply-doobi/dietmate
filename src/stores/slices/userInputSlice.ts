@@ -334,10 +334,10 @@ const userInputSlice = createSlice({
       state.bmrKnown.isValid = true;
       // ThirdInput !!!! thirdInput의 칼탄단지는 baseLine값 불러오는게 아니라 항상 다시 계산하는 값
       state.ratio.value = NUTR_RATIO_CD[0].cd;
-      state.calorie.value = '';
-      state.carb.value = '';
-      state.protein.value = '';
-      state.fat.value = '';
+      Object.assign(state.calorie, initialState.calorie);
+      Object.assign(state.carb, initialState.carb);
+      Object.assign(state.protein, initialState.protein);
+      Object.assign(state.fat, initialState.fat);
       // Mypage calorie, carb, protein, fat change input -> 마이페이지 변경 칼탄단지, 몸무게는 서버 baseLine 정보 불러오는 값
       const {calorie, carb, protein, fat} = action.payload;
       state.calorieChange.value = String(parseInt(calorie));
@@ -356,10 +356,10 @@ const userInputSlice = createSlice({
         {name: 'sportsSeqCd', value: sportsSeqCd},
         {name: 'sportsTimeCd', value: sportsTimeCd},
         {name: 'sportsStrengthCd', value: sportsStrengthCd},
-        {name: 'calorie', value: String(parseInt(calorie))},
-        {name: 'carb', value: String(parseInt(carb))},
-        {name: 'protein', value: String(parseInt(protein))},
-        {name: 'fat', value: String(parseInt(fat))},
+        {name: 'calorie', value: ''},
+        {name: 'carb', value: ''},
+        {name: 'protein', value: ''},
+        {name: 'fat', value: ''},
       ];
       loadList.forEach(({name, value}) => {
         if (!validateInput[name]) {
