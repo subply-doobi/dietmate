@@ -157,6 +157,7 @@ const AddressEdit = () => {
                     dispatch(setValue({name: 'addr2', value: v}))
                   }
                   isActivated={!!addr2.value}
+                  isValid={addr2.isValid}
                   keyboardType="default"
                 />
               </>

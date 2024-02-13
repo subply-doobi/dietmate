@@ -86,6 +86,7 @@ const CalculateByRatio = () => {
         onChangeText={v => dispatch(setValue({name: 'calorie', value: v}))}
         onFocus={() => {}}
         isActivated={!!userInputState.calorie}
+        isValid={userInputState.calorie.isValid}
         keyboardType="numeric"
         maxLength={4}
       />

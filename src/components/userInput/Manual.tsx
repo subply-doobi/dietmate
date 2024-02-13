@@ -59,11 +59,12 @@ const Manual = ({scrollRef}: IManual) => {
         onFocus={() =>
           setTimeout(() => {
             scrollRef?.current.scrollToEnd({animated: true});
-          }, 50)
+          }, 150)
         }
         value={carb.value}
         onChangeText={v => dispatch(setValue({name: 'carb', value: v}))}
         isActivated={!!carb.value}
+        isValid={carb.isValid}
         keyboardType="numeric"
         maxLength={3}
         ref={el => {
@@ -85,11 +86,12 @@ const Manual = ({scrollRef}: IManual) => {
         onFocus={() =>
           setTimeout(() => {
             scrollRef?.current.scrollToEnd({animated: true});
-          }, 50)
+          }, 150)
         }
         value={protein.value}
         onChangeText={v => dispatch(setValue({name: 'protein', value: v}))}
         isActivated={!!protein.value}
+        isValid={protein.isValid}
         keyboardType="numeric"
         maxLength={3}
         ref={el => {
@@ -112,11 +114,12 @@ const Manual = ({scrollRef}: IManual) => {
         onFocus={() =>
           setTimeout(() => {
             scrollRef?.current.scrollToEnd({animated: true});
-          }, 50)
+          }, 150)
         }
         value={fat.value}
         onChangeText={v => dispatch(setValue({name: 'fat', value: v}))}
         isActivated={!!fat.value}
+        isValid={fat.isValid}
         keyboardType="numeric"
         maxLength={3}
         ref={el => {

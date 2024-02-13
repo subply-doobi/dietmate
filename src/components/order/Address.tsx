@@ -65,6 +65,7 @@ const EntranceMethodContainer = () => {
         value={entranceNote.value}
         onChangeText={v => dispatch(setValue({name: 'entranceNote', value: v}))}
         isActivated={!!entranceNote.value}
+        isValid={entranceNote.isValid}
         keyboardType="default"
       />
     </>

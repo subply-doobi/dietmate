@@ -61,6 +61,7 @@ const NutrChangeAlert = ({
         value={userInputState[type].value}
         onChangeText={v => dispatch(setValue({name: type, value: v}))}
         isActivated={!!userInputState[type].value}
+        isValid={userInputState[type].isValid}
         keyboardType="numeric"
         maxLength={3}
       />

@@ -28,6 +28,7 @@ const Orderer = () => {
         value={buyerName.value}
         onChangeText={v => dispatch(setValue({name: 'buyerName', value: v}))}
         isActivated={!!buyerName.value}
+        isValid={buyerName.isValid}
         keyboardType="default"
       />
       {buyerName.errMsg && (
@@ -43,6 +44,7 @@ const Orderer = () => {
         value={buyerTel.value}
         onChangeText={v => dispatch(setValue({name: 'buyerTel', value: v}))}
         isActivated={!!buyerTel.value}
+        isValid={buyerTel.isValid}
         maxLength={13}
         keyboardType="number-pad"
       />
