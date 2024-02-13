@@ -253,6 +253,7 @@ export const ratioCdToValue: IRatioCdValue = {
 export const REGEX_KOR = /^[ㄱ-ㅎ|가-힣]+$/; //문자열에 한글만 있는지 확인
 // 핸드폰
 export const REGEX_PHONE = /01[016789]-[^0][0-9]{2,3}-[0-9]{3,4}/;
+export const REGEX_NUMBER = /^[0-9]*$/;
 
 //사업자 정보 (ex. 대표자, 주소, 사업자 등록번호)
 export const BUSINESS_INFO = {

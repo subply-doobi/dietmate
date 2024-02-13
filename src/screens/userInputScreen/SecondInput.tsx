@@ -163,13 +163,14 @@ const SecondInput = () => {
           value={bmrKnown.value}
           onChangeText={v => dispatch(setValue({name: 'bmrKnown', value: v}))}
           isActivated={!!bmrKnown.value}
+          isValid={bmrKnown.isValid}
           keyboardType="numeric"
           maxLength={4}
           onFocus={() => {
             console.log('scrollToEnd!!');
             setTimeout(() => {
               scrollRef.current.scrollToEnd({animated: true});
-            }, 50);
+            }, 150);
           }}
         />
         {bmrKnown.errMsg && (

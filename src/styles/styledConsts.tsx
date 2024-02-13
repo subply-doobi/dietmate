@@ -5,6 +5,7 @@ import {SCREENWIDTH} from '../constants/constants';
 
 export interface StyledProps {
   isActivated?: boolean;
+  isValid?: boolean;
   btnStyle?: string;
   width?: number;
   height?: number;
@@ -103,6 +104,11 @@ export const UserInfoTextInput = styled.TextInput`
   justify-content: center;
   align-items: flex-start;
   font-size: 16px;
+  color: ${({isValid}: StyledProps) =>
+    isValid ? colors.textMain : colors.warning};
+
+  line-height: 24px;
+
   border-bottom-width: 1px;
   border-color: ${({isActivated}: StyledProps) =>
     isActivated ? colors.main : colors.inactivated};

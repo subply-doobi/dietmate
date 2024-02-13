@@ -37,6 +37,7 @@ const WeightChangeAlert = ({
         value={weightChange.value}
         onChangeText={v => dispatch(setValue({name: 'weightChange', value: v}))}
         isActivated={!!weightChange.value}
+        isValid={weightChange.isValid}
         keyboardType="numeric"
         maxLength={3}
       />

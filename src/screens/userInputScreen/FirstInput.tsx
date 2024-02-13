@@ -124,6 +124,7 @@ const FirstInput = () => {
           value={age.value}
           onChangeText={v => dispatch(setValue({name: 'age', value: v}))}
           isActivated={!!age.value}
+          isValid={age.isValid}
           keyboardType="numeric"
           maxLength={3}
           ref={el => {
@@ -149,6 +150,7 @@ const FirstInput = () => {
           value={height.value}
           onChangeText={v => dispatch(setValue({name: 'height', value: v}))}
           isActivated={!!height.value}
+          isValid={height.isValid}
           keyboardType="numeric"
           maxLength={3}
           ref={el => {
@@ -174,6 +176,7 @@ const FirstInput = () => {
           value={weight.value}
           onChangeText={v => dispatch(setValue({name: 'weight', value: v}))}
           isActivated={!!weight.value}
+          isValid={weight.isValid}
           keyboardType="numeric"
           maxLength={3}
           ref={el => {

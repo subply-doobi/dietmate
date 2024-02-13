@@ -6,9 +6,20 @@ import colors from '../../../styles/colors';
 
 interface IDTextInput extends React.ComponentProps<typeof TextInput> {
   isActivated: boolean;
+  isValid: boolean;
 }
 const DTextInput = forwardRef((props: IDTextInput, ref) => {
-  return <Input {...props} placeholderTextColor={colors.textSub} ref={ref} />;
+  return (
+    <Input
+      {...props}
+      placeholderTextColor={colors.textSub}
+      ref={ref}
+      style={{
+        includeFontPadding: false,
+        fontFamily: 'NotoSansKR',
+      }}
+    />
+  );
 });
 
 export default DTextInput;

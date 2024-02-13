@@ -339,11 +339,16 @@ const userInputSlice = createSlice({
       Object.assign(state.protein, initialState.protein);
       Object.assign(state.fat, initialState.fat);
       // Mypage calorie, carb, protein, fat change input -> 마이페이지 변경 칼탄단지, 몸무게는 서버 baseLine 정보 불러오는 값
-      const {calorie, carb, protein, fat} = action.payload;
-      state.calorieChange.value = String(parseInt(calorie));
-      state.carbChange.value = String(parseInt(carb));
-      state.proteinChange.value = String(parseInt(protein));
-      state.fatChange.value = String(parseInt(fat));
+      const {
+        calorie: calChange,
+        carb: carbChange,
+        protein: proteinChange,
+        fat: fatChange,
+      } = action.payload;
+      state.calorieChange.value = String(parseInt(calChange));
+      state.carbChange.value = String(parseInt(carbChange));
+      state.proteinChange.value = String(parseInt(proteinChange));
+      state.fatChange.value = String(parseInt(fatChange));
       state.weightChange.value = weight;
 
       // validation
@@ -360,6 +365,10 @@ const userInputSlice = createSlice({
         {name: 'carb', value: ''},
         {name: 'protein', value: ''},
         {name: 'fat', value: ''},
+        {name: 'calorieChange', value: calChange},
+        {name: 'carbChange', value: carbChange},
+        {name: 'proteinChange', value: proteinChange},
+        {name: 'fatChange', value: fatChange},
       ];
       loadList.forEach(({name, value}) => {
         if (!validateInput[name]) {

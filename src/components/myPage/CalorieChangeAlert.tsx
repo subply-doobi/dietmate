@@ -97,6 +97,7 @@ const CalChangeAlert = () => {
           dispatch(setValue({name: 'calorieChange', value: v}))
         }
         isActivated={!!calorieChange.value}
+        isValid={calorieChange.isValid}
         keyboardType="numeric"
         maxLength={4}
       />
