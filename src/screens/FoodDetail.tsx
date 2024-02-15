@@ -158,8 +158,16 @@ const FoodDetail = () => {
     return makeTableData(productData, baseLineData);
   }, [baseLineData, productData]);
 
-  return !productData || !baseLineData ? (
-    <ActivityIndicator />
+  return !productData || !baseLineData || isFetching ? (
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <ActivityIndicator size={'large'} />
+    </SafeAreaView>
   ) : (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <Container>
