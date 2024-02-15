@@ -59,7 +59,10 @@ interface IShowPart {
 const ShowPart = ({clicked, table, data}: IShowPart) => {
   if (clicked === '영양성분') return <NutrientPart table={table} />;
   if (clicked === '식품상세') return <FoodPart productData={data} />;
-  if (clicked === '배송정책') return <ShippingPart />;
+  if (clicked === '배송정책')
+    return (
+      <ShippingPart platformNm={data.platformNm} platformUrl={data.link1} />
+    );
   return <NutrientPart table={table} />;
 };
 
