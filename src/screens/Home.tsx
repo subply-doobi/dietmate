@@ -163,13 +163,7 @@ const Home = () => {
   return (
     <Container>
       {/* 끼니선택, progressBar section */}
-      {isBaseLineFetching === false &&
-      listDietLoading === false &&
-      productIsLoading === false ? (
-        <MenuSection />
-      ) : (
-        <ActivityIndicator />
-      )}
+      <MenuSection />
 
       <HomeContainer>
         {/* 검색결과 수 및 정렬 필터 */}

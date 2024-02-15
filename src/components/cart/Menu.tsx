@@ -34,16 +34,9 @@ import MenuNumSelect from './MenuNumSelect';
 interface IMenu {
   dietNo: string;
   dietDetailData: IDietDetailData;
-  setDietNoToNumControl: React.Dispatch<SetStateAction<string>>;
-  setMenuNumSelectShow: React.Dispatch<SetStateAction<boolean>>;
 }
 
-const Menu = ({
-  dietNo,
-  dietDetailData,
-  setDietNoToNumControl,
-  setMenuNumSelectShow,
-}: IMenu) => {
+const Menu = ({dietNo, dietDetailData}: IMenu) => {
   // react-query
   const {data: baseLineData} = useGetBaseLine();
   const deleteDietDetailMutation = useDeleteDietDetail();

@@ -12,12 +12,7 @@ import {IDietDetailData} from '../../query/types/diet';
 import Menu from './Menu';
 import {SetStateAction} from 'react';
 import {commaToNum, sumUpPrice} from '../../util/sumUp';
-import {
-  HorizontalLine,
-  HorizontalSpace,
-  Row,
-  TextMain,
-} from '../../styles/styledConsts';
+import {HorizontalSpace, Row, TextMain} from '../../styles/styledConsts';
 import MenuNumSelect from './MenuNumSelect';
 
 interface IAccordionContent {
@@ -60,12 +55,7 @@ const AccordionContent = ({
       </Row>
       <HorizontalSpace height={8} />
       <NutrientsProgress dietDetailData={dietDetailData} />
-      <Menu
-        dietNo={dietNo}
-        dietDetailData={dietDetailData}
-        setDietNoToNumControl={setDietNoToNumControl}
-        setMenuNumSelectShow={setMenuNumSelectShow}
-      />
+      <Menu dietNo={dietNo} dietDetailData={dietDetailData} />
     </ContentBody>
   );
 };
