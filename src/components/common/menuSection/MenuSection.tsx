@@ -112,7 +112,7 @@ const MenuSection = () => {
                   <PriceSum>{commaToNum(priceSum)}원</PriceSum>
                   <MenuNumSelect
                     disabled={!!dietDetailData && dietDetailData.length === 0}
-                    isForOpenModal={true}
+                    action="openModal"
                     currentQty={currentQty}
                     openMenuNumSelect={onMenuNoSelectPress}
                   />
@@ -148,7 +148,7 @@ const MenuSection = () => {
                 <PriceSum>{commaToNum(priceSum)}원</PriceSum>
                 <MenuNumSelect
                   disabled={!!dietDetailData && dietDetailData.length === 0}
-                  isForOpenModal={true}
+                  action="openModal"
                   currentQty={currentQty}
                   openMenuNumSelect={onMenuNoSelectPress}
                 />

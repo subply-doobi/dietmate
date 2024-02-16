@@ -112,7 +112,7 @@ const AccordionInactiveHeader = ({
       <Col style={{position: 'absolute', right: 8, bottom: 8}}>
         <MenuNumSelect
           disabled={dietDetailData.length === 0}
-          isForOpenModal={true}
+          action="openModal"
           currentQty={currentQty}
           openMenuNumSelect={onMenuNoSelectPress}
         />

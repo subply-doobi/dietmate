@@ -48,7 +48,7 @@ const AccordionContent = ({
         <PriceSum>{commaToNum(dietPrice)}원</PriceSum>
         <MenuNumSelect
           disabled={dietDetailData.length === 0}
-          isForOpenModal={true}
+          action="openModal"
           currentQty={currentQty}
           openMenuNumSelect={onMenuNoSelectPress}
         />

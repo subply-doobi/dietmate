@@ -147,7 +147,7 @@ const MenuNumSelectContent = ({
         <Col style={{alignSelf: 'flex-end'}}>
           <MenuNumSelect
             disabled={!dietDetailData || dietDetailData.length === 0}
-            isForOpenModal={false}
+            action="setQty"
             setQty={setQty}
             currentQty={qty}
           />
