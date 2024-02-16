@@ -5,29 +5,32 @@ import {icons} from '../../assets/icons/iconSource';
 
 /** dummy인 경우 수량조절 bottomSheet 열어주고 아닌 경우 실제 수량조절 */
 const MenuNumSelect = ({
-  isForOpenModal,
+  action,
   disabled = false,
   openMenuNumSelect,
   setQty,
   currentQty,
 }: {
-  isForOpenModal: boolean;
+  action: 'openModal' | 'setQty';
   disabled?: boolean;
   openMenuNumSelect?: Function;
   setQty?: React.Dispatch<React.SetStateAction<number>>;
   currentQty: number;
 }) => {
-  // etc
-  // 버튼 상태 (dummy 버튼인지, 전체 disabled 상태인지에 따라)
-  // 전체 버튼 | +/- 버튼 상태 결정
-  const isBtnBoxDisabled = disabled || !isForOpenModal;
-  const isPlusMinusBtnDisabled = disabled || isForOpenModal;
+  // 1. 식품이 없거나 서버 오류로 dummy버튼인 경우
+  //    == disabled prop 사용하면 홈화면 accordion이 닫히는 문제 때문에 onPress에 disabled 처리
+  // 2. plusMinusBtn 만 disabled 인 경우
+  //    == menuselect bottomsheet 열어주는 경우
+  // 3. 버튼 박스만 disabled
+  //    == 실제 수량조절 하는 경우
+  const isPlusMinusBtnDisabled = action !== 'setQty';
   return (
     <Box
-      onPress={() =>
-        isForOpenModal && !!openMenuNumSelect && openMenuNumSelect()
-      }
-      disabled={isBtnBoxDisabled}>
+      onPress={() => {
+        if (disabled) return;
+        action === 'openModal' && openMenuNumSelect && openMenuNumSelect();
+      }}
+      disabled={action === 'setQty'}>
       <PlusMinusBtn
         style={{borderTopLeftRadius: 5, borderBottomLeftRadius: 5}}
         disabled={isPlusMinusBtnDisabled}
