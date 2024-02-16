@@ -3,10 +3,10 @@ import {useCallback, useEffect, useState, useRef} from 'react';
 import {FlatList, Animated, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
-
-// doobi util, redux, etc
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../stores/store';
+
+// doobi util, const
 import {setCurrentDiet, setTotalFoodList} from '../stores/slices/commonSlice';
 import {
   FOOD_LIST_ITEM_HEIGHT,

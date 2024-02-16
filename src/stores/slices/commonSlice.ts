@@ -7,7 +7,7 @@ export interface ICartState {
   totalFoodList: IProductData[];
   totalFoodListIsLoaded: boolean;
   platformDDItems: {value: string; label: string}[];
-  nutrTooltipText: string;
+  progressTooltipShow: boolean;
   menuActiveSection: number[];
 }
 
@@ -16,7 +16,7 @@ const initialState: ICartState = {
   totalFoodList: [],
   totalFoodListIsLoaded: false,
   platformDDItems: [{value: '', label: '선택안함'}],
-  nutrTooltipText: '',
+  progressTooltipShow: true,
   menuActiveSection: [],
 };
 
@@ -26,6 +26,7 @@ export const commonSlice = createSlice({
   reducers: {
     setCurrentDiet: (state, action: PayloadAction<string>) => {
       state.currentDietNo = action.payload;
+      state.progressTooltipShow = true;
       // queryClient.invalidateQueries([PRODUCTS]);
     },
     setTotalFoodList: (state, action: PayloadAction<IProductData[]>) => {
@@ -46,8 +47,8 @@ export const commonSlice = createSlice({
         ...platformDDItems,
       ];
     },
-    setNutrTooltipText: (state, action: PayloadAction<string>) => {
-      state.nutrTooltipText = action.payload;
+    setProgressTooltipShow: (state, action: PayloadAction<boolean>) => {
+      state.progressTooltipShow = action.payload;
     },
     setMenuActiveSection: (state, action: PayloadAction<number[]>) => {
       state.menuActiveSection = action.payload;
@@ -58,7 +59,7 @@ export const commonSlice = createSlice({
 export const {
   setCurrentDiet,
   setTotalFoodList,
-  setNutrTooltipText,
+  setProgressTooltipShow,
   setMenuActiveSection,
 } = commonSlice.actions;
 export default commonSlice.reducer;
