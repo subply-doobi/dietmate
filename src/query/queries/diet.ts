@@ -6,6 +6,7 @@ import {queryClient} from '../store';
 import {
   setCurrentDiet,
   setMenuActiveSection,
+  setProgressTooltipShow,
 } from '../../stores/slices/commonSlice';
 import {useHandleError} from '../../util/handleError';
 import {
@@ -65,7 +66,10 @@ export const useCreateDiet = (options?: IMutationOptions) => {
       return {prevEmptyData};
     },
     onSuccess: data => {
-      console.log('createDiet success: ', data);
+      // progressTooltip을 끼니나 식품을 추가/삭제 할 경우에만 띄우기 위함.
+      // 툴팁 닫은 후에 화면 옮겼을 때 다시 뜨지 않도록 방지
+      dispatch(setProgressTooltipShow(true));
+
       options?.onSuccess && options?.onSuccess(data);
       // 현재 구성중인 끼니의 dietNo, dietIdx를 redux에 저장 => 장바구니와 동기화
       dispatch(setCurrentDiet(data.dietNo));
@@ -93,6 +97,8 @@ export const useCreateDiet = (options?: IMutationOptions) => {
 };
 
 export const useCreateDietDetail = (options?: IMutationOptions) => {
+  const dispatch = useDispatch();
+
   const onSuccess = options?.onSuccess;
   const handleError = useHandleError();
   const mutation = useMutation({
@@ -158,6 +164,10 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
       };
     },
     onSuccess: (data, {dietNo, food}) => {
+      // progressTooltip을 끼니나 식품을 추가/삭제 할 경우에만 띄우기 위함.
+      // 툴팁 닫은 후에 화면 옮겼을 때 다시 뜨지 않도록 방지
+      dispatch(setProgressTooltipShow(true));
+
       // 컴포넌트로부터 전달받은 onSuccess 실행
       onSuccess && onSuccess();
 
@@ -298,6 +308,10 @@ export const useDeleteDiet = () => {
       return {prevDietData, newDietData};
     },
     onSuccess: (data, {dietNo}: {dietNo: string}, context) => {
+      // progressTooltip을 끼니나 식품을 추가/삭제 할 경우에만 띄우기 위함.
+      // 툴팁 닫은 후에 화면 옮겼을 때 다시 뜨지 않도록 방지
+      dispatch(setProgressTooltipShow(true));
+
       // 끼니 삭제 후 현재 구성중인 끼니를 redux에 새로 저장 => 장바구니와 동기화
       const prevDietData = context?.prevDietData;
       if (!prevDietData) {
@@ -330,6 +344,7 @@ export const useDeleteDiet = () => {
 };
 
 export const useDeleteDietDetail = (options?: IMutationOptions) => {
+  const dispatch = useDispatch();
   const onSuccess = options?.onSuccess;
   const handleError = useHandleError();
   const mutation = useMutation({
@@ -392,6 +407,10 @@ export const useDeleteDietDetail = (options?: IMutationOptions) => {
       };
     },
     onSuccess: (data, {dietNo, productNo}) => {
+      // progressTooltip을 끼니나 식품을 추가/삭제 할 경우에만 띄우기 위함.
+      // 툴팁 닫은 후에 화면 옮겼을 때 다시 뜨지 않도록 방지
+      dispatch(setProgressTooltipShow(true));
+
       // 컴포넌트로부터 option으로 받은 onSuccess 실행
       onSuccess && onSuccess();
 

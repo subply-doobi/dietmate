@@ -1,7 +1,9 @@
-import React, {useEffect, useState} from 'react';
+// RN, 3rd
+import {useMemo, useState, useEffect} from 'react';
 import styled from 'styled-components/native';
 import * as Progress from 'react-native-progress';
 
+// util, const
 import colors from '../../../styles/colors';
 import {Col, Row, VerticalSpace} from '../../../styles/styledConsts';
 import {
@@ -10,15 +12,18 @@ import {
   sumUpNutrients,
 } from '../../../util/sumUp';
 
-import {useGetBaseLine} from '../../../query/queries/baseLine';
-import DTooltip from '../tooltip/DTooltip';
+// doobi components
 import {NUTR_ERROR_RANGE, SCREENWIDTH} from '../../../constants/constants';
-import {RootState} from '../../../stores/store';
-import {useDispatch, useSelector} from 'react-redux';
-import {setNutrTooltipText} from '../../../stores/slices/commonSlice';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {icons} from '../../../assets/icons/iconSource';
+import DTooltip from '../tooltip/DTooltip';
+
+// react-query
+import {useGetBaseLine} from '../../../query/queries/baseLine';
 import {IDietDetailData} from '../../../query/types/diet';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../../stores/store';
+import {setProgressTooltipShow} from '../../../stores/slices/commonSlice';
 
 const indicatorColorsByTitle2: {[key: string]: string} = {
   '칼로리(kcal)': colors.main,
@@ -76,13 +81,12 @@ const NutrientsProgress = ({
 }: {
   dietDetailData: IDietDetailData;
 }) => {
-  // navigation
-  const {navigate} = useNavigation();
-  const route = useRoute();
-
   // redux
-  const {nutrTooltipText} = useSelector((state: RootState) => state.common);
   const dispatch = useDispatch();
+  const {progressTooltipShow} = useSelector((state: RootState) => state.common);
+
+  // navigation
+  const route = useRoute();
 
   // react-query
   const {data: baseLineData, isInitialLoading, isLoading} = useGetBaseLine();
@@ -90,28 +94,36 @@ const NutrientsProgress = ({
   // etc
   const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
 
-  // tooltip 위치 계산
-  const isSatisfied = checkNutrSatisfied(baseLineData, cal, carb, protein, fat);
-  const exceedIdx = getExceedIdx(baseLineData, cal, carb, protein, fat);
-  const tootipPosition = isSatisfied
-    ? 0
-    : -8 + ((SCREENWIDTH - 16) / 4) * exceedIdx;
+  // useMemo
+  // 1. 툴팁 보여줄 것인지, 2. 텍스트, 3. 위치 값 memo
+  const {exceedIdx, tooltipPosition, tooltipText} = useMemo(() => {
+    const isSatisfied = checkNutrSatisfied(
+      baseLineData,
+      cal,
+      carb,
+      protein,
+      fat,
+    );
+    const exceedIdx = getExceedIdx(baseLineData, cal, carb, protein, fat);
+    const tooltipPosition = isSatisfied
+      ? 0
+      : -8 + ((SCREENWIDTH - 16) / 4) * exceedIdx;
 
-  useEffect(() => {
     const tooltipText =
       exceedIdx !== -1
         ? '영양이 초과되었어요'
         : isSatisfied
         ? '한 끼니가 완성되었어요'
         : '';
-    dispatch(setNutrTooltipText(tooltipText));
-  }, [baseLineData, dietDetailData]);
+
+    return {exceedIdx, tooltipPosition, tooltipText};
+  }, [baseLineData, dietDetailData, progressTooltipShow]);
 
   return (
     <Container>
       <DTooltip
-        text={nutrTooltipText}
-        tooltipShow={nutrTooltipText !== ''}
+        text={tooltipText}
+        tooltipShow={progressTooltipShow && tooltipText !== ''}
         showIcon={true}
         renderCustomIcon={
           exceedIdx !== -1 && route.name === 'Home'
@@ -120,22 +132,12 @@ const NutrientsProgress = ({
         }
         reversed={true}
         boxTop={58}
-        boxLeft={exceedIdx < 3 ? tootipPosition : undefined}
+        boxLeft={exceedIdx < 3 ? tooltipPosition : undefined}
         boxRight={exceedIdx === 3 ? -8 : undefined}
         triangleRight={
           exceedIdx === 3 ? (SCREENWIDTH - 16) / 4 - 16 : undefined
         }
-        onPressFn={() => {
-          if (route.name === 'Cart') {
-            dispatch(setNutrTooltipText(''));
-            return;
-          }
-          if (exceedIdx !== -1) {
-            navigate('BottomTabNav', {screen: 'Cart'});
-            return;
-          }
-          dispatch(setNutrTooltipText(''));
-        }}
+        onPressFn={() => dispatch(setProgressTooltipShow(false))}
       />
 
       <Col style={{width: '100%', height: 70}}>

@@ -33,7 +33,6 @@ import {
 } from '../../../query/queries/diet';
 import MenuNumSelect from '../../cart/MenuNumSelect';
 import {commaToNum, sumUpPrice} from '../../../util/sumUp';
-import {setNutrTooltipText} from '../../../stores/slices/commonSlice';
 
 const MenuSection = () => {
   // redux
@@ -75,7 +74,6 @@ const MenuSection = () => {
   // accordion
   // accordionUpdate
   const updateSections = (activeSections: number[]) => {
-    dispatch(setNutrTooltipText(''));
     setActiveSection(activeSections);
   };
 
@@ -128,15 +126,17 @@ const MenuSection = () => {
           </ProgressContainer>
         ),
         content: (
-          <MenuContainer>
+          // 툴팁잘림 => activeHeader paddingBottom에 + , content marginTop에 - 로 조절
+          <ProgressContainer style={{marginTop: -24}}>
             <Menu dietNo={currentDietNo} dietDetailData={dietDetailData} />
             <MenuContainerClose onPress={() => setActiveSection([])}>
               {isAccordionActive && <Arrow source={icons.arrowUp_20} />}
             </MenuContainerClose>
-          </MenuContainer>
+          </ProgressContainer>
         ),
         activeHeader: (
-          <ProgressContainer>
+          // 툴팁잘림 => activeHeader paddingBottom에 + , content marginTop에 - 로 조절
+          <ProgressContainer style={{paddingBottom: 24}}>
             {/* 끼니 수량조절 */}
             <>
               <Row
