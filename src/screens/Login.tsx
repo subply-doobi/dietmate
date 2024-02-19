@@ -11,6 +11,7 @@ import AppleLogin from '../components/login/appleLogin';
 import {navigateByUserInfo} from '../util/login/navigateByUserInfo';
 
 // react-query
+import {useGetGuestYn} from '../query/queries/guest';
 import {useGetBaseLine} from '../query/queries/baseLine';
 
 // doobi Component
@@ -22,6 +23,7 @@ const Login = () => {
   const navigation = useNavigation();
 
   // react-query
+  const {data: guestYnData} = useGetGuestYn();
   const {refetch} = useGetBaseLine({enabled: false});
 
   // kakaoLogin
@@ -32,13 +34,13 @@ const Login = () => {
     baseLineData && navigateByUserInfo(baseLineData, navigation);
   };
 
-  // guest login
-  // const signInWithGuest = async (): Promise<void> => {
-  //   const GLdata = await guestLogin();
-  //   if (GLdata === undefined) return;
-  //   const baseLineData = await refetch().then(res => res.data);
-  //   baseLineData && navigateByUserInfo(baseLineData, navigation);
-  // };
+  // guest login (플레이스토어, 앱스토어, 카드사 심사용: 서버 값으로 사용유무 결정)
+  const signInWithGuest = async (): Promise<void> => {
+    const GLdata = await guestLogin();
+    if (GLdata === undefined) return;
+    const baseLineData = await refetch().then(res => res.data);
+    baseLineData && navigateByUserInfo(baseLineData, navigation);
+  };
 
   // useeffect
   useEffect(() => {
@@ -58,9 +60,14 @@ const Login = () => {
         <BtnKakaoLogin btnStyle="kakao" onPress={signInWithKakao}>
           <BtnTextKakao>카카오 로그인</BtnTextKakao>
         </BtnKakaoLogin>
-        {/* <BtnGuestLogin onPress={signInWithGuest}>
-          <BtnTextGuest>GUEST LOGIN</BtnTextGuest>
-        </BtnGuestLogin> */}
+
+        {/* 앱심사용 게스트로그인 사용유무 */}
+        {guestYnData && guestYnData.enableYn === 'Y' && (
+          <BtnGuestLogin onPress={signInWithGuest}>
+            <BtnTextGuest>GUEST LOGIN</BtnTextGuest>
+          </BtnGuestLogin>
+        )}
+
         {IS_IOS ? <AppleLogin /> : <></>}
       </Box>
     </Container>
@@ -99,11 +106,11 @@ const BtnTextKakao = styled(BtnText)`
   color: ${colors.textMain};
 `;
 
-// const BtnGuestLogin = styled(BtnCTA)`
-//   align-self: center;
-//   margin-top: 20px;
-// `;
+const BtnGuestLogin = styled(BtnCTA)`
+  align-self: center;
+  margin-top: 20px;
+`;
 
-// const BtnTextGuest = styled(BtnText)`
-//   color: ${colors.textMain};
-// `;
+const BtnTextGuest = styled(BtnText)`
+  color: ${colors.textMain};
+`;

@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://3.36.62.63:8080';
+export const BASE_URL = 'http://54.180.96.237:8080';
 
 export const GET_TOKEN = `${BASE_URL}/api/every/token/get-token`; //토큰 조회
 export const GET_AUTH = `${BASE_URL}/api/member/auth/get-auth`; //인증 여부 조회
@@ -54,5 +54,8 @@ export const LIST_ADDRESS = `${BASE_URL}/api/member/address/list-address`;
 export const GET_ADDRESS = `${BASE_URL}/api/member/address/get-address`;
 export const DELETE_ADDRESS = `${BASE_URL}/api/member/address/delete-address`;
 
-// api-member-gusest-login
+// api-member-guest-login
 export const GET_GUEST = `${BASE_URL}/api/every/token/get-token-guest`;
+
+// api-member-guest-controller
+export const GET_GUEST_YN = `${BASE_URL}/api/member/guest/get-guest-yn`;

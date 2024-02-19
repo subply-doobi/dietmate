@@ -24,3 +24,6 @@ export const MARK = 'MARK';
 //order
 export const ORDER = 'ORDER';
 export const ORDER_DETAIL = 'ORDER_DETAIL';
+
+//guest
+export const GUEST_YN = 'GUEST_YN';
