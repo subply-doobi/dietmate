@@ -7,10 +7,18 @@ import {IReIssueTokenData} from '../types/token';
 import {queryFn} from './requestFn';
 
 import {GET_TOKEN, GET_AUTH, RE_ISSUE_TOKEN, GET_GUEST} from './urls';
+import {AXIOS_TIMEOUT} from '../../constants/constants';
+
+const requestConfig = {
+  timeout: AXIOS_TIMEOUT,
+};
 
 export const getDoobiToken = async (kakaoAccessToken: string | null) => {
   try {
-    const result = await axios.get(`${GET_TOKEN}/${kakaoAccessToken}`);
+    const result = await axios.get(
+      `${GET_TOKEN}/${kakaoAccessToken}`,
+      requestConfig,
+    );
     return result?.status === 200 ? result.data : undefined;
   } catch (e) {
     console.log('getDoobiToken error: ', e);
@@ -18,7 +26,7 @@ export const getDoobiToken = async (kakaoAccessToken: string | null) => {
 };
 export const getGuestToken = async () => {
   try {
-    const result = await axios.get(`${GET_GUEST}`);
+    const result = await axios.get(`${GET_GUEST}`, requestConfig);
     return result?.status === 200 ? result.data : undefined;
   } catch (e) {
     console.log('getGuestToken error: ', e);

@@ -15,7 +15,7 @@ import {useGetGuestYn} from '../query/queries/guest';
 import {useGetBaseLine} from '../query/queries/baseLine';
 
 // doobi Component
-import {BtnCTA, BtnText} from '../styles/styledConsts';
+import {BtnCTA, BtnText, TextMain} from '../styles/styledConsts';
 import {IS_IOS} from '../constants/constants';
 
 const Login = () => {
@@ -56,7 +56,8 @@ const Login = () => {
   return (
     <Container>
       <Box>
-        <TitleText>{'식단조절은\n두비에게'}</TitleText>
+        <Logo source={require('../assets/appIcon/appIcon_black.png')} />
+        <TitleText>다이어트메이트</TitleText>
         <BtnKakaoLogin btnStyle="kakao" onPress={signInWithKakao}>
           <BtnTextKakao>카카오 로그인</BtnTextKakao>
         </BtnKakaoLogin>
@@ -88,14 +89,21 @@ const Box = styled.View`
   align-self: center;
 `;
 
-const TitleText = styled.Text`
-  margin-bottom: 70px;
-  color: ${colors.textMain};
+const TitleText = styled(TextMain)`
+  margin-top: 24px;
+  margin-bottom: 80px;
   font-size: 24px;
   font-weight: bold;
   text-align: center;
   line-height: 35px;
-  text-align: center;
+`;
+
+const Logo = styled.Image`
+  width: 100px;
+  height: 100px;
+  align-self: center;
+  background-color: ${colors.inactivated};
+  border-radius: 40px;
 `;
 
 const BtnKakaoLogin = styled(BtnCTA)`

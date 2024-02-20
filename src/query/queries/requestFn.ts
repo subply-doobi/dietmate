@@ -1,11 +1,12 @@
 import axios from 'axios';
 import {getStoredToken} from '../../util/asyncStorage';
+import {AXIOS_TIMEOUT} from '../../constants/constants';
 
 export const queryFn = async <T>(url: string): Promise<T> => {
   const {accessToken} = await getStoredToken();
   const requestConfig = {
     headers: {authorization: `Bearer ${accessToken}`},
-    timeout: 2000,
+    timeout: AXIOS_TIMEOUT,
   };
   const res = await axios.get(url, requestConfig);
   return res.data;
@@ -22,7 +23,7 @@ export const mutationFn = async <T>(
     method,
     headers: {authorization: `Bearer ${accessToken}`},
     data: requestBody,
-    timeout: 2000,
+    timeout: AXIOS_TIMEOUT,
   };
   return axios(requestConfig).then(res => res.data);
 };
