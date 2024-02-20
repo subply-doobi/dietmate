@@ -24,6 +24,9 @@ export const KOREAN_NUTRITION_REFERENCE_URL =
 export const KAKAOPAY_CID = 'CAZ1OZBO5O';
 export const IAMPORT_USER_CODE = 'imp88778331';
 
+// axios timeout
+export const AXIOS_TIMEOUT = 2000;
+
 // Doobi server category etc.
 //주간 운동 횟수
 export const SPORTS_SEQ_CD = [
