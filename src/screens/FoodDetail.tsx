@@ -96,6 +96,7 @@ const FoodDetail = () => {
 
   //state
   const [clicked, setClicked] = useState('식품상세');
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const detailMenu = ['영양성분', '식품상세', '배송정책'];
 
   // etc
@@ -105,6 +106,9 @@ const FoodDetail = () => {
   // 식품마다 headerTitle바꾸기
   // TBD : route.params.item 타입 관련 해결 및 만약 null값일 시 에러처리
   useEffect(() => {
+    const waitPage = async () => {
+      setTimeout(() => setIsPageLoading(false), 500);
+    };
     const initializePage = async () => {
       const initialData = (await refetchProduct()).data;
       navigation.setOptions({
@@ -133,6 +137,7 @@ const FoodDetail = () => {
         },
       });
     };
+    waitPage();
     initializePage();
   }, [navigation]);
 
@@ -161,7 +166,7 @@ const FoodDetail = () => {
     return makeTableData(productData, baseLineData);
   }, [baseLineData, productData]);
 
-  return !productData || !baseLineData || isFetching ? (
+  return !productData || !baseLineData || isPageLoading ? (
     <SafeAreaView
       style={{
         flex: 1,
