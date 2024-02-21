@@ -92,10 +92,11 @@ const Box = styled.View`
 const TitleText = styled(TextMain)`
   margin-top: 24px;
   margin-bottom: 80px;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 32px;
   text-align: center;
-  line-height: 35px;
+  line-height: 32px;
+  font-family: 'KotraHope';
+  include-font-padding: false;
 `;
 
 const Logo = styled.Image`
