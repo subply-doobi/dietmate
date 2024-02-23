@@ -17,12 +17,16 @@ const ErrorAlert = () => {
       <DAlert
         alertShow={errorCode ? true : false}
         onConfirm={() => {
-          errorCode && errorActionByCode[errorCode]
-            ? errorActionByCode[errorCode](reset)
-            : reset({
-                index: 0,
-                routes: [{name: 'Login'}],
-              });
+          // errorCode && errorActionByCode[errorCode]
+          //   ? errorActionByCode[errorCode](reset)
+          //   : reset({
+          //       index: 0,
+          //       routes: [{name: 'Login'}],
+          //     });
+          reset({
+            index: 0,
+            routes: [{name: 'Login'}],
+          });
           dispatch(closeCommonAlert());
           queryClient.invalidateQueries();
         }}

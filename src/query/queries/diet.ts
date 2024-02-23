@@ -202,9 +202,6 @@ export const useListDiet = (options?: IQueryOptions) => {
     queryKey: [DIET, ...additionalQK],
     queryFn: () => queryFn(LIST_DIET),
     enabled,
-    onSuccess: data => {
-      options?.onSuccess && options.onSuccess(data);
-    },
   });
 };
 
@@ -214,7 +211,6 @@ export const useListDietDetail = (dietNo: string, options?: IQueryOptions) => {
     queryKey: dietNo ? [DIET_DETAIL, dietNo] : [DIET_DETAIL],
     queryFn: () => queryFn(`${LIST_DIET_DETAIL}/${dietNo}`),
     enabled,
-    onSuccess: data => {},
   });
 };
 
@@ -224,7 +220,6 @@ export const useListDietDetailAll = (options?: IQueryOptions) => {
     queryKey: [DIET_DETAIL_ALL],
     queryFn: () => queryFn(LIST_DIET_DETAIL_ALL),
     enabled,
-    onSuccess: data => {},
   });
 };
 
@@ -234,7 +229,6 @@ export const useGetDietDetailEmptyYn = (options?: IQueryOptions) => {
     queryKey: [DIET_DETAIL_EMPTY_YN],
     queryFn: () => queryFn(GET_DIET_DETAIL_EMPTY_YN),
     enabled,
-    onSuccess: data => {},
   });
 };
 

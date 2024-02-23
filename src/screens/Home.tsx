@@ -61,7 +61,7 @@ const Home = () => {
   const [tooltipShow, setTooltipShow] = useState(false);
 
   // react-query
-  const {isFetching: isBaseLineFetching} = useGetBaseLine(); // 미리 캐싱
+  const {isFetching: isBaseLineFetching, isInitialLoading} = useGetBaseLine(); // 미리 캐싱
   const {data: dietDetailData, isLoading: listDietLoading} = useListDietDetail(
     currentDietNo,
     {
@@ -83,12 +83,6 @@ const Home = () => {
     },
     {
       enabled: currentDietNo ? true : false,
-      onSuccess: (data: IProductData[]) => {
-        if (data.length === 0) setProductAlertShow(true);
-        // 처음 앱 켰을 때 totalFoodList를 redux에 저장해놓고 끼니 자동구성에 사용
-        if (totalFoodListIsLoaded) return;
-        dispatch(setTotalFoodList(data));
-      },
     },
   );
 
@@ -143,6 +137,15 @@ const Home = () => {
     initializeDiet();
   }, []);
 
+  // 처음 앱 켰을 때 totalFoodList를 redux에 저장해놓고 끼니 자동구성에 사용
+  useEffect(() => {
+    if (!productData) return;
+    if (productData.length === 0) setProductAlertShow(true);
+    // 처음 앱 켰을 때 totalFoodList를 redux에 저장해놓고 끼니 자동구성에 사용
+    if (totalFoodListIsLoaded) return;
+    dispatch(setTotalFoodList(productData));
+  }, [productData]);
+
   // "식단 고민하기 싫다면 장바구니페이지의 자동구성을 이용하세요" 툴팁
   useEffect(() => {
     //tooltip 관련
@@ -160,7 +163,11 @@ const Home = () => {
     scrollTop();
   }, [appliedSortFilter]);
 
-  return (
+  return isInitialLoading ? (
+    <Container style={{justifyContent: 'center', alignItems: 'center'}}>
+      <ActivityIndicator size="large" color={colors.main} />
+    </Container>
+  ) : (
     <Container>
       {/* 끼니선택, progressBar section */}
       <MenuSection />

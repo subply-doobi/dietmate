@@ -115,12 +115,9 @@ const ThirdInput = () => {
     const requestBody = convertDataByMethod[calculationMethod](userInputState);
 
     dietData?.length === 0 && createDietMutation.mutate();
-
-    if (!baseLineData) return;
-    Object.keys(baseLineData).length === 0
+    !baseLineData || Object.keys(baseLineData).length === 0
       ? createMutation.mutate(requestBody)
       : updateMutation.mutate(requestBody);
-
     navigation.reset({
       index: 1,
       routes: [
@@ -160,9 +157,7 @@ const ThirdInput = () => {
       <BtnBottomCTA
         btnStyle={btnStyle}
         disabled={!btnIsActive}
-        onPress={() => {
-          onSubmit();
-        }}>
+        onPress={async () => onSubmit()}>
         <BtnText>완료</BtnText>
       </BtnBottomCTA>
     </Container>

@@ -22,6 +22,5 @@ export const useGetGuestYn = () => {
     queryKey: [GET_GUEST_YN],
     queryFn: () => queryFnGetGuestYn(),
     retry: 1,
-    onError: error => {},
   });
 };

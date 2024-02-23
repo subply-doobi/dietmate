@@ -14,7 +14,6 @@ export const useListCategory = (options?: IQueryOptions) => {
     queryFn: () => queryFn(LIST_CATEGORY),
     enabled,
     retry: 0,
-    onSuccess: data => {},
   });
 };
 export const useListCategoryCnt = (options?: IQueryOptions) => {
@@ -24,7 +23,5 @@ export const useListCategoryCnt = (options?: IQueryOptions) => {
     queryFn: () => queryFn(LIST_CATEGORY_PRODUCT_CNT),
     enabled,
     retry: 0,
-
-    onSuccess: data => {},
   });
 };

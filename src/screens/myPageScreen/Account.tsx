@@ -51,14 +51,14 @@ const Account = () => {
   const onWithdrawal = async () => {
     try {
       setIsAlert(false);
-      await deleteUser.mutateAsync();
-      await resetGuide();
-      dispatch(initializeInput());
-      await removeToken();
       reset({
         index: 0,
         routes: [{name: 'Login'}],
       });
+      await deleteUser.mutateAsync();
+      await resetGuide();
+      dispatch(initializeInput());
+      await removeToken();
     } catch (e) {
       console.log(e);
     }

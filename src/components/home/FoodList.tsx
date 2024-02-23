@@ -96,12 +96,12 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
       productNo: item.productNo,
     });
     setDeleteAlertShow(false);
-    aniPValue.setValue(removedP); // TBD | onSuccess 이후에 실행되어야함
+    aniPValue.setValue(removedP);
   };
 
   const onAdd = () => {
     addMutation.mutate({dietNo: currentDietNo, food: item});
-    aniPValue.setValue(addedP); // TBD | onSuccess 이후에 실행되어야함
+    aniPValue.setValue(addedP);
   };
 
   const onLikeDelete = () => {

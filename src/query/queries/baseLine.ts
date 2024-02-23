@@ -24,7 +24,6 @@ export const useCreateBaseLine = () => {
       mutationFn<IBaseLineCreate>(CREATE_BASE_LINE, 'put', baseLine),
     onSuccess: data => {
       queryClient.invalidateQueries({queryKey: [BASE_LINE]});
-      console.log('생성');
     },
   });
   return mutation;

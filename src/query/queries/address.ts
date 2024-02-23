@@ -33,9 +33,6 @@ export const useListAddress = () => {
   return useQuery<IAddressData[]>({
     queryKey: [LIST_ADDRESS],
     queryFn: () => queryFn(LIST_ADDRESS),
-    onSuccess: () => {
-      console.log('LIST_ADDRESS 성공');
-    },
   });
 };
 
@@ -44,7 +41,6 @@ export const useGetAddress = () => {
   return useQuery<IAddressData>({
     queryKey: [GET_ADDRESS],
     queryFn: () => queryFn(GET_ADDRESS),
-    onSuccess: () => console.log('GET_ADDRESS 성공'),
   });
 };
 //POST
