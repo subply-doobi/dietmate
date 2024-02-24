@@ -26,7 +26,6 @@ export const useCreateOrder = () => {
     mutationFn: (body: IOrderCreate) =>
       mutationFn(`${CREATE_ORDER}`, 'put', body),
     onSuccess: data => {
-      console.log('useCreateOrder: onSuccess: ', data);
       queryClient.invalidateQueries({queryKey: [ORDER]});
       queryClient.invalidateQueries({queryKey: [DIET]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
@@ -51,7 +50,6 @@ export const useUpdateOrder = () => {
         'post',
       ),
     onSuccess: data => {
-      console.log('updateOrder success: ', data);
       queryClient.invalidateQueries({queryKey: [ORDER]});
       queryClient.invalidateQueries({queryKey: [DIET]});
       queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
@@ -80,7 +78,6 @@ export const useDeleteOrder = () => {
     mutationFn: ({orderNo}: {orderNo: string}) =>
       mutationFn(`${DELETE_ORDER}/${orderNo}`, 'delete'),
     onSuccess: data => {
-      console.log('deleteOrder success: ', data);
       queryClient.invalidateQueries({queryKey: [ORDER]});
     },
   });

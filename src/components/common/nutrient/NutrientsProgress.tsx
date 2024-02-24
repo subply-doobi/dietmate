@@ -141,7 +141,7 @@ const NutrientsProgress = ({
       />
 
       <Col style={{width: '100%', height: 70}}>
-        {baseLineData && (
+        {baseLineData && Object.keys(baseLineData).length !== 0 && (
           <Row
             style={{
               alignItems: 'center',
@@ -150,28 +150,44 @@ const NutrientsProgress = ({
             <ProgressBar
               title="칼로리(kcal)"
               numerator={cal}
-              denominator={parseInt(baseLineData.calorie)}
+              denominator={
+                Object.keys(baseLineData).length === 0
+                  ? 0
+                  : parseInt(baseLineData.calorie)
+              }
             />
             <VerticalSpace width={8} />
 
             <ProgressBar
               title="탄수화물(g)"
               numerator={carb}
-              denominator={parseInt(baseLineData.carb)}
+              denominator={
+                Object.keys(baseLineData).length === 0
+                  ? 0
+                  : parseInt(baseLineData.carb)
+              }
             />
             <VerticalSpace width={8} />
 
             <ProgressBar
               title="단백질(g)"
               numerator={protein}
-              denominator={parseInt(baseLineData.protein)}
+              denominator={
+                Object.keys(baseLineData).length === 0
+                  ? 0
+                  : parseInt(baseLineData.protein)
+              }
             />
             <VerticalSpace width={8} />
 
             <ProgressBar
               title="지방(g)"
               numerator={fat}
-              denominator={parseInt(baseLineData.fat)}
+              denominator={
+                Object.keys(baseLineData).length === 0
+                  ? 0
+                  : parseInt(baseLineData.fat)
+              }
             />
           </Row>
         )}

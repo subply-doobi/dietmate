@@ -33,6 +33,8 @@ import {
 } from '../../../query/queries/diet';
 import MenuNumSelect from '../../cart/MenuNumSelect';
 import {commaToNum, sumUpPrice} from '../../../util/sumUp';
+import {useGetBaseLine} from '../../../query/queries/baseLine';
+import {SCREENHEIGHT} from '../../../constants/constants';
 
 const MenuSection = () => {
   // redux
@@ -40,6 +42,7 @@ const MenuSection = () => {
   const {currentDietNo} = useSelector((state: RootState) => state.common);
 
   // react-query
+  const {data: baseLineData} = useGetBaseLine();
   const {data: dietData} = useListDiet();
   const deleteDietMutation = useDeleteDiet();
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {
@@ -79,10 +82,14 @@ const MenuSection = () => {
 
   // accordionContent
   const PROGRESS_ACCORDION = useMemo(() => {
-    if (!dietData || !dietDetailData)
+    if (
+      !dietData ||
+      !dietDetailData ||
+      !baseLineData ||
+      Object.keys(baseLineData).length === 0
+    )
       return [
         {
-          // TBD : loading시 inactiveHeader 자리에 indicator
           inactiveHeader: (
             <IndicatorBox>
               <ActivityIndicator size="small" color={colors.main} />
@@ -128,7 +135,12 @@ const MenuSection = () => {
         content: (
           // 툴팁잘림 => activeHeader paddingBottom에 + , content marginTop에 - 로 조절
           <ProgressContainer style={{marginTop: -24}}>
-            <Menu dietNo={currentDietNo} dietDetailData={dietDetailData} />
+            <ScrollView
+              style={{height: SCREENHEIGHT - 410}}
+              showsVerticalScrollIndicator={false}>
+              <HorizontalSpace height={8} />
+              <Menu dietNo={currentDietNo} dietDetailData={dietDetailData} />
+            </ScrollView>
             <MenuContainerClose onPress={() => setActiveSection([])}>
               {isAccordionActive && <Arrow source={icons.arrowUp_20} />}
             </MenuContainerClose>
@@ -162,7 +174,7 @@ const MenuSection = () => {
         ),
       },
     ];
-  }, [dietDetailData, activeSection]);
+  }, [dietDetailData, dietData, baseLineData, activeSection]);
 
   return (
     <Container>

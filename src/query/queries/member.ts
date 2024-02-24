@@ -15,8 +15,7 @@ export const useGetUser = () => {
 export const useDeleteUser = () => {
   const mutation = useMutation({
     mutationFn: () => mutationFn(`${DELETE_USER}`, 'delete'),
-    onSuccess: e => {
-      console.log('delete success', e);
+    onSuccess: () => {
       queryClient.removeQueries([]);
       // queryClient.invalidateQueries([]);
     },

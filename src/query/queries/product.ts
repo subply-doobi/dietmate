@@ -116,9 +116,6 @@ export const useListProduct = (
         `${LIST_PRODUCT}/${dietNo}?searchText=${searchParam}&categoryCd=${categoryParam}&sort=${sortParam}&filter=${calorieParam}${carbParam}${proteinParam}${fatParam}${priceParam}`,
       ),
     enabled,
-    onSuccess: data => {
-      options?.onSuccess && options?.onSuccess(data);
-    },
   });
 };
 
@@ -130,9 +127,6 @@ export const useListProductDetail = (
   return useQuery<IProductDetailData[]>({
     queryKey: [PRODUCT_DETIAL, productNo],
     queryFn: () => queryFn(`${LIST_PRODUCT_DETAIL}/${productNo}`),
-    onSuccess: data => {
-      options?.onSuccess && options?.onSuccess(data);
-    },
     enabled,
   });
 };
@@ -142,9 +136,6 @@ export const useListProductMark = (options?: IQueryOptions) => {
   return useQuery<IProductData[]>({
     queryKey: [MARK],
     queryFn: () => queryFn(`${LIST_PRODUCT_MARK}`),
-    onSuccess: data => {
-      options?.onSuccess && options?.onSuccess(data);
-    },
     enabled,
   });
 };
