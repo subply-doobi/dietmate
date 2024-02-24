@@ -1,5 +1,5 @@
 // react, RN, 3rd
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -7,14 +7,23 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import Accordion from 'react-native-collapsible/Accordion';
-
-// doobi util, redux, etc
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../stores/store';
+import {useNavigation} from '@react-navigation/native';
+
+// doobi util, constant etc
 import {icons} from '../../../assets/icons/iconSource';
-import {HorizontalSpace, Row, TextMain} from '../../../styles/styledConsts';
 import {findDietSeq} from '../../../util/findDietSeq';
 import colors from '../../../styles/colors';
+import {SCREENHEIGHT, SCREENWIDTH} from '../../../constants/constants';
+import {
+  BtnBottomCTA,
+  BtnCTA,
+  BtnText,
+  HorizontalSpace,
+  Row,
+  TextMain,
+} from '../../../styles/styledConsts';
 
 // doobi Components
 import DAlert from '../alert/DAlert';
@@ -34,11 +43,9 @@ import {
 import MenuNumSelect from '../../cart/MenuNumSelect';
 import {commaToNum, sumUpPrice} from '../../../util/sumUp';
 import {useGetBaseLine} from '../../../query/queries/baseLine';
-import {SCREENHEIGHT} from '../../../constants/constants';
 
 const MenuSection = () => {
   // redux
-  const dispatch = useDispatch();
   const {currentDietNo} = useSelector((state: RootState) => state.common);
 
   // react-query
@@ -80,6 +87,12 @@ const MenuSection = () => {
     setActiveSection(activeSections);
   };
 
+  // useEffect
+  // diet생성이나 diet전환할 때 dietNo바뀐경우 activeSection 초기화
+  useEffect(() => {
+    setActiveSection([]);
+  }, [currentDietNo]);
+
   // accordionContent
   const PROGRESS_ACCORDION = useMemo(() => {
     if (
@@ -96,7 +109,11 @@ const MenuSection = () => {
             </IndicatorBox>
           ),
           content: <></>,
-          activeHeader: <></>,
+          activeHeader: (
+            <IndicatorBox>
+              <ActivityIndicator size="small" color={colors.main} />
+            </IndicatorBox>
+          ),
         },
       ];
 
@@ -135,12 +152,20 @@ const MenuSection = () => {
         content: (
           // 툴팁잘림 => activeHeader paddingBottom에 + , content marginTop에 - 로 조절
           <ProgressContainer style={{marginTop: -24}}>
-            <ScrollView
-              style={{height: SCREENHEIGHT - 410}}
-              showsVerticalScrollIndicator={false}>
-              <HorizontalSpace height={8} />
-              <Menu dietNo={currentDietNo} dietDetailData={dietDetailData} />
-            </ScrollView>
+            {dietDetailData?.length === 0 ? (
+              <>
+                <HorizontalSpace height={8} />
+                <Menu dietNo={currentDietNo} dietDetailData={dietDetailData} />
+              </>
+            ) : (
+              <ScrollView
+                style={{height: SCREENHEIGHT - 410}}
+                showsVerticalScrollIndicator={false}>
+                <HorizontalSpace height={8} />
+                <Menu dietNo={currentDietNo} dietDetailData={dietDetailData} />
+              </ScrollView>
+            )}
+
             <MenuContainerClose onPress={() => setActiveSection([])}>
               {isAccordionActive && <Arrow source={icons.arrowUp_20} />}
             </MenuContainerClose>
