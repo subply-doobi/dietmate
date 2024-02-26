@@ -14,12 +14,17 @@
   self.initialProps = @{};
     
     [super application:application didFinishLaunchingWithOptions:launchOptions];
-    [RNSplashScreen show];  // 추가
+    // [RNSplashScreen show];  // react-native-splash-screen => react-native-bootsplash로 대체
 
     return YES; // 수정
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
+{
+  return [self getBundleURL];
+}
+ 
+- (NSURL *)getBundleURL
 {
 #if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
