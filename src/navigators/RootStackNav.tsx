@@ -2,8 +2,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 
 import colors from '../styles/colors';
-import {queryClient} from '../query/store';
-import {useHandleError} from '../util/handleError';
 
 import InputNav from './InputNav';
 import BottomTabNav from './BottomTabNav';
@@ -27,25 +25,6 @@ import OrderGuide from '../screens/orderScreen/OrderGuide';
 const Stack = createNativeStackNavigator();
 
 const RootStackNav = () => {
-  // react-query defaultOptions
-  const handleError = useHandleError();
-  queryClient.setDefaultOptions({
-    queries: {
-      retry: 0,
-      staleTime: Infinity,
-      cacheTime: Infinity,
-      // staleTime: 30000,
-      // cacheTime: 5 * 60 * 1000,
-      refetchOnMount: true,
-      refetchOnWindowFocus: false,
-      onError: handleError,
-    },
-    mutations: {
-      retry: 0,
-      onError: handleError,
-    },
-  });
-
   const {goBack, navigate} = useNavigation();
   return (
     <Stack.Navigator

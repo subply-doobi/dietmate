@@ -9,7 +9,8 @@
     "jsx": "react-jsx",
     "allowJs": true,
     "declaration": true,
-    "types": ["@types/styled-components-react-native"]
+    "types": ["@types/styled-components-react-native"],
+    "moduleResolution": "node", // TBD | typescript 5.4(beta) 에서는 이거 없이도 타입 적용된다는 글도 있어서 나중에 확인
   },
   // "include": [
   //     "src"

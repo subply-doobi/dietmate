@@ -17,6 +17,8 @@ import {useGetBaseLine} from '../query/queries/baseLine';
 // doobi Component
 import {BtnCTA, BtnText, TextMain} from '../styles/styledConsts';
 import {IS_IOS} from '../constants/constants';
+import {RootState} from '../stores/store';
+import {useSelector} from 'react-redux';
 
 const Login = () => {
   // navigation

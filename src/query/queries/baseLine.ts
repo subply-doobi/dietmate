@@ -16,6 +16,7 @@ import {
   GET_GUEST,
   UPDATE_BASE_LINE,
 } from './urls';
+import {useRoute} from '@react-navigation/native';
 
 // PUT
 export const useCreateBaseLine = () => {
@@ -32,11 +33,13 @@ export const useCreateBaseLine = () => {
 // GET
 
 export const useGetBaseLine = (options?: IQueryOptions) => {
+  const route = useRoute();
   const enabled = options?.enabled ?? true;
   return useQuery<IBaseLineData>({
     queryKey: [BASE_LINE],
     queryFn: () => queryFn(GET_BASE_LINE),
     enabled,
+    meta: {from: route.name},
   });
 };
 

@@ -2,7 +2,6 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 import {queryClient} from '../store';
 
 import {queryFn, mutationFn} from './requestFn';
-import {useHandleError} from '../../util/handleError';
 
 import {
   CREATE_ADDRESS,

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import {store} from './src/stores/store';
 import {Provider} from 'react-redux';
 import {
@@ -12,9 +12,6 @@ import {
 } from '@react-navigation/native';
 import RootStackNav from './src/navigators/RootStackNav';
 import ErrorAlert from './src/components/common/error/ErrorAlert';
-import SplashScreen from 'react-native-splash-screen';
-
-import CustomErrorBoundary from './src/components/common/error/CustomErrorBoundary';
 
 function App(): React.JSX.Element {
   const navigationRef = useNavigationContainerRef();
@@ -28,16 +25,14 @@ function App(): React.JSX.Element {
   // }, []);
 
   return (
-    <>
-      <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <NavigationContainer ref={navigationRef}>
-            <RootStackNav />
-            <ErrorAlert />
-          </NavigationContainer>
-        </Provider>
-      </QueryClientProvider>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <NavigationContainer ref={navigationRef}>
+          <RootStackNav />
+          <ErrorAlert />
+        </NavigationContainer>
+      </Provider>
+    </QueryClientProvider>
   );
 }
 
