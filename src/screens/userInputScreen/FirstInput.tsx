@@ -19,8 +19,6 @@ import {
   Row,
   StyledProps,
   TextMain,
-  UserInfoTextInput,
-  VerticalSpace,
 } from '../../styles/styledConsts';
 
 import Dropdown from '../../components/userInput/Dropdown';
@@ -31,6 +29,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {loadBaseLineData, setValue} from '../../stores/slices/userInputSlice';
 import colors from '../../styles/colors';
 import DTextInput from '../../components/common/textInput/DTextInput';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const genderBtnItem = [
   {label: '남성', value: 'M'},
@@ -95,6 +94,7 @@ const FirstInput = () => {
 
   return (
     <Container>
+    <SafeAreaView>
       <ScrollView
         contentContainerStyle={{paddingBottom: 80}}
         showsVerticalScrollIndicator={false}
@@ -212,6 +212,7 @@ const FirstInput = () => {
         onPress={() => onCTAPress()}>
         <BtnText>다음</BtnText>
       </BtnBottomCTA>
+      </SafeAreaView>
     </Container>
   );
 };

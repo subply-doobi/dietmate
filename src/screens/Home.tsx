@@ -61,7 +61,7 @@ const Home = () => {
   const [tooltipShow, setTooltipShow] = useState(false);
 
   // react-query
-  const {isFetching: isBaseLineFetching, isInitialLoading} = useGetBaseLine(); // 미리 캐싱
+  const {isLoading} = useGetBaseLine(); // 미리 캐싱
   const {data: dietDetailData, isLoading: listDietLoading} = useListDietDetail(
     currentDietNo,
     {
@@ -136,7 +136,6 @@ const Home = () => {
 
     initializeDiet();
   }, []);
-
   // 처음 앱 켰을 때 totalFoodList를 redux에 저장해놓고 끼니 자동구성에 사용
   useEffect(() => {
     if (!productData) return;
@@ -163,7 +162,7 @@ const Home = () => {
     scrollTop();
   }, [appliedSortFilter]);
 
-  return isInitialLoading ? (
+  return isLoading ? (
     <Container style={{justifyContent: 'center', alignItems: 'center'}}>
       <ActivityIndicator size="large" color={colors.main} />
     </Container>

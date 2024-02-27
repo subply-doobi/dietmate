@@ -13,6 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import {RootState} from '../../stores/store';
 import {icons} from '../../assets/icons/iconSource';
 import {
+  AccordionContentContainer,
   BtnBottomCTA,
   BtnText,
   Col,
@@ -146,7 +147,12 @@ const Order = () => {
           {commaToNum(shippingPrice)}원
         </HeaderSubTitle>
       ),
-      content: <></>,
+      content: <AccordionContentContainer>
+        <HeaderSubTitle>
+          식품가격: {commaToNum(priceTotal)}원 | 배송비:{' '}
+          {commaToNum(shippingPrice)}원
+        </HeaderSubTitle>
+        </AccordionContentContainer>,
     },
   ];
 

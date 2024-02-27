@@ -5,6 +5,8 @@ import {useUpdateOrder, useDeleteOrder} from '../../query/queries/order';
 import Loading from './Loading';
 import {usePreventBackBtn} from '../../util/order/backEventHook';
 import {IAMPORT_USER_CODE} from '../../constants/constants';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import styled from 'styled-components/native';
 
 const KakaoPay = () => {
   const route = useRoute();
@@ -54,7 +56,9 @@ const KakaoPay = () => {
   };
 
   return (
+    <Container>
     <IMP.Payment
+
       userCode={IAMPORT_USER_CODE} // this one you can get in the iamport console.
       data={kakaopayData}
       callback={response => {
@@ -63,6 +67,13 @@ const KakaoPay = () => {
       }}
       loading={<Loading />}
     />
+    </Container>
   );
 };
+
 export default KakaoPay;
+
+const Container = styled(SafeAreaView)`
+  flex: 1;
+`;
+

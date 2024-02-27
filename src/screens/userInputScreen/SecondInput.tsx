@@ -24,6 +24,7 @@ import DTooltip from '../../components/common/tooltip/DTooltip';
 import {useListCode} from '../../query/queries/code';
 import {setValue} from '../../stores/slices/userInputSlice';
 import DTextInput from '../../components/common/textInput/DTextInput';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SecondInput = () => {
   // redux
@@ -67,6 +68,7 @@ const SecondInput = () => {
 
   return (
     <Container>
+      <SafeAreaView>
       <ScrollView contentContainerStyle={{paddingBottom: 80}} ref={scrollRef}>
         <Title>{'선택 정보를\n입력해주세요'}</Title>
         <SubText>입력된 정보로 목표 칼로리를 계산해드려요</SubText>
@@ -187,6 +189,7 @@ const SecondInput = () => {
         onPress={() => onCTAPress()}>
         <BtnCTAText>다음</BtnCTAText>
       </BtnBottomCTA>
+      </SafeAreaView>
     </Container>
   );
 };

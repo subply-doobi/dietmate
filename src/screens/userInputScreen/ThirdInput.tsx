@@ -34,6 +34,7 @@ import {
   useListDiet,
   useListDietDetail,
 } from '../../query/queries/diet';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ThirdInput = () => {
   // navigation
@@ -131,6 +132,7 @@ const ThirdInput = () => {
 
   return (
     <Container>
+      <SafeAreaView>
       <Title>
         <TitleText>
           <TitleTextHighlight>한 끼</TitleTextHighlight> 기준{' '}
@@ -160,6 +162,7 @@ const ThirdInput = () => {
         onPress={async () => onSubmit()}>
         <BtnText>완료</BtnText>
       </BtnBottomCTA>
+      </SafeAreaView>
     </Container>
   );
 };
