@@ -8,7 +8,7 @@ import {
   setMenuActiveSection,
   setProgressTooltipShow,
 } from '../../stores/slices/commonSlice';
-import {useHandleError} from '../../util/handleError';
+
 import {
   DIET,
   DIET_DETAIL,
@@ -40,11 +40,11 @@ import {
   UPDATE_DIET_DETAIL,
 } from './urls';
 import {findDietSeq} from '../../util/findDietSeq';
+import {handleError} from '../../util/handleError';
 
 // PUT //
 export const useCreateDiet = (options?: IMutationOptions) => {
   const dispatch = useDispatch();
-  const handleError = useHandleError();
   const mutation = useMutation({
     mutationFn: () => mutationFn(CREATE_DIET, 'put'),
     onMutate: async () => {
@@ -100,7 +100,6 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
   const dispatch = useDispatch();
 
   const onSuccess = options?.onSuccess;
-  const handleError = useHandleError();
   const mutation = useMutation({
     mutationFn: ({dietNo, food}: {dietNo: string; food: IProductData}) =>
       mutationFn(
@@ -281,13 +280,12 @@ export const useUpdateDiet = (options?: IMutationOptions) => {
 export const useDeleteDiet = () => {
   const {currentDietNo} = useSelector((state: RootState) => state.common);
   const dispatch = useDispatch();
-  const handleError = useHandleError();
   const mutation = useMutation({
     mutationFn: ({dietNo}: {dietNo: string}) =>
       mutationFn(`${DELETE_DIET}/${dietNo}`, 'delete'),
     onMutate: async ({dietNo}) => {
       // optimistic update 1. Cancel any outgoing refetches
-      await queryClient.cancelQueries([DIET]);
+      await queryClient.cancelQueries({queryKey: [DIET]});
 
       // optimistic update 2. Snapshot the previous value
       const prevDietData = queryClient.getQueryData<IDietData>([DIET]);
@@ -340,7 +338,6 @@ export const useDeleteDiet = () => {
 export const useDeleteDietDetail = (options?: IMutationOptions) => {
   const dispatch = useDispatch();
   const onSuccess = options?.onSuccess;
-  const handleError = useHandleError();
   const mutation = useMutation({
     mutationFn: ({dietNo, productNo}: {dietNo: string; productNo: string}) =>
       mutationFn(

@@ -1,10 +1,8 @@
 // 3rd library
-import {useCallback} from 'react';
-import {useDispatch} from 'react-redux';
 
 // doobi util
 import {openCommonAlert} from '../stores/slices/commonAlertSlice';
-import {queryClient} from '../query/store';
+import {store} from '../stores/store';
 
 // doobi Component
 
@@ -53,13 +51,15 @@ export const errorActionByCode: IErrorActionByCode = {
   },
 };
 ``;
-export const useHandleError = () => {
-  const dispatch = useDispatch();
-  const handleError = useCallback((error: any) => {
-    const errorCode = error.response?.status ? error.response?.status : 520;
-    console.log('handleError.tsx:', errorCode);
-    dispatch(openCommonAlert(errorCode));
-  }, []);
 
-  return handleError;
+// 에러 핸들러 //
+export const handleError = (
+  error: Error,
+  from?: String | undefined | unknown,
+) => {
+  const errorCode =
+    error.name === 'AxiosError' ? Number(error.message.slice(-3)) : 520;
+
+  // 현재 로그인 화면인 경우를 제외하고 에러코드에 따른 알림창을 띄우기
+  from !== 'Login' && store.dispatch(openCommonAlert(errorCode));
 };
