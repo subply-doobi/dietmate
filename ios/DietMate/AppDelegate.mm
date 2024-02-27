@@ -1,7 +1,6 @@
 #import "AppDelegate.h"
 #import <RNKakaoLogins.h>
 #import <React/RCTBundleURLProvider.h>
-#import "RNSplashScreen.h"
 
 
 @implementation AppDelegate

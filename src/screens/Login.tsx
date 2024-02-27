@@ -17,8 +17,6 @@ import {useGetBaseLine} from '../query/queries/baseLine';
 // doobi Component
 import {BtnCTA, BtnText, TextMain} from '../styles/styledConsts';
 import {IS_IOS} from '../constants/constants';
-import {RootState} from '../stores/store';
-import {useSelector} from 'react-redux';
 
 const Login = () => {
   // navigation
@@ -35,7 +33,9 @@ const Login = () => {
     const baseLineData = await refetch().then(res => res.data);
     baseLineData && navigateByUserInfo(baseLineData, navigation);
   };
-
+  
+  
+ 
   // guest login (플레이스토어, 앱스토어, 카드사 심사용: 서버 값으로 사용유무 결정)
   const signInWithGuest = async (): Promise<void> => {
     const GLdata = await guestLogin();
