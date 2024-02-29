@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../styles/colors';
 import {kakaoLogin, validateToken, guestLogin} from '../query/queries/token';
-import AppleLogin from '../components/login/appleLogin';
+import AppleLogin from '../components/login/AppleLogin';
 
 // doobi util, redux, etc
 import {navigateByUserInfo} from '../util/login/navigateByUserInfo';
@@ -72,6 +72,9 @@ const Login = () => {
         )}
 
         {IS_IOS ? <AppleLogin /> : <></>}
+        <BtnGuestLogin onPress={signInWithGuest}>
+            <BtnTextGuest>GUEST LOGIN</BtnTextGuest>
+          </BtnGuestLogin>
       </Box>
     </Container>
   );
