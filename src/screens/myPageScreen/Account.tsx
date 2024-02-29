@@ -11,6 +11,7 @@ import {useNavigation} from '@react-navigation/native';
 import DAlert from '../../components/common/alert/DAlert';
 import {initializeInput} from '../../stores/slices/userInputSlice';
 import PageBtn from '../../components/myPage/PageBtn';
+import {queryClient} from '../../query/store';
 
 const WithdrawalContent = ({deleteText}: {deleteText: string}) => {
   return (
@@ -51,11 +52,12 @@ const Account = () => {
   const onWithdrawal = async () => {
     try {
       setIsAlert(false);
+      deleteUser.mutate();
       reset({
         index: 0,
         routes: [{name: 'Login'}],
       });
-      await deleteUser.mutateAsync();
+      queryClient.clear();
       await resetGuide();
       dispatch(initializeInput());
       await removeToken();

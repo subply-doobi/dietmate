@@ -20,8 +20,8 @@ import {
 // doobi Component
 import {BtnCTA, Row, Col, StyledProps} from '../styles/styledConsts';
 import {updateNotShowAgain} from '../util/asyncStorage';
-import {Pressable} from 'react-native';
 import {link} from '../util/common/linking';
+import LottieView from 'lottie-react-native';
 
 interface IGuidePage {
   step: number;
@@ -123,10 +123,8 @@ const Guide = () => {
         </GuideHeaderSubText>
       ),
       stepImage: icons.guide2_32,
-      onboardingSourceType: IS_ANDROID ? 'lottie' : 'img',
-      onboardingSource: IS_ANDROID
-        ? require('../assets/onboardingLottie/autoMenu1.json')
-        : require('../assets/onboardingImg/autoMenu1.png'),
+      onboardingSourceType: 'img',
+      onboardingSource: require('../assets/onboardingImg/autoMenu1.png'),
     },
     {
       step: 4,
@@ -145,10 +143,8 @@ const Guide = () => {
         </GuideHeaderSubText>
       ),
       stepImage: icons.guide3_32,
-      onboardingSourceType: IS_ANDROID ? 'lottie' : 'img',
-      onboardingSource: IS_ANDROID
-        ? require('../assets/onboardingLottie/autoMenu2.json')
-        : require('../assets/onboardingImg/autoMenu2.png'),
+      onboardingSourceType: 'img',
+      onboardingSource: require('../assets/onboardingImg/autoMenu2.png'),
     },
     {
       step: 5,
@@ -168,10 +164,8 @@ const Guide = () => {
         </GuideHeaderSubText>
       ),
       stepImage: icons.guide4_32,
-      onboardingSourceType: IS_ANDROID ? 'lottie' : 'img',
-      onboardingSource: IS_ANDROID
-        ? require('../assets/onboardingLottie/manualAddDelete.json')
-        : require('../assets/onboardingImg/manualAddDelete.png'),
+      onboardingSourceType: 'img',
+      onboardingSource: require('../assets/onboardingImg/manualAddDelete.png'),
     },
     {
       step: 6,
@@ -211,10 +205,8 @@ const Guide = () => {
         </GuideHeaderSubText>
       ),
       stepImage: icons.guide6_32,
-      onboardingSourceType: IS_ANDROID ? 'lottie' : 'img',
-      onboardingSource: IS_ANDROID
-        ? require('../assets/onboardingLottie/remainNutrFilter.json')
-        : require('../assets/onboardingImg/remainNutrFilter.png'),
+      onboardingSourceType: 'img',
+      onboardingSource: require('../assets/onboardingImg/remainNutrFilter.png'),
     },
   ];
 
@@ -254,8 +246,9 @@ const Guide = () => {
       {/* contents */}
       <Col style={{flex: 1, marginTop: 20, marginBottom: 20}}>
         {guidePageArray[step - 1].onboardingSourceType === 'lottie' ? (
-          <Lottie
+          <LottieView
             source={guidePageArray[step - 1].onboardingSource}
+            style={{flex: 1}}
             autoPlay
             loop
           />
