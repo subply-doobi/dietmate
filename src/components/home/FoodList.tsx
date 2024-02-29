@@ -1,6 +1,13 @@
 // react, RN, 3rd
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {Animated, Pressable, PanResponder, View, Image} from 'react-native';
+import {
+  Animated,
+  Pressable,
+  PanResponder,
+  View,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -147,16 +154,21 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
   return (
     <Container>
       {/* 전체 범위 클릭하면 식품 상세정보로 이동 */}
-      <Button
-        onPress={() => navigate('FoodDetail', {productNo: item.productNo})}>
+      <Box>
         {/* 썸네일 이미지 */}
-        <Thumbnail
-          source={{
-            uri: `${BASE_URL}${item?.mainAttUrl}`,
-          }}
-          resizeMode="contain"
-        />
-        <ProductInfoContainer>
+        <TouchableOpacity
+          onPress={() => navigate('FoodDetail', {productNo: item.productNo})}>
+          <Thumbnail
+            source={{
+              uri: `${BASE_URL}${item?.mainAttUrl}`,
+            }}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+        <ProductInfoContainer
+          onPress={() =>
+            isAdded ? setDeleteAlertShow(true) : addCartAni.start(onAdd)
+          }>
           <Col>
             <SellerText numberOfLines={1} ellipsizeMode="tail">
               {item?.platformNm}
@@ -166,10 +178,7 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
             </ProductName>
 
             {/* 칼탄단지정보 클릭하면 식품추가 or 삭제 */}
-            <NutrSummaryBtn
-              onPress={() => {
-                isAdded ? setDeleteAlertShow(true) : addCartAni.start(onAdd);
-              }}>
+            <NutrSummary>
               <Nutr>
                 <NutrText>칼로리</NutrText>
                 <NutrValue willExceed={calExceed}>
@@ -194,7 +203,7 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
                   {parseInt(item.fat)}g {'  '}
                 </NutrValue>
               </Nutr>
-            </NutrSummaryBtn>
+            </NutrSummary>
           </Col>
           <Row style={{justifyContent: 'space-between'}}>
             {!!item.price && (
@@ -231,7 +240,7 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
           }}
           renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
         />
-      </Button>
+      </Box>
     </Container>
   );
 };
@@ -245,7 +254,7 @@ const Container = styled.View`
   padding: 0px 16px;
 `;
 
-const Button = styled.Pressable`
+const Box = styled.View`
   width: 100%;
   height: 100%;
   flex-direction: row;
@@ -258,7 +267,7 @@ const Thumbnail = styled.Image`
   border-radius: 5px;
 `;
 
-const ProductInfoContainer = styled.View`
+const ProductInfoContainer = styled.TouchableOpacity`
   flex: 1;
   margin-left: 16px;
   justify-content: space-between;
@@ -275,7 +284,7 @@ const ProductName = styled(TextMain)`
   font-weight: bold;
 `;
 
-const NutrSummaryBtn = styled.TouchableOpacity`
+const NutrSummary = styled.View`
   width: 100%;
   height: 42px;
   border-radius: 5px;
