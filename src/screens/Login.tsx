@@ -33,9 +33,7 @@ const Login = () => {
     const baseLineData = await refetch().then(res => res.data);
     baseLineData && navigateByUserInfo(baseLineData, navigation);
   };
-  
-  
- 
+
   // guest login (플레이스토어, 앱스토어, 카드사 심사용: 서버 값으로 사용유무 결정)
   const signInWithGuest = async (): Promise<void> => {
     const GLdata = await guestLogin();
@@ -73,8 +71,8 @@ const Login = () => {
 
         {IS_IOS ? <AppleLogin /> : <></>}
         <BtnGuestLogin onPress={signInWithGuest}>
-            <BtnTextGuest>GUEST LOGIN</BtnTextGuest>
-          </BtnGuestLogin>
+          <BtnTextGuest>GUEST LOGIN</BtnTextGuest>
+        </BtnGuestLogin>
       </Box>
     </Container>
   );
