@@ -30,7 +30,6 @@ const Likes = () => {
   // react-query
   const {
     data: likeData,
-    isInitialLoading: likeDataIsInitialLoading,
     refetch: refetchLikeData,
     isFetching: likeDataIsFetching,
   } = useListProductMark();

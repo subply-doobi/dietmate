@@ -1,5 +1,5 @@
 // RN, 3rd
-import {useMemo, useState, useEffect} from 'react';
+import {useMemo} from 'react';
 import styled from 'styled-components/native';
 import * as Progress from 'react-native-progress';
 
@@ -14,7 +14,7 @@ import {
 
 // doobi components
 import {NUTR_ERROR_RANGE, SCREENWIDTH} from '../../../constants/constants';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {icons} from '../../../assets/icons/iconSource';
 import DTooltip from '../tooltip/DTooltip';
 
@@ -89,7 +89,7 @@ const NutrientsProgress = ({
   const route = useRoute();
 
   // react-query
-  const {data: baseLineData, isInitialLoading, isLoading} = useGetBaseLine();
+  const {data: baseLineData} = useGetBaseLine();
 
   // etc
   const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
@@ -113,8 +113,8 @@ const NutrientsProgress = ({
       exceedIdx !== -1
         ? '영양이 초과되었어요'
         : isSatisfied
-        ? '한 끼니가 완성되었어요'
-        : '';
+          ? '한 끼니가 완성되었어요'
+          : '';
 
     return {exceedIdx, tooltipPosition, tooltipText};
   }, [baseLineData, dietDetailData, progressTooltipShow]);
