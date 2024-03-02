@@ -10,6 +10,8 @@ export default {
   main: '#590DE1',
   blue: '#3D9AFF',
   green: '#00E297',
+  green2: '#00C48C',
+  green3: '#30D158',
   orange: '#FFBD60',
   warning: '#FF6060',
   textMain: '#444444',

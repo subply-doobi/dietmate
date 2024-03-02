@@ -14,6 +14,7 @@ import {
   DIET_DETAIL,
   DIET_DETAIL_ALL,
   DIET_DETAIL_EMPTY_YN,
+  MARK,
   PRODUCT,
   PRODUCTS,
 } from '../keys';
@@ -112,6 +113,7 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
       // (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries({queryKey: [PRODUCTS, dietNo]});
       await queryClient.cancelQueries({queryKey: [DIET_DETAIL, dietNo]});
+      await queryClient.cancelQueries({queryKey: [MARK]});
 
       // 2. Snapshot the previous value
       const prevProductData = queryClient.getQueryData<IProductData>([PRODUCT]);
@@ -123,6 +125,7 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
         DIET_DETAIL,
         dietNo,
       ]);
+      const prevMarkData = queryClient.getQueryData<IDietDetailData>([MARK]);
 
       // new value
       const newDietDetailData: IDietDetailData = prevDietDetailData
@@ -141,6 +144,14 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
             : prevFood,
         );
 
+      const newMarkData: IProductData[] | undefined =
+        prevMarkData &&
+        prevMarkData.map(prevFood =>
+          prevFood.productNo === food.productNo
+            ? {...food, productChoiceYn: 'Y'}
+            : prevFood,
+        );
+
       // 3. Optimistically update to the new value
       // (실패할 경우 onError에서 이전 데이터로 돌려주기 -> 5번)
       queryClient.setQueryData([PRODUCT], () => {
@@ -152,6 +163,9 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
       queryClient.setQueryData([DIET_DETAIL, dietNo], () => {
         return newDietDetailData;
       });
+      queryClient.setQueryData([MARK], () => {
+        return newMarkData;
+      });
       // 4. Return a context with the previous and new todo
       return {
         prevProductData,
@@ -160,6 +174,8 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
         newProductsData,
         prevDietDetailData,
         newDietDetailData,
+        prevMarkData,
+        newMarkData,
       };
     },
     onSuccess: (data, {dietNo, food}) => {
@@ -183,6 +199,7 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
         context?.prevDietDetailData,
       );
       queryClient.setQueryData([PRODUCT], context?.prevProductData);
+      queryClient.setQueryData([MARK], context?.prevMarkData);
       handleError(e);
       console.log('useCreateDietDetail error: ', e);
     },
