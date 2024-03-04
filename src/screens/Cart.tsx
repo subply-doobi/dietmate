@@ -78,8 +78,7 @@ const Cart = () => {
     emptyDietSeq,
   } = useMemo(() => {
     const totalStatus =
-      dietTotalData &&
-      dietTotalData.map(menu => menu.isInitialLoading).includes(true)
+      dietTotalData && dietTotalData.map(menu => menu.isLoading).includes(true)
         ? 'isInitialLoading'
         : 'isInitialLoaded';
 

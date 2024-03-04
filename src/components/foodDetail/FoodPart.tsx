@@ -26,37 +26,38 @@ const useGetImageSize = async (
   let imageData: IImageData[] = [];
 
   for (const item of productDetailData) {
-    await Image.getSize(
-      // 링크
-      item.imageLink,
-      // success
-      (width, height) => {
-        const modWidth = SCREENWIDTH - 32;
-        const modHeight = height * (modWidth / width);
-        imageData = [
-          ...imageData,
-          {
-            imageLink: item.imageLink,
-            width: modWidth,
-            height: modHeight,
-            result: 'success',
-          },
-        ];
-      },
-      // error
-      error => {
-        console.log('getSize error', error);
-        imageData = [
-          ...imageData,
-          {
-            imageLink: item.imageLink,
-            width: SCREENWIDTH - 32,
-            height: 24,
-            result: 'error',
-          },
-        ];
-      },
-    );
+    await new Promise<void>((resolve, reject) => {
+      Image.getSize(
+        item.imageLink,
+        (width, height) => {
+          const modWidth = SCREENWIDTH - 32;
+          const modHeight = height * (modWidth / width);
+          imageData = [
+            ...imageData,
+            {
+              imageLink: item.imageLink,
+              width: modWidth,
+              height: modHeight,
+              result: 'success',
+            },
+          ];
+          resolve();
+        },
+        error => {
+          console.error('getSize error', error);
+          imageData = [
+            ...imageData,
+            {
+              imageLink: item.imageLink,
+              width: SCREENWIDTH - 32,
+              height: 24,
+              result: 'error',
+            },
+          ];
+          resolve();
+        },
+      );
+    });
   }
   setImageData(imageData);
 };

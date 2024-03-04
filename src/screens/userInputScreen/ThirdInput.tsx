@@ -5,11 +5,13 @@ import {useSelector} from 'react-redux';
 import styled from 'styled-components/native';
 import Accordion from 'react-native-collapsible/Accordion';
 import {useNavigation, useRoute} from '@react-navigation/native';
-//doobi util, redux, etc
 import {RootState} from '../../stores/store';
+
+//doobi util, etc
 import {icons} from '../../assets/icons/iconSource';
 import colors from '../../styles/colors';
 import {convertDataByMethod} from '../../util/userInput/userInfoSubmit';
+
 //doobi Component
 import {
   BtnBottomCTA,
@@ -24,17 +26,14 @@ import Auto from '../../components/userInput/Auto';
 import CalculateByRatio from '../../components/userInput/CalculateByRatio';
 import Manual from '../../components/userInput/Manual';
 
+// react-query
 import {
   useCreateBaseLine,
   useGetBaseLine,
   useUpdateBaseLine,
 } from '../../query/queries/baseLine';
-import {
-  useCreateDiet,
-  useListDiet,
-  useListDietDetail,
-} from '../../query/queries/diet';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {useCreateDiet, useListDiet} from '../../query/queries/diet';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const ThirdInput = () => {
   // navigation
@@ -43,8 +42,8 @@ const ThirdInput = () => {
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
-  const updateMutation = useUpdateBaseLine();
-  const createMutation = useCreateBaseLine();
+  const updateBaseLineMutation = useUpdateBaseLine();
+  const createBaseLineMutation = useCreateBaseLine();
   const {data: dietData} = useListDiet();
   const createDietMutation = useCreateDiet();
 
@@ -110,15 +109,16 @@ const ThirdInput = () => {
       : false;
   const btnStyle = btnIsActive ? 'activated' : 'inactivated';
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const calculationMethod = activeSections[0];
     // //기존 값이 존재하면 update 없으면 create
     const requestBody = convertDataByMethod[calculationMethod](userInputState);
 
-    dietData?.length === 0 && createDietMutation.mutate();
+    dietData?.length === 0 && (await createDietMutation.mutateAsync());
     !baseLineData || Object.keys(baseLineData).length === 0
-      ? createMutation.mutate(requestBody)
-      : updateMutation.mutate(requestBody);
+      ? await createBaseLineMutation.mutateAsync(requestBody)
+      : await updateBaseLineMutation.mutateAsync(requestBody);
+
     navigation.reset({
       index: 1,
       routes: [
@@ -133,35 +133,35 @@ const ThirdInput = () => {
   return (
     <Container>
       <SafeAreaView>
-      <Title>
-        <TitleText>
-          <TitleTextHighlight>한 끼</TitleTextHighlight> 기준{' '}
-        </TitleText>
-        <TitleText>목표섭취량을 입력해주세요</TitleText>
-      </Title>
-      <HorizontalSpace height={16} />
-      <ScrollView
-        contentContainerStyle={{paddingBottom: 80}}
-        showsVerticalScrollIndicator={false}
-        ref={scrollRef}>
-        <Accordion
-          activeSections={activeSections}
-          sections={CONTENT}
-          touchableComponent={TouchableOpacity}
-          renderHeader={renderHeader}
-          renderContent={renderContent}
-          duration={200}
-          onChange={updateSections}
-          renderFooter={() => <HorizontalSpace height={20} />}
-          containerStyle={{marginTop: 32}}
-        />
-      </ScrollView>
-      <BtnBottomCTA
-        btnStyle={btnStyle}
-        disabled={!btnIsActive}
-        onPress={async () => onSubmit()}>
-        <BtnText>완료</BtnText>
-      </BtnBottomCTA>
+        <Title>
+          <TitleText>
+            <TitleTextHighlight>한 끼</TitleTextHighlight> 기준{' '}
+          </TitleText>
+          <TitleText>목표섭취량을 입력해주세요</TitleText>
+        </Title>
+        <HorizontalSpace height={16} />
+        <ScrollView
+          contentContainerStyle={{paddingBottom: 80}}
+          showsVerticalScrollIndicator={false}
+          ref={scrollRef}>
+          <Accordion
+            activeSections={activeSections}
+            sections={CONTENT}
+            touchableComponent={TouchableOpacity}
+            renderHeader={renderHeader}
+            renderContent={renderContent}
+            duration={200}
+            onChange={updateSections}
+            renderFooter={() => <HorizontalSpace height={20} />}
+            containerStyle={{marginTop: 32}}
+          />
+        </ScrollView>
+        <BtnBottomCTA
+          btnStyle={btnStyle}
+          disabled={!btnIsActive}
+          onPress={async () => onSubmit()}>
+          <BtnText>완료</BtnText>
+        </BtnBottomCTA>
       </SafeAreaView>
     </Container>
   );

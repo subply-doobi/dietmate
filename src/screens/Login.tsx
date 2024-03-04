@@ -69,7 +69,9 @@ const Login = () => {
           </BtnGuestLogin>
         )}
 
-        {IS_IOS ? <AppleLogin /> : <></>}
+        {IS_IOS && guestYnData && guestYnData.enableYn === 'Y' && (
+          <AppleLogin />
+        )}
         <BtnGuestLogin onPress={signInWithGuest}>
           <BtnTextGuest>GUEST LOGIN</BtnTextGuest>
         </BtnGuestLogin>
