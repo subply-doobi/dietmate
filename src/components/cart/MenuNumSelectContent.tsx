@@ -1,4 +1,4 @@
-import {useState, SetStateAction, useEffect} from 'react';
+import {useState, SetStateAction, useEffect, useMemo} from 'react';
 import {ScrollView, TouchableWithoutFeedback} from 'react-native';
 import styled from 'styled-components/native';
 
@@ -21,6 +21,7 @@ import colors from '../../styles/colors';
 import {findDietSeq} from '../../util/findDietSeq';
 import {BASE_URL} from '../../query/queries/urls';
 import {
+  SCREENHEIGHT,
   SCREENWIDTH,
   SERVICE_PRICE_PER_PRODUCT,
 } from '../../constants/constants';
@@ -29,9 +30,13 @@ import {
 import {
   useListDiet,
   useListDietDetail,
+  useListDietDetailAll,
+  useListDietTotal,
   useUpdateDietDetail,
 } from '../../query/queries/diet';
 import {reGroupDietBySeller} from '../../util/common/regroup';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../stores/store';
 
 const MenuNumSelectContent = ({
   setMenuNumSelectShow,
@@ -42,6 +47,8 @@ const MenuNumSelectContent = ({
 }) => {
   // react-query
   const {data: dietData} = useListDiet();
+  const dietTotalData =
+    !!dietData && useListDietTotal(dietData, {enabled: !!dietData});
   const {data: dietDetailData} = useListDietDetail(dietNoToNumControl);
   const updateDietDetailMutation = useUpdateDietDetail();
 
@@ -51,6 +58,7 @@ const MenuNumSelectContent = ({
       ? parseInt(dietDetailData[0].qty, 10)
       : 1;
   const [qty, setQty] = useState(initialQty);
+  const {currentDietNo} = useSelector((state: RootState) => state.common);
 
   // useEffect
   useEffect(() => {
@@ -61,8 +69,42 @@ const MenuNumSelectContent = ({
 
   // etc
   const {dietSeq} = findDietSeq(dietData, dietNoToNumControl);
-  const productNum = dietDetailData ? dietDetailData.length : 0;
-  const regroupedDDData = reGroupDietBySeller(dietDetailData);
+
+  // useMemo
+  const {currentDDDataBySeller, otherDietSellerPrice} = useMemo(() => {
+    if (!dietDetailData || !dietTotalData)
+      return {currentDDDataBySeller: [], otherDietSellerPrice: {}};
+
+    // 현재 끼니의 판매자별 식품 데이터
+    const currentDDDataBySeller = reGroupDietBySeller(dietDetailData);
+
+    // 현재 끼니의 판매자별 식품 데이터 중 판매자명만 추출
+    let currentDietSeller: string[] = [];
+    currentDDDataBySeller.forEach(menu => {
+      !currentDietSeller.includes(menu[0].platformNm) &&
+        currentDietSeller.push(menu[0].platformNm);
+    });
+
+    // 다른 끼니의 현재끼니 판매자의 식품 데이터
+    const otherDDDataBySeller = dietTotalData
+      .map(menu => menu.data)
+      .filter(menu => menu && menu[0].dietNo !== currentDietNo)
+      .filter(menu => menu && currentDietSeller.includes(menu[0].platformNm));
+
+    // 다른 끼니의 현재끼니 판매자의 식품 데이터 중 판매자별 금액 합산
+    let otherDietSellerPrice: {[key: string]: number} = {};
+    otherDDDataBySeller.forEach(menu => {
+      const seller = menu && menu[0].platformNm;
+      if (!seller) return;
+      otherDietSellerPrice[seller] = sumUpPrice(menu, true);
+    });
+
+    return {
+      currentDDDataBySeller,
+      otherDietSellerPrice,
+    };
+  }, [dietData, dietDetailData, dietTotalData]);
+
   const saveQty = () => {
     updateDietDetailMutation.mutate({
       dietNo: dietNoToNumControl,
@@ -85,21 +127,31 @@ const MenuNumSelectContent = ({
             <HorizontalSpace height={8} />
             {dietDetailData &&
               dietDetailData.map((food, idx) => (
-                <Row key={idx} style={{marginTop: 16}}>
+                <Row
+                  key={idx}
+                  style={{
+                    width: SCREENWIDTH - 32 - 40 - 8,
+                    marginTop: 16,
+                  }}>
                   <ThumbnailImg
                     source={{uri: `${BASE_URL}${food.mainAttUrl}`}}
                   />
                   <Col
                     style={{
-                      flex: 1,
+                      width: '100%',
                       marginLeft: 8,
                     }}>
                     <TextGrey>{food.platformNm}</TextGrey>
-                    <Row style={{justifyContent: 'space-between'}}>
-                      <Text numberOfLines={1} ellipsizeMode="tail">
-                        {food.productNm}
-                      </Text>
-                      <TextGrey>
+                    <Row
+                      style={{
+                        width: '100%',
+                      }}>
+                      <Col style={{flex: 1}}>
+                        <Text numberOfLines={1} ellipsizeMode="tail">
+                          {food.productNm}
+                        </Text>
+                      </Col>
+                      <TextGrey style={{marginLeft: 8, textAlign: 'right'}}>
                         {commaToNum(
                           parseInt(food.price) + SERVICE_PRICE_PER_PRODUCT,
                         )}
@@ -117,9 +169,12 @@ const MenuNumSelectContent = ({
             <HorizontalSpace height={8} />
             {dietDetailData &&
               dietDetailData?.length > 0 &&
-              regroupedDDData &&
-              regroupedDDData.map((seller, idx) => {
-                const sellerPrice = sumUpPrice(seller) * qty;
+              currentDDDataBySeller &&
+              currentDDDataBySeller.map((seller, idx) => {
+                const currentSellerPrice = sumUpPrice(seller) * qty;
+                const sellerPriceInOtherDiet =
+                  otherDietSellerPrice[seller[0].platformNm] || 0;
+                const sellerPrice = currentSellerPrice + sellerPriceInOtherDiet;
                 const sellerShippingPrice = seller[0].shippingPrice;
                 const freeShippingPrice = parseInt(seller[0].freeShippingPrice);
                 const noticeText =
@@ -179,8 +234,8 @@ const MenuNumSelectContent = ({
 export default MenuNumSelectContent;
 
 const Container = styled.View`
-  width: 100%;
-  height: 638px;
+  width: ${SCREENWIDTH - 32}px;
+  height: ${SCREENHEIGHT - 200}px;
 `;
 
 const TitleText = styled(TextMain)`
