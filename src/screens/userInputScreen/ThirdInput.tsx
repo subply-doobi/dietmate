@@ -132,6 +132,7 @@ const ThirdInput = () => {
 
   return (
     <Container>
+      <ScrollView>
       <SafeAreaView>
         <Title>
           <TitleText>
@@ -163,6 +164,7 @@ const ThirdInput = () => {
           <BtnText>완료</BtnText>
         </BtnBottomCTA>
       </SafeAreaView>
+      </ScrollView>
     </Container>
   );
 };
