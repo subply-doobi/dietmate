@@ -53,10 +53,6 @@ const Account = () => {
     try {
       setIsAlert(false);
       deleteUser.mutate();
-      reset({
-        index: 0,
-        routes: [{name: 'Login'}],
-      });
       queryClient.clear();
       await resetGuide();
       dispatch(initializeInput());
