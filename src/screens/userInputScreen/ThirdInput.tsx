@@ -132,8 +132,6 @@ const ThirdInput = () => {
 
   return (
     <Container>
-      <ScrollView>
-      <SafeAreaView>
         <Title>
           <TitleText>
             <TitleTextHighlight>한 끼</TitleTextHighlight> 기준{' '}
@@ -163,8 +161,6 @@ const ThirdInput = () => {
           onPress={async () => onSubmit()}>
           <BtnText>완료</BtnText>
         </BtnBottomCTA>
-      </SafeAreaView>
-      </ScrollView>
     </Container>
   );
 };
