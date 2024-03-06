@@ -88,8 +88,8 @@ const MenuNumSelectContent = ({
     // 다른 끼니의 현재끼니 판매자의 식품 데이터
     const otherDDDataBySeller = dietTotalData
       .map(menu => menu.data)
-      .filter(menu => menu && menu[0].dietNo !== currentDietNo)
-      .filter(menu => menu && currentDietSeller.includes(menu[0].platformNm));
+      .filter(menu => menu && menu[0]?.dietNo !== currentDietNo)
+      .filter(menu => menu && currentDietSeller.includes(menu[0]?.platformNm));
 
     // 다른 끼니의 현재끼니 판매자의 식품 데이터 중 판매자별 금액 합산
     let otherDietSellerPrice: {[key: string]: number} = {};
