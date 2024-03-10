@@ -23,6 +23,9 @@ export const KOREAN_NUTRITION_REFERENCE_URL =
   'https://www.kns.or.kr/FileRoom/FileRoom_view.asp?idx=108&BoardID=Kdr';
 export const KAKAOPAY_CID = 'CAZ1OZBO5O';
 export const IAMPORT_USER_CODE = 'imp88778331';
+export const PLAY_STORE_URL = 'market://details?id=com.subply.dietmate';
+export const APP_STORE_URL =
+  'itms-apps://itunes.apple.com/us/app//id6472628268';
 
 // axios timeout
 export const AXIOS_TIMEOUT = 2000;

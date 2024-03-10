@@ -16,6 +16,7 @@
 		C7C5107CFCE4D3ABFAC46489 /* Pods_DietMate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FCC02753AFDB36D357B77E8 /* Pods_DietMate.framework */; };
 		E07A41412B8DC5020025A68F /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = E07A41402B8DC5020025A68F /* Fonts */; };
 		E0E7B35F2B8D700200BF090C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E0E7B35E2B8D700200BF090C /* GoogleService-Info.plist */; };
+		D52EE1BC5E034B98AE146675 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E7AE1421CE714923A0AD2724 /* BootSplash.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		E07D88F32B9026FC003C94BB /* DietMate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DietMate.entitlements; path = DietMate/DietMate.entitlements; sourceTree = "<group>"; };
 		E0E7B35E2B8D700200BF090C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		E7AE1421CE714923A0AD2724 /* BootSplash.storyboard */ = {isa = PBXFileReference; name = "BootSplash.storyboard"; path = "DietMate/BootSplash.storyboard"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				E7AE1421CE714923A0AD2724 /* BootSplash.storyboard */,
 			);
 			name = DietMate;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				E0E7B35F2B8D700200BF090C /* GoogleService-Info.plist in Resources */,
 				E07A41412B8DC5020025A68F /* Fonts in Resources */,
+				D52EE1BC5E034B98AE146675 /* BootSplash.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

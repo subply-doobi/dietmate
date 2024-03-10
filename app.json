@@ -1,9 +1,4 @@
 {
-  // IOS 빌드 설정
-  // "name": "DietMate",
-
-  // 안드로이드 빌드 설정
-  //dietmate
   "androidAppName": "dietmate",
   "iosAppName": "DietMate",
 
