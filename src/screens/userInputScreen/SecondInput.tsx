@@ -24,7 +24,7 @@ import DTooltip from '../../components/common/tooltip/DTooltip';
 import {useListCode} from '../../query/queries/code';
 import {setValue} from '../../stores/slices/userInputSlice';
 import DTextInput from '../../components/common/textInput/DTextInput';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const SecondInput = () => {
   // redux
@@ -58,8 +58,8 @@ const SecondInput = () => {
     ? seqCode.findIndex(item => item.cd === sportsSeqCd.value) < 3
       ? '두비는 주 3회 이상 운동을 권장합니다'
       : seqCode?.findIndex(item => item.cd === sportsSeqCd.value) === 7
-      ? '두비는 헬창을 응원합니다'
-      : ''
+        ? '두비는 헬창을 응원합니다'
+        : ''
     : '';
 
   const onCTAPress = () => {
@@ -69,126 +69,128 @@ const SecondInput = () => {
   return (
     <Container>
       <SafeAreaView>
-      <ScrollView contentContainerStyle={{paddingBottom: 80}} ref={scrollRef}>
-        <Title>{'선택 정보를\n입력해주세요'}</Title>
-        <SubText>입력된 정보로 목표 칼로리를 계산해드려요</SubText>
-        <HorizontalSpace height={16} />
+        <ScrollView contentContainerStyle={{paddingBottom: 80}} ref={scrollRef}>
+          <Title>{'선택 정보를\n입력해주세요'}</Title>
+          <SubText>입력된 정보로 목표 칼로리를 계산해드려요</SubText>
+          <HorizontalSpace height={16} />
 
-        {/* 주간 운동횟수 */}
-        <Col style={{width: '100%'}}>
-          <ContainerTitleText>주간 운동횟수</ContainerTitleText>
-          <BtnContainer>
-            {seqCode?.map((item, idx) => {
-              return (
-                <Btn
-                  key={idx}
-                  onPress={() =>
-                    dispatch(setValue({name: 'sportsSeqCd', value: item.cd}))
-                  }
-                  isActivated={sportsSeqCd.value === item.cd}>
-                  <BtnText isActivated={sportsSeqCd.value === item.cd}>
-                    {item.cdNm}
-                  </BtnText>
-                </Btn>
-              );
-            })}
-          </BtnContainer>
-
-          {/* 주간 운동횟수 툴팁 */}
-          <Col>
-            <DTooltip
-              tooltipShow={!!seqTooltipText}
-              boxTop={8}
-              boxLeft={0}
-              triangle={false}
-              text={seqTooltipText}
-            />
-          </Col>
-        </Col>
-
-        {/* 회당 운동시간 (분)*/}
-        {sportsSeqCd.value !== 'SP008001' && (
+          {/* 주간 운동횟수 */}
           <Col style={{width: '100%'}}>
-            <ContainerTitleText>회당 운동시간 (분)</ContainerTitleText>
+            <ContainerTitleText>주간 운동횟수</ContainerTitleText>
             <BtnContainer>
-              {timeCode?.map((item, idx) => {
+              {seqCode?.map((item, idx) => {
                 return (
                   <Btn
                     key={idx}
                     onPress={() =>
-                      dispatch(setValue({name: 'sportsTimeCd', value: item.cd}))
+                      dispatch(setValue({name: 'sportsSeqCd', value: item.cd}))
                     }
-                    isActivated={sportsTimeCd.value === item.cd}>
-                    <BtnText isActivated={sportsTimeCd.value === item.cd}>
+                    isActivated={sportsSeqCd.value === item.cd}>
+                    <BtnText isActivated={sportsSeqCd.value === item.cd}>
                       {item.cdNm}
                     </BtnText>
                   </Btn>
                 );
               })}
             </BtnContainer>
+
+            {/* 주간 운동횟수 툴팁 */}
+            <Col>
+              <DTooltip
+                tooltipShow={!!seqTooltipText}
+                boxTop={8}
+                boxLeft={0}
+                triangle={false}
+                text={seqTooltipText}
+              />
+            </Col>
           </Col>
-        )}
 
-        {/* 운동강도 (누가뭐래도 내 느낌) */}
-        {sportsSeqCd.value !== 'SP008001' && (
-          <Col style={{width: '100%'}}>
-            <ContainerTitleText>
-              운동강도 (누가뭐래도 내 느낌)
-            </ContainerTitleText>
-            <BtnContainer>
-              {strengthCode?.map((item, idx) => {
-                return (
-                  <StrengthBtn
-                    key={item.cd}
-                    isActivated={sportsStrengthCd.value === item.cd}
-                    onPress={() =>
-                      dispatch(
-                        setValue({name: 'sportsStrengthCd', value: item.cd}),
-                      )
-                    }>
-                    <BtnText isActivated={sportsStrengthCd.value === item.cd}>
-                      {item.cdNm}
-                    </BtnText>
-                  </StrengthBtn>
-                );
-              })}
-            </BtnContainer>
-          </Col>
-        )}
+          {/* 회당 운동시간 (분)*/}
+          {sportsSeqCd.value !== 'SP008001' && (
+            <Col style={{width: '100%'}}>
+              <ContainerTitleText>회당 운동시간 (분)</ContainerTitleText>
+              <BtnContainer>
+                {timeCode?.map((item, idx) => {
+                  return (
+                    <Btn
+                      key={idx}
+                      onPress={() =>
+                        dispatch(
+                          setValue({name: 'sportsTimeCd', value: item.cd}),
+                        )
+                      }
+                      isActivated={sportsTimeCd.value === item.cd}>
+                      <BtnText isActivated={sportsTimeCd.value === item.cd}>
+                        {item.cdNm}
+                      </BtnText>
+                    </Btn>
+                  );
+                })}
+              </BtnContainer>
+            </Col>
+          )}
 
-        {/* 기초대사량 */}
-        <InputHeader isActivated={!!bmrKnown.value}>
-          기초대사량(kcal)
-        </InputHeader>
-        <DTextInput
-          placeholder="기초대사량을 알고있다면 적어주세요 (kcal)"
-          value={bmrKnown.value}
-          onChangeText={v => dispatch(setValue({name: 'bmrKnown', value: v}))}
-          isActivated={!!bmrKnown.value}
-          isValid={bmrKnown.isValid}
-          keyboardType="numeric"
-          maxLength={4}
-          onFocus={() => {
-            console.log('scrollToEnd!!');
-            setTimeout(() => {
-              scrollRef.current.scrollToEnd({animated: true});
-            }, 150);
-          }}
-        />
-        {bmrKnown.errMsg && (
-          <ErrorBox>
-            <ErrorText>{bmrKnown.errMsg}</ErrorText>
-          </ErrorBox>
-        )}
-      </ScrollView>
+          {/* 운동강도 (누가뭐래도 내 느낌) */}
+          {sportsSeqCd.value !== 'SP008001' && (
+            <Col style={{width: '100%'}}>
+              <ContainerTitleText>
+                운동강도 (누가뭐래도 내 느낌)
+              </ContainerTitleText>
+              <BtnContainer>
+                {strengthCode?.map((item, idx) => {
+                  return (
+                    <StrengthBtn
+                      key={item.cd}
+                      isActivated={sportsStrengthCd.value === item.cd}
+                      onPress={() =>
+                        dispatch(
+                          setValue({name: 'sportsStrengthCd', value: item.cd}),
+                        )
+                      }>
+                      <BtnText isActivated={sportsStrengthCd.value === item.cd}>
+                        {item.cdNm}
+                      </BtnText>
+                    </StrengthBtn>
+                  );
+                })}
+              </BtnContainer>
+            </Col>
+          )}
 
-      {/* CTA버튼 */}
-      <BtnBottomCTA
-        btnStyle={isValidAll ? 'activated' : 'inactivated'}
-        disabled={!isValidAll}
-        onPress={() => onCTAPress()}>
-        <BtnCTAText>다음</BtnCTAText>
-      </BtnBottomCTA>
+          {/* 기초대사량 */}
+          <InputHeader isActivated={!!bmrKnown.value}>
+            기초대사량(kcal)
+          </InputHeader>
+          <DTextInput
+            placeholder="기초대사량을 알고있다면 적어주세요 (kcal)"
+            value={bmrKnown.value}
+            onChangeText={v => dispatch(setValue({name: 'bmrKnown', value: v}))}
+            isActivated={!!bmrKnown.value}
+            isValid={bmrKnown.isValid}
+            keyboardType="numeric"
+            maxLength={4}
+            onFocus={() => {
+              console.log('scrollToEnd!!');
+              setTimeout(() => {
+                scrollRef.current.scrollToEnd({animated: true});
+              }, 150);
+            }}
+          />
+          {bmrKnown.errMsg && (
+            <ErrorBox>
+              <ErrorText>{bmrKnown.errMsg}</ErrorText>
+            </ErrorBox>
+          )}
+        </ScrollView>
+
+        {/* CTA버튼 */}
+        <BtnBottomCTA
+          btnStyle={isValidAll ? 'activated' : 'inactivated'}
+          disabled={!isValidAll}
+          onPress={() => onCTAPress()}>
+          <BtnCTAText>다음</BtnCTAText>
+        </BtnBottomCTA>
       </SafeAreaView>
     </Container>
   );

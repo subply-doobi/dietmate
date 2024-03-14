@@ -178,12 +178,12 @@ export const BtnCTA = styled.TouchableOpacity`
     btnStyle === 'activated'
       ? `${colors.main}`
       : btnStyle === 'inactivated'
-      ? `${colors.inactivated}`
-      : btnStyle === 'border'
-      ? `${colors.white}`
-      : btnStyle === 'kakao'
-      ? `${colors.kakaoColor}`
-      : `${colors.white}`};
+        ? `${colors.inactivated}`
+        : btnStyle === 'border'
+          ? `${colors.white}`
+          : btnStyle === 'kakao'
+            ? `${colors.kakaoColor}`
+            : `${colors.white}`};
   align-items: center;
   align-self: center;
   justify-content: center;
@@ -193,8 +193,8 @@ export const BtnCTA = styled.TouchableOpacity`
     btnStyle === 'border'
       ? colors.inactivated
       : btnStyle === 'borderActivated'
-      ? colors.main
-      : colors.white};
+        ? colors.main
+        : colors.white};
 `;
 
 export const BtnBottomCTA = styled(BtnCTA)`

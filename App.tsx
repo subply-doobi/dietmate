@@ -44,7 +44,7 @@ function App(): React.JSX.Element {
       await loadSplash;
 
       // TBD | 최신 앱 버전을 서버에서 관리하도록 수정할 것. 일단 임시코드
-      appVersion !== '1.0.12' && setIsUpdateNeeded(true);
+      appVersion !== '1.0.13' && setIsUpdateNeeded(true);
     };
 
     init().finally(async () => {
