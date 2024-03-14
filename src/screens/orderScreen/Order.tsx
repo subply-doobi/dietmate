@@ -83,14 +83,14 @@ const Order = () => {
   const validationErrMsg = !listAddressData
     ? '잠시만 기다려주세요'
     : invalidateInput
-    ? invalidateInput.errMsg
-    : listAddressData.length === 0
-    ? '주소를 입력해주세요'
-    : listAddressData[selectedAddrIdx]?.addr1 === ''
-    ? '주소를 입력해주세요'
-    : listAddressData[selectedAddrIdx]?.addr2 === ''
-    ? '상세주소를 입력해주세요'
-    : ``;
+      ? invalidateInput.errMsg
+      : listAddressData.length === 0
+        ? '주소를 입력해주세요'
+        : listAddressData[selectedAddrIdx]?.addr1 === ''
+          ? '주소를 입력해주세요'
+          : listAddressData[selectedAddrIdx]?.addr2 === ''
+            ? '상세주소를 입력해주세요'
+            : ``;
   const ctaBtnStyle = validationErrMsg === '' ? 'activated' : 'inactivated';
   const ctaBtnText =
     validationErrMsg === ''
@@ -147,12 +147,14 @@ const Order = () => {
           {commaToNum(shippingPrice)}원
         </HeaderSubTitle>
       ),
-      content: <AccordionContentContainer>
-        <HeaderSubTitle>
-          식품가격: {commaToNum(priceTotal)}원 | 배송비:{' '}
-          {commaToNum(shippingPrice)}원
-        </HeaderSubTitle>
-        </AccordionContentContainer>,
+      content: (
+        <AccordionContentContainer>
+          <HeaderSubTitle>
+            식품가격: {commaToNum(priceTotal)}원 | 배송비:{' '}
+            {commaToNum(shippingPrice)}원
+          </HeaderSubTitle>
+        </AccordionContentContainer>
+      ),
     },
   ];
 
@@ -192,13 +194,12 @@ const Order = () => {
       buyerTel: buyerTel.value,
       buyerAddr: listAddressData
         ? listAddressData[selectedAddrIdx]?.addr1 +
+          ' | ' +
           listAddressData[selectedAddrIdx]?.addr2
         : '',
       buyerZipCode: listAddressData
         ? listAddressData[selectedAddrIdx]?.zipCode
         : '',
-      receiver: buyerTel.value,
-      receiverContact: buyerTel.value,
       entranceType: entranceType.value,
       entranceNote: entranceNote.value,
       diet: dietDetailAllData?.map((food, idx) => {
