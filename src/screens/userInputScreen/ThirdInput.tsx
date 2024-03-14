@@ -131,36 +131,36 @@ const ThirdInput = () => {
   };
 
   return (
-    <Container>
-        <Title>
-          <TitleText>
-            <TitleTextHighlight>한 끼</TitleTextHighlight> 기준{' '}
-          </TitleText>
-          <TitleText>목표섭취량을 입력해주세요</TitleText>
-        </Title>
-        <HorizontalSpace height={16} />
-        <ScrollView
-          contentContainerStyle={{paddingBottom: 80}}
-          showsVerticalScrollIndicator={false}
-          ref={scrollRef}>
-          <Accordion
-            activeSections={activeSections}
-            sections={CONTENT}
-            touchableComponent={TouchableOpacity}
-            renderHeader={renderHeader}
-            renderContent={renderContent}
-            duration={200}
-            onChange={updateSections}
-            renderFooter={() => <HorizontalSpace height={20} />}
-            containerStyle={{marginTop: 32}}
-          />
-        </ScrollView>
-        <BtnBottomCTA
-          btnStyle={btnStyle}
-          disabled={!btnIsActive}
-          onPress={async () => onSubmit()}>
-          <BtnText>완료</BtnText>
-        </BtnBottomCTA>
+    <Container style={{paddingBottom: 16}}>
+      <Title>
+        <TitleText>
+          <TitleTextHighlight>한 끼</TitleTextHighlight> 기준{' '}
+        </TitleText>
+        <TitleText>목표섭취량을 입력해주세요</TitleText>
+      </Title>
+      <HorizontalSpace height={16} />
+      <ScrollView
+        contentContainerStyle={{paddingBottom: 80}}
+        showsVerticalScrollIndicator={false}
+        ref={scrollRef}>
+        <Accordion
+          activeSections={activeSections}
+          sections={CONTENT}
+          touchableComponent={TouchableOpacity}
+          renderHeader={renderHeader}
+          renderContent={renderContent}
+          duration={200}
+          onChange={updateSections}
+          renderFooter={() => <HorizontalSpace height={20} />}
+          containerStyle={{marginTop: 32}}
+        />
+      </ScrollView>
+      <BtnBottomCTA
+        btnStyle={btnStyle}
+        disabled={!btnIsActive}
+        onPress={async () => onSubmit()}>
+        <BtnText>완료</BtnText>
+      </BtnBottomCTA>
     </Container>
   );
 };
