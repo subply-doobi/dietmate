@@ -1,5 +1,16 @@
-export const BASE_URL = 'http://43.201.101.22:8080';
+// export const BASE_URL = 'http://subply.kr:8080';
+export const BASE_URL = 'http://52.79.213.181:8080';
 
+// app-version-controller
+export const GET_VERSION = `${BASE_URL}/api/every/app-version/get-app-version`;
+
+// api-member-guest-login
+export const GET_GUEST = `${BASE_URL}/api/every/token/get-token-guest`;
+
+// api-member-guest-controller
+export const GET_GUEST_YN = `${BASE_URL}/api/every/guest/get-guest-yn`;
+
+// user-token-contoller
 export const GET_TOKEN = `${BASE_URL}/api/every/token/get-token`; //토큰 조회
 export const GET_AUTH = `${BASE_URL}/api/member/auth/get-auth`; //인증 여부 조회
 export const RE_ISSUE_TOKEN = `${BASE_URL}/api/every/token/re-issue-token`;
@@ -53,9 +64,3 @@ export const UPDATE_ADDRESS = `${BASE_URL}/api/member/address/update-address`;
 export const LIST_ADDRESS = `${BASE_URL}/api/member/address/list-address`;
 export const GET_ADDRESS = `${BASE_URL}/api/member/address/get-address`;
 export const DELETE_ADDRESS = `${BASE_URL}/api/member/address/delete-address`;
-
-// api-member-guest-login
-export const GET_GUEST = `${BASE_URL}/api/every/token/get-token-guest`;
-
-// api-member-guest-controller
-export const GET_GUEST_YN = `${BASE_URL}/api/every/guest/get-guest-yn`;
