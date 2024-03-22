@@ -1,3 +1,6 @@
+package check
+npx @rnx-kit/align-deps --requirements react-native@[major.minor]
+
 apk 추출
 npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/
 
