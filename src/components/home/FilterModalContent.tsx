@@ -115,7 +115,7 @@ const FilterModalContent = ({setFilterModalShow}: IFilterModalContent) => {
 
 export default FilterModalContent;
 
-const Container = styled.View`
+const Container = styled.SafeAreaView`
   height: 100%;
 `;
 
