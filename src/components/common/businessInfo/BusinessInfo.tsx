@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
-import {BUSINESS_INFO} from '../../../constants/constants';
-import {HorizontalSpace, TextSub} from '../../../styles/styledConsts';
+import {BUSINESS_INFO} from '../../../shared/constants';
+import {HorizontalSpace, TextSub} from '../../../shared/ui/styledConsts';
 
 const BusinessInfo = ({bgColor}: {bgColor?: string}) => {
   return (

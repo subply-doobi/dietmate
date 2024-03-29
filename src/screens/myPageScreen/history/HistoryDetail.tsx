@@ -11,21 +11,21 @@ import {
 } from 'react-native-image-picker';
 import axios from 'axios';
 
-import {RootState} from '../../../stores/store';
-import {icons} from '../../../assets/icons/iconSource';
-import {NavigationProps, SCREENWIDTH} from '../../../constants/constants';
-import colors from '../../../styles/colors';
+import {RootState} from '../../../app/store/reduxStore';
+import {icons} from '../../../shared/iconSource';
+import {NavigationProps, SCREENWIDTH} from '../../../shared/constants';
+import colors from '../../../shared/colors';
 import {
   useChangeHeaderRight,
   useChangeHeaderTitle,
-} from '../../../util/customHooks';
+} from '../../../shared/utils/customHooks';
 import {
   HorizontalLine,
   TextMain,
   TextSub,
   VerticalLine,
   VerticalSpace,
-} from '../../../styles/styledConsts';
+} from '../../../shared/ui/styledConsts';
 
 import NutrTarget from '../../../components/common/nutrient/NutrientTarget';
 import DAlert from '../../../components/common/alert/DAlert';

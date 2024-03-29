@@ -7,26 +7,26 @@ import styled from 'styled-components/native';
 
 //doobi util, redux, etc
 import {useDispatch} from 'react-redux';
-import colors from '../../styles/colors';
-import {setShippingPrice} from '../../stores/slices/orderSlice';
+import colors from '../../shared/colors';
+import {setShippingPrice} from '../../features/reduxSlices/orderSlice';
 import {
   applySortFilter,
   updateSearch,
-} from '../../stores/slices/sortFilterSlice';
-import {icons} from '../../assets/icons/iconSource';
+} from '../../features/reduxSlices/sortFilterSlice';
+import {icons} from '../../shared/iconSource';
 import {
   commaToNum,
   sumUpDietTotal,
   getTotalShippingPrice,
   getSellerShippingPrice,
-} from '../../util/sumUp';
+} from '../../shared/utils/sumUp';
 
 //doobi Component
-import {HorizontalLine, TextMain, TextSub} from '../../styles/styledConsts';
+import {HorizontalLine, TextMain, TextSub} from '../../shared/ui/styledConsts';
 
 // react-query
-import {useListDietDetailAll} from '../../query/queries/diet';
-import {reGroupByDietNo, reGroupDietBySeller} from '../../util/common/regroup';
+import {useListDietDetailAll} from '../../shared/api/queries/diet';
+import {reGroupByDietNo, reGroupDietBySeller} from '../../shared/utils/regroup';
 
 const CartSummary = ({
   setMenuNumSelectShow,

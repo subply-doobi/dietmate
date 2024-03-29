@@ -4,26 +4,26 @@ import styled from 'styled-components/native';
 import * as Progress from 'react-native-progress';
 
 // util, const
-import colors from '../../../styles/colors';
-import {Col, Row, VerticalSpace} from '../../../styles/styledConsts';
+import colors from '../../../shared/colors';
+import {Col, Row, VerticalSpace} from '../../../shared/ui/styledConsts';
 import {
   checkNutrSatisfied,
   getExceedIdx,
   sumUpNutrients,
-} from '../../../util/sumUp';
+} from '../../../shared/utils/sumUp';
 
 // doobi components
-import {NUTR_ERROR_RANGE, SCREENWIDTH} from '../../../constants/constants';
+import {NUTR_ERROR_RANGE, SCREENWIDTH} from '../../../shared/constants';
 import {useRoute} from '@react-navigation/native';
-import {icons} from '../../../assets/icons/iconSource';
+import {icons} from '../../../shared/iconSource';
 import DTooltip from '../tooltip/DTooltip';
 
 // react-query
-import {useGetBaseLine} from '../../../query/queries/baseLine';
-import {IDietDetailData} from '../../../query/types/diet';
+import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
+import {IDietDetailData} from '../../../shared/api/types/diet';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../../stores/store';
-import {setProgressTooltipShow} from '../../../stores/slices/commonSlice';
+import {RootState} from '../../../app/store/reduxStore';
+import {setProgressTooltipShow} from '../../../features/reduxSlices/commonSlice';
 
 const indicatorColorsByTitle2: {[key: string]: string} = {
   '칼로리(kcal)': colors.main,

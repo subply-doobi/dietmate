@@ -3,14 +3,14 @@ import {FlatList} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {RootState} from '../../../stores/store';
-import colors from '../../../styles/colors';
-import {SCREENWIDTH} from '../../../constants/constants';
-import {changeNutrByWeight} from '../../../util/alertActions';
-import {BtnBottomCTA, BtnText} from '../../../styles/styledConsts';
+import {RootState} from '../../../app/store/reduxStore';
+import colors from '../../../shared/colors';
+import {SCREENWIDTH} from '../../../shared/constants';
+import {changeNutrByWeight} from '../../../shared/utils/alertActions';
+import {BtnBottomCTA, BtnText} from '../../../shared/ui/styledConsts';
 
 import DAlert from '../../../components/common/alert/DAlert';
-import WeightChangeAlert from '../../../components/myPage/WeightChangeAlert';
+import WeightChangeAlert from '../../mypage/ui/WeightChangeAlert';
 import {useNavigation} from '@react-navigation/native';
 
 const History = () => {

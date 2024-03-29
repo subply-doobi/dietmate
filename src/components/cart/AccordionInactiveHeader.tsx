@@ -5,11 +5,11 @@ import * as Progress from 'react-native-progress';
 import styled from 'styled-components/native';
 
 // doobi util, redux, etc
-import {icons} from '../../assets/icons/iconSource';
-import {RootState} from '../../stores/store';
-import colors from '../../styles/colors';
-import {commaToNum, sumUpNutrients, sumUpPrice} from '../../util/sumUp';
-import {setMenuActiveSection} from '../../stores/slices/commonSlice';
+import {icons} from '../../shared/iconSource';
+import {RootState} from '../../app/store/reduxStore';
+import colors from '../../shared/colors';
+import {commaToNum, sumUpNutrients, sumUpPrice} from '../../shared/utils/sumUp';
+import {setMenuActiveSection} from '../../features/reduxSlices/commonSlice';
 
 // doobi Component
 import DAlert from '../common/alert/DAlert';
@@ -23,12 +23,12 @@ import {
   TextSub,
   VerticalLine,
   StyledProps,
-} from '../../styles/styledConsts';
+} from '../../shared/ui/styledConsts';
 
 // react-query
-import {useGetBaseLine} from '../../query/queries/baseLine';
-import {useDeleteDiet, useListDiet} from '../../query/queries/diet';
-import {IDietDetailData} from '../../query/types/diet';
+import {useGetBaseLine} from '../../shared/api/queries/baseLine';
+import {useDeleteDiet, useListDiet} from '../../shared/api/queries/diet';
+import {IDietDetailData} from '../../shared/api/types/diet';
 import {current} from '@reduxjs/toolkit';
 import MenuNumSelect from './MenuNumSelect';
 

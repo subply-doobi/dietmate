@@ -2,8 +2,8 @@ import React from 'react';
 import {Modal} from 'react-native';
 import styled from 'styled-components/native';
 
-import {StyledProps} from '../../../styles/styledConsts';
-import colors from '../../../styles/colors';
+import {StyledProps} from '../../../shared/ui/styledConsts';
+import colors from '../../../shared/colors';
 
 interface IDBottomSheet {
   alertShow: boolean;

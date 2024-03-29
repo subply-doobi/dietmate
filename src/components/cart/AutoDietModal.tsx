@@ -4,11 +4,11 @@ import {Modal, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 // doobi util, redux, etc
-import {RootState} from '../../stores/store';
-import {icons} from '../../assets/icons/iconSource';
-import colors from '../../styles/colors';
-import {useAsync} from '../../util/cart/cartCustomHooks';
-import {setCurrentDiet} from '../../stores/slices/commonSlice';
+import {RootState} from '../../app/store/reduxStore';
+import {icons} from '../../shared/iconSource';
+import colors from '../../shared/colors';
+import {useAsync} from '../../screens/cart/util/cartCustomHooks';
+import {setCurrentDiet} from '../../features/reduxSlices/commonSlice';
 // doobi Component
 import {
   BtnCTA,
@@ -18,15 +18,18 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../shared/ui/styledConsts';
 import DSlider from '../common/slider/DSlider';
 // react-query
-import {useListCategory} from '../../query/queries/category';
-import {useGetBaseLine} from '../../query/queries/baseLine';
-import {IDietDetailData} from '../../query/types/diet';
-import {IProductData} from '../../query/types/product';
-import {useCreateDietDetail, useListDietDetail} from '../../query/queries/diet';
-import {makeAutoMenu2} from '../../util/cart/autoMenu2';
+import {useListCategory} from '../../shared/api/queries/category';
+import {useGetBaseLine} from '../../shared/api/queries/baseLine';
+import {IDietDetailData} from '../../shared/api/types/diet';
+import {IProductData} from '../../shared/api/types/product';
+import {
+  useCreateDietDetail,
+  useListDietDetail,
+} from '../../shared/api/queries/diet';
+import {makeAutoMenu2} from '../../screens/cart/util/autoMenu2';
 import Dropdown from '../userInput/Dropdown';
 
 interface IAutoDietModal {
@@ -277,10 +280,10 @@ const AutoDietModal = ({
         {isLoading
           ? renderIsLoadingContent()
           : isSuccess
-          ? renderIsSuccessContent()
-          : autoFailedNum > 1 || !isError
-          ? renderBaseContent()
-          : renderIsErrorContent()}
+            ? renderIsSuccessContent()
+            : autoFailedNum > 1 || !isError
+              ? renderBaseContent()
+              : renderIsErrorContent()}
       </ModalBackGround>
     </Modal>
   );

@@ -1,11 +1,11 @@
 import IMP from 'iamport-react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {useUpdateDiet, useCreateDiet} from '../../query/queries/diet';
-import {useUpdateOrder, useDeleteOrder} from '../../query/queries/order';
+import {useUpdateDiet, useCreateDiet} from '../../shared/api/queries/diet';
+import {useUpdateOrder, useDeleteOrder} from '../../shared/api/queries/order';
 import Loading from './Loading';
-import {usePreventBackBtn} from '../../util/order/backEventHook';
-import {IAMPORT_USER_CODE} from '../../constants/constants';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {usePreventBackBtn} from '../../screens/order/util/backEventHook';
+import {IAMPORT_USER_CODE} from '../../shared/constants';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 
 const KakaoPay = () => {
@@ -57,16 +57,17 @@ const KakaoPay = () => {
 
   return (
     <Container>
-    <IMP.Payment
-
-      userCode={IAMPORT_USER_CODE} // this one you can get in the iamport console.
-      data={kakaopayData}
-      callback={response => {
-        // success가 아닌 경우 1. 아임포트 자체오류 || 2. 사용자 취소 구분은 아직 없음
-        response.imp_success === 'true' ? onPaymentSuccess() : onPaymentFail();
-      }}
-      loading={<Loading />}
-    />
+      <IMP.Payment
+        userCode={IAMPORT_USER_CODE} // this one you can get in the iamport console.
+        data={kakaopayData}
+        callback={response => {
+          // success가 아닌 경우 1. 아임포트 자체오류 || 2. 사용자 취소 구분은 아직 없음
+          response.imp_success === 'true'
+            ? onPaymentSuccess()
+            : onPaymentFail();
+        }}
+        loading={<Loading />}
+      />
     </Container>
   );
 };
@@ -76,4 +77,3 @@ export default KakaoPay;
 const Container = styled(SafeAreaView)`
   flex: 1;
 `;
-

@@ -3,13 +3,13 @@ import styled from 'styled-components/native';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 // doobi util, redux, etc
-import {icons} from '../../assets/icons/iconSource';
+import {icons} from '../../shared/iconSource';
 import {
   commaToNum,
   compareNutrToTarget,
   sumUpNutrients,
   sumUpPrice,
-} from '../../util/sumUp';
+} from '../../shared/utils/sumUp';
 
 // doobi Component
 import {
@@ -18,7 +18,7 @@ import {
   HorizontalLine,
   Row,
   TextMain,
-} from '../../styles/styledConsts';
+} from '../../shared/ui/styledConsts';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import AutoDietModal from './AutoDietModal';
@@ -26,9 +26,9 @@ import AutoMenuBtn from './AutoMenuBtn';
 import CartFoodList from './CartFoodList';
 
 // react-query
-import {IDietDetailData} from '../../query/types/diet';
-import {useGetBaseLine} from '../../query/queries/baseLine';
-import {useDeleteDietDetail} from '../../query/queries/diet';
+import {IDietDetailData} from '../../shared/api/types/diet';
+import {useGetBaseLine} from '../../shared/api/queries/baseLine';
+import {useDeleteDietDetail} from '../../shared/api/queries/diet';
 import MenuNumSelect from './MenuNumSelect';
 
 interface IMenu {
