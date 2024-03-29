@@ -2,17 +2,17 @@
 import styled from 'styled-components/native';
 
 // doobi util, redux, etc
-import colors from '../../styles/colors';
+import colors from '../../shared/colors';
 
 // doobi Component
 import NutrientsProgress from '../common/nutrient/NutrientsProgress';
 
 // react-query
-import {IDietDetailData} from '../../query/types/diet';
+import {IDietDetailData} from '../../shared/api/types/diet';
 import Menu from './Menu';
 import {SetStateAction} from 'react';
-import {commaToNum, sumUpPrice} from '../../util/sumUp';
-import {HorizontalSpace, Row, TextMain} from '../../styles/styledConsts';
+import {commaToNum, sumUpPrice} from '../../shared/utils/sumUp';
+import {HorizontalSpace, Row, TextMain} from '../../shared/ui/styledConsts';
 import MenuNumSelect from './MenuNumSelect';
 
 interface IAccordionContent {

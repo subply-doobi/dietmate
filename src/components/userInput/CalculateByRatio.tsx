@@ -2,24 +2,24 @@
 import styled from 'styled-components/native';
 
 //doobi util, redux, etc
-import colors from '../../styles/colors';
-import {NUTR_RATIO_CD} from '../../constants/constants';
-import {calculateCaloriesToNutr} from '../../util/targetCalculation';
+import colors from '../../shared/colors';
+import {NUTR_RATIO_CD} from '../../shared/constants';
+import {calculateCaloriesToNutr} from '../../shared/utils/targetCalculation';
 //Doobi components
 import {
   ErrorBox,
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
+} from '../../shared/ui/styledConsts';
 
 import Dropdown from './Dropdown';
-import {getRecommendedNutr} from '../../util/userInput/targetByReduxData';
-import {RootState} from '../../stores/store';
+import {getRecommendedNutr} from '../../screens/userInput/util/targetByReduxData';
+import {RootState} from '../../app/store/reduxStore';
 import {useDispatch, useSelector} from 'react-redux';
-import {useListCode} from '../../query/queries/code';
+import {useListCode} from '../../shared/api/queries/code';
 import {useEffect, useState} from 'react';
-import {setValue} from '../../stores/slices/userInputSlice';
+import {setValue} from '../../features/reduxSlices/userInputSlice';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import DTextInput from '../common/textInput/DTextInput';
 

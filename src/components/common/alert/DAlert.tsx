@@ -2,9 +2,9 @@ import React from 'react';
 import {Modal} from 'react-native';
 import styled from 'styled-components/native';
 
-import colors from '../../../styles/colors';
-import {DALERT_WIDTH, SCREENWIDTH} from '../../../constants/constants';
-import {Row, StyledProps, TextMain} from '../../../styles/styledConsts';
+import colors from '../../../shared/colors';
+import {DALERT_WIDTH, SCREENWIDTH} from '../../../shared/constants';
+import {Row, StyledProps, TextMain} from '../../../shared/ui/styledConsts';
 
 interface IDAlert {
   alertShow: boolean;

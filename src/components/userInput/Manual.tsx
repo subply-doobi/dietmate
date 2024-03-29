@@ -2,18 +2,18 @@ import React, {useEffect, useRef} from 'react';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {RootState} from '../../stores/store';
+import {RootState} from '../../app/store/reduxStore';
 import {
   ErrorBox,
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
-} from '../../styles/styledConsts';
-import {calculateManualCalorie} from '../../util/targetCalculation';
-import colors from '../../styles/colors';
-import {getRecommendedNutr} from '../../util/userInput/targetByReduxData';
-import {useListCode} from '../../query/queries/code';
-import {setValue} from '../../stores/slices/userInputSlice';
+} from '../../shared/ui/styledConsts';
+import {calculateManualCalorie} from '../../shared/utils/targetCalculation';
+import colors from '../../shared/colors';
+import {getRecommendedNutr} from '../../screens/userInput/util/targetByReduxData';
+import {useListCode} from '../../shared/api/queries/code';
+import {setValue} from '../../features/reduxSlices/userInputSlice';
 import DTextInput from '../common/textInput/DTextInput';
 
 interface IManual {

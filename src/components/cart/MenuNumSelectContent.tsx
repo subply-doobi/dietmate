@@ -12,19 +12,19 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
+} from '../../shared/ui/styledConsts';
 import MenuNumSelect from './MenuNumSelect';
 
 // util, constants
-import {commaToNum, sumUpPrice} from '../../util/sumUp';
-import colors from '../../styles/colors';
-import {findDietSeq} from '../../util/findDietSeq';
-import {BASE_URL} from '../../query/queries/urls';
+import {commaToNum, sumUpPrice} from '../../shared/utils/sumUp';
+import colors from '../../shared/colors';
+import {findDietSeq} from '../../shared/utils/findDietSeq';
+import {BASE_URL} from '../../shared/api/urls';
 import {
   SCREENHEIGHT,
   SCREENWIDTH,
   SERVICE_PRICE_PER_PRODUCT,
-} from '../../constants/constants';
+} from '../../shared/constants';
 
 // react-query
 import {
@@ -33,10 +33,10 @@ import {
   useListDietDetailAll,
   useListDietTotal,
   useUpdateDietDetail,
-} from '../../query/queries/diet';
-import {reGroupDietBySeller} from '../../util/common/regroup';
+} from '../../shared/api/queries/diet';
+import {reGroupDietBySeller} from '../../shared/utils/regroup';
 import {useSelector} from 'react-redux';
-import {RootState} from '../../stores/store';
+import {RootState} from '../../app/store/reduxStore';
 
 const MenuNumSelectContent = ({
   setMenuNumSelectShow,

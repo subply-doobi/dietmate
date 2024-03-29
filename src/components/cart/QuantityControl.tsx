@@ -1,9 +1,9 @@
 import {SetStateAction} from 'react';
 import styled from 'styled-components/native';
 
-import {icons} from '../../assets/icons/iconSource';
-import {TextMain} from '../../styles/styledConsts';
-import {IDietDetailProductData} from '../../query/types/diet';
+import {icons} from '../../shared/iconSource';
+import {TextMain} from '../../shared/ui/styledConsts';
+import {IDietDetailProductData} from '../../shared/api/types/diet';
 
 const QuantityControl = ({
   food,

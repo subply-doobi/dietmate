@@ -3,20 +3,20 @@ import {useState} from 'react';
 import styled from 'styled-components/native';
 
 // doobi util, redux, etc
-import {icons} from '../../assets/icons/iconSource';
-import colors from '../../styles/colors';
-import {commaToNum, sumUpPrice} from '../../util/sumUp';
+import {icons} from '../../shared/iconSource';
+import colors from '../../shared/colors';
+import {commaToNum, sumUpPrice} from '../../shared/utils/sumUp';
 
 // doobi Component
-import {Row, StyledProps} from '../../styles/styledConsts';
+import {Row, StyledProps} from '../../shared/ui/styledConsts';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 
 // react-query
-import {useDeleteDiet, useListDiet} from '../../query/queries/diet';
-import {queryClient} from '../../query/store';
-import {DIET_DETAIL} from '../../query/keys';
-import {IDietDetailData} from '../../query/types/diet';
+import {useDeleteDiet, useListDiet} from '../../shared/api/queries/diet';
+import {queryClient} from '../../app/store/reactQueryStore';
+import {DIET_DETAIL} from '../../shared/api/keys';
+import {IDietDetailData} from '../../shared/api/types/diet';
 
 interface IAccordionActiveHeader {
   idx: number;

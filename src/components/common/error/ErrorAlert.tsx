@@ -1,12 +1,15 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {closeCommonAlert} from '../../../stores/slices/commonAlertSlice';
-import {RootState} from '../../../stores/store';
-import {convertCodeToMsg, errorActionByCode} from '../../../util/handleError';
+import {closeCommonAlert} from '../../../features/reduxSlices/commonAlertSlice';
+import {RootState} from '../../../app/store/reduxStore';
+import {
+  convertCodeToMsg,
+  errorActionByCode,
+} from '../../../shared/utils/handleError';
 import DAlert from '../alert/DAlert';
-import {queryClient} from '../../../query/store';
+import {queryClient} from '../../../app/store/reactQueryStore';
 import styled from 'styled-components/native';
-import {Col, TextMain} from '../../../styles/styledConsts';
+import {Col, TextMain} from '../../../shared/ui/styledConsts';
 
 const RequestAlertContent = () => {
   const {errorCode} = useSelector((state: RootState) => state.commonAlert);
@@ -42,7 +45,7 @@ const ErrorAlert = () => {
           //       index: 0,
           //       routes: [{name: 'Login'}],
           //     });
-          console.log('sdfsdffs')
+          console.log('sdfsdffs');
           dispatch(closeCommonAlert());
           reset({
             index: 0,

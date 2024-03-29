@@ -2,8 +2,8 @@ import React, {SetStateAction, useState} from 'react';
 import styled from 'styled-components/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-import colors from '../../styles/colors';
-import {InputHeaderText} from '../../styles/styledConsts';
+import colors from '../../shared/colors';
+import {InputHeaderText} from '../../shared/ui/styledConsts';
 
 interface CategoryObject {
   label: string;

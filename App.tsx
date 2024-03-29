@@ -1,30 +1,30 @@
 import {useEffect, useState} from 'react';
-import {store} from './src/stores/store';
+import {store} from './src/app/store/reduxStore';
 import {Provider} from 'react-redux';
 import {
   useQueryErrorResetBoundary,
   QueryClientProvider,
 } from '@tanstack/react-query';
-import {queryClient} from './src/query/store';
+import {queryClient} from './src/app/store/reactQueryStore';
 import {
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import RootStackNav from './src/navigators/RootStackNav';
+import RootStackNav from './src/app/navigators/RootStackNav';
 import ErrorAlert from './src/components/common/error/ErrorAlert';
 import BootSplash from 'react-native-bootsplash';
 
 import {version as appVersion} from './package.json';
 import DAlert from './src/components/common/alert/DAlert';
 import CommonAlertContent from './src/components/common/alert/CommonAlertContent';
-import {link} from './src/util/common/linking';
+import {link} from './src/shared/utils/linking';
 import {
   APP_STORE_URL,
   IS_ANDROID,
   IS_IOS,
   PLAY_STORE_URL,
-} from './src/constants/constants';
-import {getLatestVersion} from './src/query/queries/version';
+} from './src/shared/constants';
+import {getLatestVersion} from './src/shared/api/queries/version';
 
 const loadSplash = new Promise(resolve =>
   setTimeout(() => {

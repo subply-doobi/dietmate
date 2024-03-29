@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
-import colors from '../../styles/colors';
-import {TextMain} from '../../styles/styledConsts';
-import {icons} from '../../assets/icons/iconSource';
+import colors from '../../shared/colors';
+import {TextMain} from '../../shared/ui/styledConsts';
+import {icons} from '../../shared/iconSource';
 
 /** dummy인 경우 수량조절 bottomSheet 열어주고 아닌 경우 실제 수량조절 */
 const MenuNumSelect = ({

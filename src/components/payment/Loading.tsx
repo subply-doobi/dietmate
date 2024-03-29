@@ -1,6 +1,6 @@
 import {View, Image, Text, StyleSheet} from 'react-native';
 
-const logo = require('../../assets/appIcon/appIcon.png');
+const logo = require('../../shared/assets/appIcon/appIcon.png');
 
 function Loading() {
   return (

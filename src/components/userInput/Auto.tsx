@@ -2,17 +2,17 @@
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 //doobi util, redux, etc
-import {RootState} from '../../stores/store';
-import colors from '../../styles/colors';
-import {Col} from '../../styles/styledConsts';
+import {RootState} from '../../app/store/reduxStore';
+import colors from '../../shared/colors';
+import {Col} from '../../shared/ui/styledConsts';
 import {
   KOREAN_NUTRITION_REFERENCE_URL,
   purposeCdToValue,
-} from '../../constants/constants';
-import {calculateNutrTarget} from '../../util/targetCalculation';
-import {useListCode} from '../../query/queries/code';
-import {getRecommendedNutr} from '../../util/userInput/targetByReduxData';
-import {link} from '../../util/common/linking';
+} from '../../shared/constants';
+import {calculateNutrTarget} from '../../shared/utils/targetCalculation';
+import {useListCode} from '../../shared/api/queries/code';
+import {getRecommendedNutr} from '../../screens/userInput/util/targetByReduxData';
+import {link} from '../../shared/utils/linking';
 
 const Auto = () => {
   // redux

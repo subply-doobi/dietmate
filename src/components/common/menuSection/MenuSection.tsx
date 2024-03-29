@@ -8,14 +8,14 @@ import {
 import styled from 'styled-components/native';
 import Accordion from 'react-native-collapsible/Accordion';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../../stores/store';
+import {RootState} from '../../../app/store/reduxStore';
 import {useNavigation} from '@react-navigation/native';
 
 // doobi util, constant etc
-import {icons} from '../../../assets/icons/iconSource';
-import {findDietSeq} from '../../../util/findDietSeq';
-import colors from '../../../styles/colors';
-import {SCREENHEIGHT, SCREENWIDTH} from '../../../constants/constants';
+import {icons} from '../../../shared/iconSource';
+import {findDietSeq} from '../../../shared/utils/findDietSeq';
+import colors from '../../../shared/colors';
+import {SCREENHEIGHT, SCREENWIDTH} from '../../../shared/constants';
 import {
   BtnBottomCTA,
   BtnCTA,
@@ -23,7 +23,7 @@ import {
   HorizontalSpace,
   Row,
   TextMain,
-} from '../../../styles/styledConsts';
+} from '../../../shared/ui/styledConsts';
 
 // doobi Components
 import DAlert from '../alert/DAlert';
@@ -39,10 +39,10 @@ import {
   useDeleteDiet,
   useListDiet,
   useListDietDetail,
-} from '../../../query/queries/diet';
+} from '../../../shared/api/queries/diet';
 import MenuNumSelect from '../../cart/MenuNumSelect';
-import {commaToNum, sumUpPrice} from '../../../util/sumUp';
-import {useGetBaseLine} from '../../../query/queries/baseLine';
+import {commaToNum, sumUpPrice} from '../../../shared/utils/sumUp';
+import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
 
 const MenuSection = () => {
   // redux

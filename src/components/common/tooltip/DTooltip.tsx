@@ -1,9 +1,9 @@
 import styled from 'styled-components/native';
 
-import colors from '../../../styles/colors';
-import {icons} from '../../../assets/icons/iconSource';
+import colors from '../../../shared/colors';
+import {icons} from '../../../shared/iconSource';
 import {Image} from 'react-native';
-import {Col} from '../../../styles/styledConsts';
+import {Col} from '../../../shared/ui/styledConsts';
 
 interface IDtooltip {
   tooltipShow: boolean;
@@ -51,20 +51,20 @@ const DTooltip = ({
     boxBottom !== undefined
       ? {bottom: boxBottom}
       : boxTop !== undefined
-      ? {top: boxTop}
-      : {bottom: 0};
+        ? {top: boxTop}
+        : {bottom: 0};
   const boxHorizontalStyle =
     boxLeft !== undefined
       ? {left: boxLeft}
       : boxRight !== undefined
-      ? {right: boxRight}
-      : {left: 0};
+        ? {right: boxRight}
+        : {left: 0};
   const triangleHorizontalStyle =
     triangleLeft !== undefined
       ? {left: triangleLeft - 6}
       : triangleRight !== undefined
-      ? {right: triangleRight - 6}
-      : {left: 10};
+        ? {right: triangleRight - 6}
+        : {left: 10};
   return tooltipShow ? (
     <Container
       style={{...boxVerticalStyle, ...boxHorizontalStyle, ...style}}

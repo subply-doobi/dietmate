@@ -2,14 +2,14 @@ import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components/native';
 
-import {RootState} from '../../../stores/store';
+import {RootState} from '../../../app/store/reduxStore';
 import {
   setCurrentDiet,
   setMenuActiveSection,
-} from '../../../stores/slices/commonSlice';
-import {Col, Row, StyledProps} from '../../../styles/styledConsts';
-import colors from '../../../styles/colors';
-import {getDietAddStatus} from '../../../util/getDietAddStatus';
+} from '../../../features/reduxSlices/commonSlice';
+import {Col, Row, StyledProps} from '../../../shared/ui/styledConsts';
+import colors from '../../../shared/colors';
+import {getDietAddStatus} from '../../../shared/utils/getDietAddStatus';
 import DAlert from '../alert/DAlert';
 import CreateLimitAlertContent from '../alert/CreateLimitAlertContent';
 import CommonAlertContent from '../alert/CommonAlertContent';
@@ -18,7 +18,7 @@ import {
   useCreateDiet,
   useGetDietDetailEmptyYn,
   useListDiet,
-} from '../../../query/queries/diet';
+} from '../../../shared/api/queries/diet';
 
 const MenuSelectCard = () => {
   // redux

@@ -2,9 +2,9 @@
 import {View} from 'react-native';
 import styled from 'styled-components/native';
 // doobi util, redux, etc
-import {icons} from '../../assets/icons/iconSource';
+import {icons} from '../../shared/iconSource';
 // doobi Component
-import {BtnCTA, Row, TextSub} from '../../styles/styledConsts';
+import {BtnCTA, Row, TextSub} from '../../shared/ui/styledConsts';
 
 const AutoMenuBtn = ({
   status,

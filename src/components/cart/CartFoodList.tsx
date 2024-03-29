@@ -4,27 +4,27 @@ import {useNavigation} from '@react-navigation/native';
 import styled from 'styled-components/native';
 
 // doobi util, redux, etc
-import {icons} from '../../assets/icons/iconSource';
-import colors from '../../styles/colors';
+import {icons} from '../../shared/iconSource';
+import colors from '../../shared/colors';
 import {
   Col,
   HorizontalLine,
   Row,
   TextMain,
   TextSub,
-} from '../../styles/styledConsts';
-import {commaToNum} from '../../util/sumUp';
+} from '../../shared/ui/styledConsts';
+import {commaToNum} from '../../shared/utils/sumUp';
 
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 
-import {BASE_URL} from '../../query/queries/urls';
+import {BASE_URL} from '../../shared/api/urls';
 import {
   useDeleteDietDetail,
   useListDiet,
   useListDietDetail,
-} from '../../query/queries/diet';
-import {SERVICE_PRICE_PER_PRODUCT} from '../../constants/constants';
+} from '../../shared/api/queries/diet';
+import {SERVICE_PRICE_PER_PRODUCT} from '../../shared/constants';
 
 interface ICartFoodList {
   selectedFoods: {[key: string]: string[]};
