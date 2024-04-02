@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyCN8TPlGu5P7V9I4dADQ-_BisuWIZzAjVA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>358588470833</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.subply.dietmate</string>
+	<key>PROJECT_ID</key>
+	<string>doob2-b3919</string>
+	<key>STORAGE_BUCKET</key>
+	<string>doob2-b3919.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:358588470833:ios:65129518ad5f932402e710</string>
+</dict>
+</plist>
