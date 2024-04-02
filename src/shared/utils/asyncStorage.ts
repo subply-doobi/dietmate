@@ -43,13 +43,11 @@ export const checkNotShowAgain = async (value: string) => {
     console.error(error);
   }
 };
-export const resetGuide = async () => {
-  try {
-    await AsyncStorage.removeItem('NOT_SHOW_AGAIN');
-  } catch (error) {
-    console.error(error);
-  }
-};
+
+// TBD |
+// 'NOT_SHOW_AGAIN'을 키 값으로 두고 value에 해당 값 하나씩 저장하는 것보다
+// value를 다시 object로 키(ex. homeTooltip, onboarding)와 valuer값에 boolean으로 저장하는 것이
+// 유지보수할 때 훨씬 편할 것.
 export const updateNotShowAgain = async (value: string) => {
   try {
     const notShowAgain = await AsyncStorage.getItem('NOT_SHOW_AGAIN');

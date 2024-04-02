@@ -1,26 +1,28 @@
+// RN
+import {Pressable, Image} from 'react-native';
+
+// 3rd
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 
-import colors from '../../shared/colors';
-
+// doobi comps
 import InputNav from './InputNav';
 import BottomTabNav from './BottomTabNav';
-import AddressEdit from '../../screens/addressEdit/AddressEdit';
 import OrderHistoryNav from './OrderHistoryNav';
-
-import Guide from '../../screens/guide/Guide';
 import Login from '../../screens/login/Login';
 import FoodDetail from '../../screens/foodDetail/FoodDetail';
 import Account from '../../screens/account/Account';
+import AddressEdit from '../../screens/addressEdit/AddressEdit';
 import OrderComplete from '../../screens/orderComplete/OrderComplete';
 import BackArrow from '../../components/common/navigation/BackArrow';
 import KakaoPay from '../../components/payment/KakaoPay';
 import CustomErrorBoundary from '../../components/common/error/CustomErrorBoundary';
-import {Pressable, Image} from 'react-native';
-import {icons} from '../../shared/iconSource';
 import Notice from '../../screens/notice/Notice';
 import Order from '../../screens/order/Order';
-import OrderGuide from '../../screens/orderScreen/OrderGuide';
+
+// doobi shared
+import {icons} from '../../shared/iconSource';
+import colors from '../../shared/colors';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,9 +44,6 @@ const RootStackNav = () => {
       }}>
       {/* 로그인 */}
       <Stack.Screen name="Login" component={Login} />
-
-      {/* 가이드 */}
-      <Stack.Screen name="Guide" component={Guide} />
 
       {/* 정보입력 */}
       <Stack.Screen name="InputNav" component={InputNav} />
@@ -76,19 +75,6 @@ const RootStackNav = () => {
         options={{
           headerShown: true,
           headerTitle: '주문 / 결제',
-          headerRight: () => {
-            return (
-              <Pressable
-                onPress={() => {
-                  navigate('OrderGuide');
-                }}>
-                <Image
-                  source={icons.question_24}
-                  style={{width: 24, height: 24}}
-                />
-              </Pressable>
-            );
-          },
         }}
       />
 
