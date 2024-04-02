@@ -81,11 +81,6 @@ const Mypage = () => {
   // btns
   const myPageBtns = [
     {
-      title: '이용가이드',
-      btnId: 'Guide',
-      onPress: () => navigate('Guide', {from: 'Mypage'}),
-    },
-    {
       title: '몸무게변경',
       btnId: 'ChangeWeight',
       onPress: () => {

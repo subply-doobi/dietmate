@@ -22,6 +22,11 @@ import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import {BtnCTA, BtnText, TextMain} from '../../shared/ui/styledConsts';
 import {IS_IOS} from '../../shared/constants';
 
+const login: {[key: string]: Function} = {
+  kakao: kakaoLogin,
+  guest: guestLogin,
+};
+
 const Login = () => {
   // navigation
   const navigation = useNavigation();
@@ -30,18 +35,10 @@ const Login = () => {
   const {data: guestYnData} = useGetGuestYn();
   const {refetch} = useGetBaseLine({enabled: false});
 
-  // kakaoLogin
-  const signInWithKakao = async (): Promise<void> => {
-    const KLdata = await kakaoLogin();
-    if (KLdata === undefined) return;
-    const baseLineData = await refetch().then(res => res.data);
-    baseLineData && navigateByUserInfo(baseLineData, navigation);
-  };
-
-  // guest login (플레이스토어, 앱스토어, 카드사 심사용: 서버 값으로 사용유무 결정)
-  const signInWithGuest = async (): Promise<void> => {
-    const GLdata = await guestLogin();
-    if (GLdata === undefined) return;
+  // kakaoLogin || guest login (플레이스토어, 앱스토어, 카드사 심사용: 서버 값으로 사용유무 결정)
+  const signIn = async (option: string): Promise<void> => {
+    let loginData = await login[option]();
+    if (loginData === undefined) return;
     const baseLineData = await refetch().then(res => res.data);
     baseLineData && navigateByUserInfo(baseLineData, navigation);
   };
@@ -64,13 +61,13 @@ const Login = () => {
           source={require('../../shared/assets/appIcon/appIcon_black.png')}
         />
         <TitleText>다이어트메이트</TitleText>
-        <BtnKakaoLogin btnStyle="kakao" onPress={signInWithKakao}>
+        <BtnKakaoLogin btnStyle="kakao" onPress={() => signIn('kakao')}>
           <BtnTextKakao>카카오 로그인</BtnTextKakao>
         </BtnKakaoLogin>
 
         {/* 앱심사용 게스트로그인 사용유무 */}
         {guestYnData && guestYnData.enableYn === 'Y' && (
-          <BtnGuestLogin onPress={signInWithGuest}>
+          <BtnGuestLogin onPress={() => signIn('guest')}>
             <BtnTextGuest>GUEST LOGIN</BtnTextGuest>
           </BtnGuestLogin>
         )}
