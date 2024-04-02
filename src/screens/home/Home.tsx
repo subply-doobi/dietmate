@@ -20,8 +20,8 @@ import {SCREENWIDTH} from '../../shared/constants';
 import colors from '../../shared/colors';
 import {icons} from '../../shared/iconSource';
 import {
-  checkNotShowAgain,
-  updateNotShowAgain,
+  getNotShowAgainList,
+  updateNotShowAgainList,
 } from '../../shared/utils/asyncStorage';
 
 // doobi Component
@@ -155,8 +155,10 @@ const Home = () => {
   useEffect(() => {
     //tooltip 관련
     const initializeTooltip = async () => {
-      const notShowAgain = await checkNotShowAgain('HOME_TOOLTIP');
-      setTooltipShow(!notShowAgain);
+      const isTooltipShow = await getNotShowAgainList().then(
+        v => !v.homeTooltip,
+      );
+      setTooltipShow(isTooltipShow);
     };
     initializeTooltip();
   }, []);
@@ -236,7 +238,7 @@ const Home = () => {
           triangleRight={SCREENWIDTH / 8 - 8}
           onPressFn={() => {
             setTooltipShow(false);
-            updateNotShowAgain('HOME_TOOLTIP');
+            updateNotShowAgainList({key: 'homeTooltip', value: true});
             navigate('BottomTabNav', {screen: 'Cart'});
           }}
         />

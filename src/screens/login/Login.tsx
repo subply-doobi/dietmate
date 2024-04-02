@@ -13,10 +13,13 @@ import AppleLogin from './ui/AppleLogin';
 
 // doobi util, redux, etc
 import {navigateByUserInfo} from './util/navigateByUserInfo';
-
-// react-query
 import {useGetGuestYn} from '../../shared/api/queries/guest';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
+import {
+  getNotShowAgainList,
+  initializeNotShowAgainList,
+  updateNotShowAgainList,
+} from '../../shared/utils/asyncStorage';
 
 // doobi Component
 import {BtnCTA, BtnText, TextMain} from '../../shared/ui/styledConsts';

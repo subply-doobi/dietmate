@@ -3,7 +3,10 @@ import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {TextMain, Col} from '../../shared/ui/styledConsts';
-import {removeToken, resetGuide} from '../../shared/utils/asyncStorage';
+import {
+  initializeNotShowAgainList,
+  removeToken,
+} from '../../shared/utils/asyncStorage';
 import {useDeleteUser} from '../../shared/api/queries/member';
 
 import colors from '../../shared/colors';
@@ -54,7 +57,7 @@ const Account = () => {
       setIsAlert(false);
       deleteUser.mutate();
       queryClient.clear();
-      await resetGuide();
+      await initializeNotShowAgainList();
       dispatch(initializeInput());
       await removeToken();
     } catch (e) {
