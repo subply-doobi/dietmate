@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, SafeAreaView, StyleSheet} from 'react-native';
 
-import {HorizontalSpace} from '../../../shared/ui/styledConsts';
+import {HorizontalSpace} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 
 const ReviewPart = () => {

@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Container} from '../../shared/ui/styledConsts';
+import {Container} from '../../shared/ui/styledComps';
 import {link} from '../../shared/utils/linking';
 import {
   INQUIRY_URL,

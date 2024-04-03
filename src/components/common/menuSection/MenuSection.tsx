@@ -17,13 +17,12 @@ import {findDietSeq} from '../../../shared/utils/findDietSeq';
 import colors from '../../../shared/colors';
 import {SCREENHEIGHT, SCREENWIDTH} from '../../../shared/constants';
 import {
-  BtnBottomCTA,
   BtnCTA,
   BtnText,
   HorizontalSpace,
   Row,
   TextMain,
-} from '../../../shared/ui/styledConsts';
+} from '../../../shared/ui/styledComps';
 
 // doobi Components
 import DAlert from '../alert/DAlert';

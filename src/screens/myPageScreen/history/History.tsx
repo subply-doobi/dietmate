@@ -7,7 +7,7 @@ import {RootState} from '../../../app/store/reduxStore';
 import colors from '../../../shared/colors';
 import {SCREENWIDTH} from '../../../shared/constants';
 import {changeNutrByWeight} from '../../../shared/utils/alertActions';
-import {BtnBottomCTA, BtnText} from '../../../shared/ui/styledConsts';
+import {BtnBottomCTA, BtnText} from '../../../shared/ui/styledComps';
 
 import DAlert from '../../../components/common/alert/DAlert';
 import WeightChangeAlert from '../../mypage/ui/WeightChangeAlert';

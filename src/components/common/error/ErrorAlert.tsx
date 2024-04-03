@@ -9,7 +9,7 @@ import {
 import DAlert from '../alert/DAlert';
 import {queryClient} from '../../../app/store/reactQueryStore';
 import styled from 'styled-components/native';
-import {Col, TextMain} from '../../../shared/ui/styledConsts';
+import {Col, TextMain} from '../../../shared/ui/styledComps';
 
 const RequestAlertContent = () => {
   const {errorCode} = useSelector((state: RootState) => state.commonAlert);

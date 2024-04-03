@@ -20,13 +20,7 @@ import {commaToNum, sumUpNutrients} from '../../../shared/utils/sumUp';
 import {BASE_URL} from '../../../shared/api/urls';
 
 // doobi Component
-import {
-  Col,
-  Row,
-  StyledProps,
-  TextMain,
-  TextSub,
-} from '../../../shared/ui/styledConsts';
+import {Col, Row, TextMain, TextSub} from '../../../shared/ui/styledComps';
 import DeleteAlertContent from '../../../components/common/alert/DeleteAlertContent';
 import DAlert from '../../../components/common/alert/DAlert';
 
@@ -301,10 +295,9 @@ const NutrText = styled(TextSub)`
   font-size: 11px;
 `;
 
-const NutrValue = styled(TextMain)`
+const NutrValue = styled(TextMain)<{willExceed: boolean}>`
   font-size: 11px;
-  color: ${({willExceed}: StyledProps) =>
-    willExceed ? colors.warning : colors.textMain};
+  color: ${({willExceed}) => (willExceed ? colors.warning : colors.textMain)};
 `;
 const Price = styled(TextMain)`
   font-size: 16px;

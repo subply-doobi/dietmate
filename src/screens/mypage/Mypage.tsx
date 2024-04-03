@@ -14,7 +14,7 @@ import {
   TextMain,
   TextSub,
   VerticalLine,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 
 import DAlert from '../../components/common/alert/DAlert';
 import NutrTarget from '../../components/common/nutrient/NutrientTarget';
@@ -216,10 +216,7 @@ const Mypage = () => {
           </ProfileTextContainer>
           <UserInfoBtnContainer
             onPress={() => {
-              navigate('InputNav', {
-                screen: 'FirstInput',
-                params: {from: 'Mypage'},
-              });
+              navigate('UserInput', {from: 'Mypage'});
             }}>
             <UserInfoBtnText>정보변경</UserInfoBtnText>
             <RightArrow source={icons.arrowRight_20} />

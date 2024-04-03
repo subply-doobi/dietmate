@@ -2,19 +2,8 @@ import styled from 'styled-components/native';
 
 import colors from '../colors';
 import {SCREENWIDTH} from '../constants';
+import {ViewProps} from 'react-native';
 
-export interface StyledProps {
-  isActivated?: boolean;
-  isValid?: boolean;
-  btnStyle?: string;
-  width?: number;
-  height?: number;
-  backgroundColor?: string;
-  lineColor?: string;
-  thumbIdx?: number;
-  filterHeight?: number;
-  willExceed?: boolean;
-}
 export const NotoSansLight = styled.Text`
   font-family: 'NotoSansKRLight';
   color: ${colors.textMain};
@@ -85,32 +74,48 @@ export const TextSub = styled.Text`
   font-weight: 300;
 `;
 
-export const Container = styled.View`
+const SafeView = styled.SafeAreaView`
   flex: 1;
-  padding: 0px 16px 0px 16px;
   background-color: ${colors.white};
 `;
+const PaddingView = styled.View`
+  flex: 1;
+  padding: 0px 16px 0px 16px;
+`;
+export const Container = ({children, ...props}: ViewProps) => {
+  return (
+    <SafeView>
+      <PaddingView {...props}>{children}</PaddingView>
+    </SafeView>
+  );
+};
 
 export const AlertContentContainer = styled.View`
   padding: 28px 16px 28px 16px;
 `;
 
-export const InputHeaderText = styled.Text`
+interface IInputHeaderText {
+  isActivated?: boolean;
+}
+export const InputHeaderText = styled.Text<IInputHeaderText>`
   font-size: 14px;
-  color: ${({isActivated}: StyledProps) =>
-    isActivated ? colors.main : colors.white};
+  color: ${({isActivated}) => (isActivated ? colors.main : colors.white)};
 `;
-export const UserInfoTextInput = styled.TextInput`
+
+interface IUserInfoTextInput {
+  isValid?: boolean;
+  isActivated?: boolean;
+}
+export const UserInfoTextInput = styled.TextInput<IUserInfoTextInput>`
   justify-content: center;
   align-items: flex-start;
   font-size: 16px;
-  color: ${({isValid}: StyledProps) =>
-    isValid ? colors.textMain : colors.warning};
+  color: ${({isValid}) => (isValid ? colors.textMain : colors.warning)};
 
   line-height: 24px;
 
   border-bottom-width: 1px;
-  border-color: ${({isActivated}: StyledProps) =>
+  border-color: ${({isActivated}) =>
     isActivated ? colors.main : colors.inactivated};
   margin-top: -4px;
   padding-bottom: 6px;
@@ -170,26 +175,39 @@ export const Seperator = styled.View`
  *  props 2. height -> height: ${p => p.height ?? 52}px
  *  props 3. width -> width: ${p => p.width ?? `${SCREENWIDTH - 32}`}px;
  */
-export const BtnCTA = styled.TouchableOpacity`
-  height: ${({height}: StyledProps) => (height ? `${height}px` : '52px')};
-  width: ${({width}: StyledProps) => (width ? `${width}px` : '100%')};
+interface IBtnCTA {
+  height?: number;
+  width?: number;
+  btnStyle?:
+    | 'activated'
+    | 'inactivated'
+    | 'border'
+    | 'kakao'
+    | 'borderActivated';
+  btnColor?: string;
+}
+export const BtnCTA = styled.TouchableOpacity<IBtnCTA>`
+  height: ${({height}) => (height ? `${height}px` : '52px')};
+  width: ${({width}) => (width ? `${width}px` : '100%')};
   border-radius: 4px;
-  background-color: ${({btnStyle}: StyledProps) =>
-    btnStyle === 'activated'
-      ? `${colors.main}`
-      : btnStyle === 'inactivated'
-        ? `${colors.inactivated}`
-        : btnStyle === 'border'
-          ? `${colors.white}`
-          : btnStyle === 'kakao'
-            ? `${colors.kakaoColor}`
-            : `${colors.white}`};
+  background-color: ${({btnStyle, btnColor}) =>
+    btnColor
+      ? btnColor
+      : btnStyle === 'activated'
+        ? `${colors.main}`
+        : btnStyle === 'inactivated'
+          ? `${colors.inactivated}`
+          : btnStyle === 'border'
+            ? `${colors.white}`
+            : btnStyle === 'kakao'
+              ? `${colors.kakaoColor}`
+              : `${colors.white}`};
   align-items: center;
   align-self: center;
   justify-content: center;
-  border-width: ${({btnStyle}: StyledProps) =>
+  border-width: ${({btnStyle}) =>
     btnStyle === 'border' || btnStyle === 'borderActivated' ? '1px' : '0px'};
-  border-color: ${({btnStyle}: StyledProps) =>
+  border-color: ${({btnStyle}) =>
     btnStyle === 'border'
       ? colors.inactivated
       : btnStyle === 'borderActivated'
@@ -215,14 +233,16 @@ export const StickyFooter = styled.View`
   padding: 0px 8px 0px 8px;
 `;
 
-/** props1. isActivated -> boolean */
-export const BtnSmall = styled.TouchableOpacity`
+interface IBtnSmall {
+  isActivated?: boolean;
+}
+export const BtnSmall = styled.TouchableOpacity<IBtnSmall>`
   height: 32px;
   width: 74px;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  background-color: ${({isActivated}: StyledProps) =>
+  background-color: ${({isActivated}) =>
     isActivated ? colors.inactivated : colors.white};
   border-width: 1px;
   border-color: ${colors.inactivated};
@@ -233,42 +253,66 @@ export const BtnText = styled.Text`
   font-size: 16px;
 `;
 
-/** props1. isActivated -> boolean */
-export const BtnSmallText = styled.Text`
+interface IBtnSmallText {
+  isActivated?: boolean;
+}
+export const BtnSmallText = styled.Text<IBtnSmallText>`
   font-size: 14px;
-  color: ${({isActivated}: StyledProps) =>
-    isActivated ? colors.textMain : colors.textSub};
+  color: ${({isActivated}) => (isActivated ? colors.textMain : colors.textSub)};
 `;
 
-export const VerticalLine = styled.View`
-  height: ${({height}: StyledProps) => (height ? `${height}px` : '100%')};
-  width: ${({width}: StyledProps) => (width ? `${width}px` : `1px`)};
+interface IVerticalLine {
+  height?: number;
+  width?: number;
+}
+export const VerticalLine = styled.View<IVerticalLine>`
+  height: ${({height}) => (height ? `${height}px` : '100%')};
+  width: ${({width}) => (width ? `${width}px` : `1px`)};
   background-color: ${colors.inactivated};
 `;
-export const HorizontalLine = styled.View`
+
+interface IHorizontalLine {
+  width?: number;
+  lineColor?: string;
+}
+export const HorizontalLine = styled.View<IHorizontalLine>`
   height: 1px;
-  width: ${({width}: StyledProps) => (width ? `${width}px` : '100%')};
+  width: ${({width}) => (width ? `${width}px` : '100%')};
   background-color: ${({lineColor}) =>
     lineColor ? lineColor : colors.lineLight};
 `;
 
-/** props1. height  */
-export const HorizontalSpace = styled.View`
+interface IHorizontalSpace {
+  height?: number;
+}
+export const HorizontalSpace = styled.View<IHorizontalSpace>`
   width: 100%;
-  height: ${({height}: StyledProps) => `${height}px`};
-  /* background-color: ${colors.white}; */
+  height: ${({height}) => `${height}px`};
 `;
 
-/** props1. width */
-export const VerticalSpace = styled.View`
+interface IVerticalSpace {
+  width?: number;
+}
+export const VerticalSpace = styled.View<IVerticalSpace>`
   height: 100%;
-  width: ${({width}: StyledProps) => `${width}px`};
+  width: ${({width}) => `${width}px`};
   background-color: ${colors.white};
 `;
 
-export const Dot = styled.View`
+interface IDot {
+  backgroundColor?: string;
+}
+export const Dot = styled.View<IDot>`
   width: 10px;
   height: 10px;
   border-radius: 10px;
-  background-color: ${({backgroundColor}: StyledProps) => `${backgroundColor}`};
+  background-color: ${({backgroundColor}) => `${backgroundColor}`};
+`;
+
+interface IIcon {
+  size?: number;
+}
+export const Icon = styled.Image<IIcon>`
+  width: ${({size}) => (size ? `${size}px` : '24px')};
+  height: ${({size}) => (size ? `${size}px` : '24px')};
 `;

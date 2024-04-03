@@ -5,7 +5,7 @@ import {
   HorizontalLine,
   TextMain,
   TextSub,
-} from '../../../shared/ui/styledConsts';
+} from '../../../shared/ui/styledComps';
 import styled from 'styled-components/native';
 import colors from '../../../shared/colors';
 import {ICategoryCnt} from '../../../shared/api/types/category';

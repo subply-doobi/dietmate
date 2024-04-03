@@ -1,8 +1,4 @@
 import {Dimensions, Platform} from 'react-native';
-import {
-  UserInputState,
-  initialState,
-} from '../features/reduxSlices/userInputSlice';
 
 // RN constants
 export const {width, height} = Dimensions.get('screen');
@@ -43,7 +39,7 @@ export const SPORTS_SEQ_CD = [
   {cdNm: '4회', cd: 'SP008005'},
   {cdNm: '5회', cd: 'SP008006'},
   {cdNm: '6회', cd: 'SP008007'},
-  {cdNm: '으악그만', cd: 'SP008008'},
+  {cdNm: '7회', cd: 'SP008008'},
 ];
 
 //회당 운동 시간(분)

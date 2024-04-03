@@ -21,7 +21,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 import colors from '../../shared/colors';
 import {KAKAOPAY_CID, SCREENWIDTH} from '../../shared/constants';
 import {commaToNum} from '../../shared/utils/sumUp';

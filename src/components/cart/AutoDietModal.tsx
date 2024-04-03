@@ -5,7 +5,6 @@ import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 // doobi util, redux, etc
 import {RootState} from '../../app/store/reduxStore';
-import {icons} from '../../shared/iconSource';
 import colors from '../../shared/colors';
 import {useAsync} from '../../screens/cart/util/cartCustomHooks';
 import {setCurrentDiet} from '../../features/reduxSlices/commonSlice';
@@ -13,24 +12,20 @@ import {setCurrentDiet} from '../../features/reduxSlices/commonSlice';
 import {
   BtnCTA,
   BtnText,
-  HorizontalLine,
   HorizontalSpace,
   Row,
   TextMain,
   TextSub,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 import DSlider from '../common/slider/DSlider';
 // react-query
 import {useListCategory} from '../../shared/api/queries/category';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import {IDietDetailData} from '../../shared/api/types/diet';
 import {IProductData} from '../../shared/api/types/product';
-import {
-  useCreateDietDetail,
-  useListDietDetail,
-} from '../../shared/api/queries/diet';
+import {useCreateDietDetail} from '../../shared/api/queries/diet';
 import {makeAutoMenu2} from '../../screens/cart/util/autoMenu2';
-import Dropdown from '../userInput/Dropdown';
+import DDropdown from '../../shared/ui/DDropdown';
 
 interface IAutoDietModal {
   modalVisible: boolean;
@@ -84,21 +79,6 @@ const AutoDietModal = ({
     }, [] as number[]);
   }, [selectedCategory]);
 
-  // TBD | 서버 자동구성 api 안정적으로 작동될 때 params로 필요함
-  // const selectedCategoryStr = categoryData?.reduce(
-  //   (acc, cur, idx) =>
-  //     (acc += selectedCategory[idx]
-  //       ? idx === 0
-  //         ? `${cur.categoryCd}`
-  //         : `,${cur.categoryCd}`
-  //       : ``),
-  //   ``,
-  // );
-  // const priceRangeStr = String(sliderValue[0]) + `,` + String(sliderValue[1]);
-  // console.log('AutoDietModal : selctedCategoryStr', selectedCategoryStr);
-  // console.log('AutoDietModal : priceRangeStr', priceRangeStr);
-
-  // useAsync custom hook을 만들어서 autoMenu 실행되는 동안 인디케이터 띄우기
   const {
     data: autoMenu,
     isError,
@@ -238,7 +218,7 @@ const AutoDietModal = ({
 
         {/* 해당 판매자 식품을 하나 이상 포함 */}
         <OptionTitle>{'해당 식품사를 포함해서 자동구성'}</OptionTitle>
-        <Dropdown
+        <DDropdown
           placeholder="식품사"
           value={wantedPlatform}
           setValue={setWantedPlatform}

@@ -6,7 +6,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 
 // doobi comps
-import InputNav from './InputNav';
 import BottomTabNav from './BottomTabNav';
 import OrderHistoryNav from './OrderHistoryNav';
 import Login from '../../screens/login/Login';
@@ -23,6 +22,7 @@ import Order from '../../screens/order/Order';
 // doobi shared
 import {icons} from '../../shared/iconSource';
 import colors from '../../shared/colors';
+import UserInput from '../../screens/userInput/UserInput';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,7 +46,15 @@ const RootStackNav = () => {
       <Stack.Screen name="Login" component={Login} />
 
       {/* 정보입력 */}
-      <Stack.Screen name="InputNav" component={InputNav} />
+      <Stack.Screen
+        name="UserInput"
+        component={UserInput}
+        options={{
+          headerShown: true,
+          headerShadowVisible: false,
+          headerTitle: '',
+        }}
+      />
 
       {/* 홈 - 마이페이지 - 좋아요 - 장바구니 */}
       <Stack.Screen name="BottomTabNav" component={BottomTabNav} />

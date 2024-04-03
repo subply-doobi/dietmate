@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 
-import {TextMain} from '../../../shared/ui/styledConsts';
+import {TextMain} from '../../../shared/ui/styledComps';
 import {SCREENWIDTH} from '../../../shared/constants';
 
 interface INutrTarget {

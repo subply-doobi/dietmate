@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 
-import {TextMain} from '../ui/styledConsts';
+import {TextMain} from '../ui/styledComps';
 
 // login navigator
 /** 로그인 할 때마다 baseline 과 onBoarding 정보를 확인해서

@@ -1,7 +1,7 @@
 import {Text, StyleSheet, View} from 'react-native';
 
 import colors from '../../../shared/colors';
-import {Dot, TextMain} from '../../../shared/ui/styledConsts';
+import {Dot, TextMain} from '../../../shared/ui/styledComps';
 import {useGetUser} from '../../../shared/api/queries/member';
 import styled from 'styled-components/native';
 import {ITableItem} from '../util/makeNutrTable';

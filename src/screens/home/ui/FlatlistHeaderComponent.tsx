@@ -12,7 +12,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../../shared/ui/styledConsts';
+} from '../../../shared/ui/styledComps';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   applySortFilter,

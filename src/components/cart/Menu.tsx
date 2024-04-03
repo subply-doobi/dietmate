@@ -18,7 +18,7 @@ import {
   HorizontalLine,
   Row,
   TextMain,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import AutoDietModal from './AutoDietModal';

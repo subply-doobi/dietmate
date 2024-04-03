@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 
 import colors from '../../../shared/colors';
 import {DALERT_WIDTH, SCREENWIDTH} from '../../../shared/constants';
-import {Row, StyledProps, TextMain} from '../../../shared/ui/styledConsts';
+import {Row, TextMain} from '../../../shared/ui/styledComps';
 
 interface IDAlert {
   alertShow: boolean;
@@ -67,11 +67,15 @@ const ModalBackGround = styled.View`
   background-color: ${colors.backgroundModal};
 `;
 
-const PopUpContainer = styled.View`
-  width: ${({width}: StyledProps) =>
-    width ? `${width}px` : `${DALERT_WIDTH}px`};
-  height: ${({height}: StyledProps) => (height ? `${height}px` : 'auto')};
-  background-color: ${({backgroundColor}: StyledProps) =>
+interface IPopUpContainer {
+  width?: number;
+  height?: number;
+  backgroundColor?: string;
+}
+const PopUpContainer = styled.View<IPopUpContainer>`
+  width: ${({width}) => (width ? `${width}px` : `${DALERT_WIDTH}px`)};
+  height: ${({height}) => (height ? `${height}px` : 'auto')};
+  background-color: ${({backgroundColor}) =>
     backgroundColor ? backgroundColor : colors.white};
   border-radius: 10px;
 `;

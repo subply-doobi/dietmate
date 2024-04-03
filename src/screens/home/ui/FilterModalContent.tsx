@@ -7,7 +7,7 @@ import {
   Col,
   HorizontalSpace,
   TextMain,
-} from '../../../shared/ui/styledConsts';
+} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 import {icons} from '../../../shared/iconSource';
 import {FILTER_LIST, SCREENWIDTH} from '../../../shared/constants';

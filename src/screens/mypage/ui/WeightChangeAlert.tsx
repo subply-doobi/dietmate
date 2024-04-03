@@ -11,7 +11,7 @@ import {
   TextMain,
   TextSub,
   UserInfoTextInput,
-} from '../../../shared/ui/styledConsts';
+} from '../../../shared/ui/styledComps';
 import {useDispatch, useSelector} from 'react-redux';
 import {setValue} from '../../../features/reduxSlices/userInputSlice';
 import {RootState} from '../../../app/store/reduxStore';

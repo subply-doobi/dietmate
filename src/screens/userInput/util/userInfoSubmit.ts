@@ -1,11 +1,11 @@
 import {ICodeData} from '../../../shared/api/types/code';
-import {UserInputState} from '../../../features/reduxSlices/userInputSlice';
+import {IUserInputState} from '../../../features/reduxSlices/userInputSlice';
 import {calculateCaloriesToNutr} from '../../../shared/utils/targetCalculation';
-import {getRecommendedNutr} from './targetByReduxData';
+import {getRecommendedNutr} from './targetByUserInfo';
 
 // 자동계산
 export const setSubmitDataByAuto = (
-  userInputState: UserInputState,
+  userInputState: IUserInputState,
   seqCodeData: ICodeData | undefined,
   timeCodeData: ICodeData | undefined,
   strengthCodeData: ICodeData | undefined,
@@ -33,7 +33,7 @@ export const setSubmitDataByAuto = (
   };
 };
 // 영양비율, 칼로리 입력
-export const setSubmitDataByRatio = (userInputState: UserInputState) => {
+export const setSubmitDataByRatio = (userInputState: IUserInputState) => {
   console.log('ratioMethodSubmit!');
   const {carb, protein, fat} = calculateCaloriesToNutr(
     userInputState.ratio.value,
@@ -56,7 +56,7 @@ export const setSubmitDataByRatio = (userInputState: UserInputState) => {
 };
 
 // 탄단지 직접입력
-export const setSubmitDataByManual = (userInputState: UserInputState) => {
+export const setSubmitDataByManual = (userInputState: IUserInputState) => {
   const calorie =
     parseInt(userInputState.carb.value) * 4 +
     parseInt(userInputState.protein.value) * 4 +

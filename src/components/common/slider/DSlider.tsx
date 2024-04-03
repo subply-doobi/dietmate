@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import {Slider} from '@miblanchard/react-native-slider';
 
 import colors from '../../../shared/colors';
-import {StyledProps, TextMain} from '../../../shared/ui/styledConsts';
+import {TextMain} from '../../../shared/ui/styledComps';
 import {commaToNum} from '../../../shared/utils/sumUp';
 
 interface IDSlider {
@@ -70,12 +70,12 @@ const SliderContainer = styled.View`
   margin-top: 24px;
 `;
 
-const AboveThumbComponent = styled.View`
+const AboveThumbComponent = styled.View<{thumbIdx: number}>`
   width: 56px;
   height: 20px;
   position: absolute;
   left: -28px;
-  top: ${({thumbIdx}: StyledProps) =>
+  top: ${({thumbIdx}) =>
     thumbIdx === 0 ? (THUMB_SIZE / 2) * 3 + 6 : -(THUMB_SIZE / 2 + 6)}px;
   align-items: center;
   justify-content: center;
