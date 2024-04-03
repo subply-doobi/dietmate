@@ -16,7 +16,7 @@ import {
   HorizontalSpace,
   BtnSmall,
   BtnSmallText,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 import {BASE_URL} from '../../shared/api/urls';
 import MenuSection from '../../components/common/menuSection/MenuSection';
 import {icons} from '../../shared/iconSource';

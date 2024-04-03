@@ -17,9 +17,8 @@ import {
   ErrorText,
   InputHeaderText,
   Row,
-  StyledProps,
   TextMain,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 
 import Dropdown from '../../components/userInput/Dropdown';
 //react-query
@@ -227,7 +226,7 @@ const Title = styled(TextMain)`
   font-weight: bold;
 `;
 
-const BtnToggle = styled.TouchableOpacity`
+const BtnToggle = styled.TouchableOpacity<{isActivated: boolean}>`
   flex: 1;
   height: 48px;
   margin-top: 48px;
@@ -235,14 +234,13 @@ const BtnToggle = styled.TouchableOpacity`
   align-items: center;
   border-width: 1px;
   border-radius: 4px;
-  border-color: ${({isActivated}: StyledProps) =>
+  border-color: ${({isActivated}) =>
     isActivated ? colors.main : colors.inactivated};
 `;
 
-const ToggleText = styled.Text`
+const ToggleText = styled.Text<{isActivated: boolean}>`
   font-size: 16px;
-  color: ${({isActivated}: StyledProps) =>
-    isActivated ? colors.main : colors.inactivated};
+  color: ${({isActivated}) => (isActivated ? colors.main : colors.inactivated)};
 `;
 
 const InputHeader = styled(InputHeaderText)`

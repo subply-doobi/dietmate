@@ -4,14 +4,14 @@ import {useSelector} from 'react-redux';
 //doobi util, redux, etc
 import {RootState} from '../../app/store/reduxStore';
 import colors from '../../shared/colors';
-import {Col} from '../../shared/ui/styledConsts';
+import {Col} from '../../shared/ui/styledComps';
 import {
   KOREAN_NUTRITION_REFERENCE_URL,
   purposeCdToValue,
 } from '../../shared/constants';
 import {calculateNutrTarget} from '../../shared/utils/targetCalculation';
 import {useListCode} from '../../shared/api/queries/code';
-import {getRecommendedNutr} from '../../screens/userInput/util/targetByReduxData';
+import {getRecommendedNutr} from '../../screens/userInput/util/targetByUserInfo';
 import {link} from '../../shared/utils/linking';
 
 const Auto = () => {

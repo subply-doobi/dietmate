@@ -11,10 +11,10 @@ import {
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 
 import Dropdown from './Dropdown';
-import {getRecommendedNutr} from '../../screens/userInput/util/targetByReduxData';
+import {getRecommendedNutr} from '../../screens/userInput/util/targetByUserInfo';
 import {RootState} from '../../app/store/reduxStore';
 import {useDispatch, useSelector} from 'react-redux';
 import {useListCode} from '../../shared/api/queries/code';

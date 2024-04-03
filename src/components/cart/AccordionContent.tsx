@@ -12,7 +12,7 @@ import {IDietDetailData} from '../../shared/api/types/diet';
 import Menu from './Menu';
 import {SetStateAction} from 'react';
 import {commaToNum, sumUpPrice} from '../../shared/utils/sumUp';
-import {HorizontalSpace, Row, TextMain} from '../../shared/ui/styledConsts';
+import {HorizontalSpace, Row, TextMain} from '../../shared/ui/styledComps';
 import MenuNumSelect from './MenuNumSelect';
 
 interface IAccordionContent {

@@ -6,7 +6,7 @@ import appleAuth, {
   AppleButton,
 } from '@invertase/react-native-apple-authentication';
 import styled from 'styled-components/native';
-import {BtnCTA, BtnText} from '../../../shared/ui/styledConsts';
+import {BtnCTA, BtnText} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 import {
   kakaoLogin,

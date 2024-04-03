@@ -22,7 +22,7 @@ import {
 } from '../../shared/utils/asyncStorage';
 
 // doobi Component
-import {BtnCTA, BtnText, TextMain} from '../../shared/ui/styledConsts';
+import {BtnCTA, BtnText, TextMain} from '../../shared/ui/styledComps';
 import {IS_IOS} from '../../shared/constants';
 
 const login: {[key: string]: Function} = {

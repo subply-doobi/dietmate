@@ -7,7 +7,7 @@ import {
   setCurrentDiet,
   setMenuActiveSection,
 } from '../../../features/reduxSlices/commonSlice';
-import {Col, Row, StyledProps} from '../../../shared/ui/styledConsts';
+import {Col, Row} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 import {getDietAddStatus} from '../../../shared/utils/getDietAddStatus';
 import DAlert from '../alert/DAlert';
@@ -101,20 +101,19 @@ const MenuSelectCard = () => {
 
 export default MenuSelectCard;
 
-const CardText = styled.Text`
+const CardText = styled.Text<{isActivated: boolean}>`
   font-size: 14px;
-  color: ${({isActivated}: StyledProps) =>
-    isActivated ? colors.textMain : colors.textSub};
+  color: ${({isActivated}) => (isActivated ? colors.textMain : colors.textSub)};
 `;
-const CardBtn = styled.TouchableOpacity`
-  height: ${({isActivated}: StyledProps) => (isActivated ? '32px' : '28px')};
+const CardBtn = styled.TouchableOpacity<{isActivated: boolean}>`
+  height: ${({isActivated}) => (isActivated ? '32px' : '28px')};
   width: 74px;
   justify-content: center;
   align-items: center;
 
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
-  background-color: ${({isActivated}: StyledProps) =>
+  background-color: ${({isActivated}) =>
     isActivated ? colors.white : colors.inactivated};
   border-color: ${colors.white};
 `;

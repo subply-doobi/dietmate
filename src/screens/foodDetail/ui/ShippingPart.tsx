@@ -1,6 +1,6 @@
 import {SafeAreaView} from 'react-native';
 
-import {TextMain} from '../../../shared/ui/styledConsts';
+import {TextMain} from '../../../shared/ui/styledComps';
 import styled from 'styled-components/native';
 import colors from '../../../shared/colors';
 import {link} from '../../../shared/utils/linking';

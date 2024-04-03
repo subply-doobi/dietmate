@@ -19,12 +19,7 @@ import {getDietAddStatus} from '../../shared/utils/getDietAddStatus';
 import {RootState} from '../../app/store/reduxStore';
 
 // doobi Component
-import {
-  BtnBottomCTA,
-  BtnText,
-  Row,
-  TextSub,
-} from '../../shared/ui/styledConsts';
+import {BtnBottomCTA, BtnText, Row, TextSub} from '../../shared/ui/styledComps';
 import CartSummary from '../../components/cart/CartSummary';
 import DAlert from '../../components/common/alert/DAlert';
 import CreateLimitAlertContent from '../../components/common/alert/CreateLimitAlertContent';

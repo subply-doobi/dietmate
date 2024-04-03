@@ -13,7 +13,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 import FoodList from '../home/ui/FoodList';
 import MenuSection from '../../components/common/menuSection/MenuSection';
 

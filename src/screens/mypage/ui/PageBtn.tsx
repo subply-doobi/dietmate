@@ -4,7 +4,7 @@ import {
   HorizontalLine,
   Row,
   TextMain,
-} from '../../../shared/ui/styledConsts';
+} from '../../../shared/ui/styledComps';
 import {icons} from '../../../shared/iconSource';
 
 interface IPageBtn {

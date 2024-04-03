@@ -17,7 +17,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../../shared/ui/styledConsts';
+} from '../../../shared/ui/styledComps';
 import {ENTRANCE_TYPE} from '../../../shared/constants';
 import {useListAddress} from '../../../shared/api/queries/address';
 import {

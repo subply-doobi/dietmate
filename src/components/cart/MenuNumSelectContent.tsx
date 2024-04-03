@@ -12,7 +12,7 @@ import {
   Row,
   TextMain,
   TextSub,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 import MenuNumSelect from './MenuNumSelect';
 
 // util, constants

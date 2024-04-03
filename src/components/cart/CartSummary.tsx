@@ -22,7 +22,7 @@ import {
 } from '../../shared/utils/sumUp';
 
 //doobi Component
-import {HorizontalLine, TextMain, TextSub} from '../../shared/ui/styledConsts';
+import {HorizontalLine, TextMain, TextSub} from '../../shared/ui/styledComps';
 
 // react-query
 import {useListDietDetailAll} from '../../shared/api/queries/diet';

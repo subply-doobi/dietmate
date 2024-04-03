@@ -1,8 +1,6 @@
 import React from 'react';
 import {Modal} from 'react-native';
 import styled from 'styled-components/native';
-
-import {StyledProps} from '../../../shared/ui/styledConsts';
 import colors from '../../../shared/colors';
 
 interface IDBottomSheet {
@@ -48,13 +46,16 @@ const ModalBackGround = styled.TouchableOpacity`
   justify-content: flex-end;
 `;
 
-const PopUpContainer = styled.TouchableOpacity`
+interface IPopUpContainer {
+  filterHeight: number;
+  backgroundColor?: string;
+}
+const PopUpContainer = styled.TouchableOpacity<IPopUpContainer>`
   width: 100%;
-  height: ${({filterHeight}: StyledProps) =>
-    filterHeight ? `${filterHeight}px` : 'auto'};
+  height: ${({filterHeight}) => (filterHeight ? `${filterHeight}px` : 'auto')};
   padding: 0px 16px 16px 16px;
   align-items: center;
-  background-color: ${({backgroundColor}: StyledProps) =>
+  background-color: ${({backgroundColor}) =>
     backgroundColor ? backgroundColor : colors.white};
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;

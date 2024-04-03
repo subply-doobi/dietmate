@@ -14,9 +14,8 @@ import {
   TextMain,
   UserInfoTextInput,
   Col,
-  StyledProps,
   HorizontalSpace,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 import {calculateNutrTarget} from '../../shared/utils/targetCalculation';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -219,22 +218,21 @@ const BtnContainer = styled.View`
   gap: 8px;
 `;
 
-const Btn = styled.TouchableOpacity`
+const Btn = styled.TouchableOpacity<{isActivated: boolean}>`
   width: 72px;
   height: 40px;
   align-items: center;
   justify-content: center;
   border-radius: 5px;
   border-width: 1px;
-  border-color: ${({isActivated}: StyledProps) =>
+  border-color: ${({isActivated}) =>
     isActivated ? colors.main : colors.inactivated};
   background-color: ${colors.white};
 `;
 
-const BtnText = styled(TextMain)`
+const BtnText = styled(TextMain)<{isActivated: boolean}>`
   font-size: 14px;
-  color: ${({isActivated}: StyledProps) =>
-    isActivated ? colors.textMain : colors.textSub};
+  color: ${({isActivated}) => (isActivated ? colors.textMain : colors.textSub)};
 `;
 const BtnCTAText = styled(TextMain)`
   font-size: 16px;
@@ -254,14 +252,14 @@ const StrengthBtnContainer = styled.View`
 const StrengthBtnText = styled(TextMain)`
   font-size: 14px;
 `;
-const StrengthBtn = styled.TouchableOpacity`
+const StrengthBtn = styled.TouchableOpacity<{isActivated: boolean}>`
   width: 100%;
   height: 40px;
   background-color: ${colors.white};
 
   border-radius: 5px;
   border-width: 1px;
-  border-color: ${({isActivated}: StyledProps) =>
+  border-color: ${({isActivated}) =>
     isActivated ? colors.main : colors.inactivated};
 
   align-items: center;

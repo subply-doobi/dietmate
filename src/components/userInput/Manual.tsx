@@ -8,10 +8,10 @@ import {
   ErrorText,
   InputHeaderText,
   UserInfoTextInput,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 import {calculateManualCalorie} from '../../shared/utils/targetCalculation';
 import colors from '../../shared/colors';
-import {getRecommendedNutr} from '../../screens/userInput/util/targetByReduxData';
+import {getRecommendedNutr} from '../../screens/userInput/util/targetByUserInfo';
 import {useListCode} from '../../shared/api/queries/code';
 import {setValue} from '../../features/reduxSlices/userInputSlice';
 import DTextInput from '../common/textInput/DTextInput';

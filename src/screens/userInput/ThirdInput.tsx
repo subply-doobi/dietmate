@@ -18,9 +18,8 @@ import {
   BtnText,
   Container,
   HorizontalSpace,
-  StyledProps,
   TextMain,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 
 import Auto from '../../components/userInput/Auto';
 import CalculateByRatio from '../../components/userInput/CalculateByRatio';
@@ -182,20 +181,19 @@ const TitleTextHighlight = styled.Text`
   color: ${colors.main};
 `;
 
-const AccordionHeader = styled.View`
+const AccordionHeader = styled.View<{isActivated: boolean}>`
   height: 52px;
   border-radius: 4px;
   align-items: center;
   justify-content: center;
   border-width: 1px;
-  border-color: ${({isActivated}: StyledProps) =>
+  border-color: ${({isActivated}) =>
     isActivated ? colors.main : colors.inactivated};
 `;
 
-const AccordionHeaderTitle = styled.Text`
+const AccordionHeaderTitle = styled.Text<{isActivated: boolean}>`
   font-size: 16px;
-  color: ${({isActivated}: StyledProps) =>
-    isActivated ? colors.main : colors.textSub};
+  color: ${({isActivated}) => (isActivated ? colors.main : colors.textSub)};
 `;
 
 const CheckIcon = styled.Image`

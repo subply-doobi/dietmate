@@ -7,8 +7,8 @@ export const navigateByUserInfo = async (
 ) => {
   const hasBaseLine = Object.keys(data).length === 0 ? false : true;
   if (!hasBaseLine) {
-    // canSkipOnboarding 있는데 baseline 없으면 FirstInput으로
-    navigation.navigate('InputNav', {screen: 'FirstInput'});
+    // baseline 없으면 UserInput으로
+    navigation.navigate('UserInput');
     return;
   }
   // baseline 있으면 홈으로
