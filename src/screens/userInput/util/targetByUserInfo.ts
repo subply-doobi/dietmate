@@ -4,7 +4,7 @@ import {
   SPORTS_TIME_CD,
 } from '../../../shared/constants';
 import {ICodeData} from '../../../shared/api/types/code';
-import {UserInputState} from '../../../features/reduxSlices/userInputSlice';
+import {IUserInputState} from '../../../features/reduxSlices/userInputSlice';
 import {
   calculateBMR,
   calculateNutrTarget,
@@ -14,7 +14,7 @@ export const getRecommendedNutr = (
   seqCode: ICodeData | undefined,
   timeCode: ICodeData | undefined,
   strengthCode: ICodeData | undefined,
-  userInputState: UserInputState,
+  userInputState: IUserInputState,
 ) => {
   const {
     gender,
@@ -26,6 +26,7 @@ export const getRecommendedNutr = (
     sportsTimeCd,
     sportsStrengthCd,
     bmrKnown,
+    amrKnown,
   } = userInputState;
 
   const seqCodeArr = seqCode ? seqCode : SPORTS_SEQ_CD;
@@ -57,6 +58,7 @@ export const getRecommendedNutr = (
     duration,
     dietPurposeCd.value,
     bmr,
+    amrKnown.value,
   );
 
   return nutrTarget;

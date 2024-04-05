@@ -38,18 +38,21 @@ export const calculateNutrTarget = (
   mets: number,
   duration: number,
   dietPurposecd: string,
-  BMR: string,
+  bmr: string,
+  amrKnown: string,
 ) => {
   // const wcal = 0.0175 * 6 * parseFloat(weight) * timeCdToMinutes[weightTimeCd];
   // const acal = 0.0175 * 7 * parseFloat(weight) * timeCdToMinutes[aerobicTimeCd];
   // 하루 평균 운동시간 (분)
   const avgDuration = (duration * frequency) / 7;
   // 하루 평균 활동 칼로리
-  const aCal = 0.0175 * mets * parseFloat(weight) * avgDuration;
-  const AMR = aCal + parseFloat(BMR) * 0.2;
-  const TMR = parseFloat(BMR) + AMR;
+  const aCal = amrKnown
+    ? parseFloat(amrKnown)
+    : 0.0175 * mets * parseFloat(weight) * avgDuration;
+  const amr = aCal + parseFloat(bmr) * 0.2;
+  const tmr = parseFloat(bmr) + amr;
   const calorieTarget =
-    (TMR + parseInt(purposeCdToValue[dietPurposecd].additionalCalorie)) / 3;
+    (tmr + parseInt(purposeCdToValue[dietPurposecd].additionalCalorie)) / 3;
   const carbTarget = (calorieTarget * 0.55) / 4;
   const proteinTarget = (calorieTarget * 0.2) / 4;
   const fatTarget = (calorieTarget * 0.25) / 9;
@@ -59,7 +62,7 @@ export const calculateNutrTarget = (
   const fatTargetPerMeal = fatTarget;
 
   return {
-    tmr: String(Math.round(TMR)),
+    tmr: String(Math.round(tmr)),
     calorie: String(Math.round(calorieTargetPerMeal)),
     carb: String(Math.round(carbTargetPerMeal)),
     protein: String(Math.round(proteinTargetPerMeal)),

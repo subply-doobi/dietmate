@@ -13,7 +13,7 @@ import {
   TextSub,
   VerticalLine,
   Container,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 import DAlert from '../../components/common/alert/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 

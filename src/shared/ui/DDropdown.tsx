@@ -3,13 +3,13 @@ import styled from 'styled-components/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import colors from '../../shared/colors';
-import {InputHeaderText} from '../../shared/ui/styledConsts';
+import {InputHeaderText} from '../../shared/ui/styledComps';
 
 interface CategoryObject {
   label: string;
   value: string;
 }
-interface IDropdown {
+interface IDDropdown {
   placeholder: string;
   value: string;
   setValue: React.Dispatch<SetStateAction<string>>;
@@ -17,7 +17,7 @@ interface IDropdown {
   scrollRef?: any;
 }
 
-const Dropdown = (props: IDropdown) => {
+const DDropdown = (props: IDDropdown) => {
   const [open, setOpen] = useState(false);
   const {placeholder, value, setValue, items, scrollRef} = props;
 
@@ -68,7 +68,7 @@ const Dropdown = (props: IDropdown) => {
   );
 };
 
-export default Dropdown;
+export default DDropdown;
 
 const DropdownHeader = styled(InputHeaderText)`
   margin-top: 24px;

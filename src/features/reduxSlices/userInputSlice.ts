@@ -12,7 +12,7 @@ import {IAddressCreate, IAddressData} from '../../shared/api/types/address';
 import {formatPhone} from '../../shared/utils/format';
 import {validateInput} from '../../shared/utils/validation';
 
-export interface UserInputState {
+export interface IUserInputState {
   // FirstInput
   gender: {
     value: string;
@@ -39,8 +39,6 @@ export interface UserInputState {
     isValid: boolean;
     errMsg: string;
   };
-
-  // SecondInput
   sportsSeqCd: {
     value: string;
     isValid: boolean;
@@ -61,8 +59,16 @@ export interface UserInputState {
     isValid: boolean;
     errMsg: string;
   };
-
-  // ThirdInput
+  amrKnown: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
+  targetOption: {
+    value: number[];
+    isValid: boolean;
+    errMsg: string;
+  };
   ratio: {
     value: string;
     isValid: boolean;
@@ -117,7 +123,6 @@ export interface UserInputState {
   };
 
   // Order input
-
   buyerName: {
     value: string;
     isValid: boolean;
@@ -162,7 +167,7 @@ export interface UserInputState {
 
 // 선택사항 input의 경우는 isValid를 true로 설정, errMsg는 빈 문자열로 설정
 // validation이 필요한 경우는 validateInput에 추가
-export const initialState: UserInputState = {
+export const initialState: IUserInputState = {
   // FirstInput
   gender: {
     value: 'M',
@@ -189,8 +194,6 @@ export const initialState: UserInputState = {
     isValid: false,
     errMsg: '',
   },
-
-  // SecondInput
   sportsSeqCd: {
     value: SPORTS_SEQ_CD[0].cd,
     isValid: true,
@@ -211,8 +214,16 @@ export const initialState: UserInputState = {
     isValid: true,
     errMsg: '',
   },
-
-  // ThirdInput
+  amrKnown: {
+    value: '',
+    isValid: true,
+    errMsg: '',
+  },
+  targetOption: {
+    value: [],
+    isValid: true,
+    errMsg: '',
+  },
   ratio: {
     value: NUTR_RATIO_CD[0].cd,
     isValid: true,
@@ -221,22 +232,22 @@ export const initialState: UserInputState = {
   calorie: {
     value: '',
     isValid: false,
-    errMsg: '한 끼 목표 칼로리를 입력해주세요',
+    errMsg: '',
   },
   carb: {
     value: '',
     isValid: false,
-    errMsg: '한 끼 목표 탄수화물을 입력해주세요',
+    errMsg: '',
   },
   protein: {
     value: '',
     isValid: false,
-    errMsg: '한 끼 목표 단백질을 입력해주세요',
+    errMsg: '',
   },
   fat: {
     value: '',
     isValid: false,
-    errMsg: '한 끼 목표 지방을 입력해주세요',
+    errMsg: '',
   },
 
   // Mypage change input
@@ -352,7 +363,7 @@ const userInputSlice = createSlice({
       state.weightChange.value = weight;
 
       // validation
-      const loadList: {name: keyof UserInputState; value: string}[] = [
+      const loadList: {name: keyof IUserInputState; value: string}[] = [
         {name: 'gender', value: gender},
         {name: 'age', value: age},
         {name: 'height', value: height},
@@ -361,10 +372,10 @@ const userInputSlice = createSlice({
         {name: 'sportsSeqCd', value: sportsSeqCd},
         {name: 'sportsTimeCd', value: sportsTimeCd},
         {name: 'sportsStrengthCd', value: sportsStrengthCd},
-        {name: 'calorie', value: ''},
-        {name: 'carb', value: ''},
-        {name: 'protein', value: ''},
-        {name: 'fat', value: ''},
+        // {name: 'calorie', value: ''},
+        // {name: 'carb', value: ''},
+        // {name: 'protein', value: ''},
+        // {name: 'fat', value: ''},
         {name: 'calorieChange', value: calChange},
         {name: 'carbChange', value: carbChange},
         {name: 'proteinChange', value: proteinChange},
@@ -402,11 +413,19 @@ const userInputSlice = createSlice({
     setValue: (
       state,
       action: PayloadAction<{
-        name: keyof UserInputState;
-        value: UserInputState[keyof UserInputState]['value'];
+        name: keyof IUserInputState;
+        value: IUserInputState[keyof IUserInputState]['value'];
       }>,
     ) => {
       const name = action.payload.name;
+      // targetOption 설정은 validation 필요없음
+      if (typeof action.payload.value !== 'string' && name === 'targetOption') {
+        state[name].value = action.payload.value;
+        state[name].isValid = true;
+        return;
+      }
+      if (typeof action.payload.value !== 'string') return;
+
       // 핸드폰 번호 input은 입력시 자동으로 하이픈 추가
       const value =
         name === 'buyerTel'

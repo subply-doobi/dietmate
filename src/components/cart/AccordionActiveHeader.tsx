@@ -8,7 +8,6 @@ import colors from '../../shared/colors';
 import {commaToNum, sumUpPrice} from '../../shared/utils/sumUp';
 
 // doobi Component
-import {Row, StyledProps} from '../../shared/ui/styledConsts';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 
@@ -68,7 +67,7 @@ const AccordionActiveHeader = ({
 
 export default AccordionActiveHeader;
 
-const Container = styled.View`
+const Container = styled.View<{backgroundColor: string}>`
   height: 48px;
   width: 100%;
   margin-top: 24px;
@@ -77,8 +76,7 @@ const Container = styled.View`
   justify-content: space-between;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  background-color: ${({backgroundColor}: StyledProps) =>
-    backgroundColor ?? colors.dark};
+  background-color: ${({backgroundColor}) => backgroundColor ?? colors.dark};
 `;
 
 const MenuSeq = styled.Text`

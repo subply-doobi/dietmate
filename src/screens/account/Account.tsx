@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {TextMain, Col} from '../../shared/ui/styledConsts';
+import {TextMain, Col} from '../../shared/ui/styledComps';
 import {
   initializeNotShowAgainList,
   removeToken,

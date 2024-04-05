@@ -11,7 +11,7 @@ import {
   TextMain,
   TextSub,
   UserInfoTextInput,
-} from '../../../shared/ui/styledConsts';
+} from '../../../shared/ui/styledComps';
 
 import DTooltip from '../../../components/common/tooltip/DTooltip';
 

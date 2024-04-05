@@ -9,7 +9,7 @@ import {
   Col,
   Row,
   HorizontalLine,
-} from '../../../shared/ui/styledConsts';
+} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 import {commaToNum} from '../../../shared/utils/sumUp';
 

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 
-import {Row, StyledProps, TextMain} from '../../../shared/ui/styledConsts';
+import {Row, TextMain} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 import {RootState} from '../../../app/store/reduxStore';
 import {useListDietDetail} from '../../../shared/api/queries/diet';
@@ -80,12 +80,12 @@ const Filter = ({setFilterModalShow, setSearchBarFocus}: IFilter) => {
 };
 export default Filter;
 
-const FilterBtn = styled.TouchableOpacity`
+const FilterBtn = styled.TouchableOpacity<{isActivated: boolean}>`
   height: 32px;
   padding: 6px 8px 6px 8px;
   border-radius: 16px;
   border-width: 1px;
-  border-color: ${({isActivated}: StyledProps) =>
+  border-color: ${({isActivated}) =>
     isActivated ? colors.dark : colors.inactivated};
   background-color: ${colors.white};
 `;
@@ -97,10 +97,9 @@ const RemainNutrFilterBtn = styled.TouchableOpacity`
   background-color: ${colors.dark};
 `;
 
-const FilterBtnText = styled(TextMain)`
+const FilterBtnText = styled(TextMain)<{isActivated: boolean}>`
   font-size: 14px;
-  color: ${({isActivated}: StyledProps) =>
-    isActivated ? colors.textMain : colors.textSub};
+  color: ${({isActivated}) => (isActivated ? colors.textMain : colors.textSub)};
 `;
 
 const InitializeBtn = styled.TouchableOpacity`

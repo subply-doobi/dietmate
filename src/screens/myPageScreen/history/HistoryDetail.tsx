@@ -25,7 +25,7 @@ import {
   TextSub,
   VerticalLine,
   VerticalSpace,
-} from '../../../shared/ui/styledConsts';
+} from '../../../shared/ui/styledComps';
 
 import NutrTarget from '../../../components/common/nutrient/NutrientTarget';
 import DAlert from '../../../components/common/alert/DAlert';

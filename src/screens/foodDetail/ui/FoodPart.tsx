@@ -12,7 +12,7 @@ import {useEffect, useState} from 'react';
 import {SCREENWIDTH} from '../../../shared/constants';
 import {ActivityIndicator} from 'react-native';
 import colors from '../../../shared/colors';
-import {TextSub} from '../../../shared/ui/styledConsts';
+import {TextSub} from '../../../shared/ui/styledComps';
 import {icons} from '../../../shared/iconSource';
 
 interface IImageData {

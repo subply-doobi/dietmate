@@ -5,7 +5,7 @@ import * as Progress from 'react-native-progress';
 
 // util, const
 import colors from '../../../shared/colors';
-import {Col, Row, VerticalSpace} from '../../../shared/ui/styledConsts';
+import {Col, Row, VerticalSpace} from '../../../shared/ui/styledComps';
 import {
   checkNutrSatisfied,
   getExceedIdx,

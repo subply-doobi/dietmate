@@ -7,7 +7,7 @@ import {
   BtnCTA,
   Row,
   TextMain,
-} from '../../../shared/ui/styledConsts';
+} from '../../../shared/ui/styledComps';
 import {useDispatch} from 'react-redux';
 import {setValue} from '../../../features/reduxSlices/userInputSlice';
 

@@ -16,14 +16,7 @@ import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import DTooltip from '../common/tooltip/DTooltip';
 import AutoDietModal from './AutoDietModal';
-import {
-  Col,
-  Row,
-  TextMain,
-  TextSub,
-  VerticalLine,
-  StyledProps,
-} from '../../shared/ui/styledConsts';
+import {Col, Row, TextMain, TextSub} from '../../shared/ui/styledComps';
 
 // react-query
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
@@ -159,12 +152,12 @@ const Container = styled.View`
   background-color: ${colors.white};
 `;
 
-const LeftBar = styled.View`
+const LeftBar = styled.View<{backgroundColor: string}>`
   width: 4px;
   height: 84px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
-  background-color: ${({backgroundColor}: StyledProps) => backgroundColor};
+  background-color: ${({backgroundColor}) => backgroundColor};
 `;
 
 const MenuSeq = styled(TextMain)`

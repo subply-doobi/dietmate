@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import {UserInfoTextInput} from '../../../shared/ui/styledConsts';
+import {UserInfoTextInput} from '../../../shared/ui/styledComps';
 import React, {forwardRef} from 'react';
 import {TextInput} from 'react-native';
 import colors from '../../../shared/colors';

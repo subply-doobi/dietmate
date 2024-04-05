@@ -7,7 +7,6 @@ interface IValidateInput {
   };
 }
 export const validateInput: IValidateInput = {
-  // FirstInput
   gender: (v: string) => {
     if (!v)
       return {
@@ -67,8 +66,17 @@ export const validateInput: IValidateInput = {
       errMsg: '',
     };
   },
-
-  // SecondInput
+  dietPurposeCd: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '식단의 목적을 선택해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
   bmrKnown: (v: string) => {
     if (v === '')
       return {
@@ -85,7 +93,55 @@ export const validateInput: IValidateInput = {
       errMsg: '',
     };
   },
-
+  amrKnown: (v: string) => {
+    if (v === '')
+      return {
+        isValid: true,
+        errMsg: '',
+      };
+    if (Number(v) < 0 || Number(v) > 2000)
+      return {
+        isValid: false,
+        errMsg: '정확한 운동 칼로리를 입력해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
+  sportsSeqCd: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '운동 빈도를 선택해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
+  sportsTimeCd: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '운동 시간을 선택해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
+  sportsStrengthCd: (v: string) => {
+    if (!v)
+      return {
+        isValid: false,
+        errMsg: '운동 강도를 선택해주세요',
+      };
+    return {
+      isValid: true,
+      errMsg: '',
+    };
+  },
   // ThirdInput
   calorie: (v: string) => {
     if (!v)
@@ -125,7 +181,7 @@ export const validateInput: IValidateInput = {
         isValid: false,
         errMsg: '한 끼 목표 단백질을 입력해주세요',
       };
-    if (Number(v) < 10 || Number(v) > 375)
+    if (Number(v) < 10 || Number(v) > 200)
       return {
         isValid: false,
         errMsg: `한 끼에 ${v}g은 안돼요 ㅠㅠ`,

@@ -22,7 +22,7 @@ import {
   TextSub,
   StickyFooter,
   Dot,
-} from '../../shared/ui/styledConsts';
+} from '../../shared/ui/styledComps';
 import colors from '../../shared/colors';
 import {IProductData} from '../../shared/api/types/product';
 
