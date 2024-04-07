@@ -16,13 +16,7 @@ import {icons} from '../../../shared/iconSource';
 import {findDietSeq} from '../../../shared/utils/findDietSeq';
 import colors from '../../../shared/colors';
 import {SCREENHEIGHT, SCREENWIDTH} from '../../../shared/constants';
-import {
-  BtnCTA,
-  BtnText,
-  HorizontalSpace,
-  Row,
-  TextMain,
-} from '../../../shared/ui/styledComps';
+import {HorizontalSpace, Row, TextMain} from '../../../shared/ui/styledComps';
 
 // doobi Components
 import DAlert from '../alert/DAlert';
@@ -31,7 +25,7 @@ import DeleteAlertContent from '../alert/DeleteAlertContent';
 import NutrientsProgress from '../nutrient/NutrientsProgress';
 import DBottomSheet from '../bottomsheet/DBottomSheet';
 import MenuNumSelectContent from '../../cart/MenuNumSelectContent';
-import Menu from '../../cart/Menu';
+import Menu from '../../menuAccordion/Menu';
 
 // react-query
 import {
@@ -50,25 +44,25 @@ const MenuSection = () => {
   // react-query
   const {data: baseLineData} = useGetBaseLine();
   const {data: dietData} = useListDiet();
-  const deleteDietMutation = useDeleteDiet();
+  // const deleteDietMutation = useDeleteDiet();
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {
     enabled: currentDietNo ? true : false,
   });
 
   // state
-  const [dietNoToDelete, setDietNoToDelete] = useState<string>();
-  const [deleteAlertShow, setDeleteAlertShow] = useState(false);
+  // const [dietNoToDelete, setDietNoToDelete] = useState<string>();
+  // const [deleteAlertShow, setDeleteAlertShow] = useState(false);
   const [activeSection, setActiveSection] = useState<number[]>([]); // accordion
   const [menuNumSelectShow, setMenuNumSelectShow] = useState(false);
   const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
 
   // etc
   const isAccordionActive = activeSection.length > 0;
-  const onDeleteDiet = () => {
-    if (!dietData || dietData.length === 1) return;
-    dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
-    setDeleteAlertShow(false);
-  };
+  // const onDeleteDiet = () => {
+  //   if (!dietData || dietData.length === 1) return;
+  //   dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
+  //   setDeleteAlertShow(false);
+  // };
   const priceSum = sumUpPrice(dietDetailData);
   const currentQty =
     dietDetailData && dietDetailData.length > 0
@@ -207,7 +201,7 @@ const MenuSection = () => {
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <MenuSelectCard />
         </ScrollView>
-        {dietData && dietData.length > 1 && (
+        {/* {dietData && dietData.length > 1 && (
           <DeleteBtn
             onPress={() => {
               setDietNoToDelete(currentDietNo);
@@ -215,11 +209,11 @@ const MenuSection = () => {
             }}>
             <DeleteImg source={icons.deleteRound_18} />
           </DeleteBtn>
-        )}
+        )} */}
       </HeaderRow>
 
       {/* 끼니 삭제 알럿 */}
-      <DAlert
+      {/* <DAlert
         alertShow={deleteAlertShow}
         renderContent={() => (
           <DeleteAlertContent
@@ -230,7 +224,7 @@ const MenuSection = () => {
         )}
         onConfirm={() => onDeleteDiet()}
         onCancel={() => setDeleteAlertShow(false)}
-      />
+      /> */}
 
       <Accordion
         activeSections={activeSection}

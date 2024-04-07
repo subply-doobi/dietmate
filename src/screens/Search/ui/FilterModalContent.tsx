@@ -25,7 +25,7 @@ import CategoryFilter from './CategoryFilter';
 import NutritionFilter from './NutritionFilter';
 import {AnyAction, Dispatch} from '@reduxjs/toolkit';
 import PriceFilter from './PriceFilter';
-import {checkisFiltered} from '../util/filterUtils';
+import {checkisFiltered} from '../../home/util/filterUtils';
 
 const initializeSome = (
   dispatch: Dispatch<AnyAction>,

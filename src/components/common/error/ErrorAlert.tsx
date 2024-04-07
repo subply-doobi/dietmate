@@ -45,7 +45,6 @@ const ErrorAlert = () => {
           //       index: 0,
           //       routes: [{name: 'Login'}],
           //     });
-          console.log('sdfsdffs');
           dispatch(closeCommonAlert());
           reset({
             index: 0,

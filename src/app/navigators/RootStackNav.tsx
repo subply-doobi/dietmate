@@ -23,6 +23,10 @@ import Order from '../../screens/order/Order';
 import {icons} from '../../shared/iconSource';
 import colors from '../../shared/colors';
 import UserInput from '../../screens/userInput/UserInput';
+import Search from '../../screens/Search/Search';
+import AutoMenu from '../../screens/autoMenu/AutoMenu';
+import Change from '../../screens/change/Change';
+import Likes from '../../screens/like/Likes';
 
 const Stack = createNativeStackNavigator();
 
@@ -58,6 +62,35 @@ const RootStackNav = () => {
 
       {/* 홈 - 마이페이지 - 좋아요 - 장바구니 */}
       <Stack.Screen name="BottomTabNav" component={BottomTabNav} />
+
+      {/* 자동구성 가이드 */}
+      <Stack.Screen
+        name="AutoMenu"
+        component={AutoMenu}
+        options={{headerShown: true, headerTitle: ''}}
+      />
+
+      <Stack.Screen
+        name="ManualAdd"
+        component={Search}
+        options={{headerShown: true, headerTitle: '식품선택'}}
+      />
+
+      <Stack.Screen
+        name="Change"
+        component={Change}
+        options={{headerShown: true, headerTitle: '식품변경'}}
+      />
+
+      {/* 좋아요 식품 */}
+      <Stack.Screen
+        name="Likes"
+        component={Likes}
+        options={{
+          headerShown: true,
+          headerTitle: '찜한 상품',
+        }}
+      />
 
       {/* 식품상세 */}
       <Stack.Screen

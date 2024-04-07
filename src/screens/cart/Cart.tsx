@@ -19,7 +19,7 @@ import {getDietAddStatus} from '../../shared/utils/getDietAddStatus';
 import {RootState} from '../../app/store/reduxStore';
 
 // doobi Component
-import {BtnBottomCTA, BtnText, Row, TextSub} from '../../shared/ui/styledComps';
+import {HorizontalSpace, TextSub} from '../../shared/ui/styledComps';
 import CartSummary from '../../components/cart/CartSummary';
 import DAlert from '../../components/common/alert/DAlert';
 import CreateLimitAlertContent from '../../components/common/alert/CreateLimitAlertContent';
@@ -39,6 +39,9 @@ import {
 } from '../../shared/api/queries/diet';
 import {findDietSeq, findEmptyDietSeq} from '../../shared/utils/findDietSeq';
 import {setFoodToOrder} from '../../features/reduxSlices/orderSlice';
+import CtaButton from '../../shared/ui/CtaButton';
+import {getMenuAcContent} from '../../shared/utils/menuAccordion';
+import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 
 const Cart = () => {
   // redux
@@ -49,11 +52,11 @@ const Cart = () => {
   const {shippingPrice} = useSelector((state: RootState) => state.order);
 
   // react-query
+  const {data: baseLineData} = useGetBaseLine();
   const {data: dietData} = useListDiet();
   const {data: dietEmptyData} = useGetDietDetailEmptyYn();
   const dietTotalData =
     !!dietData && useListDietTotal(dietData, {enabled: !!dietData});
-  const createDietMutation = useCreateDiet();
 
   // state
   const [createAlertShow, setCreateAlertShow] = useState(false);
@@ -69,78 +72,47 @@ const Cart = () => {
 
   // dietTotalData가 바뀔때마다 변경되어야 하는 정보들
   const {
-    totalStatus,
-    dietTotal,
+    dTDataStatus,
+    dTData,
     menuNum,
     productNum,
     priceTotal,
-    ACCORDION_CONTENT,
+    accordionContent,
     emptyDietSeq,
   } = useMemo(() => {
-    const totalStatus =
+    const dTDataStatus =
       dietTotalData && dietTotalData.map(menu => menu.isLoading).includes(true)
-        ? 'isInitialLoading'
-        : 'isInitialLoaded';
+        ? 'isLoading'
+        : 'isSuccess';
+    const dTData =
+      dietTotalData && dTDataStatus === 'isSuccess'
+        ? dietTotalData?.map((d, idx) => (d.data ? d.data : []))
+        : undefined;
 
-    // reactQueries data
-    const dietTotal = dietTotalData
-      ? dietTotalData?.map((d, idx) => (d.data ? d.data : []))
-      : undefined;
     // 끼니수량, 상품수량, 총 가격, 배송비
-    const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotal);
+    const {menuNum, productNum, priceTotal} = sumUpDietTotal(dTData);
 
     // 비어있는 끼니 확인
-    const emptyDietSeq = findEmptyDietSeq(dietTotal);
+    const emptyDietSeq = findEmptyDietSeq(dTData);
 
     // accordion
-    const ACCORDION_CONTENT =
-      dietData && dietTotalData && totalStatus === 'isInitialLoaded'
-        ? dietData.map((menu, idx) => {
-            return {
-              inactiveHeader: (
-                <AccordionInactiveHeader
-                  idx={idx}
-                  dietNo={menu.dietNo}
-                  dietSeq={menu.dietSeq}
-                  dietDetailData={dietTotalData[idx].data ?? []}
-                  // setActiveSections={setActiveSections}
-                  setDietNoToNumControl={setDietNoToNumControl}
-                  setMenuNumSelectShow={setMenuNumSelectShow}
-                />
-              ),
-              content: (
-                <AccordionContent
-                  dietNo={menu.dietNo}
-                  dietDetailData={dietTotalData[idx].data ?? []}
-                  setDietNoToNumControl={setDietNoToNumControl}
-                  setMenuNumSelectShow={setMenuNumSelectShow}
-                />
-              ),
-              activeHeader: (
-                <AccordionActiveHeader
-                  idx={idx}
-                  dietNo={menu.dietNo}
-                  dietSeq={menu.dietSeq}
-                  dietDetailData={dietTotalData[idx].data ?? []}
-                />
-              ),
-            };
-          })
-        : [
-            {
-              inactiveHeader: <></>,
-              activeHeader: <></>,
-              content: <></>,
-            },
-          ];
+    const accordionContent = getMenuAcContent({
+      currentDietNo,
+      bLData: baseLineData,
+      dData: dietData,
+      dTData,
+      screen: 'Cart',
+      setMenuNumSelectShow,
+      setDietNoToNumControl,
+    });
 
     return {
-      totalStatus,
-      dietTotal,
+      dTDataStatus,
+      dTData,
       menuNum,
       productNum,
       priceTotal,
-      ACCORDION_CONTENT,
+      accordionContent,
       emptyDietSeq,
     };
   }, [dietTotalData]);
@@ -154,62 +126,40 @@ const Cart = () => {
     currentDietNo && dispatch(setCurrentDiet(currentDietNo));
   };
 
-  const onCreateDiet = () => {
-    if (addAlertStatus === 'possible') {
-      createDietMutation.mutate();
-      return;
-    }
-    setCreateAlertShow(true);
-  };
+  // const onCreateDiet = () => {
+  //   if (addAlertStatus === 'possible') {
+  //     createDietMutation.mutate();
+  //     return;
+  //   }
+  //   setCreateAlertShow(true);
+  // };
 
   // useEffect
   // 장바구니 이동했을 때 현재 끼니의 accordion을 열어줌
   // navigation addListener는 redux currentDietNo가 동기화가 안됨
   // => useIsFocused 사용
   useEffect(() => {
-    if (isFocused) {
-      const {idx} = findDietSeq(dietData, currentDietNo);
-      dispatch(setMenuActiveSection([idx]));
-    }
+    if (isFocused) dispatch(setMenuActiveSection([]));
   }, [isFocused]);
 
   return (
     <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
         <ContentContainer>
-          {totalStatus === 'isInitialLoading' ? (
+          {dTDataStatus === 'isLoading' || !dTData ? (
             <ActivityIndicator style={{marginTop: 16}} />
           ) : (
-            <>
-              {/* 장바구니 각 끼니들 accordion */}
-              <Accordion
-                activeSections={menuActiveSection}
-                sections={ACCORDION_CONTENT}
-                touchableComponent={TouchableOpacity}
-                renderHeader={(section, _, isActive) =>
-                  isActive ? section.activeHeader : section.inactiveHeader
-                }
-                renderContent={section => section.content}
-                onChange={updateSections}
-              />
-
-              {/* 끼니 추가 버튼 */}
-              <CreateDietBtn onPress={onCreateDiet}>
-                {createDietMutation.isLoading ? (
-                  <ActivityIndicator />
-                ) : (
-                  <Row
-                    style={{
-                      flex: 1,
-                      justifyContent: 'center',
-                      marginLeft: -16,
-                    }}>
-                    <PlusImage source={icons.plusSquare_24} />
-                    <CreateDietText>끼니 추가</CreateDietText>
-                  </Row>
-                )}
-              </CreateDietBtn>
-            </>
+            <Accordion
+              activeSections={menuActiveSection}
+              sections={accordionContent}
+              touchableComponent={TouchableOpacity}
+              renderHeader={(section, _, isActive) =>
+                isActive ? section.activeHeader : section.inactiveHeader
+              }
+              renderContent={section => section.content}
+              renderFooter={() => <HorizontalSpace height={24} />}
+              onChange={updateSections}
+            />
           )}
         </ContentContainer>
 
@@ -221,22 +171,27 @@ const Cart = () => {
       </ScrollView>
 
       {/* 주문 버튼 */}
-      <BtnBottomCTA
-        btnStyle={'activated'}
-        width={SCREENWIDTH - 16}
+      <CtaButton
+        btnStyle="active"
+        style={{
+          backgroundColor: colors.dark,
+          width: SCREENWIDTH - 32,
+          alignSelf: 'center',
+          position: 'absolute',
+          bottom: 8,
+        }}
+        btnText={`주문하기 (${commaToNum(priceTotal + shippingPrice)}원)`}
         onPress={() => {
           if (addAlertStatus === 'empty') {
-            // 비어있을 때 끼니 추가 안되는 것 방지하는 코드랑 중복
+            // 주문시 비어있는 끼니 있으면 일단 막기
             setCreateAlertShow(true);
             return;
           }
-          !!dietTotal && dispatch(setFoodToOrder(dietTotal));
+          !!dTData && dispatch(setFoodToOrder(dTData));
           navigate('Order');
-        }}>
-        <BtnText>주문하기 ({commaToNum(priceTotal + shippingPrice)}원)</BtnText>
-      </BtnBottomCTA>
+        }}
+      />
 
-      {/* CreateDiet 알럿 */}
       <DAlert
         alertShow={createAlertShow}
         renderContent={() =>
@@ -282,7 +237,7 @@ const Container = styled.SafeAreaView`
 `;
 const ContentContainer = styled.View`
   flex: 1;
-  padding: 0px 8px 16px 8px;
+  padding: 16px 8px 40px 8px;
   background-color: ${colors.backgroundLight2};
 `;
 

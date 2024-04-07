@@ -429,8 +429,9 @@ const selectMenu = (
     err: number[];
     errScore: number;
   }[],
+  menuNum: number,
 ) => {
-  let selectedMenu: IProductData[] = [];
+  let selectedMenu: IProductData[][] = [];
 
   // errRange 내 vs 외 메뉴 구분
   let menuInErrRange = [];
@@ -440,18 +441,28 @@ const selectMenu = (
       menuInErrRange.push(validMenuWithErrObj[i]);
     else menuExceedErrRange.push(validMenuWithErrObj[i]);
   }
+  // menuExceedErrRange sort by errScore
+  menuExceedErrRange.sort((a, b) => a.errScore - b.errScore);
+
   // console.log('--------------- ⬇️ menuInErrRange ⬇️ ---------------');
   // printValidMenuWithErr(menuInErrRange);
   // console.log('--------------- ⬇️ menuExceedErrRange ⬇️ ---------------');
   // printValidMenuWithErr(menuExceedErrRange);
   // console.log('------------------------------------------------------');
 
-  // 오차범위 내 메뉴 있으면 그 중 하나 랜덤 선택
-  if (menuInErrRange.length > 0) {
-    selectedMenu = getRandomMenu(menuInErrRange.map(m => m.menu));
-  } else {
-    // 오차범위 내 메뉴 없으면 오차점수 최소인 메뉴 선택
-    selectedMenu = getErrorMinMenu(menuExceedErrRange);
+  // menuInErrRange.length 가 menuNum 보다 크면 menuInErrRange 중 menuNum 만큼 랜덤 선택
+  if (menuInErrRange.length >= menuNum) {
+    selectedMenu = menuInErrRange.slice(0, menuNum).map(m => m.menu);
+    return selectedMenu;
+  }
+
+  const menuInErrRangeNum = menuInErrRange.length;
+  const numOfadditionalMenu = menuNum - menuInErrRangeNum;
+  if (menuInErrRangeNum < menuNum) {
+    selectedMenu = [
+      ...menuInErrRange.map(m => m.menu),
+      ...menuExceedErrRange.slice(0, numOfadditionalMenu).map(m => m.menu),
+    ];
   }
 
   return selectedMenu;
@@ -464,6 +475,7 @@ interface IAutoMenu {
   selectedCategoryIdx: number[];
   priceTarget: number[];
   wantedPlatform: string;
+  menuNum: number;
 }
 export const makeAutoMenu2 = ({
   totalFoodList,
@@ -472,9 +484,9 @@ export const makeAutoMenu2 = ({
   selectedCategoryIdx,
   priceTarget,
   wantedPlatform,
+  menuNum,
 }: IAutoMenu): Promise<{
-  sum: number[];
-  recommendedFoods: IProductData[];
+  recommendedMenu: IProductData[][];
 }> => {
   return new Promise((resolve, reject) => {
     try {
@@ -492,7 +504,7 @@ export const makeAutoMenu2 = ({
       if (availableFoods.length === 0) return reject('no availableFoods!');
 
       // 20개 메뉴 뽑을 것
-      const TRY_NUM = 20;
+      const TRY_NUM = 40;
       let validMenuWithErrObj = [];
       let NO_FOOD_AVAILABLE = false;
       for (let i = 0; i < TRY_NUM; i++) {
@@ -548,19 +560,21 @@ export const makeAutoMenu2 = ({
         availableFoods = [...totalFoodList];
       }
       if (validMenuWithErrObj.length === 0) return reject('no validMenu!');
-
+      if (validMenuWithErrObj.length < menuNum)
+        return reject('not enough menu!');
       // errorScore를 기반으로 메뉴 선택
       // (error 범위 내 식품 있으면 랜덤선택 or 오차최소 메뉴 선택)
-      const selectedMenu = selectMenu(validMenuWithErrObj);
+      const selectedMenu = selectMenu(validMenuWithErrObj, menuNum);
       if (!selectedMenu || selectedMenu.length === 0)
-        return reject('no recommendedFoods!');
+        return reject('no recommendedMenu!');
 
       // 처음 추가되어 있던 식품들은 제외
-      const filteredMenu = excludeInitialMenu(initialMenu, selectedMenu);
+      const filteredMenu = selectedMenu.map(m =>
+        excludeInitialMenu(initialMenu, m),
+      );
 
       return resolve({
-        recommendedFoods: filteredMenu,
-        sum: getSum(selectedMenu),
+        recommendedMenu: filteredMenu,
       });
     } catch (error) {
       return reject(error);

@@ -9,7 +9,7 @@ import NutrientsProgress from '../common/nutrient/NutrientsProgress';
 
 // react-query
 import {IDietDetailData} from '../../shared/api/types/diet';
-import Menu from './Menu';
+import Menu from '../menuAccordion/Menu';
 import {SetStateAction} from 'react';
 import {commaToNum, sumUpPrice} from '../../shared/utils/sumUp';
 import {HorizontalSpace, Row, TextMain} from '../../shared/ui/styledComps';

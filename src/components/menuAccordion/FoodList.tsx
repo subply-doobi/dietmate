@@ -9,6 +9,7 @@ import colors from '../../shared/colors';
 import {
   Col,
   HorizontalLine,
+  Icon,
   Row,
   TextMain,
   TextSub,
@@ -26,19 +27,15 @@ import {
 } from '../../shared/api/queries/diet';
 import {SERVICE_PRICE_PER_PRODUCT} from '../../shared/constants';
 
-interface ICartFoodList {
+interface IFoodList {
   selectedFoods: {[key: string]: string[]};
   setSelectedFoods: React.Dispatch<SetStateAction<{[key: string]: string[]}>>;
   dietNo: string;
 }
 
-const CartFoodList = ({
-  selectedFoods,
-  setSelectedFoods,
-  dietNo,
-}: ICartFoodList) => {
+const FoodList = ({selectedFoods, setSelectedFoods, dietNo}: IFoodList) => {
   // navigation
-  const navigation = useNavigation();
+  const {navigate} = useNavigation();
 
   // react-query
   const {data: dietData} = useListDiet();
@@ -81,38 +78,36 @@ const CartFoodList = ({
     <Container>
       {dietDetailData?.map((food, idx) => {
         const isSelected = selectedFoods[dietNo]?.includes(food.productNo);
-        const checkIconSource = isSelected
-          ? icons.checkboxCheckedGreen_24
-          : icons.checkbox_24;
         return (
-          <FoodBox
-            key={idx}
-            onPress={() => {
-              navigation.navigate('FoodDetail', {
-                productNo: food.productNo,
-              });
-            }}>
+          <FoodBox key={idx}>
             <Row
               style={{
                 width: '100%',
                 alignItems: 'flex-start',
               }}>
               {/* 식품 이미지 */}
-              <ThumbnailImage
-                source={{uri: `${BASE_URL}${food.mainAttUrl}`}}
-                resizeMode="center"
-              />
-              <SelectedBtn
+              <FoodDetailBtn
+                onPress={() => {
+                  navigate('FoodDetail', {
+                    productNo: food.productNo,
+                  });
+                }}>
+                <ThumbnailImage
+                  source={{uri: `${BASE_URL}${food.mainAttUrl}`}}
+                  resizeMode="center"
+                />
+              </FoodDetailBtn>
+              {isSelected && (
+                <SelectedCheckImage source={icons.checkboxCheckedGreen_24} />
+              )}
+
+              {/* 식품정보 */}
+              <SelectBtn
                 onPress={() =>
                   isSelected
                     ? deleteFromSelected(food.productNo)
                     : addToSelected(food.productNo)
                 }>
-                <SelectedCheckImage source={checkIconSource} />
-              </SelectedBtn>
-
-              {/* 식품정보 */}
-              <Col style={{flex: 1, marginLeft: 8}}>
                 <Row style={{justifyContent: 'space-between'}}>
                   <SellerText>{food.platformNm}</SellerText>
                 </Row>
@@ -123,36 +118,51 @@ const CartFoodList = ({
                 {/* 영양정보 */}
                 <NutrientBox>
                   <NutrientText>
-                    칼 <NutrientValue>{parseInt(food.calorie)} </NutrientValue>
-                    kcal
+                    칼로리{' '}
+                    <NutrientValue>{parseInt(food.calorie)} kcal</NutrientValue>
                   </NutrientText>
-                  <NutrientText>
-                    탄 <NutrientValue>{parseInt(food.carb)} </NutrientValue>g
-                  </NutrientText>
-                  <NutrientText>
-                    단 <NutrientValue>{parseInt(food.protein)} </NutrientValue>g
-                  </NutrientText>
-                  <NutrientText>
-                    지 <NutrientValue>{parseInt(food.fat)} </NutrientValue>g
-                  </NutrientText>
+                  <Row style={{columnGap: 8}}>
+                    <NutrientText>
+                      탄 <NutrientValue>{parseInt(food.carb)} g</NutrientValue>
+                    </NutrientText>
+                    <NutrientText>
+                      단{' '}
+                      <NutrientValue>{parseInt(food.protein)} g</NutrientValue>
+                    </NutrientText>
+                    <NutrientText>
+                      지 <NutrientValue>{parseInt(food.fat)} g</NutrientValue>
+                    </NutrientText>
+                  </Row>
                 </NutrientBox>
                 <ProductPrice>
                   {commaToNum(parseInt(food.price) + SERVICE_PRICE_PER_PRODUCT)}
                   원
                 </ProductPrice>
-              </Col>
-              <DeleteBtn
-                onPress={() => {
-                  setProductNoToDelete(food.productNo);
-                  setDeleteAlertShow(true);
-                }}>
-                <DeleteImage source={icons.cancelRound_24} />
-              </DeleteBtn>
+              </SelectBtn>
+
+              <RightBtnBox>
+                <DeleteBtn
+                  onPress={() => {
+                    setProductNoToDelete(food.productNo);
+                    setDeleteAlertShow(true);
+                  }}>
+                  <Icon source={icons.cancelRound_24} />
+                </DeleteBtn>
+                <ChangeBtn
+                  onPress={() => {
+                    navigate('Change', {
+                      dietNo: dietNo,
+                      productNo: food.productNo,
+                      food,
+                    });
+                  }}>
+                  <Icon source={icons.changeRound_24} />
+                </ChangeBtn>
+              </RightBtnBox>
             </Row>
           </FoodBox>
         );
       })}
-      {/* <HorizontalLine style={{marginTop: 16}} /> */}
       <DAlert
         alertShow={deleteAlertShow}
         confirmLabel="삭제"
@@ -166,74 +176,90 @@ const CartFoodList = ({
   );
 };
 
-export default CartFoodList;
+export default FoodList;
 
 const Container = styled.View`
   width: 100%;
   margin-top: 24px;
-  row-gap: 16px;
+  row-gap: 20px;
 `;
 
-const FoodBox = styled.TouchableOpacity`
+const FoodBox = styled.View`
   width: 100%;
+  height: 104px;
 `;
 
-const SelectedBtn = styled.TouchableOpacity`
-  position: absolute;
-  width: 24px;
-  height: 24px;
+const FoodDetailBtn = styled.TouchableOpacity``;
+
+const SelectBtn = styled.TouchableOpacity`
+  flex: 1;
+  margin: 0 8px;
 `;
 
 const SelectedCheckImage = styled.Image`
+  position: absolute;
+
   width: 24px;
   height: 24px;
 `;
 
 const ThumbnailImage = styled.Image`
-  width: 88px;
-  height: 88px;
+  width: 104px;
+  height: 104px;
   border-radius: 5px;
 `;
 
 const SellerText = styled(TextSub)`
-  font-size: 12px;
+  margin-left: 4px;
+  font-size: 11px;
+`;
+
+const RightBtnBox = styled.View`
+  width: 32px;
+  height: 100%;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: ${colors.lineLight};
 `;
 
 const DeleteBtn = styled.TouchableOpacity`
-  width: 36px;
-  height: 36px;
-  justify-content: flex-start;
-  align-items: flex-end;
+  width: 100%;
+  height: 50%;
+  justify-content: center;
+  align-items: center;
 `;
 
-const DeleteImage = styled.Image`
-  width: 24px;
-  height: 24px;
+const ChangeBtn = styled.TouchableOpacity`
+  width: 100%;
+  height: 50%;
+  justify-content: center;
+  align-items: center;
+  border-top-width: 1px;
+  border-color: ${colors.lineLight};
 `;
 
 const ProductNmText = styled(TextMain)`
+  margin-left: 4px;
   font-size: 14px;
   font-weight: bold;
 `;
 
 const NutrientBox = styled.View`
-  flex-direction: row;
   background-color: ${colors.backgroundLight};
-  padding: 2px 4px;
-  align-items: center;
+  padding: 8px 4px;
   margin-top: 4px;
   column-gap: 12px;
 `;
 
 const NutrientText = styled(TextSub)`
-  font-size: 12px;
+  font-size: 11px;
 `;
-const NutrientValue = styled(TextSub)`
-  font-size: 12px;
-  font-weight: bold;
+const NutrientValue = styled(TextMain)`
+  font-size: 11px;
 `;
 
 const ProductPrice = styled(TextMain)`
-  margin-top: 8px;
-  font-size: 16px;
+  margin-top: 4px;
+  margin-left: 4px;
+  font-size: 11px;
 `;

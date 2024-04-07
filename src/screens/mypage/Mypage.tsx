@@ -90,6 +90,13 @@ const Mypage = () => {
       },
     },
     {
+      title: '찜한 상품',
+      btnId: 'Likes',
+      onPress: () => {
+        navigate('Likes');
+      },
+    },
+    {
       title: '주문내역',
       btnId: 'OrderHistory',
       onPress: () => navigate('OrderHistoryNav', {screen: 'OrderHistory'}),

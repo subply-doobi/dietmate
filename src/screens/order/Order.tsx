@@ -37,6 +37,7 @@ import {sumUpDietTotal} from '../../shared/utils/sumUp';
 import {useListAddress} from '../../shared/api/queries/address';
 import {useGetUser} from '../../shared/api/queries/user';
 import {useListDietDetailAll} from '../../shared/api/queries/diet';
+import CtaButton from '../../shared/ui/CtaButton';
 
 interface IIamportPayment {
   pg: string; //kakaopay, html5_inicis 등등
@@ -91,7 +92,7 @@ const Order = () => {
           : listAddressData[selectedAddrIdx]?.addr2 === ''
             ? '상세주소를 입력해주세요'
             : ``;
-  const ctaBtnStyle = validationErrMsg === '' ? 'activated' : 'inactivated';
+  const ctaBtnStyle = validationErrMsg === '' ? 'active' : 'inactive';
   const ctaBtnText =
     validationErrMsg === ''
       ? `총 ${commaToNum(priceTotal + shippingPrice)}원 결제하기`
@@ -288,12 +289,12 @@ const Order = () => {
       </ScrollView>
 
       {/* 결제버튼 */}
-      <BtnBottomCTA
-        style={{width: SCREENWIDTH - 32}}
+      <CtaButton
         btnStyle={ctaBtnStyle}
-        onPress={async () => onHandleOrder()}>
-        <BtnText>{ctaBtnText}</BtnText>
-      </BtnBottomCTA>
+        style={{width: SCREENWIDTH - 32}}
+        onPress={async () => onHandleOrder()}
+        btnText={ctaBtnText}
+      />
     </SafeAreaView>
   );
 };

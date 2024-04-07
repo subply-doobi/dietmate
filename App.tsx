@@ -1,10 +1,7 @@
 import {useEffect, useState} from 'react';
 import {store} from './src/app/store/reduxStore';
 import {Provider} from 'react-redux';
-import {
-  useQueryErrorResetBoundary,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+import {QueryClientProvider} from '@tanstack/react-query';
 import {queryClient} from './src/app/store/reactQueryStore';
 import {
   NavigationContainer,
@@ -37,7 +34,6 @@ function App(): React.JSX.Element {
   const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
 
   const navigationRef = useNavigationContainerRef();
-  const {reset} = useQueryErrorResetBoundary();
 
   useEffect(() => {
     const init = async () => {

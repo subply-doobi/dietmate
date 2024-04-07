@@ -4,12 +4,7 @@ import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 // doobi util, redux, etc
 import {icons} from '../../shared/iconSource';
-import {
-  commaToNum,
-  compareNutrToTarget,
-  sumUpNutrients,
-  sumUpPrice,
-} from '../../shared/utils/sumUp';
+import {commaToNum, sumUpNutrients, sumUpPrice} from '../../shared/utils/sumUp';
 
 // doobi Component
 import {
@@ -21,15 +16,14 @@ import {
 } from '../../shared/ui/styledComps';
 import DAlert from '../common/alert/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
-import AutoDietModal from './AutoDietModal';
-import AutoMenuBtn from './AutoMenuBtn';
-import CartFoodList from './CartFoodList';
+import AccordionCtaBtns from './AccordionCtaBtns';
+import FoodList from './FoodList';
 
 // react-query
 import {IDietDetailData} from '../../shared/api/types/diet';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import {useDeleteDietDetail} from '../../shared/api/queries/diet';
-import MenuNumSelect from './MenuNumSelect';
+import MenuNumSelect from '../cart/MenuNumSelect';
 
 interface IMenu {
   dietNo: string;
@@ -38,11 +32,9 @@ interface IMenu {
 
 const Menu = ({dietNo, dietDetailData}: IMenu) => {
   // react-query
-  const {data: baseLineData} = useGetBaseLine();
   const deleteDietDetailMutation = useDeleteDietDetail();
 
   // useState
-  const [autoDietModalShow, setAutoDietModalShow] = useState(false);
   const [checkAllClicked, setCheckAllClicked] = useState(false);
   const [deleteModalShow, setDeleteModalShow] = useState(false);
   const [selectedFoods, setSelectedFoods] = useState<{[key: string]: string[]}>(
@@ -55,19 +47,8 @@ const Menu = ({dietNo, dietDetailData}: IMenu) => {
   }, [selectedFoods, dietDetailData, dietNo]);
 
   // 현재 끼니의 식품들이 목표섭취량에 부합하는지 확인
-  // empty/notEnough/exceed 에 따라 autoMenuBtn 디자인이 다름
+  // empty/notEnough/exceed 에 따라 AccordionCtaBtns 디자인이 다름
   const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
-  const menuStatus = baseLineData
-    ? compareNutrToTarget(
-        {cal, carb, protein, fat},
-        {
-          cal: parseInt(baseLineData.calorie),
-          carb: parseInt(baseLineData.carb),
-          protein: parseInt(baseLineData.protein),
-          fat: parseInt(baseLineData.fat),
-        },
-      )
-    : 'empty';
 
   // 전체선택 - 삭제 start
   const checkAll = () => {
@@ -133,27 +114,12 @@ const Menu = ({dietNo, dietDetailData}: IMenu) => {
 
       {/* 현재 끼니 식품들 */}
       {dietDetailData.length > 0 && (
-        <>
-          <HorizontalLine style={{marginTop: 16}} />
-          <CartFoodList
-            selectedFoods={selectedFoods}
-            setSelectedFoods={setSelectedFoods}
-            dietNo={dietNo}
-          />
-        </>
+        <FoodList
+          selectedFoods={selectedFoods}
+          setSelectedFoods={setSelectedFoods}
+          dietNo={dietNo}
+        />
       )}
-
-      {/* 자동구성 버튼, 모달 */}
-      <AutoMenuBtn
-        status={menuStatus}
-        onPress={() => setAutoDietModalShow(true)}
-      />
-      <AutoDietModal
-        modalVisible={autoDietModalShow}
-        setModalVisible={setAutoDietModalShow}
-        dietNo={dietNo}
-        dietDetailData={dietDetailData}
-      />
 
       {/* 삭제 알럿 */}
       <DAlert
