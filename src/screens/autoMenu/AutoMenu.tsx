@@ -61,7 +61,7 @@ const AutoMenu = () => {
   // 1. 이미 구성중인 끼니 있으면 끼니 선택 페이지에서 시작 || 카테고리선택 페이지에서 시작
   // 2. 한 끼니 자동구성이면 카테고리 선택 페이지에서 시작
   useEffect(() => {
-    if (!dTData) return;
+    if (!dTData || !dData) return;
     if (route?.params?.isOneMenuAuto) {
       setProgress([getPageIdx('Category')]);
       route?.params?.selectedOneDietNo &&
@@ -71,6 +71,7 @@ const AutoMenu = () => {
     }
     const menuLengthList = dTData.map((m: any) => m.length);
     if (menuLengthList.every((m: number) => m === 0)) {
+      setSelectedDietNo(dData.map(v => v.dietNo));
       setProgress([getPageIdx('Category')]);
     }
     setPageloaded(true);

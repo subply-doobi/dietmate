@@ -3,8 +3,8 @@ import {ViewProps} from 'react-native';
 
 // 3rd
 import DropShadow from 'react-native-drop-shadow';
-import {Col} from './styledComps';
 import styled from 'styled-components/native';
+import colors from '../colors';
 
 interface IShadowView extends ViewProps {
   opacity?: number;
@@ -15,6 +15,7 @@ const ShadowView = (props: IShadowView) => {
     <Box {...boxProps}>
       <DropShadow
         style={{
+          backgroundColor: colors.white,
           shadowColor: '#000',
           shadowOffset: {
             width: 1,
@@ -31,4 +32,6 @@ const ShadowView = (props: IShadowView) => {
 
 export default ShadowView;
 
-const Box = styled.View``;
+const Box = styled.View`
+  background-color: ${colors.white};
+`;
