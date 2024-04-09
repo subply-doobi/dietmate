@@ -2,9 +2,13 @@
 import {useCallback, useEffect, useState} from 'react';
 
 // 3rd
-import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import * as Progress from 'react-native-progress';
-import {styled} from "styled-components/native";
+import {styled} from 'styled-components/native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../app/store/reduxStore';
 
@@ -12,7 +16,7 @@ import {RootState} from '../../app/store/reduxStore';
 import {SCREENWIDTH} from '../../shared/constants';
 import colors from '../../shared/colors';
 import {Col, Container} from '../../shared/ui/styledComps';
-import GuideTitle from './ui/GuideTitle';
+import GuideTitle from '../../shared/ui/GuideTitle';
 import {PAGES} from './util/contentBypages';
 import BackArrow from '../../components/common/navigation/BackArrow';
 import {getPageIdx} from './util/pageIdx';
@@ -43,9 +47,9 @@ const UserInput = () => {
 
   // useState
   const [progress, setProgress] = useState<number[]>([0]);
-  const currentIdx = progress[progress.length - 1];
 
   // etc
+  const currentIdx = progress[progress.length - 1];
   const goNext = (nextPage: string) => {
     const nextPageIdx = getPageIdx(nextPage);
     setProgress(v => [...v, nextPageIdx]);
@@ -56,13 +60,18 @@ const UserInput = () => {
   const goStart = () => {
     setProgress([0]);
   };
-  const onComplete = async () => {
+  const onComplete = async (currentDietNum: number) => {
     const requestBody =
       convertDataByMethod[userInputState.targetOption.value[0]](userInputState);
-    dietData?.length === 0 && (await createDietMutation.mutateAsync());
+    // dietData?.length === 0 && (await createDietMutation.mutateAsync());
+
     !baseLineData || Object.keys(baseLineData).length === 0
       ? await createBaseLineMutation.mutateAsync(requestBody)
       : await updateBaseLineMutation.mutateAsync(requestBody);
+
+    for (let i = 0; i < 5 - currentDietNum; i++) {
+      await createDietMutation.mutateAsync();
+    }
 
     reset({
       index: 0,
@@ -79,7 +88,7 @@ const UserInput = () => {
   };
   const onCtaPress = () => {
     if (currentIdx === PAGES.length - 1) {
-      onComplete();
+      dietData && onComplete(dietData.length);
       return;
     }
     goNext(PAGES[currentIdx].getNextPage(userInputState));
@@ -107,25 +116,23 @@ const UserInput = () => {
     });
   }, [progress]);
 
-
   // android back button
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
-        if (PAGES[currentIdx].name === 'Start')
-          return false;
-        
+        if (PAGES[currentIdx].name === 'Start') return false;
+
         goPrev();
         return true;
       };
 
       const subscription = BackHandler.addEventListener(
         'hardwareBackPress',
-        onBackPress
+        onBackPress,
       );
 
       return () => subscription.remove();
-    }, [progress])
+    }, [progress]),
   );
   return (
     <Container>
@@ -151,6 +158,8 @@ const UserInput = () => {
           title={PAGES[currentIdx].title}
           subTitle={PAGES[currentIdx].subTitle}
         />
+
+        {/* 각 페이지 내용 */}
         {PAGES[currentIdx].render(userInputState)}
       </ScrollView>
 

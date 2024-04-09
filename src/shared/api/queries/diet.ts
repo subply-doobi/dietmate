@@ -249,12 +249,13 @@ export const useGetDietDetailEmptyYn = (options?: IQueryOptions) => {
 };
 
 export const useListDietTotal = (
-  dietData: IDietData,
+  dietData: IDietData | undefined,
   options?: IQueryOptions,
 ) => {
   const enabled = options?.enabled ?? true;
+  const dData = dietData || [];
   return useQueries({
-    queries: dietData.map(dietData => {
+    queries: dData.map(dietData => {
       return {
         queryKey: [DIET_DETAIL, dietData.dietNo],
         queryFn: () =>

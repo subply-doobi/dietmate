@@ -43,7 +43,7 @@ interface IFoodList {
   screen?: string;
 }
 
-const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
+const FoodList = ({item, screen = 'Search'}: IFoodList) => {
   const {navigate} = useNavigation();
   // redux
   const {currentDietNo} = useSelector((state: RootState) => state.common);
@@ -205,7 +205,7 @@ const FoodList = ({item, screen = 'HomeScreen'}: IFoodList) => {
                 {commaToNum(parseInt(item.price) + SERVICE_PRICE_PER_PRODUCT)}원
               </Price>
             )}
-            {screen === 'LikeScreen' && (
+            {screen === 'Likes' && (
               <DeleteLikeFoodBtn onPress={onLikeDelete}>
                 {/* <LikeImg source={icons.likeSmall_20} /> */}
                 <DeleteLikeFoodBtnText>찜 취소</DeleteLikeFoodBtnText>

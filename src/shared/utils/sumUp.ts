@@ -117,37 +117,71 @@ export const makePriceObjBySeller = (
   return priceBySeller;
 };
 
-interface INutr {
-  cal: number;
-  carb: number;
-  protein: number;
-  fat: number;
-}
+/** 현재 영양과 목표영양을 비교한 상태
+ * error | empty | notEnough | satisfied | exceed
+ */
+export const getNutrStatus = ({
+  totalFoodList,
+  bLData,
+  dDData,
+}: {
+  totalFoodList: IProductData[];
+  bLData: IBaseLineData | undefined;
+  dDData: IDietDetailData | undefined;
+}) => {
+  // error
+  if (!bLData || !dDData || totalFoodList.length === 0) return 'error';
 
-/** 현재 영양과 목표영양을 비교해서  */
-export const compareNutrToTarget = (
-  currentNutr: INutr | undefined,
-  targetNutr: INutr | undefined,
-): 'notEnough' | 'exceed' | 'empty' => {
-  if (!currentNutr || !targetNutr) return 'empty';
-  const {cal, carb, protein, fat} = currentNutr;
-  const {cal: calT, carb: carbT, protein: proteinT, fat: fatT} = targetNutr;
+  // empty
+  if (dDData.length === 0) return 'empty';
 
+  const {calorie: calT, carb: carbT, protein: proteinT, fat: fatT} = bLData;
+  const {cal, carb, protein, fat} = sumUpNutrients(dDData);
   const current = [cal, carb, protein, fat];
-  const target = [calT, carbT, proteinT, fatT];
-
-  if (cal === 0 && carb === 0 && protein === 0 && fat === 0) {
-    return 'empty';
-  }
+  const target = [Number(calT), Number(carbT), Number(proteinT), Number(fatT)];
+  const remain = [
+    Number(calT) - cal,
+    Number(carbT) - carb,
+    Number(proteinT) - protein,
+    Number(fatT) - fat,
+  ];
 
   let exceedNumber = 0;
   const indexToNutr = ['calorie', 'carb', 'protein', 'fat'];
   for (let i = 0; i < current.length; i++) {
-    if (current[i] > target[i] + NUTR_ERROR_RANGE[indexToNutr[i]][0])
-      exceedNumber += 1;
+    if (NUTR_ERROR_RANGE[indexToNutr[i]][0] > remain[i]) exceedNumber += 1;
   }
+  if (exceedNumber !== 0) return 'exceed';
 
-  return exceedNumber === 0 ? 'notEnough' : 'exceed';
+  // satisfied
+  if (
+    parseInt(calT) + NUTR_ERROR_RANGE.calorie[0] <= cal &&
+    parseInt(calT) + NUTR_ERROR_RANGE.calorie[1] >= cal &&
+    // parseInt(carbT) + NUTR_ERROR_RANGE.carb[0] <= carb &&
+    parseInt(carbT) + NUTR_ERROR_RANGE.carb[1] >= carb &&
+    // parseInt(proteinT) + NUTR_ERROR_RANGE.protein[0] <=
+    //   protein &&
+    parseInt(proteinT) + NUTR_ERROR_RANGE.protein[1] >= protein &&
+    // parseInt(fatT) + NUTR_ERROR_RANGE.fat[0] <= fat &&
+    parseInt(fatT) + NUTR_ERROR_RANGE.fat[1] >= fat
+  )
+    return 'satisfied';
+
+  for (let i = 0; i < totalFoodList.length; i++) {
+    if (
+      Number(totalFoodList[i].calorie) <=
+        remain[0] + NUTR_ERROR_RANGE[indexToNutr[0]][1] &&
+      Number(totalFoodList[i].carb) <=
+        remain[1] + NUTR_ERROR_RANGE[indexToNutr[1]][1] &&
+      Number(totalFoodList[i].protein) <=
+        remain[2] + NUTR_ERROR_RANGE[indexToNutr[2]][1] &&
+      Number(totalFoodList[i].fat) <=
+        remain[3] + NUTR_ERROR_RANGE[indexToNutr[3]][1]
+    ) {
+      return 'notEnough';
+    }
+  }
+  return 'exceed';
 };
 
 export const sumUpPriceOfSeller = (

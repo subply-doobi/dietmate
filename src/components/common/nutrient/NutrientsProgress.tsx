@@ -78,8 +78,10 @@ const ProgressBar = ({title, numerator, denominator}: INutrientProgress) => {
 
 const NutrientsProgress = ({
   dietDetailData,
+  tooltipShow = true,
 }: {
   dietDetailData: IDietDetailData;
+  tooltipShow?: boolean;
 }) => {
   // redux
   const dispatch = useDispatch();
@@ -121,24 +123,26 @@ const NutrientsProgress = ({
 
   return (
     <Container>
-      <DTooltip
-        text={tooltipText}
-        tooltipShow={progressTooltipShow && tooltipText !== ''}
-        showIcon={true}
-        renderCustomIcon={
-          exceedIdx !== -1 && route.name === 'Home'
-            ? () => <Icon source={icons.cartWhiteFilled_36} />
-            : undefined
-        }
-        reversed={true}
-        boxTop={58}
-        boxLeft={exceedIdx < 3 ? tooltipPosition : undefined}
-        boxRight={exceedIdx === 3 ? -8 : undefined}
-        triangleRight={
-          exceedIdx === 3 ? (SCREENWIDTH - 16) / 4 - 16 : undefined
-        }
-        onPressFn={() => dispatch(setProgressTooltipShow(false))}
-      />
+      {/* {tooltipShow && (
+        <DTooltip
+          text={tooltipText}
+          tooltipShow={progressTooltipShow && tooltipText !== ''}
+          showIcon={true}
+          renderCustomIcon={
+            exceedIdx !== -1 && route.name === 'Home'
+              ? () => <Icon source={icons.cartWhiteFilled_36} />
+              : undefined
+          }
+          reversed={true}
+          boxTop={58}
+          boxLeft={exceedIdx < 3 ? tooltipPosition : undefined}
+          boxRight={exceedIdx === 3 ? -8 : undefined}
+          triangleRight={
+            exceedIdx === 3 ? (SCREENWIDTH - 16) / 4 - 16 : undefined
+          }
+          onPressFn={() => dispatch(setProgressTooltipShow(false))}
+        />
+      )} */}
 
       <Col style={{width: '100%', height: 70}}>
         {baseLineData && Object.keys(baseLineData).length !== 0 && (

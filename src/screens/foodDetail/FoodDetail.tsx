@@ -50,6 +50,7 @@ import {
 } from '../../shared/api/queries/product';
 import {ITableItem, makeTableData} from './util/makeNutrTable';
 import {ActivityIndicator} from 'react-native';
+import CtaButton from '../../shared/ui/CtaButton';
 
 interface IShowPart {
   clicked: string;
@@ -142,7 +143,6 @@ const FoodDetail = () => {
   }, [navigation]);
 
   const handlePressLikeBtn = () => {
-    // TBD : 찜된 목록인지 알 수 있는 API나오면 좋아요기능 완성하기
     if (!productData) return;
     isIncludedInLike
       ? deleteProductMarkMutation.mutate(productData.productNo)
@@ -151,6 +151,10 @@ const FoodDetail = () => {
 
   const handlePressAddCartBtn = () => {
     if (!productData) return;
+    if (route?.params?.from === 'Change') {
+      navigation.goBack();
+      return;
+    }
 
     productData.productChoiceYn === 'Y'
       ? deleteDietDetailMutation.mutate({
@@ -295,7 +299,7 @@ const FoodDetail = () => {
               source={isIncludedInLike ? icons.likeActivated_48 : icons.like_48}
             />
           </LikeBtn>
-          <BtnCTA
+          {/* <BtnCTA
             btnStyle={'activated'}
             style={{flex: 1}}
             onPress={handlePressAddCartBtn}>
@@ -304,7 +308,22 @@ const FoodDetail = () => {
             ) : (
               <BtnText>현재끼니에 추가</BtnText>
             )}
-          </BtnCTA>
+          </BtnCTA> */}
+          <CtaButton
+            btnStyle="active"
+            style={{
+              width: SCREENWIDTH - 32 - 16 - 52 - 6,
+              backgroundColor: colors.dark,
+            }}
+            onPress={handlePressAddCartBtn}
+            btnText={
+              route?.params?.from === 'Change'
+                ? '뒤로가기'
+                : productData.productChoiceYn === 'Y'
+                  ? '현재끼니에서 제거'
+                  : '현재끼니에 추가'
+            }
+          />
         </BtnBox>
       </View>
     </SafeAreaView>
@@ -382,6 +401,7 @@ const NutritionInImage = styled.View`
 `;
 
 const BtnBox = styled(StickyFooter)`
+  flex: 1;
   flex-direction: row;
   column-gap: 6px;
 `;

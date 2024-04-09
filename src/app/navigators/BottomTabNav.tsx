@@ -1,17 +1,21 @@
+// RN
+
+// 3rd
 import styled from 'styled-components/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useNavigation} from '@react-navigation/native';
 
-import {icons} from '../../shared/iconSource';
-import colors from '../../shared/colors';
-
-import Home from '../../screens/home/Home';
+// doobi
 import Mypage from '../../screens/mypage/Mypage';
-import Likes from '../../screens/like/Likes';
 import Cart from '../../screens/cart/Cart';
 import BackArrow from '../../components/common/navigation/BackArrow';
+import Search from '../../screens/Search/Search';
+import Home from '../../screens/home/Home';
 
+import {icons} from '../../shared/iconSource';
+import colors from '../../shared/colors';
 import {useListDietDetailAll} from '../../shared/api/queries/diet';
+import {Icon} from '../../shared/ui/styledComps';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,70 +25,56 @@ const BottomTabNav = () => {
   const navigation = useNavigation();
   const {goBack} = navigation;
   return (
-    <Tab.Navigator backBehavior="history">
+    <Tab.Navigator
+      backBehavior="history"
+      screenOptions={{headerShown: false, tabBarShowLabel: false}}>
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
-          headerShown: false,
-          tabBarIcon: ({focused}) =>
-            focused ? (
-              <BottomTabIcon source={icons.mainActivated_36} />
-            ) : (
-              <BottomTabIcon source={icons.main_36} />
-            ),
-          tabBarShowLabel: false,
+          tabBarIcon: ({focused}) => (
+            <Icon
+              source={focused ? icons.mainActivated_36 : icons.main_36}
+              size={36}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <Icon
+              source={focused ? icons.searchActivated_36 : icons.search_36}
+              size={36}
+            />
+          ),
         }}
       />
       <Tab.Screen
         name="Mypage"
         component={Mypage}
         options={{
-          headerShown: false,
-          tabBarIcon: ({focused}) =>
-            focused ? (
-              <BottomTabIcon source={icons.mypageActivated_36} />
-            ) : (
-              <BottomTabIcon source={icons.mypage_36} />
-            ),
-          tabBarShowLabel: false,
-        }}
-      />
-      <Tab.Screen
-        name="Likes"
-        component={Likes}
-        options={{
-          tabBarIcon: ({focused}) =>
-            focused ? (
-              <BottomTabIcon source={icons.likeActivated_36} />
-            ) : (
-              <BottomTabIcon source={icons.like_36} />
-            ),
-          tabBarShowLabel: false,
-          headerShown: true,
-          headerTitle: '찜한 상품',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontSize: 18,
-            fontWeight: 'bold',
-            color: colors.textMain,
-          },
-          headerLeft: () => (
-            <BackArrow style={{marginLeft: 16}} goBackFn={goBack} />
+          tabBarIcon: ({focused}) => (
+            <Icon
+              source={focused ? icons.mypageActivated_36 : icons.mypage_36}
+              size={36}
+            />
           ),
         }}
       />
+
       <Tab.Screen
         name="Cart"
         component={Cart}
         options={{
           tabBarIcon: ({focused}) => (
             <CartIcon>
-              {focused ? (
-                <BottomTabIcon source={icons.cartFilled_36} />
-              ) : (
-                <BottomTabIcon source={icons.cart_36} />
-              )}
+              <Icon
+                source={focused ? icons.cartActivated_36 : icons.cart_36}
+                size={36}
+              />
               {dietDetailAllData && dietDetailAllData.length !== 0 && (
                 <Badge>
                   <BadgeText>{dietDetailAllData.length}</BadgeText>

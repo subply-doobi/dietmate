@@ -19,7 +19,7 @@ import {
   initializeSortFilter,
   setFilterByRemainNutr,
 } from '../../../features/reduxSlices/sortFilterSlice';
-import {checkisFiltered} from '../util/filterUtils';
+import {checkisFiltered} from '../../home/util/filterUtils';
 
 interface IFilter {
   setFilterModalShow: React.Dispatch<React.SetStateAction<boolean>>;

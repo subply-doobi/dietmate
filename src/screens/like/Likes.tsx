@@ -14,7 +14,7 @@ import {
   TextMain,
   TextSub,
 } from '../../shared/ui/styledComps';
-import FoodList from '../home/ui/FoodList';
+import FoodList from '../Search/ui/FoodList';
 import MenuSection from '../../components/common/menuSection/MenuSection';
 
 // react-query
@@ -38,7 +38,7 @@ const Likes = () => {
   // flatList render fn
   const renderFoodList = useCallback(
     ({item}: {item: IProductData}) =>
-      dietDetailData ? <FoodList item={item} screen="LikeScreen" /> : <></>,
+      dietDetailData ? <FoodList item={item} screen="Likes" /> : <></>,
     [],
   );
   const extractListKey = useCallback(
@@ -84,7 +84,7 @@ const Likes = () => {
 
 export default Likes;
 
-export const Container = styled.View`
+const Container = styled.View`
   flex: 1;
   background-color: ${colors.white};
 `;

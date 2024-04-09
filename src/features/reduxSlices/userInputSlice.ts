@@ -191,7 +191,7 @@ export const initialState: IUserInputState = {
   },
   dietPurposeCd: {
     value: DIET_PURPOSE_CD[0].cd,
-    isValid: false,
+    isValid: true,
     errMsg: '',
   },
   sportsSeqCd: {

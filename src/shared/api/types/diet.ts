@@ -1,6 +1,6 @@
 import {IProductData} from './product';
 
-export interface IMenu {
+export interface IDietBaseData {
   companyCd: string;
   dietNo: string;
   dietSeq: string;
@@ -8,7 +8,7 @@ export interface IMenu {
   statusNm: string;
   userId: string;
 }
-export type IDietData = Array<IMenu>;
+export type IDietData = Array<IDietBaseData>;
 
 export interface IDietDetailProductData extends IProductData {
   qty: string;

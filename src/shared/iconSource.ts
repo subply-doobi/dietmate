@@ -24,6 +24,9 @@ export const icons = {
   plusSquareActivated_24: require(
     `./assets/icons/24_plus_square_activated.png`,
   ),
+  down_8: require(`./assets/icons/8_down.png`),
+  up_8: require(`./assets/icons/8_up.png`),
+  round_8: require(`./assets/icons/8_round.png`),
 
   // change
   changeRound_24: require(`./assets/icons/24_change_round.png`),
@@ -56,9 +59,8 @@ export const icons = {
   cartActivated_36: require(`./assets/icons/36_cart_activated.png`),
   cartWhiteFilled_36: require(`./assets/icons/36_cart_white_filled.png`),
   cartFilled_36: require(`./assets/icons/36_cart_filled.png`),
-  like_36: require(`./assets/icons/36_like.png`),
-  likeActivated_36: require(`./assets/icons/36_like_activated.png`),
-  likeInactivated_36: require(`./assets/icons/36_like.png`),
+  search_36: require(`./assets/icons/36_search.png`),
+  searchActivated_36: require(`./assets/icons/36_search_activated.png`),
   main_36: require(`./assets/icons/36_main.png`),
   mainActivated_36: require(`./assets/icons/36_main_activated.png`),
   mypageActivated_36: require(`./assets/icons/36_mypage_activated.png`),
