@@ -21,19 +21,31 @@ interface IChangeSummary {
 }
 const ChangeSummary = ({foodToChange, selectedProduct}: IChangeSummary) => {
   const nutrOriginal = [
-    {name: '칼로리', value: Number(foodToChange?.calorie), unit: 'kcal'},
-    {name: '탄수화물', value: Number(foodToChange?.carb), unit: 'g'},
-    {name: '단백질', value: Number(foodToChange?.protein), unit: 'g'},
-    {name: '지방', value: Number(foodToChange?.fat), unit: 'g'},
+    {name: '칼로리', value: parseInt(foodToChange?.calorie, 10), unit: 'kcal'},
+    {name: '탄수화물', value: parseInt(foodToChange?.carb, 10), unit: 'g'},
+    {name: '단백질', value: parseInt(foodToChange?.protein, 10), unit: 'g'},
+    {name: '지방', value: parseInt(foodToChange?.fat, 10), unit: 'g'},
   ];
 
   const nutrChanged = !selectedProduct
     ? []
     : [
-        {name: '칼로리', value: Number(selectedProduct?.calorie), unit: 'kcal'},
-        {name: '탄수화물', value: Number(selectedProduct?.carb), unit: 'g'},
-        {name: '단백질', value: Number(selectedProduct?.protein), unit: 'g'},
-        {name: '지방', value: Number(selectedProduct?.fat), unit: 'g'},
+        {
+          name: '칼로리',
+          value: parseInt(selectedProduct?.calorie, 10),
+          unit: 'kcal',
+        },
+        {
+          name: '탄수화물',
+          value: parseInt(selectedProduct?.carb, 10),
+          unit: 'g',
+        },
+        {
+          name: '단백질',
+          value: parseInt(selectedProduct?.protein, 10),
+          unit: 'g',
+        },
+        {name: '지방', value: parseInt(selectedProduct?.fat, 10), unit: 'g'},
       ];
 
   const nutrDiff = !selectedProduct

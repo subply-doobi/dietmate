@@ -71,6 +71,7 @@ const Processing = ({
   const autoMenuType =
     isOneMenuAuto && nutrStatus === 'notEnough' ? 'add' : 'overwrite';
 
+  // 자동구성 customHook
   const {
     data: autoMenuResult,
     isError,
