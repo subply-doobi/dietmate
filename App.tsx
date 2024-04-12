@@ -22,6 +22,7 @@ import {
   PLAY_STORE_URL,
 } from './src/shared/constants';
 import {getLatestVersion} from './src/shared/api/queries/version';
+import CodePush from 'react-native-code-push';
 
 const loadSplash = new Promise(resolve =>
   setTimeout(() => {
@@ -40,7 +41,7 @@ function App(): React.JSX.Element {
       // 앱 로딩
       await loadSplash;
 
-      // TBD | 최신 앱 버전을 서버에서 관리하도록 수정할 것. 일단 임시코드
+      // 최신 앱 버전을 서버에서 관리. 일단 임시코드
       await getLatestVersion().then(res => {
         appVersion !== res?.latestVersion && setIsUpdateNeeded(true);
       });
@@ -67,7 +68,7 @@ function App(): React.JSX.Element {
             alertShow={isUpdateNeeded}
             onConfirm={() => visitStore()}
             onCancel={() => setIsUpdateNeeded(false)}
-            NoOfBtn={1}
+            NoOfBtn={2}
             confirmLabel="업데이트"
             renderContent={() => (
               <CommonAlertContent text="앱 업데이트가 필요합니다" />
@@ -79,4 +80,4 @@ function App(): React.JSX.Element {
   );
 }
 
-export default App;
+export default CodePush(App);
