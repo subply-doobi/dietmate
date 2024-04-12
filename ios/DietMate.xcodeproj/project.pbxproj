@@ -16,6 +16,8 @@
 		93C391BA2BBAB1F300683BBF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 93C391B92BBAB1F300683BBF /* GoogleService-Info.plist */; };
 		C7C5107CFCE4D3ABFAC46489 /* Pods_DietMate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FCC02753AFDB36D357B77E8 /* Pods_DietMate.framework */; };
 		D52EE1BC5E034B98AE146675 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E7AE1421CE714923A0AD2724 /* BootSplash.storyboard */; };
+		E00F8DB72BC976FB002CA50A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E00F8DB62BC976FB002CA50A /* PrivacyInfo.xcprivacy */; };
+		E00F8DB82BC976FB002CA50A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E00F8DB62BC976FB002CA50A /* PrivacyInfo.xcprivacy */; };
 		E07A41412B8DC5020025A68F /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = E07A41402B8DC5020025A68F /* Fonts */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +49,7 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-DietMate-DietMateTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DietMate-DietMateTests.release.xcconfig"; path = "Target Support Files/Pods-DietMate-DietMateTests/Pods-DietMate-DietMateTests.release.xcconfig"; sourceTree = "<group>"; };
 		935BC7E72BC90FC40052E8EE /* AppCenter-Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AppCenter-Config.plist"; sourceTree = "<group>"; };
 		93C391B92BBAB1F300683BBF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E00F8DB62BC976FB002CA50A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E07A41402B8DC5020025A68F /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		E07D88F32B9026FC003C94BB /* DietMate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DietMate.entitlements; path = DietMate/DietMate.entitlements; sourceTree = "<group>"; };
 		E7AE1421CE714923A0AD2724 /* BootSplash.storyboard */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = BootSplash.storyboard; path = DietMate/BootSplash.storyboard; sourceTree = "<group>"; };
@@ -100,6 +103,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
+				E00F8DB62BC976FB002CA50A /* PrivacyInfo.xcprivacy */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				E7AE1421CE714923A0AD2724 /* BootSplash.storyboard */,
 			);
@@ -247,6 +251,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E00F8DB82BC976FB002CA50A /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +259,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E00F8DB72BC976FB002CA50A /* PrivacyInfo.xcprivacy in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				935BC7E82BC90FC40052E8EE /* AppCenter-Config.plist in Resources */,
 				93C391BA2BBAB1F300683BBF /* GoogleService-Info.plist in Resources */,
