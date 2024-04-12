@@ -4,8 +4,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../app/store/reduxStore';
 import {queryClient} from '../../../app/store/reactQueryStore';
 import {
+  setCartAcActive,
   setCurrentDiet,
-  setMenuActiveSection,
+  setHomeAcActive,
   setProgressTooltipShow,
 } from '../../../features/reduxSlices/commonSlice';
 
@@ -76,7 +77,8 @@ export const useCreateDiet = (options?: IMutationOptions) => {
       dispatch(setCurrentDiet(data.dietNo));
 
       // 장바구니 accordion 기존 끼니는 닫아주기
-      dispatch(setMenuActiveSection([]));
+      dispatch(setHomeAcActive([]));
+      dispatch(setCartAcActive([]));
 
       // invalidation
       queryClient.invalidateQueries({queryKey: [DIET]});

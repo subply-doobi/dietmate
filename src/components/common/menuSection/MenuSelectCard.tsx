@@ -4,8 +4,9 @@ import styled from 'styled-components/native';
 
 import {RootState} from '../../../app/store/reduxStore';
 import {
+  setCartAcActive,
   setCurrentDiet,
-  setMenuActiveSection,
+  setHomeAcActive,
 } from '../../../features/reduxSlices/commonSlice';
 import {Col, Row} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
@@ -92,7 +93,8 @@ const MenuSelectCard = () => {
                 isActivated={isActivated}
                 onPress={() => {
                   if (isActivated) return;
-                  dispatch(setMenuActiveSection([]));
+                  dispatch(setHomeAcActive([]));
+                  dispatch(setCartAcActive([]));
                   dispatch(setCurrentDiet(menu.dietNo));
                 }}>
                 {(nutrStatus === 'exceed' || nutrStatus === 'satisfied') && (

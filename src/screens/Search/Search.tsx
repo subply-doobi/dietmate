@@ -44,8 +44,9 @@ import BusinessInfo from '../../components/common/businessInfo/BusinessInfo';
 import {applySortFilter} from '../../features/reduxSlices/sortFilterSlice';
 import CtaButton from '../../shared/ui/CtaButton';
 import {
+  setCartAcActive,
   setCurrentDiet,
-  setMenuActiveSection,
+  setHomeAcActive,
 } from '../../features/reduxSlices/commonSlice';
 import {findDietSeq} from '../../shared/utils/findDietSeq';
 
@@ -222,7 +223,8 @@ const Search = () => {
             onPress={() => {
               goBack();
               const {idx} = findDietSeq(dietData, currentDietNo);
-              dispatch(setMenuActiveSection([idx]));
+              dispatch(setHomeAcActive([idx]));
+              dispatch(setCartAcActive([idx]));
             }}
           />
         )}

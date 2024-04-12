@@ -10,8 +10,8 @@ import Accordion from 'react-native-collapsible/Accordion';
 import colors from '../../shared/colors';
 import {commaToNum, sumUpDietTotal} from '../../shared/utils/sumUp';
 import {
+  setCartAcActive,
   setCurrentDiet,
-  setMenuActiveSection,
 } from '../../features/reduxSlices/commonSlice';
 import {SCREENWIDTH} from '../../shared/constants';
 import {icons} from '../../shared/iconSource';
@@ -26,9 +26,6 @@ import CreateLimitAlertContent from '../../components/common/alert/CreateLimitAl
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 import MenuNumSelectContent from '../../components/cart/MenuNumSelectContent';
 import DBottomSheet from '../../components/common/bottomsheet/DBottomSheet';
-import AccordionContent from '../../components/cart/AccordionContent';
-import AccordionInactiveHeader from '../../components/cart/AccordionInactiveHeader';
-import AccordionActiveHeader from '../../components/cart/AccordionActiveHeader';
 
 // react-query
 import {
@@ -46,7 +43,7 @@ import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 const Cart = () => {
   // redux
   const dispatch = useDispatch();
-  const {currentDietNo, menuActiveSection} = useSelector(
+  const {currentDietNo, cartAcActive} = useSelector(
     (state: RootState) => state.common,
   );
   const {shippingPrice} = useSelector((state: RootState) => state.order);
@@ -62,6 +59,7 @@ const Cart = () => {
   const [createAlertShow, setCreateAlertShow] = useState(false);
   const [menuNumSelectShow, setMenuNumSelectShow] = useState(false);
   const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
+
   // navigation
   const {navigate} = useNavigation();
   // const {navigate} = navigation;
@@ -119,7 +117,7 @@ const Cart = () => {
 
   // Fn
   const updateSections = (activeSections: number[]) => {
-    dispatch(setMenuActiveSection(activeSections));
+    dispatch(setCartAcActive(activeSections));
     if (activeSections.length === 0) return;
     const currentIdx = activeSections[0];
     const currentDietNo = dietData && dietData[currentIdx].dietNo;
@@ -136,10 +134,10 @@ const Cart = () => {
 
   // useEffect
   // 장바구니 이동했을 때 현재 끼니의 accordion을 열어줌
-  // navigation addListener는 redux currentDietNo가 동기화가 안됨
-  // => useIsFocused 사용
   useEffect(() => {
-    if (isFocused) dispatch(setMenuActiveSection([]));
+    isFocused
+      ? dispatch(setCartAcActive([findDietSeq(dietData, currentDietNo).idx]))
+      : dispatch(setCartAcActive([]));
   }, [isFocused]);
 
   return (
@@ -150,7 +148,7 @@ const Cart = () => {
             <ActivityIndicator style={{marginTop: 16}} />
           ) : (
             <Accordion
-              activeSections={menuActiveSection}
+              activeSections={cartAcActive}
               sections={accordionContent}
               touchableComponent={TouchableOpacity}
               renderHeader={(section, _, isActive) =>
