@@ -2,6 +2,9 @@
 #import <RNKakaoLogins.h>
 #import <React/RCTBundleURLProvider.h>
 #import "RNBootSplash.h"
+#import <AppCenterReactNative.h>
+#import <AppCenterReactNativeAnalytics.h>
+#import <AppCenterReactNativeCrashes.h>
 
 
 @implementation AppDelegate
@@ -15,6 +18,9 @@
     
     [super application:application didFinishLaunchingWithOptions:launchOptions];
     // [RNSplashScreen show];  // react-native-splash-screen => react-native-bootsplash로 대체
+    [AppCenterReactNative register];
+    [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];
+    [AppCenterReactNativeCrashes registerWithAutomaticProcessing];
 
     return YES; // 수정
 }
