@@ -8,10 +8,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../app/store/reduxStore';
 import {
   setCurrentDiet,
-  setMenuActiveSection,
+  setHomeAcActive,
   setTotalFoodList,
 } from '../../features/reduxSlices/commonSlice';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import Accordion from 'react-native-collapsible/Accordion';
 
 // doobi
@@ -28,15 +28,17 @@ import GuideTitle from '../../shared/ui/GuideTitle';
 import CtaButton from '../../shared/ui/CtaButton';
 import colors from '../../shared/colors';
 import {SCREENWIDTH} from '../../shared/constants';
+import {findDietSeq} from '../../shared/utils/findDietSeq';
 
 const Home = () => {
   // navigation
   const {navigate} = useNavigation();
+  const isFocused = useIsFocused();
   const route = useRoute();
 
   // redux
   const dispatch = useDispatch();
-  const {menuActiveSection, currentDietNo, totalFoodListIsLoaded} = useSelector(
+  const {homeAcActive, currentDietNo, totalFoodListIsLoaded} = useSelector(
     (state: RootState) => state.common,
   );
   const {applied: appliedSortFilter} = useSelector(
@@ -92,6 +94,12 @@ const Home = () => {
     dispatch(setTotalFoodList(listProductData));
   }, [listProductData]);
 
+  useEffect(() => {
+    isFocused
+      ? dispatch(setHomeAcActive([findDietSeq(dietData, currentDietNo).idx]))
+      : dispatch(setHomeAcActive([]));
+  }, [isFocused]);
+
   // memo
   const {dTData, dTDataStatus, accordionContent} = useMemo(() => {
     const dTDataStatus =
@@ -129,7 +137,7 @@ const Home = () => {
 
   // fn
   const updateSections = (activeSections: number[]) => {
-    dispatch(setMenuActiveSection(activeSections));
+    dispatch(setHomeAcActive(activeSections));
     if (activeSections.length === 0) return;
     const currentIdx = activeSections[0];
     const currentDietNo = dietData && dietData[currentIdx].dietNo;
@@ -151,7 +159,7 @@ const Home = () => {
         ) : (
           <Accordion
             containerStyle={{marginTop: 64}}
-            activeSections={menuActiveSection}
+            activeSections={homeAcActive}
             sections={accordionContent}
             touchableComponent={TouchableOpacity}
             renderHeader={(section, _, isActive) =>

@@ -19,7 +19,6 @@ import {getPageIdx} from '../util/pageIdx';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {IProductData} from '../../../shared/api/types/product';
 import {getNutrStatus} from '../../../shared/utils/sumUp';
-import {setMenuActiveSection} from '../../../features/reduxSlices/commonSlice';
 import CtaButton from '../../../shared/ui/CtaButton';
 
 interface IProcessing {

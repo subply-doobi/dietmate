@@ -47,10 +47,9 @@ const MenuNumSelectContent = ({
 }) => {
   // react-query
   const {data: dietData} = useListDiet();
-  const dietTotalData =
-    !!dietData && useListDietTotal(dietData, {enabled: !!dietData});
   const {data: dietDetailData} = useListDietDetail(dietNoToNumControl);
   const updateDietDetailMutation = useUpdateDietDetail();
+  const {data: dDAData} = useListDietDetailAll();
 
   // state
   const initialQty =
@@ -58,7 +57,6 @@ const MenuNumSelectContent = ({
       ? parseInt(dietDetailData[0].qty, 10)
       : 1;
   const [qty, setQty] = useState(initialQty);
-  const {currentDietNo} = useSelector((state: RootState) => state.common);
 
   // useEffect
   useEffect(() => {
@@ -72,7 +70,7 @@ const MenuNumSelectContent = ({
 
   // useMemo
   const {currentDDDataBySeller, otherDietSellerPrice} = useMemo(() => {
-    if (!dietDetailData || !dietTotalData)
+    if (!dietDetailData || !dDAData)
       return {currentDDDataBySeller: [], otherDietSellerPrice: {}};
 
     // 현재 끼니의 판매자별 식품 데이터
@@ -86,24 +84,30 @@ const MenuNumSelectContent = ({
     });
 
     // 다른 끼니의 현재끼니 판매자의 식품 데이터
-    const otherDDDataBySeller = dietTotalData
-      .map(menu => menu.data)
-      .filter(menu => menu && menu[0]?.dietNo !== currentDietNo)
-      .filter(menu => menu && currentDietSeller.includes(menu[0]?.platformNm));
+    const otherDDData = dDAData
+      .filter(p => p.dietNo !== dietNoToNumControl)
+      .filter(p => p && currentDietSeller.includes(p.platformNm));
 
     // 다른 끼니의 현재끼니 판매자의 식품 데이터 중 판매자별 금액 합산
     let otherDietSellerPrice: {[key: string]: number} = {};
-    otherDDDataBySeller.forEach(menu => {
-      const seller = menu && menu[0].platformNm;
-      if (!seller) return;
-      otherDietSellerPrice[seller] = sumUpPrice(menu, true);
+    otherDDData.forEach(p => {
+      const price = parseInt(p.price, 10);
+      const productQty = parseInt(p.qty, 10);
+      otherDietSellerPrice[p.platformNm] = otherDietSellerPrice[p.platformNm]
+        ? (otherDietSellerPrice[p.platformNm] +
+            price +
+            SERVICE_PRICE_PER_PRODUCT) *
+          productQty
+        : (price + SERVICE_PRICE_PER_PRODUCT) * productQty;
     });
+
+    console.log('otherDietSellerPrice', otherDietSellerPrice);
 
     return {
       currentDDDataBySeller,
       otherDietSellerPrice,
     };
-  }, [dietData, dietDetailData, dietTotalData]);
+  }, [dietData, dietDetailData, dDAData]);
 
   const saveQty = () => {
     updateDietDetailMutation.mutate({
