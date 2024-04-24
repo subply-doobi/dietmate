@@ -8,9 +8,7 @@ export interface ICartState {
   totalFoodListIsLoaded: boolean;
   platformDDItems: {value: string; label: string}[];
   progressTooltipShow: boolean;
-  menuActiveSection: number[];
-  homeAcActive: number[];
-  cartAcActive: number[];
+  menuAcActive: number[];
 }
 
 const initialState: ICartState = {
@@ -19,9 +17,7 @@ const initialState: ICartState = {
   totalFoodListIsLoaded: false,
   platformDDItems: [{value: '', label: '선택안함'}],
   progressTooltipShow: true,
-  menuActiveSection: [],
-  homeAcActive: [],
-  cartAcActive: [],
+  menuAcActive: [],
 };
 
 export const commonSlice = createSlice({
@@ -54,11 +50,8 @@ export const commonSlice = createSlice({
     setProgressTooltipShow: (state, action: PayloadAction<boolean>) => {
       state.progressTooltipShow = action.payload;
     },
-    setHomeAcActive: (state, action: PayloadAction<number[]>) => {
-      state.homeAcActive = action.payload;
-    },
-    setCartAcActive: (state, action: PayloadAction<number[]>) => {
-      state.cartAcActive = action.payload;
+    setMenuAcActive: (state, action: PayloadAction<number[]>) => {
+      state.menuAcActive = action.payload;
     },
   },
 });
@@ -67,7 +60,6 @@ export const {
   setCurrentDiet,
   setTotalFoodList,
   setProgressTooltipShow,
-  setHomeAcActive,
-  setCartAcActive,
+  setMenuAcActive,
 } = commonSlice.actions;
 export default commonSlice.reducer;

@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../app/store/reduxStore';
 import {
   setCurrentDiet,
-  setHomeAcActive,
+  setMenuAcActive,
   setTotalFoodList,
 } from '../../features/reduxSlices/commonSlice';
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
@@ -38,7 +38,7 @@ const Home = () => {
 
   // redux
   const dispatch = useDispatch();
-  const {homeAcActive, currentDietNo, totalFoodListIsLoaded} = useSelector(
+  const {currentDietNo, totalFoodListIsLoaded, menuAcActive} = useSelector(
     (state: RootState) => state.common,
   );
   const {applied: appliedSortFilter} = useSelector(
@@ -65,23 +65,10 @@ const Home = () => {
   useEffect(() => {
     const initializeDiet = async () => {
       const dietData = (await refetchListDiet()).data;
-      if (!dietData) return;
-      const numOfDiet = dietData.length;
-      const firstDietNo = numOfDiet !== 0 ? dietData[0].dietNo : '';
-      let firstAddedDietNo = '';
-      for (let i = 0; i < 5 - numOfDiet; i++) {
-        if (i === 0) {
-          await createDietMutation
-            .mutateAsync()
-            .then(res => (firstAddedDietNo = res.dietNo));
-        }
-        await createDietMutation.mutateAsync();
-      }
+      if (!dietData || dietData.length === 0) return;
 
-      if (currentDietNo !== '') return;
-      dispatch(
-        setCurrentDiet(numOfDiet === 0 ? firstAddedDietNo : firstDietNo),
-      );
+      const firstDietNo = dietData[0].dietNo;
+      dispatch(setCurrentDiet(firstDietNo));
     };
 
     initializeDiet();
@@ -93,12 +80,6 @@ const Home = () => {
     if (totalFoodListIsLoaded) return;
     dispatch(setTotalFoodList(listProductData));
   }, [listProductData]);
-
-  useEffect(() => {
-    isFocused
-      ? dispatch(setHomeAcActive([findDietSeq(dietData, currentDietNo).idx]))
-      : dispatch(setHomeAcActive([]));
-  }, [isFocused]);
 
   // memo
   const {dTData, dTDataStatus, accordionContent} = useMemo(() => {
@@ -137,7 +118,7 @@ const Home = () => {
 
   // fn
   const updateSections = (activeSections: number[]) => {
-    dispatch(setHomeAcActive(activeSections));
+    dispatch(setMenuAcActive(activeSections));
     if (activeSections.length === 0) return;
     const currentIdx = activeSections[0];
     const currentDietNo = dietData && dietData[currentIdx].dietNo;
@@ -159,7 +140,7 @@ const Home = () => {
         ) : (
           <Accordion
             containerStyle={{marginTop: 64}}
-            activeSections={homeAcActive}
+            activeSections={menuAcActive}
             sections={accordionContent}
             touchableComponent={TouchableOpacity}
             renderHeader={(section, _, isActive) =>
@@ -182,7 +163,6 @@ const Home = () => {
             navigate('AutoMenu', {
               isOneMenuAuto: false,
               selectedOneDietNo: undefined,
-              initialMenu: [],
             })
           }
         />
@@ -194,7 +174,7 @@ const Home = () => {
             }}
             btnStyle={'active'}
             btnText="장바구니 확인"
-            onPress={() => navigate('BottomTabNav', {screen: 'Cart'})}
+            onPress={() => navigate('BottomTabNav', {screen: 'Diet'})}
           />
         )}
       </BtnBox>

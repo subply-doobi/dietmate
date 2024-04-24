@@ -3,15 +3,22 @@ import {IDietDetailData} from '../../../shared/api/types/diet';
 import colors from '../../../shared/colors';
 import Category from '../subScreens/Category';
 import Company from '../subScreens/Company';
-import Complete from '../subScreens/Complete';
 import Price from '../subScreens/Price';
 import Processing from '../subScreens/Processing';
 import Select from '../subScreens/Select';
 import {IProductData} from '../../../shared/api/types/product';
 import Error from '../subScreens/Error';
+
+export type IAutoMenuSubPages =
+  | 'Select'
+  | 'Category'
+  | 'Company'
+  | 'Price'
+  | 'Processing'
+  | 'Error';
 interface IPageRender {
   dTData: IDietDetailData[];
-  setProgress: React.Dispatch<React.SetStateAction<number[]>>;
+  setProgress: React.Dispatch<React.SetStateAction<IAutoMenuSubPages[]>>;
   selectedDietNo: string[];
   setSelectedDietNo: React.Dispatch<SetStateAction<string[]>>;
   selectedCategory: boolean[];
@@ -26,7 +33,18 @@ interface IPageCheckIsActive {
   selectedDietNo?: string[];
   selectedCategory?: boolean[];
 }
-export const PAGES = [
+
+type IPages = {
+  id: number;
+  name: IAutoMenuSubPages;
+  title: string;
+  subTitle: string;
+  btnColor: string;
+  getNextPage: () => IAutoMenuSubPages;
+  checkIsActive: (props: IPageCheckIsActive) => boolean;
+  render: (props: IPageRender) => JSX.Element;
+}[];
+export const PAGES: IPages = [
   {
     id: 0,
     name: 'Select',

@@ -10,8 +10,8 @@ import Accordion from 'react-native-collapsible/Accordion';
 import colors from '../../shared/colors';
 import {commaToNum, sumUpDietTotal} from '../../shared/utils/sumUp';
 import {
-  setCartAcActive,
   setCurrentDiet,
+  setMenuAcActive,
 } from '../../features/reduxSlices/commonSlice';
 import {SCREENWIDTH} from '../../shared/constants';
 import {icons} from '../../shared/iconSource';
@@ -43,9 +43,7 @@ import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 const Cart = () => {
   // redux
   const dispatch = useDispatch();
-  const {currentDietNo, cartAcActive} = useSelector(
-    (state: RootState) => state.common,
-  );
+  const {currentDietNo} = useSelector((state: RootState) => state.common);
   const {shippingPrice} = useSelector((state: RootState) => state.order);
 
   // react-query
@@ -99,7 +97,7 @@ const Cart = () => {
       bLData: baseLineData,
       dData: dietData,
       dTData,
-      screen: 'Cart',
+      screen: 'Diet',
       setMenuNumSelectShow,
       setDietNoToNumControl,
     });
@@ -117,7 +115,7 @@ const Cart = () => {
 
   // Fn
   const updateSections = (activeSections: number[]) => {
-    dispatch(setCartAcActive(activeSections));
+    dispatch(setMenuAcActive(activeSections));
     if (activeSections.length === 0) return;
     const currentIdx = activeSections[0];
     const currentDietNo = dietData && dietData[currentIdx].dietNo;
@@ -136,8 +134,8 @@ const Cart = () => {
   // 장바구니 이동했을 때 현재 끼니의 accordion을 열어줌
   useEffect(() => {
     isFocused
-      ? dispatch(setCartAcActive([findDietSeq(dietData, currentDietNo).idx]))
-      : dispatch(setCartAcActive([]));
+      ? dispatch(setMenuAcActive([findDietSeq(dietData, currentDietNo).idx]))
+      : dispatch(setMenuAcActive([]));
   }, [isFocused]);
 
   return (

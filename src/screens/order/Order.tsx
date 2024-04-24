@@ -17,6 +17,7 @@ import {
   BtnBottomCTA,
   BtnText,
   Col,
+  Container,
   HorizontalSpace,
   Row,
   TextMain,
@@ -270,9 +271,16 @@ const Order = () => {
   };
 
   return listAddressDataLoading ? (
-    <ActivityIndicator />
+    <Container>
+      <ActivityIndicator />
+    </Container>
   ) : (
-    <SafeAreaView style={{flex: 1}}>
+    <Container
+      style={{
+        paddingRight: 0,
+        paddingLeft: 0,
+        backgroundColor: colors.backgroundLight2,
+      }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Accordion
           containerStyle={{marginTop: 16}}
@@ -295,7 +303,7 @@ const Order = () => {
         onPress={async () => onHandleOrder()}
         btnText={ctaBtnText}
       />
-    </SafeAreaView>
+    </Container>
   );
 };
 

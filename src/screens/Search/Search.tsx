@@ -44,9 +44,8 @@ import BusinessInfo from '../../components/common/businessInfo/BusinessInfo';
 import {applySortFilter} from '../../features/reduxSlices/sortFilterSlice';
 import CtaButton from '../../shared/ui/CtaButton';
 import {
-  setCartAcActive,
   setCurrentDiet,
-  setHomeAcActive,
+  setMenuAcActive,
 } from '../../features/reduxSlices/commonSlice';
 import {findDietSeq} from '../../shared/utils/findDietSeq';
 
@@ -71,23 +70,18 @@ const Search = () => {
   const [tooltipShow, setTooltipShow] = useState(false);
 
   // react-query
-  const {isLoading} = useGetBaseLine(); // 미리 캐싱
-  const {data: dietDetailData, isLoading: listDietLoading} = useListDietDetail(
+  const {isLoading: getBaseLineIsLoading} = useGetBaseLine(); // 미리 캐싱
+  const {data: dietData, isLoading: listDietIsLoading} = useListDiet();
+  const {data: dietDetailData, isLoading: listDDIsLoading} = useListDietDetail(
     currentDietNo,
     {
       enabled: currentDietNo ? true : false,
     },
   );
   const {
-    data: dietData,
-    refetch: refetchListDiet,
-    isSuccess: isListDietSuccess,
-  } = useListDiet();
-  const {
     data: productData,
     refetch: refetchProduct,
     isFetching: productIsFetching,
-    isLoading: productIsLoading,
   } = useListProduct(
     {
       dietNo: currentDietNo,
@@ -155,82 +149,88 @@ const Search = () => {
     scrollTop();
   }, [appliedSortFilter]);
 
-  return isLoading ? (
-    <Container style={{justifyContent: 'center', alignItems: 'center'}}>
-      <ActivityIndicator size="large" color={colors.main} />
-    </Container>
-  ) : (
+  if (getBaseLineIsLoading || listDietIsLoading || listDDIsLoading) {
+    return (
+      <Container style={{justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color={colors.main} />
+      </Container>
+    );
+  }
+
+  return (
     <Container>
       {/* 끼니선택, progressBar section */}
       <MenuSection />
 
-      <HomeContainer>
-        {/* 검색결과 수 및 정렬 필터 */}
-        <FlatlistHeaderComponent
-          translateY={translateY}
-          searchedNum={productData?.length}
-          setFilterModalShow={setFilterModalShow}
-          setSortModalShow={setSortModalShow}
-        />
-
-        {/* 식품 리스트 */}
-        {productData && dietDetailData && (
-          <FlatList
-            contentContainerStyle={{
-              marginTop: HOME_FILTER_HEADER_HEIGHT,
-              paddingBottom: 120,
-            }} // 숨겨지는 header의 높이만큼 margin
-            data={productData}
-            keyExtractor={extractListKey}
-            renderItem={renderFoodList}
-            getItemLayout={getItemLayout}
-            initialNumToRender={5}
-            windowSize={2}
-            maxToRenderPerBatch={7}
-            removeClippedSubviews={true}
-            onEndReachedThreshold={0.4}
-            showsVerticalScrollIndicator={false}
-            refreshing={productIsFetching}
-            onRefresh={() => {
-              dispatch(applySortFilter());
-              refetchProduct();
-            }}
-            progressViewOffset={HOME_FILTER_HEADER_HEIGHT}
-            onScroll={e => {
-              scrollY.setValue(
-                e.nativeEvent.contentOffset.y < 0
-                  ? 0
-                  : e.nativeEvent.contentOffset.y,
-              );
-            }}
-            ref={flatListRef}
-            // 하단 사업자 정보
-            ListFooterComponent={() => (
-              <BusinessInfo bgColor={colors.backgroundLight} />
-            )}
+      {dietData?.length === 0 ? (
+        <HomeContainer></HomeContainer>
+      ) : (
+        <HomeContainer>
+          {/* 검색결과 수 및 정렬 필터 */}
+          <FlatlistHeaderComponent
+            translateY={translateY}
+            searchedNum={productData?.length}
+            setFilterModalShow={setFilterModalShow}
+            setSortModalShow={setSortModalShow}
           />
-        )}
-        {route?.params?.from && route?.params?.from === 'Home' && (
-          <CtaButton
-            btnStyle="active"
-            style={{
-              width: SCREENWIDTH - 32,
-              position: 'absolute',
-              bottom: 8,
-              backgroundColor: colors.dark,
-            }}
-            btnText="완료"
-            onPress={() => {
-              goBack();
-              const {idx} = findDietSeq(dietData, currentDietNo);
-              dispatch(setHomeAcActive([idx]));
-              dispatch(setCartAcActive([idx]));
-            }}
-          />
-        )}
 
-        {/* 홈화면 기본 툴팁 */}
-        {/* {!route?.params?.from || route?.params?.from !== 'Home' ? (
+          {/* 식품 리스트 */}
+          {productData && dietDetailData && (
+            <FlatList
+              contentContainerStyle={{
+                marginTop: HOME_FILTER_HEADER_HEIGHT,
+                paddingBottom: 120,
+              }} // 숨겨지는 header의 높이만큼 margin
+              data={productData}
+              keyExtractor={extractListKey}
+              renderItem={renderFoodList}
+              getItemLayout={getItemLayout}
+              initialNumToRender={5}
+              windowSize={2}
+              maxToRenderPerBatch={7}
+              removeClippedSubviews={true}
+              onEndReachedThreshold={0.4}
+              showsVerticalScrollIndicator={false}
+              refreshing={productIsFetching}
+              onRefresh={() => {
+                dispatch(applySortFilter());
+                refetchProduct();
+              }}
+              progressViewOffset={HOME_FILTER_HEADER_HEIGHT}
+              onScroll={e => {
+                scrollY.setValue(
+                  e.nativeEvent.contentOffset.y < 0
+                    ? 0
+                    : e.nativeEvent.contentOffset.y,
+                );
+              }}
+              ref={flatListRef}
+              // 하단 사업자 정보
+              ListFooterComponent={() => (
+                <BusinessInfo bgColor={colors.backgroundLight} />
+              )}
+            />
+          )}
+          {route?.params?.from && route?.params?.from === 'Home' && (
+            <CtaButton
+              btnStyle="active"
+              style={{
+                width: SCREENWIDTH - 32,
+                position: 'absolute',
+                bottom: 8,
+                backgroundColor: colors.dark,
+              }}
+              btnText="완료"
+              onPress={() => {
+                goBack();
+                const {idx} = findDietSeq(dietData, currentDietNo);
+                dispatch(setMenuAcActive([idx]));
+              }}
+            />
+          )}
+
+          {/* 홈화면 기본 툴팁 */}
+          {/* {!route?.params?.from || route?.params?.from !== 'Home' ? (
           <DTooltip
             tooltipShow={tooltipShow}
             text={`식단 고민하기 싫다면\n장바구니페이지의 자동구성을 이용하세요`}
@@ -243,13 +243,14 @@ const Search = () => {
             onPressFn={() => {
               setTooltipShow(false);
               updateNotShowAgainList({key: 'homeTooltip', value: true});
-              navigate('BottomTabNav', {screen: 'Cart'});
+              navigate('BottomTabNav', {screen: 'Diet'});
             }}
           />
         ) : (
           <></>
         )} */}
-      </HomeContainer>
+        </HomeContainer>
+      )}
 
       {/* 정렬, 필터 모달 */}
       <DBottomSheet

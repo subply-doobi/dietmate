@@ -234,6 +234,8 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
           }}
           renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
         />
+
+        {/* currentDietNo 없을 때 (끼니 자체가 없을 때) 식품 추가/삭제 방지 */}
       </Box>
     </Container>
   );

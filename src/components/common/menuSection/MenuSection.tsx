@@ -16,7 +16,12 @@ import {icons} from '../../../shared/iconSource';
 import {findDietSeq} from '../../../shared/utils/findDietSeq';
 import colors from '../../../shared/colors';
 import {SCREENHEIGHT, SCREENWIDTH} from '../../../shared/constants';
-import {HorizontalSpace, Row, TextMain} from '../../../shared/ui/styledComps';
+import {
+  HorizontalSpace,
+  Icon,
+  Row,
+  TextMain,
+} from '../../../shared/ui/styledComps';
 
 // doobi Components
 import DAlert from '../../../shared/ui/DAlert';
@@ -42,27 +47,30 @@ const MenuSection = () => {
   const {currentDietNo} = useSelector((state: RootState) => state.common);
 
   // react-query
-  const {data: baseLineData} = useGetBaseLine();
-  const {data: dietData} = useListDiet();
-  // const deleteDietMutation = useDeleteDiet();
-  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
-    enabled: currentDietNo ? true : false,
-  });
+  const {data: baseLineData, isLoading: getBLIsLoading} = useGetBaseLine();
+  const {data: dietData, isLoading: listDietIsLoading} = useListDiet();
+  const deleteDietMutation = useDeleteDiet();
+  const {data: dietDetailData, isLoading: listDDIsLoading} = useListDietDetail(
+    currentDietNo,
+    {
+      enabled: currentDietNo ? true : false,
+    },
+  );
 
   // state
-  // const [dietNoToDelete, setDietNoToDelete] = useState<string>();
-  // const [deleteAlertShow, setDeleteAlertShow] = useState(false);
+  const [dietNoToDelete, setDietNoToDelete] = useState<string>();
+  const [deleteAlertShow, setDeleteAlertShow] = useState(false);
   const [activeSection, setActiveSection] = useState<number[]>([]); // accordion
   const [menuNumSelectShow, setMenuNumSelectShow] = useState(false);
   const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
 
   // etc
   const isAccordionActive = activeSection.length > 0;
-  // const onDeleteDiet = () => {
-  //   if (!dietData || dietData.length === 1) return;
-  //   dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
-  //   setDeleteAlertShow(false);
-  // };
+  const onDeleteDiet = () => {
+    if (!dietData) return;
+    dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
+    setDeleteAlertShow(false);
+  };
   const priceSum = sumUpPrice(dietDetailData);
   const currentQty =
     dietDetailData && dietDetailData.length > 0
@@ -88,11 +96,12 @@ const MenuSection = () => {
 
   // accordionContent
   const PROGRESS_ACCORDION = useMemo(() => {
+    // 로딩 중
     if (
-      !dietData ||
-      !dietDetailData ||
-      !baseLineData ||
-      Object.keys(baseLineData).length === 0
+      getBLIsLoading ||
+      listDietIsLoading ||
+      listDDIsLoading ||
+      (baseLineData && Object.keys(baseLineData).length === 0)
     )
       return [
         {
@@ -110,6 +119,31 @@ const MenuSection = () => {
         },
       ];
 
+    // 끼니 없는 경우
+    if (dietData && dietData.length === 0)
+      return [
+        {
+          inactiveHeader: (
+            <IndicatorBox>
+              <Row>
+                <Icon source={icons.warning_24} size={20} />
+                <AddMenuText>+ 버튼을 눌러 끼니를 추가해보세요</AddMenuText>
+              </Row>
+            </IndicatorBox>
+          ),
+          content: <></>,
+          activeHeader: (
+            <IndicatorBox>
+              <Row>
+                <Icon source={icons.warning_24} size={20} />
+                <AddMenuText>+ 버튼을 눌러 끼니를 추가해보세요</AddMenuText>
+              </Row>
+            </IndicatorBox>
+          ),
+        },
+      ];
+
+    // 끼니 있는 경우
     return [
       {
         // progressBar
@@ -201,7 +235,7 @@ const MenuSection = () => {
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <MenuSelectCard />
         </ScrollView>
-        {/* {dietData && dietData.length > 1 && (
+        {dietData && dietData.length > 0 && (
           <DeleteBtn
             onPress={() => {
               setDietNoToDelete(currentDietNo);
@@ -209,11 +243,12 @@ const MenuSection = () => {
             }}>
             <DeleteImg source={icons.deleteRound_18} />
           </DeleteBtn>
-        )} */}
+        )}
       </HeaderRow>
 
       {/* 끼니 삭제 알럿 */}
-      {/* <DAlert
+      <DAlert
+        NoOfBtn={2}
         alertShow={deleteAlertShow}
         renderContent={() => (
           <DeleteAlertContent
@@ -224,7 +259,7 @@ const MenuSection = () => {
         )}
         onConfirm={() => onDeleteDiet()}
         onCancel={() => setDeleteAlertShow(false)}
-      /> */}
+      />
 
       <Accordion
         activeSections={activeSection}
@@ -254,6 +289,11 @@ const MenuSection = () => {
 };
 
 export default MenuSection;
+
+const AddMenuText = styled(TextMain)`
+  font-size: 16px;
+  margin-left: 4px;
+`;
 
 const IndicatorBox = styled.View`
   width: 100%;

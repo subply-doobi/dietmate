@@ -4,9 +4,8 @@ import styled from 'styled-components/native';
 
 import {RootState} from '../../../app/store/reduxStore';
 import {
-  setCartAcActive,
   setCurrentDiet,
-  setHomeAcActive,
+  setMenuAcActive,
 } from '../../../features/reduxSlices/commonSlice';
 import {Col, Row} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
@@ -36,6 +35,7 @@ const MenuSelectCard = () => {
   const {data: dietData} = useListDiet();
   const dietTotalData = useListDietTotal(dietData, {enabled: !!dietData});
   const {data: dietEmptyData} = useGetDietDetailEmptyYn();
+  const createDietMutation = useCreateDiet();
 
   // memo
   const {dTData, dTDataStatus} = useMemo(() => {
@@ -54,21 +54,25 @@ const MenuSelectCard = () => {
     };
   }, [dietData, dietTotalData]);
 
-  // const createDietMutation = useCreateDiet();
-
   // state
-  // const [createAlertShow, setCreateAlertShow] = useState(false);
+  const [createErrShow, setCreateErrShow] = useState(false);
 
   // MenuSelect랑 겹치는 기능  //
-  // const addAlertStatus = getDietAddStatus(dietData, dietEmptyData);
+  const dietAddStatus = getDietAddStatus(dietData, dietEmptyData);
+  const dietErrText =
+    dietAddStatus === 'empty'
+      ? `비어있는 끼니를\n먼저 구성하고 이용해보세요`
+      : dietAddStatus === 'limit'
+        ? `끼니 추가는\n최대 10개까지 가능해요`
+        : '';
 
-  // const onCreateDiet = () => {
-  //   if (addAlertStatus === 'possible') {
-  //     createDietMutation.mutate();
-  //     return;
-  //   }
-  //   setCreateAlertShow(true);
-  // };
+  const onCreateDiet = () => {
+    if (dietAddStatus === 'possible') {
+      createDietMutation.mutate();
+      return;
+    }
+    setCreateErrShow(true);
+  };
 
   return (
     <Col>
@@ -93,8 +97,7 @@ const MenuSelectCard = () => {
                 isActivated={isActivated}
                 onPress={() => {
                   if (isActivated) return;
-                  dispatch(setHomeAcActive([]));
-                  dispatch(setCartAcActive([]));
+                  dispatch(setMenuAcActive([]));
                   dispatch(setCurrentDiet(menu.dietNo));
                 }}>
                 {(nutrStatus === 'exceed' || nutrStatus === 'satisfied') && (
@@ -105,42 +108,32 @@ const MenuSelectCard = () => {
             </Row>
           );
         })}
-        {/* <Row>
+        <Row>
           <CardBtn onPress={() => onCreateDiet()}>
             <CardText style={{color: colors.textSub}}>+</CardText>
           </CardBtn>
-        </Row> */}
+        </Row>
       </Row>
-      {/* <DAlert
-        alertShow={createAlertShow}
-        onCancel={() => setCreateAlertShow(false)}
+      <DAlert
+        alertShow={createErrShow}
+        onCancel={() => setCreateErrShow(false)}
         onConfirm={() => {
-          setCreateAlertShow(false);
+          setCreateErrShow(false);
         }}
         NoOfBtn={1}
-        renderContent={() =>
-          addAlertStatus === 'limit' ? (
-            <CreateLimitAlertContent />
-          ) : addAlertStatus === 'empty' ? (
-            <CommonAlertContent
-              text={`비어있는 끼니를\n먼저 구성하고 이용해보세요`}
-            />
-          ) : (
-            <></>
-          )
-        }
-      /> */}
+        renderContent={() => <CommonAlertContent text={dietErrText} />}
+      />
     </Col>
   );
 };
 
 export default MenuSelectCard;
 
-const CardText = styled.Text<{isActivated: boolean}>`
+const CardText = styled.Text<{isActivated?: boolean}>`
   font-size: 14px;
   color: ${({isActivated}) => (isActivated ? colors.textMain : colors.textSub)};
 `;
-const CardBtn = styled.TouchableOpacity<{isActivated: boolean}>`
+const CardBtn = styled.TouchableOpacity<{isActivated?: boolean}>`
   height: ${({isActivated}) => (isActivated ? '32px' : '28px')};
   width: 74px;
   justify-content: center;

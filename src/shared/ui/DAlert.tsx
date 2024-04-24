@@ -13,6 +13,7 @@ interface IDAlert extends ViewProps {
   onConfirm: Function;
   onCancel: Function;
   confirmLabel?: string;
+  showTopCancel?: boolean;
   NoOfBtn?: 0 | 1 | 2;
 }
 const DAlert = ({
@@ -21,6 +22,7 @@ const DAlert = ({
   onConfirm,
   onCancel,
   confirmLabel,
+  showTopCancel = false,
   NoOfBtn,
   ...props
 }: IDAlert) => {
@@ -43,14 +45,14 @@ const DAlert = ({
                 </BtnLeft>
               )}
 
-              <BtnRight onPress={() => onConfirm && onConfirm()}>
+              <BtnRight onPress={async () => onConfirm && (await onConfirm())}>
                 <ConfirmBtnText>
                   {confirmLabel ? confirmLabel : '확인'}
                 </ConfirmBtnText>
               </BtnRight>
             </Row>
           )}
-          {NoOfBtn === 0 && (
+          {showTopCancel && (
             <TopCancelBtn onPress={() => onCancel && onCancel()}>
               <Icon source={icons.cancelRound_24} />
             </TopCancelBtn>
