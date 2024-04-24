@@ -11,7 +11,7 @@ import {
 import {Col, Row} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 import {getDietAddStatus} from '../../../shared/utils/getDietAddStatus';
-import DAlert from '../alert/DAlert';
+import DAlert from '../../../shared/ui/DAlert';
 import CreateLimitAlertContent from '../alert/CreateLimitAlertContent';
 import CommonAlertContent from '../alert/CommonAlertContent';
 

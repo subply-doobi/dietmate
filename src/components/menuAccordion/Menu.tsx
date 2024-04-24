@@ -14,7 +14,7 @@ import {
   Row,
   TextMain,
 } from '../../shared/ui/styledComps';
-import DAlert from '../common/alert/DAlert';
+import DAlert from '../../shared/ui/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import AccordionCtaBtns from './AccordionCtaBtns';
 import FoodList from './FoodList';

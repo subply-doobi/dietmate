@@ -20,7 +20,7 @@ import {
 } from '../../shared/api/queries/diet';
 import ChangeFoodList from './ui/ChangeFoodList';
 import colors from '../../shared/colors';
-import DAlert from '../../components/common/alert/DAlert';
+import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 
 const FOOD_ERROR_RANGE = {

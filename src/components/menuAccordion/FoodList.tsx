@@ -16,7 +16,7 @@ import {
 } from '../../shared/ui/styledComps';
 import {commaToNum} from '../../shared/utils/sumUp';
 
-import DAlert from '../common/alert/DAlert';
+import DAlert from '../../shared/ui/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 
 import {BASE_URL} from '../../shared/api/urls';

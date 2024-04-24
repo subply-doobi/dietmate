@@ -19,7 +19,7 @@ import {SCREENHEIGHT, SCREENWIDTH} from '../../../shared/constants';
 import {HorizontalSpace, Row, TextMain} from '../../../shared/ui/styledComps';
 
 // doobi Components
-import DAlert from '../alert/DAlert';
+import DAlert from '../../../shared/ui/DAlert';
 import MenuSelectCard from './MenuSelectCard';
 import DeleteAlertContent from '../alert/DeleteAlertContent';
 import NutrientsProgress from '../nutrient/NutrientsProgress';

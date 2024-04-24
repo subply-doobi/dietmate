@@ -14,7 +14,7 @@ import {
   VerticalLine,
   Container,
 } from '../../shared/ui/styledComps';
-import DAlert from '../../components/common/alert/DAlert';
+import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 
 // util

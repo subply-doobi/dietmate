@@ -36,7 +36,7 @@ import {
 } from '../../shared/api/queries/diet';
 import {useListProduct} from '../../shared/api/queries/product';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
-import DAlert from '../../components/common/alert/DAlert';
+import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 
 import SortModalContent from './ui/SortModalContent';

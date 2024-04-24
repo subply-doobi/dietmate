@@ -21,7 +21,7 @@ import {RootState} from '../../app/store/reduxStore';
 // doobi Component
 import {HorizontalSpace, TextSub} from '../../shared/ui/styledComps';
 import CartSummary from '../../components/cart/CartSummary';
-import DAlert from '../../components/common/alert/DAlert';
+import DAlert from '../../shared/ui/DAlert';
 import CreateLimitAlertContent from '../../components/common/alert/CreateLimitAlertContent';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 import MenuNumSelectContent from '../../components/cart/MenuNumSelectContent';

@@ -70,8 +70,8 @@ export const DIET_PURPOSE_CD = [
 
 export const NUTR_RATIO_CD = [
   {cdNm: '55 : 20 : 25(보건복지부 권장)', cd: 'SP005001'},
-  {cdNm: '20 : 20: 60(저탄고지 식단)', cd: 'SP005002'},
-  {cdNm: '40 : 40 : 20(벌크업용)', cd: 'SP005003'},
+  {cdNm: '20 : 20 : 60(키토 식단)', cd: 'SP005002'},
+  {cdNm: '40 : 40 : 20(벌크업)', cd: 'SP005003'},
 ];
 
 export const categoryCode: {[key: string]: string} = {

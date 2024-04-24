@@ -15,7 +15,7 @@ const Start = ({userInputState}: {userInputState: IUserInputState}) => {
         source={require('../../../../shared/assets/onboardingLottie/onboardingCr.json')}
         style={{
           width: SCREENWIDTH - 32,
-          height: SCREENHEIGHT - 32 - 104 - 64 - 24 - 96 - 120 - 52 - 40,
+          height: SCREENHEIGHT - 32 - 104 - 64 - 24 - 96 - 120 - 52 - 40 - 40,
         }}
         autoPlay
         loop

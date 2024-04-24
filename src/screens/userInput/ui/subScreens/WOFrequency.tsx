@@ -40,7 +40,7 @@ const WOFrequency = ({userInputState}: {userInputState: IUserInputState}) => {
           <ToggleButton
             key={item.cdNm}
             isActive={sportsSeqCd.value === item.cd}
-            label={item.cdNm}
+            label={item.cd !== 'SP008008' ? item.cdNm : '7회'}
             style={{width: (SCREENWIDTH - 32 - 8 - 8 - 8) / 4, height: 48}}
             onPress={() =>
               dispatch(setValue({name: 'sportsSeqCd', value: item.cd}))

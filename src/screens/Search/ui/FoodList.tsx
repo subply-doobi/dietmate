@@ -22,7 +22,7 @@ import {BASE_URL} from '../../../shared/api/urls';
 // doobi Component
 import {Col, Row, TextMain, TextSub} from '../../../shared/ui/styledComps';
 import DeleteAlertContent from '../../../components/common/alert/DeleteAlertContent';
-import DAlert from '../../../components/common/alert/DAlert';
+import DAlert from '../../../shared/ui/DAlert';
 
 // react-query
 import {IProductData} from '../../../shared/api/types/product';
