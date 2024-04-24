@@ -23,7 +23,7 @@ import {
 } from '../../shared/ui/styledComps';
 import colors from '../../shared/colors';
 
-import DAlert from '../../components/common/alert/DAlert';
+import DAlert from '../../shared/ui/DAlert';
 import {
   useCreateAddress,
   useListAddress,

@@ -16,7 +16,7 @@ import {
   VerticalLine,
 } from '../../shared/ui/styledComps';
 
-import DAlert from '../../components/common/alert/DAlert';
+import DAlert from '../../shared/ui/DAlert';
 import NutrTarget from '../../components/common/nutrient/NutrientTarget';
 import CalChangeAlert from './ui/CalorieChangeAlert';
 import NutrChangeAlert from './ui/NutrientChangeAlert';

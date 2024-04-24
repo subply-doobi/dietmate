@@ -10,11 +10,28 @@ import {
   IUserInputState,
   setValue,
 } from '../../../../features/reduxSlices/userInputSlice';
+import {useEffect, useRef} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {TextInput} from 'react-native';
 
 const Height = ({userInputState}: {userInputState: IUserInputState}) => {
+  // navigation
+  const {isFocused} = useNavigation();
+
   // redux
   const dispatch = useDispatch();
   const {height} = userInputState;
+
+  // useRef
+  const heightRef = useRef<TextInput | null>(null);
+
+  // useEffect
+  useEffect(() => {
+    if (isFocused()) {
+      heightRef?.current?.focus();
+    }
+  }, [isFocused()]);
+
   return (
     <Container>
       <SquareInput
@@ -26,6 +43,7 @@ const Height = ({userInputState}: {userInputState: IUserInputState}) => {
         keyboardType="numeric"
         maxLength={3}
         placeholder="신장을 입력해주세요"
+        ref={heightRef}
       />
     </Container>
   );

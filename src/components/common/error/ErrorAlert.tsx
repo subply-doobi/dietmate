@@ -6,7 +6,7 @@ import {
   convertCodeToMsg,
   errorActionByCode,
 } from '../../../shared/utils/handleError';
-import DAlert from '../alert/DAlert';
+import DAlert from '../../../shared/ui/DAlert';
 import {queryClient} from '../../../app/store/reactQueryStore';
 import styled from 'styled-components/native';
 import {Col, TextMain} from '../../../shared/ui/styledComps';

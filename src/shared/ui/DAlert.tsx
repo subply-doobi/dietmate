@@ -1,18 +1,19 @@
 import React from 'react';
-import {Modal} from 'react-native';
+import {Modal, ViewProps} from 'react-native';
 import styled from 'styled-components/native';
 
-import colors from '../../../shared/colors';
-import {DALERT_WIDTH, SCREENWIDTH} from '../../../shared/constants';
-import {Row, TextMain} from '../../../shared/ui/styledComps';
+import colors from '../colors';
+import {DALERT_WIDTH, SCREENWIDTH} from '../constants';
+import {Icon, Row, TextMain} from './styledComps';
+import {icons} from '../iconSource';
 
-interface IDAlert {
+interface IDAlert extends ViewProps {
   alertShow: boolean;
   renderContent: () => React.ReactElement;
   onConfirm: Function;
   onCancel: Function;
   confirmLabel?: string;
-  NoOfBtn?: 1 | 2;
+  NoOfBtn?: 0 | 1 | 2;
 }
 const DAlert = ({
   alertShow,
@@ -21,37 +22,39 @@ const DAlert = ({
   onCancel,
   confirmLabel,
   NoOfBtn,
+  ...props
 }: IDAlert) => {
   return alertShow != null ? (
     <Modal
       animationType="fade"
       transparent={true}
       visible={alertShow ? true : false}
-      onRequestClose={() => {
-        onCancel ? onCancel() : null;
-      }}>
+      onRequestClose={() => onCancel && onCancel()}>
       <ModalBackGround>
-        <PopUpContainer>
+        <PopUpContainer {...props}>
           <ContentContainer>{renderContent()}</ContentContainer>
-          <Row>
-            {NoOfBtn !== 1 && (
-              <BtnLeft
-                onPress={() => {
-                  onCancel ? onCancel() : null;
-                }}>
-                <CancelBtnText>취소</CancelBtnText>
-              </BtnLeft>
-            )}
 
-            <BtnRight
-              onPress={() => {
-                onConfirm ? onConfirm() : null;
-              }}>
-              <ConfirmBtnText>
-                {confirmLabel ? confirmLabel : '확인'}
-              </ConfirmBtnText>
-            </BtnRight>
-          </Row>
+          {/* 취소 | 확인 버튼 */}
+          {NoOfBtn !== 0 && (
+            <Row>
+              {NoOfBtn === 2 && (
+                <BtnLeft onPress={() => onCancel && onCancel()}>
+                  <CancelBtnText>취소</CancelBtnText>
+                </BtnLeft>
+              )}
+
+              <BtnRight onPress={() => onConfirm && onConfirm()}>
+                <ConfirmBtnText>
+                  {confirmLabel ? confirmLabel : '확인'}
+                </ConfirmBtnText>
+              </BtnRight>
+            </Row>
+          )}
+          {NoOfBtn === 0 && (
+            <TopCancelBtn onPress={() => onCancel && onCancel()}>
+              <Icon source={icons.cancelRound_24} />
+            </TopCancelBtn>
+          )}
         </PopUpContainer>
       </ModalBackGround>
     </Modal>
@@ -73,10 +76,8 @@ interface IPopUpContainer {
   backgroundColor?: string;
 }
 const PopUpContainer = styled.View<IPopUpContainer>`
-  width: ${({width}) => (width ? `${width}px` : `${DALERT_WIDTH}px`)};
-  height: ${({height}) => (height ? `${height}px` : 'auto')};
-  background-color: ${({backgroundColor}) =>
-    backgroundColor ? backgroundColor : colors.white};
+  width: ${DALERT_WIDTH}px;
+  background-color: ${colors.white};
   border-radius: 10px;
 `;
 
@@ -111,4 +112,14 @@ const CancelBtnText = styled(TextMain)`
   font-size: 16px;
   font-weight: 700;
   color: ${colors.textSub};
+`;
+
+const TopCancelBtn = styled.TouchableOpacity`
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  justify-content: center;
+  align-items: center;
 `;

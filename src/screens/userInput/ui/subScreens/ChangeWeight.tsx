@@ -1,20 +1,24 @@
+// RN
+import {TextInput} from 'react-native';
+import {useEffect, useRef} from 'react';
+
 // 3rd
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../../../app/store/reduxStore';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 import styled from 'styled-components/native';
 
 // doobi
-import SquareInput from '../../../../shared/ui/SquareInput';
-import {Col} from '../../../../shared/ui/styledComps';
 import {
   IUserInputState,
   setValue,
 } from '../../../../features/reduxSlices/userInputSlice';
-import {useNavigation} from '@react-navigation/native';
-import {useRef, useEffect} from 'react';
-import {TextInput} from 'react-native';
+import SquareInput from '../../../../shared/ui/SquareInput';
+import {useGetBaseLine} from '../../../../shared/api/queries/baseLine';
 
-const Weight = ({userInputState}: {userInputState: IUserInputState}) => {
+const ChangeWeight = ({userInputState}: {userInputState: IUserInputState}) => {
+  // react-qurey
+  const {data: baseLineData} = useGetBaseLine();
+
   // navigation
   const {isFocused} = useNavigation();
 
@@ -31,11 +35,10 @@ const Weight = ({userInputState}: {userInputState: IUserInputState}) => {
       weightRef?.current?.focus();
     }
   }, [isFocused()]);
-
   return (
     <Container>
       <SquareInput
-        label="몸무게 (kg)"
+        label={`몸무게 (기존 : ${baseLineData?.weight}kg)`}
         isActive={!!weight.value}
         value={weight.value}
         onChangeText={v => dispatch(setValue({name: 'weight', value: v}))}
@@ -49,7 +52,8 @@ const Weight = ({userInputState}: {userInputState: IUserInputState}) => {
   );
 };
 
-export default Weight;
+export default ChangeWeight;
+
 const Container = styled.View`
   flex: 1;
 `;

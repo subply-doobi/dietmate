@@ -39,7 +39,7 @@ export const calculateNutrTarget = (
   duration: number,
   dietPurposecd: string,
   bmr: string,
-  amrKnown: string,
+  amrKnown?: string,
 ) => {
   // const wcal = 0.0175 * 6 * parseFloat(weight) * timeCdToMinutes[weightTimeCd];
   // const acal = 0.0175 * 7 * parseFloat(weight) * timeCdToMinutes[aerobicTimeCd];
@@ -52,21 +52,17 @@ export const calculateNutrTarget = (
   const amr = aCal + parseFloat(bmr) * 0.2;
   const tmr = parseFloat(bmr) + amr;
   const calorieTarget =
-    (tmr + parseInt(purposeCdToValue[dietPurposecd].additionalCalorie)) / 3;
+    tmr + parseInt(purposeCdToValue[dietPurposecd].additionalCalorie);
   const carbTarget = (calorieTarget * 0.55) / 4;
   const proteinTarget = (calorieTarget * 0.2) / 4;
   const fatTarget = (calorieTarget * 0.25) / 9;
-  const calorieTargetPerMeal = calorieTarget;
-  const carbTargetPerMeal = carbTarget;
-  const proteinTargetPerMeal = proteinTarget;
-  const fatTargetPerMeal = fatTarget;
 
   return {
     tmr: String(Math.round(tmr)),
-    calorie: String(Math.round(calorieTargetPerMeal)),
-    carb: String(Math.round(carbTargetPerMeal)),
-    protein: String(Math.round(proteinTargetPerMeal)),
-    fat: String(Math.round(fatTargetPerMeal)),
+    calorie: String(Math.round(calorieTarget)),
+    carb: String(Math.round(carbTarget)),
+    protein: String(Math.round(proteinTarget)),
+    fat: String(Math.round(fatTarget)),
   };
 };
 

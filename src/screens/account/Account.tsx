@@ -11,7 +11,7 @@ import {useDeleteUser} from '../../shared/api/queries/member';
 
 import colors from '../../shared/colors';
 import {useNavigation} from '@react-navigation/native';
-import DAlert from '../../components/common/alert/DAlert';
+import DAlert from '../../shared/ui/DAlert';
 import {initializeInput} from '../../features/reduxSlices/userInputSlice';
 import PageBtn from '../mypage/ui/PageBtn';
 import {queryClient} from '../../app/store/reactQueryStore';

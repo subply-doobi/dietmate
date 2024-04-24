@@ -67,4 +67,5 @@ const Label = styled(TextMain)`
 const ErrorMsg = styled(TextSub)`
   font-size: 11px;
   margin: 2px 0px 0px 12px;
+  color: ${colors.warning};
 `;

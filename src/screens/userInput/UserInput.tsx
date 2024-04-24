@@ -1,5 +1,5 @@
 // RN
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 // 3rd
 import {
@@ -19,10 +19,10 @@ import {Col, Container} from '../../shared/ui/styledComps';
 import GuideTitle from '../../shared/ui/GuideTitle';
 import {PAGES} from './util/contentBypages';
 import BackArrow from '../../components/common/navigation/BackArrow';
-import {getPageIdx} from './util/pageIdx';
+import {getPageIdx, getPageItem} from './util/pageIdx';
 import {BackHandler, ScrollView} from 'react-native';
 import CtaButton from '../../shared/ui/CtaButton';
-import {convertDataByMethod} from './util/userInfoSubmit';
+import {setSubmitData} from './util/userInfoSubmit';
 import {
   useGetBaseLine,
   useUpdateBaseLine,
@@ -43,35 +43,30 @@ const UserInput = () => {
   const updateBaseLineMutation = useUpdateBaseLine();
   const createBaseLineMutation = useCreateBaseLine();
   const {data: dietData} = useListDiet();
-  const createDietMutation = useCreateDiet();
 
   // useState
-  const [progress, setProgress] = useState<number[]>([0]);
+  const [progress, setProgress] = useState<string[]>(['Start']);
+
+  // useRef
+  const scrollRef = useRef<ScrollView | null>(null);
 
   // etc
-  const currentIdx = progress[progress.length - 1];
+  const currentPage = progress[progress.length - 1];
   const goNext = (nextPage: string) => {
-    const nextPageIdx = getPageIdx(nextPage);
-    setProgress(v => [...v, nextPageIdx]);
+    setProgress(v => [...v, nextPage]);
   };
   const goPrev = () => {
     setProgress(v => v.slice(0, v.length - 1));
   };
   const goStart = () => {
-    setProgress([0]);
+    setProgress(['Start']);
   };
-  const onComplete = async (currentDietNum: number) => {
-    const requestBody =
-      convertDataByMethod[userInputState.targetOption.value[0]](userInputState);
-    // dietData?.length === 0 && (await createDietMutation.mutateAsync());
+  const onComplete = async () => {
+    const requestBody = setSubmitData(userInputState);
 
     !baseLineData || Object.keys(baseLineData).length === 0
       ? await createBaseLineMutation.mutateAsync(requestBody)
       : await updateBaseLineMutation.mutateAsync(requestBody);
-
-    for (let i = 0; i < 5 - currentDietNum; i++) {
-      await createDietMutation.mutateAsync();
-    }
 
     reset({
       index: 0,
@@ -84,20 +79,31 @@ const UserInput = () => {
         },
       ],
     });
-    setProgress([0]);
+    setProgress(['Start']);
   };
+
+  // Cta 버튼 설정
+  const btnStyle = getPageItem(currentPage).checkIsActive(userInputState)
+    ? 'active'
+    : 'inactive';
+
+  const btnText =
+    currentPage === 'TargetCalorie'
+      ? `${userInputState.calorie.value} kcal 로 결정`
+      : '다음';
+
   const onCtaPress = () => {
-    if (currentIdx === PAGES.length - 1) {
-      dietData && onComplete(dietData.length);
+    if (currentPage === 'Result' || currentPage === 'ChangeResult') {
+      dietData && onComplete();
       return;
     }
-    goNext(PAGES[currentIdx].getNextPage(userInputState));
+    goNext(getPageItem(currentPage).getNextPage(userInputState));
   };
 
   // useEffect
   // headerTitle 설정
   useEffect(() => {
-    if (PAGES[currentIdx].name === 'Start') {
+    if (currentPage === 'Start') {
       setOptions({
         headerTitle: '',
         headerLeft: () => <BackArrow goBackFn={goBack} />,
@@ -106,7 +112,7 @@ const UserInput = () => {
       return;
     }
     setOptions({
-      headerTitle: `${currentIdx}/${PAGES.length - 1}`,
+      headerTitle: `${getPageItem(currentPage).header}`,
       headerLeft: () => <BackArrow goBackFn={goPrev} />,
       headerRight: () => (
         <GoStartBtn onPress={() => goStart()}>
@@ -120,7 +126,7 @@ const UserInput = () => {
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
-        if (PAGES[currentIdx].name === 'Start') return false;
+        if (currentPage === 'Start') return false;
 
         goPrev();
         return true;
@@ -134,52 +140,53 @@ const UserInput = () => {
       return () => subscription.remove();
     }, [progress]),
   );
+  const numerator = parseInt(getPageItem(currentPage).header.split('/')[0]);
+  const denominator = parseInt(getPageItem(currentPage).header.split('/')[1]);
+
   return (
     <Container>
       <ProgressBox>
         <Progress.Bar
-          progress={currentIdx / (PAGES.length - 1)}
+          progress={numerator / denominator}
           width={null}
           height={4}
           color={colors.main}
-          unfilledColor={colors.backgroundLight}
+          unfilledColor={colors.highlight2}
           borderWidth={0}
         />
       </ProgressBox>
       <ScrollView
+        ref={scrollRef}
         contentContainerStyle={{paddingBottom: 200}}
-        scrollEnabled={PAGES[currentIdx].name === 'Start' ? false : true}
+        scrollEnabled={currentPage === 'Start' ? false : true}
         showsVerticalScrollIndicator={false}>
         <GuideTitle
           style={{
-            marginTop: currentIdx >= getPageIdx('TargetOptions') ? 24 : 96,
+            marginTop: 48,
             marginBottom: 64,
           }}
-          title={PAGES[currentIdx].title}
-          subTitle={PAGES[currentIdx].subTitle}
+          title={getPageItem(currentPage).title}
+          subTitle={getPageItem(currentPage).subTitle}
         />
 
         {/* 각 페이지 내용 */}
-        {PAGES[currentIdx].render(userInputState)}
+        {getPageItem(currentPage).render(userInputState, scrollRef)}
       </ScrollView>
 
       <Col style={{marginTop: -120}}>
-        {route?.params?.from === 'Mypage' &&
-          PAGES[currentIdx].name === 'Start' && (
+        {route?.params?.from === 'Mypage' && currentPage === 'Start' && (
+          <>
             <CtaButton
               btnStyle="border"
-              btnText="목표영양만 변경하기"
-              onPress={() => goNext('TargetOptions')}
+              btnText="몸무게, 목표영양만 변경하기"
+              onPress={() => goNext('ChangeWeight')}
             />
-          )}
+          </>
+        )}
         <CtaButton
-          btnStyle={
-            PAGES[currentIdx].checkIsActive(userInputState)
-              ? 'active'
-              : 'inactive'
-          }
-          btnText="다음"
-          style={{marginTop: 16, marginBottom: 16}}
+          btnStyle={btnStyle}
+          btnText={btnText}
+          style={{marginTop: 8, marginBottom: 16}}
           onPress={() => onCtaPress()}
         />
       </Col>

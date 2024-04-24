@@ -12,7 +12,7 @@ import ErrorAlert from './src/components/common/error/ErrorAlert';
 import BootSplash from 'react-native-bootsplash';
 
 import {version as appVersion} from './package.json';
-import DAlert from './src/components/common/alert/DAlert';
+import DAlert from './src/shared/ui/DAlert';
 import CommonAlertContent from './src/components/common/alert/CommonAlertContent';
 import {link} from './src/shared/utils/linking';
 import {
