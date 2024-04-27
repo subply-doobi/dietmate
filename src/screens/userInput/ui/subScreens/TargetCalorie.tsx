@@ -133,6 +133,7 @@ const TargetCalorie = ({userInputState}: {userInputState: IUserInputState}) => {
       <DAlert
         style={{width: SCREENWIDTH - 32}}
         alertShow={guideAlertShow}
+        showTopCancel={true}
         onConfirm={() => setGuideAlertShow(false)}
         onCancel={() => setGuideAlertShow(false)}
         renderContent={() => <CalGuideAlertContent menuPerDay={menuPerDay} />}

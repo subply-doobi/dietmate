@@ -174,7 +174,7 @@ const Processing = ({
           {
             name: 'BottomTabNav',
             params: {
-              screen: 'Home',
+              screen: 'Diet',
               params: {from: 'AutoMenu'},
             },
           },

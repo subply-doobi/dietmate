@@ -51,6 +51,7 @@ const Select = ({dTData, selectedDietNo, setSelectedDietNo}: ISelect) => {
         dTData.map((dDData, idx) => (
           <MenuSelectBtn key={idx} onPress={() => onPress(dData[idx].dietNo)}>
             <MenuAcInactiveHeader
+              controllable={false}
               dBData={dData[idx]}
               dDData={dDData}
               bLData={bLData}

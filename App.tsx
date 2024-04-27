@@ -23,6 +23,7 @@ import {
 } from './src/shared/constants';
 import {getLatestVersion} from './src/shared/api/queries/version';
 import CodePush from 'react-native-code-push';
+import AlertControl from './src/components/common/alert/AlertControl';
 
 const loadSplash = new Promise(resolve =>
   setTimeout(() => {
@@ -51,19 +52,17 @@ function App(): React.JSX.Element {
       await BootSplash.hide({fade: true});
     });
   }, []);
-
-  // etc
   const visitStore = () => {
     IS_ANDROID ? link(PLAY_STORE_URL) : link(APP_STORE_URL);
     setIsUpdateNeeded(false);
   };
-
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <NavigationContainer ref={navigationRef}>
           <RootStackNav />
           <ErrorAlert />
+          {/* 업데이트 알럿 */}
           <DAlert
             alertShow={isUpdateNeeded}
             onConfirm={() => visitStore()}

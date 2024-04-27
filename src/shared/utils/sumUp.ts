@@ -249,3 +249,97 @@ export const commaToNum = (num: number | string | undefined) => {
   const n = typeof num === 'number' ? num.toString() : num;
   return n.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
 };
+
+const getProductNumFromDTData = (dTData: IDietDetailData[]) => {
+  // change to for loop
+  let productNum = 0;
+  if (!dTData) return productNum;
+  for (let i = 0; i < dTData.length; i++) {
+    for (let j = 0; j < dTData[i].length; j++) {
+      productNum += parseInt(dTData[i][j].qty, 10);
+    }
+  }
+  return productNum;
+};
+
+const getTotalPriceFromDTData = (dTData: IDietDetailData[]) => {
+  let totalPrice = 0;
+  if (!dTData) return totalPrice;
+  for (let i = 0; i < dTData.length; i++) {
+    for (let j = 0; j < dTData[i].length; j++) {
+      totalPrice +=
+        (parseInt(dTData[i][j].price, 10) + SERVICE_PRICE_PER_PRODUCT) *
+        parseInt(dTData[i][j].qty, 10);
+    }
+  }
+  return totalPrice;
+};
+
+const reGroupBySellerFromDTData = (dTData: IDietDetailData[]) => {
+  let regroupedBySeller: {
+    [key: string]: IDietDetailData;
+  } = {};
+  for (let i = 0; i < dTData.length; i++) {
+    for (let j = 0; j < dTData[i].length; j++) {
+      if (!regroupedBySeller[dTData[i][j].platformNm]) {
+        regroupedBySeller[dTData[i][j].platformNm] = [];
+      }
+      regroupedBySeller[dTData[i][j].platformNm].push(dTData[i][j]);
+    }
+  }
+  return regroupedBySeller;
+};
+
+const getShippingPriceBySellerFromDTData = (dTData: IDietDetailData[]) => {
+  const reGroupedBySeller = reGroupBySellerFromDTData(dTData);
+  const keys = Object.keys(reGroupedBySeller);
+  let totalPriceBySeller: {
+    [key: string]: {
+      price: number;
+      freeShippingPrice: number;
+      shippingPrice: number;
+    };
+  } = {};
+  for (let i = 0; i < keys.length; i++) {
+    if (!totalPriceBySeller[keys[i]]) {
+      totalPriceBySeller[keys[i]] = {
+        price: 0,
+        freeShippingPrice: 0,
+        shippingPrice: 0,
+      };
+    }
+    totalPriceBySeller[keys[i]].price = sumUpPrice(
+      reGroupedBySeller[keys[i]],
+      true,
+    );
+    totalPriceBySeller[keys[i]].freeShippingPrice = parseInt(
+      reGroupedBySeller[keys[i]][0].freeShippingPrice,
+      10,
+    );
+    totalPriceBySeller[keys[i]].shippingPrice = parseInt(
+      reGroupedBySeller[keys[i]][0].shippingPrice,
+      10,
+    );
+  }
+  // console.log('totalPriceBySeller', totalPriceBySeller);
+  let shippingPriceBySeller: {[key: string]: number} = {};
+  for (let i = 0; i < keys.length; i++) {
+    shippingPriceBySeller[keys[i]] =
+      totalPriceBySeller[keys[i]].price >=
+      totalPriceBySeller[keys[i]].freeShippingPrice
+        ? 0
+        : totalPriceBySeller[keys[i]].shippingPrice;
+  }
+  // console.log('shippingPriceBySeller', shippingPriceBySeller);
+  return shippingPriceBySeller;
+};
+
+export const getTotalShippingPriceFromDTData = (dTData: IDietDetailData[]) => {
+  const shippingPriceBySeller = getShippingPriceBySellerFromDTData(dTData);
+  const keys = Object.keys(shippingPriceBySeller);
+  const totalShippingPrice = keys.reduce(
+    (acc, cur) => acc + shippingPriceBySeller[cur],
+    0,
+  );
+  return totalShippingPrice;
+};

@@ -11,13 +11,14 @@ import {
 
 // doobi
 import {Container} from '../../shared/ui/styledComps';
-import {PAGES} from './util/contentByPages';
+import {IAutoMenuSubPages, PAGES} from './util/contentByPages';
 import BackArrow from '../../components/common/navigation/BackArrow';
 import {getPageIdx} from './util/pageIdx';
 import GuideTitle from '../../shared/ui/GuideTitle';
 import CtaButton from '../../shared/ui/CtaButton';
 import {useListDiet, useListDietTotal} from '../../shared/api/queries/diet';
 import colors from '../../shared/colors';
+import styled from 'styled-components/native';
 
 const AutoMenu = () => {
   // navigation
@@ -29,7 +30,7 @@ const AutoMenu = () => {
   const dietTotalData = useListDietTotal(dData, {enabled: !!dData});
 
   // useState
-  const [progress, setProgress] = useState<number[]>([0]);
+  const [progress, setProgress] = useState<IAutoMenuSubPages[]>(['Select']);
   const [pageloaded, setPageloaded] = useState<boolean>(false);
   // 각 페이지에서 autoMenu에 필요한 state
   const [selectedDietNo, setSelectedDietNo] = useState<string[]>([]);
@@ -56,6 +57,33 @@ const AutoMenu = () => {
     };
   }, [dData, dietTotalData]);
 
+  // etc
+  const currentPage =
+    progress.length > 0 ? progress[progress.length - 1] : 'Select';
+
+  // etc
+  const goNext = (nextPage: IAutoMenuSubPages) => {
+    setProgress(v => [...v, nextPage]);
+  };
+  const goPrev = () => {
+    setProgress(v => v.slice(0, v.length - 1));
+  };
+
+  const btnStyle = PAGES.find(p => p.name === currentPage)?.checkIsActive({
+    selectedDietNo,
+    selectedCategory,
+  })
+    ? 'active'
+    : 'inactive';
+  const guideStyle =
+    currentPage === 'Processing' ? {marginTop: 140} : {marginTop: 72};
+  const guideTitle = PAGES.find(p => p.name === currentPage)?.title || '';
+  const guideSubTitle = PAGES.find(p => p.name === currentPage)?.subTitle || '';
+  const guideTitleAlign =
+    PAGES.find(p => p.name === currentPage)?.name === 'Processing'
+      ? 'center'
+      : 'left';
+
   // useEffect
   // 자동구성 첫 페이지 설정
   // 1. 이미 구성중인 끼니 있으면 끼니 선택 페이지에서 시작 || 카테고리선택 페이지에서 시작
@@ -63,7 +91,7 @@ const AutoMenu = () => {
   useEffect(() => {
     if (!dTData || !dData) return;
     if (route?.params?.isOneMenuAuto) {
-      setProgress([getPageIdx('Category')]);
+      setProgress(['Category']);
       route?.params?.selectedOneDietNo &&
         setSelectedDietNo([route?.params?.selectedOneDietNo]);
       setPageloaded(true);
@@ -72,7 +100,7 @@ const AutoMenu = () => {
     const menuLengthList = dTData.map((m: any) => m.length);
     if (menuLengthList.every((m: number) => m === 0)) {
       setSelectedDietNo(dData.map(v => v.dietNo));
-      setProgress([getPageIdx('Category')]);
+      setProgress(['Category']);
     }
     setPageloaded(true);
   }, []);
@@ -85,10 +113,7 @@ const AutoMenu = () => {
       });
       return;
     }
-    if (
-      PAGES[currentIdx].name === 'Processing' ||
-      PAGES[currentIdx].name === 'Error'
-    ) {
+    if (currentPage === 'Processing' || currentPage === 'Error') {
       setOptions({
         headerLeft: () => <></>,
       });
@@ -104,10 +129,7 @@ const AutoMenu = () => {
     useCallback(() => {
       const onBackPress = () => {
         if (progress.length === 1) return false;
-        if (
-          PAGES[currentIdx].name === 'Processing' ||
-          PAGES[currentIdx].name === 'Error'
-        ) {
+        if (currentPage === 'Processing' || currentPage === 'Error') {
           return true;
         }
 
@@ -124,40 +146,22 @@ const AutoMenu = () => {
     }, [progress]),
   );
 
-  // etc
-  const currentIdx = progress[progress.length - 1];
-
-  const goNext = (nextPage: string) => {
-    const nextPageIdx = getPageIdx(nextPage);
-    setProgress(v => [...v, nextPageIdx]);
-  };
-  const goPrev = () => {
-    setProgress(v => v.slice(0, v.length - 1));
-  };
-
-  const btnStyle = PAGES[currentIdx].checkIsActive({
-    selectedDietNo,
-    selectedCategory,
-  })
-    ? 'active'
-    : 'inactive';
-
   return !pageloaded ? (
-    <Container></Container>
+    <Container>
+      <Box>
+        <ActivityIndicator size={20} color={colors.main} />
+      </Box>
+    </Container>
   ) : (
     <Container>
       <ScrollView
         contentContainerStyle={{paddingBottom: 120}}
         showsVerticalScrollIndicator={false}>
         <GuideTitle
-          style={{
-            marginTop: PAGES[currentIdx].name === 'Processing' ? 140 : 72,
-          }}
-          title={PAGES[currentIdx].title}
-          subTitle={PAGES[currentIdx].subTitle}
-          titleAlign={
-            PAGES[currentIdx].name === 'Processing' ? 'center' : 'left'
-          }
+          style={guideStyle}
+          title={guideTitle}
+          subTitle={guideSubTitle}
+          titleAlign={guideTitleAlign}
         />
         {!dTData ? (
           <ActivityIndicator
@@ -166,7 +170,7 @@ const AutoMenu = () => {
             style={{marginTop: 64}}
           />
         ) : (
-          PAGES[currentIdx].render({
+          PAGES.find(p => p.name === currentPage)?.render({
             dTData,
             setProgress,
             selectedCategory,
@@ -181,17 +185,27 @@ const AutoMenu = () => {
         )}
       </ScrollView>
 
-      {PAGES[currentIdx].name === 'Processing' ||
-        PAGES[currentIdx].name === 'Error' || (
-          <CtaButton
-            btnStyle={btnStyle}
-            style={{position: 'absolute', bottom: 8}}
-            btnText="다음"
-            onPress={() => goNext(PAGES[currentIdx].getNextPage())}
-          />
-        )}
+      {currentPage === 'Processing' || currentPage === 'Error' || (
+        <CtaButton
+          btnStyle={btnStyle}
+          style={{position: 'absolute', bottom: 8}}
+          btnText="다음"
+          onPress={() =>
+            goNext(
+              PAGES.find(p => p.name === currentPage)?.getNextPage() ||
+                'Select',
+            )
+          }
+        />
+      )}
     </Container>
   );
 };
 
 export default AutoMenu;
+
+const Box = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;

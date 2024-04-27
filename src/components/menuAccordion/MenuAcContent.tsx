@@ -5,6 +5,7 @@ import colors from '../../shared/colors';
 import Menu from './Menu';
 import AccordionCtaBtns from './AccordionCtaBtns';
 import {
+  Col,
   HorizontalLine,
   HorizontalSpace,
   Row,
@@ -14,14 +15,12 @@ import MenuNumSelect from '../cart/MenuNumSelect';
 import {commaToNum, sumUpPrice} from '../../shared/utils/sumUp';
 
 interface IMenuAcContent {
-  screen?: string;
   dBData: IDietBaseData;
   dDData: IDietDetailData;
   setDietNoToNumControl?: React.Dispatch<React.SetStateAction<string>>;
   setMenuNumSelectShow?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const MenuAcContent = ({
-  screen = 'Home',
   dDData,
   dBData,
   setDietNoToNumControl,
@@ -40,28 +39,31 @@ const MenuAcContent = ({
   return (
     <Container>
       <HorizontalSpace height={8} />
-
       <NutrientsProgress dietDetailData={dDData} tooltipShow={false} />
-
       <Menu dietDetailData={dDData} dietNo={dBData.dietNo} />
-      <HorizontalLine style={{marginTop: 40}} />
-      <HorizontalSpace height={24} />
 
-      {screen === 'Home' && (
-        <AccordionCtaBtns dDData={dDData} dietNo={dBData.dietNo} />
-      )}
-      {screen === 'Cart' && (
-        <Row style={{justifyContent: 'space-between', paddingLeft: 16}}>
-          <Price>{commaToNum(dietPrice)}원</Price>
+      {/* 식품추가 - 자동구성 버튼 */}
+      <HorizontalSpace height={40} />
+      <AccordionCtaBtns dDData={dDData} dietNo={dBData.dietNo} />
+
+      {/* 수량조절 - 가격 */}
+      {dDData.length !== 0 && (
+        <Col
+          style={{
+            marginTop: 24,
+            alignItems: 'flex-end',
+          }}>
+          <HorizontalLine />
+          <HorizontalSpace height={24} />
           <MenuNumSelect
             disabled={dDData.length === 0}
             action="openModal"
             currentQty={currentQty}
             openMenuNumSelect={onMenuNoSelectPress}
           />
-        </Row>
+          <Price>{commaToNum(dietPrice)}원</Price>
+        </Col>
       )}
-
       <HorizontalSpace height={24} />
     </Container>
   );
@@ -81,4 +83,5 @@ const Container = styled.View`
 const Price = styled(TextMain)`
   font-size: 18px;
   font-weight: bold;
+  margin-top: 16px;
 `;

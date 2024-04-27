@@ -101,7 +101,7 @@ const RootStackNav = () => {
           headerTitle: '',
           headerRight: () => {
             return (
-              <Pressable onPress={() => navigate('Cart')}>
+              <Pressable onPress={() => navigate('Diet')}>
                 <Image source={icons.cart_36} style={{width: 36, height: 36}} />
               </Pressable>
             );

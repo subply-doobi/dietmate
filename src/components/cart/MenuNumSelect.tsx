@@ -3,6 +3,14 @@ import colors from '../../shared/colors';
 import {TextMain} from '../../shared/ui/styledComps';
 import {icons} from '../../shared/iconSource';
 
+interface IMenuNumSelect {
+  action: 'openModal' | 'setQty';
+  disabled?: boolean;
+  openMenuNumSelect?: Function;
+  setQty?: React.Dispatch<React.SetStateAction<number>>;
+  currentQty: number;
+  maxQty?: number;
+}
 /** dummy인 경우 수량조절 bottomSheet 열어주고 아닌 경우 실제 수량조절 */
 const MenuNumSelect = ({
   action,
@@ -10,13 +18,8 @@ const MenuNumSelect = ({
   openMenuNumSelect,
   setQty,
   currentQty,
-}: {
-  action: 'openModal' | 'setQty';
-  disabled?: boolean;
-  openMenuNumSelect?: Function;
-  setQty?: React.Dispatch<React.SetStateAction<number>>;
-  currentQty: number;
-}) => {
+  maxQty,
+}: IMenuNumSelect) => {
   // 1. 식품이 없거나 서버 오류로 dummy버튼인 경우
   //    == disabled prop 사용하면 홈화면 accordion이 닫히는 문제 때문에 onPress에 disabled 처리
   // 2. plusMinusBtn 만 disabled 인 경우
@@ -24,6 +27,7 @@ const MenuNumSelect = ({
   // 3. 버튼 박스만 disabled
   //    == 실제 수량조절 하는 경우
   const isPlusMinusBtnDisabled = action !== 'setQty';
+  const isMaxQty = maxQty && maxQty === currentQty ? true : false;
   return (
     <Box
       onPress={() => {
@@ -42,9 +46,9 @@ const MenuNumSelect = ({
       </MenuNoBox>
       <PlusMinusBtn
         style={{borderTopRightRadius: 5, borderBottomRightRadius: 5}}
-        disabled={isPlusMinusBtnDisabled}
+        disabled={isPlusMinusBtnDisabled || isMaxQty}
         onPress={() => !!setQty && setQty(v => v + 1)}>
-        <PlusMinusImg source={icons.plusGrey_24} />
+        {isMaxQty || <PlusMinusImg source={icons.plusGrey_24} />}
       </PlusMinusBtn>
     </Box>
   );
@@ -57,7 +61,6 @@ const Box = styled.TouchableOpacity`
 
   align-items: center;
   height: 32px;
-  justify-content: space-between;
 `;
 
 const PlusMinusBtn = styled.TouchableOpacity`

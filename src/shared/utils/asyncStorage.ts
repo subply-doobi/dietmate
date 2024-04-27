@@ -28,10 +28,12 @@ export const removeToken = async () => {
 interface INotShowAgainInitial {
   homeTooltip: boolean;
   onboarding: boolean;
+  tutorial: boolean;
 }
 const notShowAgainInitial: INotShowAgainInitial = {
   homeTooltip: false,
   onboarding: false,
+  tutorial: false,
 };
 export const initializeNotShowAgainList = async () => {
   try {

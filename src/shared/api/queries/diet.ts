@@ -4,9 +4,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../app/store/reduxStore';
 import {queryClient} from '../../../app/store/reactQueryStore';
 import {
-  setCartAcActive,
   setCurrentDiet,
-  setHomeAcActive,
+  setMenuAcActive,
   setProgressTooltipShow,
 } from '../../../features/reduxSlices/commonSlice';
 
@@ -77,8 +76,7 @@ export const useCreateDiet = (options?: IMutationOptions) => {
       dispatch(setCurrentDiet(data.dietNo));
 
       // 장바구니 accordion 기존 끼니는 닫아주기
-      dispatch(setHomeAcActive([]));
-      dispatch(setCartAcActive([]));
+      dispatch(setMenuAcActive([]));
 
       // invalidation
       queryClient.invalidateQueries({queryKey: [DIET]});
@@ -329,12 +327,16 @@ export const useDeleteDiet = () => {
       if (!prevDietData) {
         return;
       }
+
       let currentDietIdx = 0;
       let nextDietIdx = 0;
-      if (currentDietNo === dietNo) {
-        prevDietData.forEach((diet, idx) => {
-          if (diet.dietNo === dietNo) currentDietIdx = idx;
-        });
+
+      if (prevDietData.length === 1) {
+        dispatch(setCurrentDiet(''));
+      } else {
+        prevDietData.forEach(
+          (diet, idx) => (currentDietIdx = diet.dietNo === dietNo ? idx : 0),
+        );
         nextDietIdx = currentDietIdx === 0 ? 1 : prevDietData.length - 2;
         dispatch(setCurrentDiet(prevDietData[nextDietIdx].dietNo));
       }

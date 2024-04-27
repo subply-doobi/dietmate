@@ -16,6 +16,7 @@ import {icons} from '../../shared/iconSource';
 import colors from '../../shared/colors';
 import {useListDietDetailAll} from '../../shared/api/queries/diet';
 import {Icon} from '../../shared/ui/styledComps';
+import Diet from '../../screens/diet/Diet';
 
 const Tab = createBottomTabNavigator();
 
@@ -66,8 +67,8 @@ const BottomTabNav = () => {
       />
 
       <Tab.Screen
-        name="Cart"
-        component={Cart}
+        name="Diet"
+        component={Diet}
         options={{
           tabBarIcon: ({focused}) => (
             <CartIcon>
@@ -84,7 +85,7 @@ const BottomTabNav = () => {
           ),
           tabBarShowLabel: false,
           headerShown: true,
-          headerTitle: '장바구니',
+          headerTitle: '식단구성',
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontSize: 18,
