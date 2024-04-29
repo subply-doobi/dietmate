@@ -23,7 +23,8 @@ import {
 } from './src/shared/constants';
 import {getLatestVersion} from './src/shared/api/queries/version';
 import CodePush from 'react-native-code-push';
-import AlertControl from './src/components/common/alert/AlertControl';
+import {getNotShowAgainList} from './src/shared/utils/asyncStorage';
+import {setTutorialStart} from './src/features/reduxSlices/commonSlice';
 
 const loadSplash = new Promise(resolve =>
   setTimeout(() => {
@@ -46,6 +47,8 @@ function App(): React.JSX.Element {
       await getLatestVersion().then(res => {
         appVersion !== res?.latestVersion && setIsUpdateNeeded(true);
       });
+      const isTutorialMode = !(await getNotShowAgainList()).tutorial;
+      isTutorialMode && store.dispatch(setTutorialStart());
     };
 
     init().finally(async () => {

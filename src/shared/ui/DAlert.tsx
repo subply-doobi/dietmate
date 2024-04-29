@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Modal, ViewProps} from 'react-native';
 import styled from 'styled-components/native';
 
@@ -15,6 +15,7 @@ interface IDAlert extends ViewProps {
   confirmLabel?: string;
   showTopCancel?: boolean;
   NoOfBtn?: 0 | 1 | 2;
+  contentDelay?: number;
 }
 const DAlert = ({
   alertShow,
@@ -24,8 +25,21 @@ const DAlert = ({
   confirmLabel,
   showTopCancel = false,
   NoOfBtn,
+  contentDelay,
   ...props
 }: IDAlert) => {
+  const [contentVisible, setContentVisible] = useState(false);
+
+  useEffect(() => {
+    if (!alertShow) {
+      setContentVisible(false);
+      return;
+    }
+    setTimeout(() => {
+      setContentVisible(true);
+    }, contentDelay);
+  }, [alertShow]);
+
   return alertShow != null ? (
     <Modal
       animationType="fade"
@@ -33,31 +47,34 @@ const DAlert = ({
       visible={alertShow ? true : false}
       onRequestClose={() => onCancel && onCancel()}>
       <ModalBackGround>
-        <PopUpContainer {...props}>
-          <ContentContainer>{renderContent()}</ContentContainer>
+        {contentVisible && (
+          <PopUpContainer {...props}>
+            <ContentContainer>{renderContent()}</ContentContainer>
 
-          {/* 취소 | 확인 버튼 */}
-          {NoOfBtn !== 0 && (
-            <Row>
-              {NoOfBtn === 2 && (
-                <BtnLeft onPress={() => onCancel && onCancel()}>
-                  <CancelBtnText>취소</CancelBtnText>
-                </BtnLeft>
-              )}
+            {/* 취소 | 확인 버튼 */}
+            {NoOfBtn !== 0 && (
+              <Row>
+                {NoOfBtn === 2 && (
+                  <BtnLeft onPress={() => onCancel && onCancel()}>
+                    <CancelBtnText>취소</CancelBtnText>
+                  </BtnLeft>
+                )}
 
-              <BtnRight onPress={async () => onConfirm && (await onConfirm())}>
-                <ConfirmBtnText>
-                  {confirmLabel ? confirmLabel : '확인'}
-                </ConfirmBtnText>
-              </BtnRight>
-            </Row>
-          )}
-          {showTopCancel && (
-            <TopCancelBtn onPress={() => onCancel && onCancel()}>
-              <Icon source={icons.cancelRound_24} />
-            </TopCancelBtn>
-          )}
-        </PopUpContainer>
+                <BtnRight
+                  onPress={async () => onConfirm && (await onConfirm())}>
+                  <ConfirmBtnText>
+                    {confirmLabel ? confirmLabel : '확인'}
+                  </ConfirmBtnText>
+                </BtnRight>
+              </Row>
+            )}
+            {showTopCancel && (
+              <TopCancelBtn onPress={() => onCancel && onCancel()}>
+                <Icon source={icons.cancelRound_24} />
+              </TopCancelBtn>
+            )}
+          </PopUpContainer>
+        )}
       </ModalBackGround>
     </Modal>
   ) : null;

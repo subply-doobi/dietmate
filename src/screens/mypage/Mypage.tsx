@@ -35,6 +35,9 @@ import {RootState} from '../../app/store/reduxStore';
 import PageBtn from './ui/PageBtn';
 import {link} from '../../shared/utils/linking';
 import {INQUIRY_URL} from '../../shared/constants';
+import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
+import {updateNotShowAgainList} from '../../shared/utils/asyncStorage';
+import {setTutorialStart} from '../../features/reduxSlices/commonSlice';
 
 type IAlertType =
   | 'calorieChange'
@@ -71,6 +74,7 @@ const Mypage = () => {
   const [autoCalculate, setAutoCalculate] = useState(false);
   const [alertShow, setAlertShow] = useState(false);
   const [alertType, setAlertType] = useState<IAlertType>('calorieChange');
+  const [restartTutorial, setRestartTutorial] = useState(false);
 
   // useEffect
   useEffect(() => {
@@ -81,20 +85,14 @@ const Mypage = () => {
   // btns
   const myPageBtns = [
     {
-      title: '몸무게변경',
-      btnId: 'ChangeWeight',
-      onPress: () => {
-        baseLineData && dispatch(loadBaseLineData(baseLineData));
-        setAlertType('weightChange');
-        setAlertShow(true);
-      },
+      title: '이용방법',
+      btnId: 'Tutorial',
+      onPress: () => setRestartTutorial(true),
     },
     {
-      title: '찜한 상품',
+      title: '찜한상품',
       btnId: 'Likes',
-      onPress: () => {
-        navigate('Likes');
-      },
+      onPress: () => navigate('Likes'),
     },
     {
       title: '주문내역',
@@ -162,34 +160,6 @@ const Mypage = () => {
       return;
     }
 
-    // 변경된 몸무게만 업데이트
-    if (alertType === 'weightChange' && !autoCalculate) {
-      updateMutation.mutate({
-        ...baseLineData,
-        weight: userInputState.weightChange.value,
-      });
-      setAlertShow(false);
-      return;
-    }
-
-    // 변경된 몸무게와 자동계산된 영양 업데이트
-    if (alertType === 'weightChange' && autoCalculate) {
-      const {calorie, carb, protein, fat} = convertNutrByWeight(
-        userInputState.weightChange.value,
-        baseLineData,
-      );
-      updateMutation.mutate({
-        ...baseLineData,
-        calorie,
-        carb,
-        protein,
-        fat,
-        weight: userInputState.weightChange.value,
-      });
-      setAlertShow(false);
-      return;
-    }
-
     // 선택된 영양으로 다른 영양 자동 계산해서 업데이트
     const {calorie, carb, protein, fat} = convertNutr[alertType](
       baseLineData.calorie,
@@ -208,6 +178,13 @@ const Mypage = () => {
 
   const onAlertCancel = () => {
     setAlertShow(false);
+  };
+
+  const goTutorial = async () => {
+    setRestartTutorial(false);
+    await updateNotShowAgainList({key: 'tutorial', value: false});
+    dispatch(setTutorialStart());
+    navigate('BottomTabNav', {screen: 'Diet'});
   };
 
   return (
@@ -274,6 +251,21 @@ const Mypage = () => {
         onConfirm={onAlertConfirm}
         onCancel={onAlertCancel}
         confirmLabel="변경"
+      />
+
+      {/* 튜토리얼 진행 알럿 */}
+      <DAlert
+        alertShow={restartTutorial}
+        renderContent={() => (
+          <CommonAlertContent
+            text="튜토리얼을 다시 진행할까요?"
+            subText="구성한 끼니가 있다면 삭제됩니다"
+          />
+        )}
+        onConfirm={goTutorial}
+        onCancel={() => setRestartTutorial(false)}
+        confirmLabel="진행"
+        NoOfBtn={2}
       />
     </Container>
   );

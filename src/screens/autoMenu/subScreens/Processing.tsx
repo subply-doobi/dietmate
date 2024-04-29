@@ -2,8 +2,8 @@ import {View, Text, ActivityIndicator} from 'react-native';
 import React, {useEffect, useMemo} from 'react';
 import {Col} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
-import {useAsync} from '../../cart/util/cartCustomHooks';
-import {makeAutoMenu2} from '../../cart/util/autoMenu2';
+import {useAsync} from '../../diet/util/cartCustomHooks';
+import {makeAutoMenu2} from '../../diet/util/autoMenu2';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../app/store/reduxStore';
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
@@ -20,6 +20,10 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {IProductData} from '../../../shared/api/types/product';
 import {getNutrStatus} from '../../../shared/utils/sumUp';
 import CtaButton from '../../../shared/ui/CtaButton';
+import {
+  setMenuAcActive,
+  setTutorialProgress,
+} from '../../../features/reduxSlices/commonSlice';
 
 interface IProcessing {
   dTData: IDietDetailData[];
@@ -38,7 +42,7 @@ const Processing = ({
   setProgress,
 }: IProcessing) => {
   // navigaton
-  const {reset} = useNavigation();
+  const {goBack} = useNavigation();
   const {
     params: {isOneMenuAuto, selectedOneDietNo, initialMenu},
   } = useRoute();
@@ -166,20 +170,9 @@ const Processing = ({
       } catch (e) {
         console.log('선택된 끼니 덮어쓰기 중 오류: ', e);
       }
-
-      // 자동구성 완료 후 Home 으로 이동 (params: from 으로 Home화면 구분)
-      reset({
-        index: 0,
-        routes: [
-          {
-            name: 'BottomTabNav',
-            params: {
-              screen: 'Diet',
-              params: {from: 'AutoMenu'},
-            },
-          },
-        ],
-      });
+      dispatch(setMenuAcActive([]));
+      dispatch(setTutorialProgress('Complete'));
+      goBack();
     };
 
     overwriteDiet();
@@ -221,19 +214,9 @@ const Processing = ({
       } catch (e) {
         console.log('남은영양 식품 추가 중 오류: ', e);
       }
-
-      reset({
-        index: 0,
-        routes: [
-          {
-            name: 'BottomTabNav',
-            params: {
-              screen: 'Home',
-              params: {from: 'AutoMenu'},
-            },
-          },
-        ],
-      });
+      dispatch(setMenuAcActive([]));
+      dispatch(setTutorialProgress('Complete'));
+      goBack();
     };
 
     addMenu();

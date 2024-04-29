@@ -12,7 +12,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {IProductData} from '../../shared/api/types/product';
 import ChangeSummary from './ui/ChangeSummary';
 import GuideTitle from '../../shared/ui/GuideTitle';
-import {FlatList} from 'react-native';
+import {FlatList, ScrollView} from 'react-native';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
@@ -22,6 +22,9 @@ import ChangeFoodList from './ui/ChangeFoodList';
 import colors from '../../shared/colors';
 import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../app/store/reduxStore';
+import {setTutorialProgress} from '../../features/reduxSlices/commonSlice';
 
 const FOOD_ERROR_RANGE = {
   calorie: [-20, 20],
@@ -31,11 +34,17 @@ const FOOD_ERROR_RANGE = {
 };
 
 const Change = () => {
+  // redux
+  const dispatch = useDispatch();
+  const {isTutorialMode, tutorialProgress} = useSelector(
+    (state: RootState) => state.common,
+  );
+
   // navigation
   const {
     params: {dietNo, productNo, food},
   } = useRoute();
-  const {goBack} = useNavigation();
+  const {goBack, setOptions} = useNavigation();
 
   // useState
   const [productAlertShow, setProductAlertShow] = useState(false);
@@ -144,21 +153,29 @@ const Change = () => {
   );
 
   const onFoodChange = async () => {
-    if (!selectedProduct) {
-      goBack();
-      return;
-    }
+    dispatch(setTutorialProgress('AutoMenu'));
     goBack();
-    // change food
-    await deleteDietDetailMutation.mutateAsync({
-      dietNo,
-      productNo,
-    });
-    await createDietDetailMutation.mutateAsync({
-      dietNo,
-      food: selectedProduct,
-    });
+    if (!!selectedProduct) {
+      // change food
+      await deleteDietDetailMutation.mutateAsync({
+        dietNo,
+        productNo,
+      });
+      await createDietDetailMutation.mutateAsync({
+        dietNo,
+        food: selectedProduct,
+      });
+    }
   };
+
+  // headerTitle 설정
+  useEffect(() => {
+    isTutorialMode &&
+      tutorialProgress === 'ChangeFood' &&
+      setOptions({
+        headerLeft: () => <></>,
+      });
+  }, [isTutorialMode]);
 
   return (
     <Container>

@@ -2,6 +2,15 @@ import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 import {IProductData} from '../../shared/api/types/product';
 
+type ITutorialProgress =
+  | ''
+  | 'AddMenu'
+  | 'AddFood'
+  | 'SelectFood'
+  | 'AutoRemain'
+  | 'ChangeFood'
+  | 'AutoMenu'
+  | 'Complete';
 export interface ICartState {
   currentDietNo: string;
   totalFoodList: IProductData[];
@@ -9,6 +18,13 @@ export interface ICartState {
   platformDDItems: {value: string; label: string}[];
   progressTooltipShow: boolean;
   menuAcActive: number[];
+  isTutorialMode: boolean;
+  tutorialProgress: ITutorialProgress;
+  autoMenuStatus: {
+    isLoading: boolean;
+    isSuccess: boolean;
+    isError: boolean;
+  };
 }
 
 const initialState: ICartState = {
@@ -18,6 +34,13 @@ const initialState: ICartState = {
   platformDDItems: [{value: '', label: '선택안함'}],
   progressTooltipShow: true,
   menuAcActive: [],
+  isTutorialMode: false,
+  tutorialProgress: '',
+  autoMenuStatus: {
+    isLoading: false,
+    isSuccess: false,
+    isError: false,
+  },
 };
 
 export const commonSlice = createSlice({
@@ -53,6 +76,30 @@ export const commonSlice = createSlice({
     setMenuAcActive: (state, action: PayloadAction<number[]>) => {
       state.menuAcActive = action.payload;
     },
+    setIsTutorialMode: (state, action: PayloadAction<boolean>) => {
+      state.isTutorialMode = action.payload;
+    },
+    setTutorialProgress: (state, action: PayloadAction<ITutorialProgress>) => {
+      state.tutorialProgress = action.payload;
+    },
+    setTutorialStart: state => {
+      state.isTutorialMode = true;
+      state.tutorialProgress = 'AddMenu';
+    },
+    setTutorialEnd: state => {
+      state.isTutorialMode = false;
+      state.tutorialProgress = '';
+    },
+    setAutoMenuStatus: (
+      state,
+      action: PayloadAction<{
+        isLoading?: boolean;
+        isSuccess?: boolean;
+        isError?: boolean;
+      }>,
+    ) => {
+      state.autoMenuStatus = {...state.autoMenuStatus, ...action.payload};
+    },
   },
 });
 
@@ -61,5 +108,10 @@ export const {
   setTotalFoodList,
   setProgressTooltipShow,
   setMenuAcActive,
+  setIsTutorialMode,
+  setTutorialStart,
+  setTutorialEnd,
+  setTutorialProgress,
+  setAutoMenuStatus,
 } = commonSlice.actions;
 export default commonSlice.reducer;

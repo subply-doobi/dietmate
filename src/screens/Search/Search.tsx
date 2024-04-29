@@ -1,64 +1,49 @@
 // react, RN, 3rd
-import {useCallback, useEffect, useState, useRef} from 'react';
-import {FlatList, Animated, ActivityIndicator} from 'react-native';
+import {useRef, useState} from 'react';
+import {ActivityIndicator, Animated, FlatList} from 'react-native';
 import styled from 'styled-components/native';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {RootState} from '../../app/store/reduxStore';
 
 // doobi util, const
-import {
-  FOOD_LIST_ITEM_HEIGHT,
-  HOME_FILTER_HEADER_HEIGHT,
-} from '../../shared/constants';
-import {IProductData} from '../../shared/api/types/product';
-import {SCREENWIDTH} from '../../shared/constants';
 import colors from '../../shared/colors';
-import {icons} from '../../shared/iconSource';
-import {
-  getNotShowAgainList,
-  updateNotShowAgainList,
-} from '../../shared/utils/asyncStorage';
 
 // doobi Component
-import FoodList from './ui/FoodList';
-import DBottomSheet from '../../components/common/bottomsheet/DBottomSheet';
 import FilterModalContent from './ui/FilterModalContent';
-import DTooltip from '../../components/common/tooltip/DTooltip';
 import MenuSection from '../../components/common/menuSection/MenuSection';
-import FlatlistHeaderComponent from './ui/FlatlistHeaderComponent';
+import {useHeaderHeight} from '@react-navigation/elements';
 
 // react-query
-import {
-  useListDietDetail,
-  useListDiet,
-  useCreateDiet,
-} from '../../shared/api/queries/diet';
-import {useListProduct} from '../../shared/api/queries/product';
+import {useListDietDetail, useListDiet} from '../../shared/api/queries/diet';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 
 import SortModalContent from './ui/SortModalContent';
-import BusinessInfo from '../../components/common/businessInfo/BusinessInfo';
-import {applySortFilter} from '../../features/reduxSlices/sortFilterSlice';
-import CtaButton from '../../shared/ui/CtaButton';
-import {
-  setCurrentDiet,
-  setMenuAcActive,
-} from '../../features/reduxSlices/commonSlice';
-import {findDietSeq} from '../../shared/utils/findDietSeq';
+import DTPScreen from '../../shared/ui/DTPScreen';
+import HomeContainer from './ui/HomeFoodListAndBtn';
+import DBottomSheet from '../../components/common/bottomsheet/DBottomSheet';
+import FlatlistHeaderComponent from './ui/FlatlistHeaderComponent';
+import {useListProduct} from '../../shared/api/queries/product';
+import {ISortFilter} from '../../features/reduxSlices/sortFilterSlice';
+import HomeFoodListAndBtn from './ui/HomeFoodListAndBtn';
+import {IProductData} from '../../shared/api/types/product';
+import DTooltip from '../../components/common/tooltip/DTooltip';
+import {Col} from '../../shared/ui/styledComps';
+import NutrientsProgress from '../../components/common/nutrient/NutrientsProgress';
+import {tutorialSortFilter} from '../../shared/constants';
 
 const Search = () => {
   // navigation
-  const {navigate, goBack} = useNavigation();
-  const route = useRoute();
+  const headerHeight = useHeaderHeight();
 
   // redux
-  const dispatch = useDispatch();
-  const {currentDietNo, totalFoodListIsLoaded} = useSelector(
-    (state: RootState) => state.common,
-  );
+  const {
+    currentDietNo,
+    totalFoodListIsLoaded,
+    isTutorialMode,
+    tutorialProgress,
+  } = useSelector((state: RootState) => state.common);
   const {applied: appliedSortFilter} = useSelector(
     (state: RootState) => state.sortFilter,
   );
@@ -67,7 +52,6 @@ const Search = () => {
   const [productAlertShow, setProductAlertShow] = useState(false);
   const [sortModalShow, setSortModalShow] = useState(false);
   const [filterModalShow, setFilterModalShow] = useState(false);
-  const [tooltipShow, setTooltipShow] = useState(false);
 
   // react-query
   const {isLoading: getBaseLineIsLoading} = useGetBaseLine(); // 미리 캐싱
@@ -85,30 +69,13 @@ const Search = () => {
   } = useListProduct(
     {
       dietNo: currentDietNo,
-      appliedSortFilter,
+      appliedSortFilter: isTutorialMode
+        ? tutorialSortFilter
+        : appliedSortFilter,
     },
     {
       enabled: currentDietNo ? true : false,
     },
-  );
-
-  // flatList render fn
-  const renderFoodList = useCallback(
-    ({item}: {item: IProductData}) =>
-      dietDetailData ? <FoodList item={item} screen="Search" /> : <></>,
-    [dietDetailData],
-  );
-  const extractListKey = useCallback(
-    (item: IProductData) => item.productNo,
-    [productData],
-  );
-  const getItemLayout = useCallback(
-    (_: any, index: number) => ({
-      length: FOOD_LIST_ITEM_HEIGHT,
-      offset: FOOD_LIST_ITEM_HEIGHT * index,
-      index,
-    }),
-    [productData],
   );
 
   // Animation
@@ -125,30 +92,10 @@ const Search = () => {
     flatListRef.current?.scrollToOffset({animated: true, offset: 0});
   };
 
-  // useEffect
+  // etc
+  const currentNumOfFoods = dietDetailData?.length || 0;
 
-  // "식단 고민하기 싫다면 장바구니페이지의 자동구성을 이용하세요" 툴팁
-  // useEffect(() => {
-  //   //tooltip 관련
-  //   const initializeTooltip = async () => {
-  //     const isTooltipShow = await getNotShowAgainList().then(
-  //       v => !v.homeTooltip,
-  //     );
-  //     setTooltipShow(isTooltipShow);
-  //   };
-  //   initializeTooltip();
-  // }, []);
-
-  // 정렬, 필터 바뀔 때마다 refetch / 스크롤 맨 위로
-  useEffect(() => {
-    if (!totalFoodListIsLoaded) return;
-    currentDietNo &&
-      refetchProduct().then(
-        res => res?.data?.length === 0 && setProductAlertShow(true),
-      );
-    scrollTop();
-  }, [appliedSortFilter]);
-
+  // render
   if (getBaseLineIsLoading || listDietIsLoading || listDDIsLoading) {
     return (
       <Container style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -156,16 +103,15 @@ const Search = () => {
       </Container>
     );
   }
-
   return (
     <Container>
       {/* 끼니선택, progressBar section */}
       <MenuSection />
 
       {dietData?.length === 0 ? (
-        <HomeContainer></HomeContainer>
+        <ContentContainer></ContentContainer>
       ) : (
-        <HomeContainer>
+        <ContentContainer>
           {/* 검색결과 수 및 정렬 필터 */}
           <FlatlistHeaderComponent
             translateY={translateY}
@@ -174,82 +120,18 @@ const Search = () => {
             setSortModalShow={setSortModalShow}
           />
 
-          {/* 식품 리스트 */}
-          {productData && dietDetailData && (
-            <FlatList
-              contentContainerStyle={{
-                marginTop: HOME_FILTER_HEADER_HEIGHT,
-                paddingBottom: 120,
-              }} // 숨겨지는 header의 높이만큼 margin
-              data={productData}
-              keyExtractor={extractListKey}
-              renderItem={renderFoodList}
-              getItemLayout={getItemLayout}
-              initialNumToRender={5}
-              windowSize={2}
-              maxToRenderPerBatch={7}
-              removeClippedSubviews={true}
-              onEndReachedThreshold={0.4}
-              showsVerticalScrollIndicator={false}
-              refreshing={productIsFetching}
-              onRefresh={() => {
-                dispatch(applySortFilter());
-                refetchProduct();
-              }}
-              progressViewOffset={HOME_FILTER_HEADER_HEIGHT}
-              onScroll={e => {
-                scrollY.setValue(
-                  e.nativeEvent.contentOffset.y < 0
-                    ? 0
-                    : e.nativeEvent.contentOffset.y,
-                );
-              }}
-              ref={flatListRef}
-              // 하단 사업자 정보
-              ListFooterComponent={() => (
-                <BusinessInfo bgColor={colors.backgroundLight} />
-              )}
+          {/* 상품 리스트 */}
+          {!isTutorialMode && (
+            <HomeFoodListAndBtn
+              scrollY={scrollY}
+              flatListRef={flatListRef}
+              scrollTop={scrollTop}
+              setProductAlertShow={setProductAlertShow}
+              setSortModalShow={setSortModalShow}
+              setFilterModalShow={setFilterModalShow}
             />
           )}
-          {route?.params?.from && route?.params?.from === 'Home' && (
-            <CtaButton
-              btnStyle="active"
-              style={{
-                width: SCREENWIDTH - 32,
-                position: 'absolute',
-                bottom: 8,
-                backgroundColor: colors.dark,
-              }}
-              btnText="완료"
-              onPress={() => {
-                goBack();
-                const {idx} = findDietSeq(dietData, currentDietNo);
-                dispatch(setMenuAcActive([idx]));
-              }}
-            />
-          )}
-
-          {/* 홈화면 기본 툴팁 */}
-          {/* {!route?.params?.from || route?.params?.from !== 'Home' ? (
-          <DTooltip
-            tooltipShow={tooltipShow}
-            text={`식단 고민하기 싫다면\n장바구니페이지의 자동구성을 이용하세요`}
-            showIcon={true}
-            renderCustomIcon={() => (
-              <CartIcon source={icons.cartWhiteFilled_36} />
-            )}
-            boxRight={8}
-            triangleRight={SCREENWIDTH / 8 - 8}
-            onPressFn={() => {
-              setTooltipShow(false);
-              updateNotShowAgainList({key: 'homeTooltip', value: true});
-              navigate('BottomTabNav', {screen: 'Diet'});
-            }}
-          />
-        ) : (
-          <></>
-        )} */}
-        </HomeContainer>
+        </ContentContainer>
       )}
 
       {/* 정렬, 필터 모달 */}
@@ -280,6 +162,45 @@ const Search = () => {
         )}
         NoOfBtn={1}
       />
+
+      {/* 튜토리얼 */}
+      <DTPScreen
+        contentDelay={500}
+        visible={isTutorialMode && tutorialProgress === 'SelectFood'}
+        renderContent={() => (
+          <>
+            <Col
+              style={{
+                position: 'absolute',
+                width: '100%',
+                backgroundColor: colors.white,
+                paddingHorizontal: 16,
+                marginTop: headerHeight + 40,
+              }}>
+              <NutrientsProgress dietDetailData={dietDetailData || []} />
+            </Col>
+            <DTooltip
+              tooltipShow={
+                isTutorialMode &&
+                tutorialProgress === 'SelectFood' &&
+                currentNumOfFoods === 0
+              }
+              text="영양성분 부분을 눌러 식품 하나를 추가해봐요"
+              boxTop={headerHeight + 40 + 70 + 8 + 140 - 40}
+              boxLeft={16}
+            />
+            <HomeFoodListAndBtn
+              style={{marginTop: headerHeight + 40 + 70 + 8 + 140}}
+              scrollY={scrollY}
+              flatListRef={flatListRef}
+              scrollTop={scrollTop}
+              setProductAlertShow={setProductAlertShow}
+              setSortModalShow={setSortModalShow}
+              setFilterModalShow={setFilterModalShow}
+            />
+          </>
+        )}
+      />
     </Container>
   );
 };
@@ -290,13 +211,7 @@ const Container = styled.SafeAreaView`
   flex: 1;
 `;
 
-const HomeContainer = styled.View`
+const ContentContainer = styled.View`
   flex: 1;
   background-color: ${colors.white};
-`;
-
-const CartIcon = styled.Image`
-  width: 20px;
-  height: 20px;
-  margin-left: 8px;
 `;

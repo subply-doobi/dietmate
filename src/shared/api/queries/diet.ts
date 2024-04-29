@@ -48,7 +48,7 @@ export const useCreateDiet = (options?: IMutationOptions) => {
   const dispatch = useDispatch();
   const mutation = useMutation({
     mutationFn: () => mutationFn(CREATE_DIET, 'put'),
-    onMutate: async () => {
+    onMutate: async ({setDietNo = false}: {setDietNo?: boolean}) => {
       // optimistic update
       // 1. Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
@@ -64,16 +64,16 @@ export const useCreateDiet = (options?: IMutationOptions) => {
         queryClient.setQueryData([DIET_DETAIL_EMPTY_YN], () => newEmptyData);
       }
       // 4. Return a context object with the snapshotted value
-      return {prevEmptyData};
+      return {prevEmptyData, setDietNo};
     },
-    onSuccess: data => {
+    onSuccess: (data, {setDietNo}, context) => {
       // progressTooltip을 끼니나 식품을 추가/삭제 할 경우에만 띄우기 위함.
       // 툴팁 닫은 후에 화면 옮겼을 때 다시 뜨지 않도록 방지
       dispatch(setProgressTooltipShow(true));
 
       options?.onSuccess && options?.onSuccess(data);
       // 현재 구성중인 끼니의 dietNo, dietIdx를 redux에 저장 => 장바구니와 동기화
-      dispatch(setCurrentDiet(data.dietNo));
+      setDietNo && dispatch(setCurrentDiet(data.dietNo));
 
       // 장바구니 accordion 기존 끼니는 닫아주기
       dispatch(setMenuAcActive([]));

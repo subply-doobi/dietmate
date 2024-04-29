@@ -68,7 +68,7 @@ const MenuSelectCard = () => {
 
   const onCreateDiet = () => {
     if (dietAddStatus === 'possible') {
-      createDietMutation.mutate();
+      createDietMutation.mutate({setDietNo: true});
       return;
     }
     setCreateErrShow(true);

@@ -99,13 +99,13 @@ const RootStackNav = () => {
         options={{
           headerShown: true,
           headerTitle: '',
-          headerRight: () => {
-            return (
-              <Pressable onPress={() => navigate('Diet')}>
-                <Image source={icons.cart_36} style={{width: 36, height: 36}} />
-              </Pressable>
-            );
-          },
+          // headerRight: () => {
+          //   return (
+          //     <Pressable onPress={() => navigate('Diet')}>
+          //       <Image source={icons.cart_36} style={{width: 36, height: 36}} />
+          //     </Pressable>
+          //   );
+          // },
         }}
       />
 

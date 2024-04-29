@@ -1,11 +1,12 @@
 import {Dimensions, Platform} from 'react-native';
+import {ISortFilter} from '../features/reduxSlices/sortFilterSlice';
 
 // RN constants
 export const {width, height} = Dimensions.get('screen');
 export const SCREENWIDTH = Math.min(width, height);
 export const SCREENHEIGHT = Math.max(width, height);
 export const DESIGN_WIDTH = 360;
-export const DALERT_WIDTH = SCREENWIDTH - 80;
+export const DALERT_WIDTH = 280;
 export const IS_ANDROID = Platform.OS === 'android';
 export const IS_IOS = Platform.OS === 'ios';
 export const FOOD_LIST_ITEM_HEIGHT = 152;
@@ -28,6 +29,38 @@ export const APP_STORE_URL =
 
 // axios timeout
 export const AXIOS_TIMEOUT = 2000;
+
+// tutorial sortFilter
+export const tutorialSortFilter: ISortFilter = {
+  sort: {
+    calorie: '',
+    carb: '',
+    protein: '',
+    fat: '',
+    price: '',
+    priceCalorieCompare: '',
+    priceProteinCompare: '',
+  },
+  filter: {
+    category: '',
+    selectedBtn: {
+      calorie: [],
+      carb: [],
+      protein: [],
+      fat: [],
+      price: [],
+    },
+    nutrition: {
+      calorie: [0, 70],
+      carb: [0, 20],
+      protein: [0, 8],
+      fat: [],
+    },
+    price: [],
+    search: '',
+  },
+  selectedFilter: 0,
+};
 
 // Doobi server category etc.
 //주간 운동 횟수

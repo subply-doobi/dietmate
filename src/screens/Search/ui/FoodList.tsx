@@ -37,6 +37,7 @@ import {
   SERVICE_PRICE_PER_PRODUCT,
 } from '../../../shared/constants';
 import {useDeleteProductMark} from '../../../shared/api/queries/product';
+import CommonAlertContent from '../../../components/common/alert/CommonAlertContent';
 
 interface IFoodList {
   item: IProductData;
@@ -46,7 +47,9 @@ interface IFoodList {
 const FoodList = ({item, screen = 'Search'}: IFoodList) => {
   const {navigate} = useNavigation();
   // redux
-  const {currentDietNo} = useSelector((state: RootState) => state.common);
+  const {currentDietNo, isTutorialMode, tutorialProgress} = useSelector(
+    (state: RootState) => state.common,
+  );
 
   // react-query
   const {data: dietDetailData} = useListDietDetail(currentDietNo, {
@@ -59,6 +62,7 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
 
   // state
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
+  const [foodLimitAlertShow, setFoodLimitAlertShow] = useState(false);
 
   // etc
   // 장바구니에 해당 상품이 들어있는지
@@ -96,7 +100,7 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
       dietNo: currentDietNo,
       productNo: item.productNo,
     });
-    setDeleteAlertShow(false);
+    // setDeleteAlertShow(false);
     aniPValue.setValue(removedP);
   };
 
@@ -145,13 +149,18 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
     aniPValue.setValue(isAdded ? addedP : removedP);
   }, [item, isAdded]);
 
+  const currentNumOfFoods = dietDetailData?.length || 0;
+
   return (
     <Container>
       {/* 전체 범위 클릭하면 식품 상세정보로 이동 */}
       <Box>
         {/* 썸네일 이미지 */}
         <TouchableOpacity
-          onPress={() => navigate('FoodDetail', {productNo: item.productNo})}>
+          onPress={() => {
+            if (isTutorialMode && tutorialProgress === 'SelectFood') return;
+            navigate('FoodDetail', {productNo: item.productNo});
+          }}>
           <Thumbnail
             source={{
               uri: `${BASE_URL}${item?.mainAttUrl}`,
@@ -160,9 +169,22 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
           />
         </TouchableOpacity>
         <ProductInfoContainer
-          onPress={() =>
-            isAdded ? setDeleteAlertShow(true) : addCartAni.start(onAdd)
-          }>
+          onPress={() => {
+            if (isAdded) {
+              removeCartAni.start(onDelete);
+              return;
+            }
+
+            if (
+              isTutorialMode &&
+              tutorialProgress === 'SelectFood' &&
+              currentNumOfFoods >= 1
+            ) {
+              setFoodLimitAlertShow(true);
+              return;
+            }
+            addCartAni.start(onAdd);
+          }}>
           <Col>
             <SellerText numberOfLines={1} ellipsizeMode="tail">
               {item?.platformNm}
@@ -215,9 +237,7 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
         </ProductInfoContainer>
 
         {/* 식품 추가하거나 삭제했을 때 나올 장바구니담김 표시 */}
-        <AniAddedMark
-          style={{width: aniWidthByPosition}}
-          onPress={() => setDeleteAlertShow(true)}>
+        <AniAddedMark style={{width: aniWidthByPosition}}>
           <AniCartImage
             style={{transform: [{scale: aniScaleByPosition}]}}
             source={icons.cartWhite_40}
@@ -225,7 +245,7 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
         </AniAddedMark>
 
         {/* 식품 삭제알럿. 없어도 무방하기는 할 듯 */}
-        <DAlert
+        {/* <DAlert
           alertShow={deleteAlertShow}
           confirmLabel="삭제"
           onConfirm={() => removeCartAni.start(onDelete)}
@@ -233,6 +253,20 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
             setDeleteAlertShow(false);
           }}
           renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
+        /> */}
+
+        {/* 튜토리얼 */}
+        <DAlert
+          alertShow={foodLimitAlertShow}
+          confirmLabel="확인"
+          onConfirm={() => setFoodLimitAlertShow(false)}
+          onCancel={() => setFoodLimitAlertShow(false)}
+          renderContent={() => (
+            <CommonAlertContent
+              text={'지금은 식품을\n하나만 추가할게요'}
+              subText={'튜토리얼이 끝나면\n자유롭게 식품을 추가할 수 있어요'}
+            />
+          )}
         />
 
         {/* currentDietNo 없을 때 (끼니 자체가 없을 때) 식품 추가/삭제 방지 */}
