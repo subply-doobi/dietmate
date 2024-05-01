@@ -82,4 +82,5 @@ function App(): React.JSX.Element {
   );
 }
 
-export default CodePush(App);
+// export default CodePush(App);
+export default App;

@@ -3,7 +3,7 @@ import React, {useEffect, useMemo} from 'react';
 import {Col} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 import {useAsync} from '../../diet/util/cartCustomHooks';
-import {makeAutoMenu2} from '../../diet/util/autoMenu2';
+import {makeAutoMenu2} from '../../../shared/utils/autoMenu2';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../app/store/reduxStore';
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
@@ -80,7 +80,7 @@ const Processing = ({
     isError,
     isLoading,
     isSuccess,
-    reload,
+    execute,
   } = useAsync<{
     recommendedMenu: IProductData[][];
   }>({
@@ -106,7 +106,7 @@ const Processing = ({
       setProgress(v => [...v, getPageIdx('Error')]);
       return;
     }
-    reload();
+    execute();
   }, [isError]);
 
   // overwriteDiet (한끼니 자동구성 재시도, 전체 자동구성)

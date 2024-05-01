@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 // doobi util, redux, etc
 import {RootState} from '../../app/store/reduxStore';
 import colors from '../../shared/colors';
-import {useAsync} from '../../screens/diet/util/cartCustomHooks';
+import {useAsync} from '../../screens/cart/util/cartCustomHooks';
 import {setCurrentDiet} from '../../features/reduxSlices/commonSlice';
 // doobi Component
 import {
@@ -24,7 +24,7 @@ import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import {IDietDetailData} from '../../shared/api/types/diet';
 import {IProductData} from '../../shared/api/types/product';
 import {useCreateDietDetail} from '../../shared/api/queries/diet';
-import {makeAutoMenu2} from '../../screens/diet/util/autoMenu2';
+import {makeAutoMenu2} from '../../shared/utils/autoMenu2';
 import DDropdown from '../../shared/ui/DDropdown';
 
 interface IAutoDietModal {

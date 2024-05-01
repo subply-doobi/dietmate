@@ -4,11 +4,7 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 // 3rd
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {useHeaderHeight} from '@react-navigation/elements';
 import Accordion from 'react-native-collapsible/Accordion';
@@ -34,6 +30,7 @@ import {
   TextMain,
 } from '../../shared/ui/styledComps';
 import {
+  setAutoMenuStatus,
   setCurrentDiet,
   setIsTutorialMode,
   setMenuAcActive,
@@ -43,7 +40,12 @@ import {
 } from '../../features/reduxSlices/commonSlice';
 import {ActivityIndicator, ScrollView, TouchableOpacity} from 'react-native';
 import CtaButton from '../../shared/ui/CtaButton';
-import {SCREENHEIGHT, SCREENWIDTH} from '../../shared/constants';
+import {
+  IS_ANDROID,
+  IS_IOS,
+  SCREENHEIGHT,
+  SCREENWIDTH,
+} from '../../shared/constants';
 import {setFoodToOrder} from '../../features/reduxSlices/orderSlice';
 import {convertQsResultToData} from '../../shared/utils/queriesData';
 import DBottomSheet from '../../components/common/bottomsheet/DBottomSheet';
@@ -57,23 +59,16 @@ import {
   getTotalShippingPriceFromDTData,
   sumUpDietTotal,
 } from '../../shared/utils/sumUp';
-import {
-  getNotShowAgainList,
-  updateNotShowAgainList,
-} from '../../shared/utils/asyncStorage';
+import {updateNotShowAgainList} from '../../shared/utils/asyncStorage';
 import DTPScreen from '../../shared/ui/DTPScreen';
-import DTooltip from '../../components/common/tooltip/DTooltip';
-import AccordionCtaBtns from '../../components/menuAccordion/AccordionCtaBtns';
-import NutrientsProgress from '../../components/common/nutrient/NutrientsProgress';
-import LoadingAlertContent from './ui/LoadingAlertContent';
-import {icons} from '../../shared/iconSource';
-import {IDietData} from '../../shared/api/types/diet';
-import ErrorAlertContent from './ui/ErrorAlertContent';
 import CartSummary from '../../components/cart/CartSummary';
+import AddMenuBtn from './ui/AddMenuBtn';
+import {renderAlertContent, renderDTPContent} from './util/modalContent';
 
 const Diet = () => {
   // navigation
   const {navigate} = useNavigation();
+  const isFocused = useIsFocused();
   const headerHeight = useHeaderHeight();
   const bottomTabBarHeight = useBottomTabBarHeight();
 
@@ -96,6 +91,7 @@ const Diet = () => {
   const deleteDietMutation = useDeleteDiet();
 
   // useState
+  const [forceModalQuit, setForceModalQuit] = useState(false);
   const [createAlertShow, setCreateAlertShow] = useState(false);
   const [numOfCreateDiet, setNumOfCreateDiet] = useState(5);
   const [isCreating, setIsCreating] = useState(false);
@@ -158,6 +154,7 @@ const Diet = () => {
 
   const onAddCreatePressed = () => {
     if (!dTData) return;
+    dispatch(setTutorialProgress(''));
     setIsCreating(false);
     const currentNumOfMenu = dTData.length;
     if (addDietStatus === 'possible') {
@@ -218,10 +215,14 @@ const Diet = () => {
         () =>
           autoMenuBtnRef?.current?.measure((fx, fy, width, height, px, py) => {
             scrollRef.current?.scrollTo({
-              y:
-                py -
-                (SCREENHEIGHT -
-                  (height + headerHeight + bottomTabBarHeight + 40 + 60)),
+              y: IS_ANDROID
+                ? py -
+                  (SCREENHEIGHT -
+                    (height + headerHeight + bottomTabBarHeight + 40 + 60))
+                : IS_IOS
+                  ? py -
+                    (SCREENHEIGHT - (height + bottomTabBarHeight + 40 + 44))
+                  : 0,
               animated: true,
             });
           }),
@@ -230,6 +231,106 @@ const Diet = () => {
       return;
     }
   }, [tutorialProgress]);
+
+  useEffect(() => {
+    if (!isFocused) {
+      setForceModalQuit(true);
+      return;
+    }
+    setForceModalQuit(false);
+  }, [isFocused]);
+
+  // ███    ███  ██████  ██████   █████  ██
+  // ████  ████ ██    ██ ██   ██ ██   ██ ██
+  // ██ ████ ██ ██    ██ ██   ██ ███████ ██
+  // ██  ██  ██ ██    ██ ██   ██ ██   ██ ██
+  // ██      ██  ██████  ██████  ██   ██ ███████
+
+  // alert state
+  const alertState = createAlertShow
+    ? 'createDiet'
+    : createNAAlertShow
+      ? 'createDietNA'
+      : autoMenuStatus.isLoading
+        ? 'autoMenuLoading'
+        : autoMenuStatus.isError
+          ? 'autoMenuError'
+          : isTutorialMode && tutorialProgress === 'Complete'
+            ? 'tutorialComplete'
+            : '';
+  const alertShow = !forceModalQuit && alertState !== '';
+  // alert confirm fn
+  const alertConfirmFn: {[key: string]: Function} = {
+    createDiet: async () => await onCreateDiet(),
+    createDietNA: () => setCreateNAAlertShow(false),
+    autoMenuLoading: () => {},
+    autoMenuError: () => dispatch(setAutoMenuStatus({isError: false})),
+    tutorialComplete: () => {
+      dispatch(setTutorialEnd());
+      updateNotShowAgainList({key: 'tutorial', value: true});
+    },
+  };
+  // alert cancel fn
+  const alertCancelFn: {[key: string]: Function} = {
+    createDiet: () => setCreateAlertShow(false),
+    createDietNA: () => setCreateNAAlertShow(false),
+    autoMenuLoading: () => {},
+    autoMenuError: () => dispatch(setAutoMenuStatus({isError: false})),
+    tutorialComplete: () => {},
+  };
+  const alertNumOfBtn: {[key: string]: 0 | 1 | 2} = {
+    createDiet: isCreating
+      ? 0
+      : isTutorialMode && tutorialProgress === 'AddMenu'
+        ? 1
+        : 2,
+    createDietNA: 1,
+    autoMenuLoading: 0,
+    autoMenuError: 1,
+    tutorialComplete: 1,
+  };
+  const alertDelay = alertState === 'tutorialComplete' ? 1000 : 0;
+  const alertConfirmLabel = alertState === 'createDiet' ? '추가' : '확인';
+
+  // DTP state
+  const dTPShow =
+    !forceModalQuit &&
+    !alertShow &&
+    isTutorialMode &&
+    (tutorialProgress === 'AddMenu' ||
+      tutorialProgress === 'AddFood' ||
+      tutorialProgress === 'AutoRemain' ||
+      tutorialProgress === 'ChangeFood' ||
+      tutorialProgress === 'AutoMenu');
+
+  const dtpDeley: {[key: string]: number} = {
+    AddMenu: 500,
+    AddFood: 800,
+    AutoRemain: 500,
+    ChangeFood: 500,
+    AutoMenu: 2000,
+  };
+  const dtpAction: {[key: string]: () => void} = {
+    AddMenu: () => {
+      onAddCreatePressed();
+    },
+    AddFood: () => setForceModalQuit(true),
+    AutoRemain: () => {},
+    ChangeFood: () => {
+      navigate('Change', {
+        dietNo: currentDietNo,
+        productNo: dTData[0][1].productNo,
+        food: dTData[0][1],
+      });
+    },
+    AutoMenu: () => {
+      navigate('AutoMenu', {
+        isOneMenuAuto: false,
+        selectedOneDietNo: undefined,
+        initialMenu: [],
+      });
+    },
+  };
 
   // render
   if (dTDataStatus === 'isLoading' || isCreating) {
@@ -265,10 +366,7 @@ const Diet = () => {
           />
 
           {/* 끼니추가 버튼 */}
-          <AddMenuBtn onPress={() => onAddCreatePressed()}>
-            <AddMenuBtnBar isActive={dTData?.length === 0} />
-            <AddMenuBtnText>끼니 추가</AddMenuBtnText>
-          </AddMenuBtn>
+          {dTData && <AddMenuBtn onPress={onCreateDiet} dTData={dTData} />}
 
           {/* 여러끼니 자동구성 버튼 */}
           <HorizontalSpace height={24} />
@@ -315,31 +413,6 @@ const Diet = () => {
         }}
       />
 
-      {/* 끼니 추가 알럿 */}
-      <DAlert
-        style={{width: 280}}
-        alertShow={createAlertShow}
-        onCancel={() => setCreateAlertShow(false)}
-        onConfirm={async () => await onCreateDiet()}
-        confirmLabel={isCreating ? '확인' : '추가'}
-        NoOfBtn={isCreating ? 0 : 2}
-        renderContent={() => (
-          <CreateDietAlert
-            numOfCreateDiet={numOfCreateDiet}
-            setNumOfCreateDiet={setNumOfCreateDiet}
-            isCreating={isCreating}
-          />
-        )}
-      />
-      {/* 끼니 추가 불가능 알럿 */}
-      <DAlert
-        alertShow={createNAAlertShow}
-        onCancel={() => setCreateNAAlertShow(false)}
-        onConfirm={() => setCreateNAAlertShow(false)}
-        NoOfBtn={1}
-        renderContent={() => <CommonAlertContent text={addDietNAText} />}
-      />
-
       {/* 끼니 수량 조절용 BottomSheet */}
       <DBottomSheet
         alertShow={menuNumSelectShow}
@@ -353,257 +426,44 @@ const Diet = () => {
         onCancel={() => setMenuNumSelectShow(false)}
       />
 
-      {/* 자동구성 로딩 알럿 */}
+      {/* 알럿 */}
       <DAlert
-        alertShow={autoMenuStatus.isLoading}
-        onCancel={() => {}}
-        onConfirm={() => {}}
-        NoOfBtn={0}
-        renderContent={() => <LoadingAlertContent />}
-      />
-      {/* 자동구성 에러 알럿 */}
-      <DAlert
-        alertShow={autoMenuStatus.isError}
-        onCancel={() => {}}
-        onConfirm={() => {}}
-        NoOfBtn={0}
-        renderContent={() => <ErrorAlertContent />}
+        contentDelay={alertDelay}
+        style={{width: 280}}
+        alertShow={alertShow}
+        onCancel={alertCancelFn[alertState]}
+        onConfirm={alertConfirmFn[alertState]}
+        confirmLabel={alertConfirmLabel}
+        NoOfBtn={alertNumOfBtn[alertState]}
+        renderContent={() =>
+          renderAlertContent[alertState] &&
+          renderAlertContent[alertState]({
+            numOfCreateDiet,
+            setNumOfCreateDiet,
+            isCreating,
+            addDietNAText,
+          })
+        }
       />
 
-      {/* 튜토리얼 (끼니 추가) */}
+      {/* DTP (튜토리얼)*/}
       <DTPScreen
-        contentDelay={500}
+        contentDelay={dtpDeley[tutorialProgress] || 0}
         style={{paddingHorizontal: 16}}
-        visible={isTutorialMode && tutorialProgress === 'AddMenu'}
-        renderContent={() => (
-          <>
-            <DTooltip
-              tooltipShow={true}
-              text="끼니를 먼저 추가해볼까요?"
-              boxTop={headerHeight + 4}
-            />
-            <AddMenuBtn
-              onPress={() => onAddCreatePressed()}
-              style={{marginTop: headerHeight + 40 + 4}}>
-              <AddMenuBtnBar isActive={dTData?.length === 0} />
-              <AddMenuBtnText>끼니 추가</AddMenuBtnText>
-            </AddMenuBtn>
-          </>
-        )}
-      />
-      {/* 튜토리얼 (식품 추가) */}
-      <DTPScreen
-        style={{paddingHorizontal: 16}}
-        visible={isTutorialMode && tutorialProgress === 'AddFood'}
-        contentDelay={800}
-        renderContent={() => (
-          <>
-            <DTooltip
-              tooltipShow={true}
-              text="식품을 추가할 차례에요!"
-              boxTop={headerHeight + 40 + 48 + 8 + 70}
-              boxLeft={8}
-            />
-            <AccordionCtaBtns
-              style={{
-                paddingHorizontal: 8,
-                marginTop: headerHeight + 40 + 48 + 8 + 70 + 40,
-              }}
-              dDData={dTData ? dTData[0] : []}
-              dietNo={currentDietNo}
-              onlyAdd={true}
-            />
-          </>
-        )}
-      />
-      {/* 튜토리얼 (남은영양 자동구성) */}
-      <DTPScreen
-        contentDelay={500}
-        style={{paddingHorizontal: 16}}
-        visible={isTutorialMode && tutorialProgress === 'AutoRemain'}
-        renderContent={() => (
-          <>
-            <Col
-              style={{
-                position: 'absolute',
-                width: '100%',
-                backgroundColor: colors.white,
-                paddingHorizontal: 8,
-                marginTop: headerHeight + 40 + 48 + 8,
-              }}>
-              <NutrientsProgress dietDetailData={dTData ? dTData[0] : []} />
-            </Col>
-            <DTooltip
-              tooltipShow={true}
-              text="남은 영양을 자동으로 채워볼게요!"
-              boxTop={headerHeight + 40 + 48 + 8 + 70 + 24 + 32 + 24 + 104 + 1}
-              boxLeft={8 + 48 + 8}
-            />
-            <AccordionCtaBtns
-              style={{
-                paddingHorizontal: 8,
-                marginTop:
-                  headerHeight + 40 + 48 + 8 + 70 + 24 + 32 + 24 + 104 + 41,
-              }}
-              dDData={dTData ? dTData[0] : []}
-              dietNo={currentDietNo}
-              onlyAuto={true}
-            />
-          </>
-        )}
-      />
-      {/* 튜토리얼 (남은영양 자동구성) */}
-      <DTPScreen
-        contentDelay={500}
-        style={{paddingHorizontal: 16}}
-        visible={isTutorialMode && tutorialProgress === 'ChangeFood'}
-        renderContent={() => (
-          <>
-            <DTooltip
-              tooltipShow={true}
-              triangleRight={16}
-              text="영양이 비슷한 식품으로 교체할 수 있어요"
-              boxTop={
-                headerHeight +
-                40 +
-                48 +
-                8 +
-                70 +
-                24 +
-                32 +
-                24 +
-                104 +
-                24 +
-                104 -
-                52 -
-                40
-              }
-              boxRight={8}
-            />
-            <ChangeBtn
-              onPress={() => {
-                navigate('Change', {
-                  dietNo: currentDietNo,
-                  productNo: dTData[0][1].productNo,
-                  food: dTData[0][1],
-                });
-              }}
-              style={{
-                position: 'absolute',
-                top:
-                  headerHeight +
-                  40 +
-                  48 +
-                  8 +
-                  70 +
-                  24 +
-                  32 +
-                  24 +
-                  104 +
-                  24 +
-                  104 -
-                  52,
-                right: 8,
-              }}>
-              <Icon source={icons.changeRound_24} />
-            </ChangeBtn>
-          </>
-        )}
-      />
-      <DTPScreen
-        contentDelay={2000}
-        style={{paddingHorizontal: 16}}
-        visible={isTutorialMode && tutorialProgress === 'AutoMenu'}
-        renderContent={() => (
-          <>
-            <DTooltip
-              tooltipShow={true}
-              text="전체 자동구성도 해볼게요"
-              boxBottom={bottomTabBarHeight + 8 + 52 + 24 + 48 + 4}
-              boxLeft={0}
-            />
-            <CtaButton
-              shadow={false}
-              btnStyle="active"
-              style={{
-                position: 'absolute',
-                width: SCREENWIDTH - 32,
-                height: 48,
-                bottom: bottomTabBarHeight + 8 + 52 + 24,
-                alignSelf: 'center',
-              }}
-              btnText={`${dTData?.length} 끼니 자동구성`}
-              onPress={() =>
-                navigate('AutoMenu', {
-                  isOneMenuAuto: false,
-                  selectedOneDietNo: undefined,
-                  initialMenu: [],
-                })
-              }
-            />
-          </>
-        )}
-      />
-      {/* 튜토리얼 완료 */}
-      <DAlert
-        contentDelay={1000}
-        alertShow={isTutorialMode && tutorialProgress === 'Complete'}
-        onCancel={() => {}}
-        onConfirm={() => {
-          dispatch(setTutorialEnd());
-          updateNotShowAgainList({key: 'tutorial', value: true});
-        }}
-        NoOfBtn={1}
-        renderContent={() => (
-          <CommonAlertContent
-            text={'튜토리얼이 완료되었어요\n이제 자유롭게 이용해보세요!'}
-            subText={'튜토리얼은 마이페이지에서\n다시 진행할 수 있어요'}
-          />
-        )}
+        visible={dTPShow}
+        renderContent={() =>
+          renderDTPContent[tutorialProgress] &&
+          renderDTPContent[tutorialProgress]({
+            fn: dtpAction[tutorialProgress],
+            headerHeight,
+            bottomTabBarHeight,
+            dTData: dTData || [],
+            currentDietNo,
+          })
+        }
       />
     </Container>
   );
 };
 
 export default Diet;
-
-const AddMenuBtn = styled.TouchableOpacity`
-  width: 100%;
-  height: 48px;
-  background-color: ${colors.white};
-  border-radius: 5px;
-
-  justify-content: center;
-  align-items: center;
-
-  margin-top: 4px;
-`;
-
-const AddMenuBtnText = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 24px;
-`;
-const AddMenuBtnBar = styled.View<{isActive: boolean}>`
-  width: 4px;
-  height: 48px;
-  position: absolute;
-  left: 0px;
-  background-color: ${({isActive}) =>
-    isActive ? colors.main : colors.inactivated};
-
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-`;
-
-const ChangeBtn = styled.TouchableOpacity`
-  width: 32px;
-  height: 52px;
-  background-color: ${colors.white};
-  justify-content: center;
-  align-items: center;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  border-width: 1px;
-  border-color: ${colors.lineLight};
-`;

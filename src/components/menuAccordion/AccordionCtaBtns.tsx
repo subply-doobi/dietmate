@@ -23,14 +23,20 @@ import {
 } from '../../features/reduxSlices/commonSlice';
 import DAlert from '../../shared/ui/DAlert';
 import {useAsync} from '../../screens/diet/util/cartCustomHooks';
-import {IProductData} from '../../shared/api/types/product';
-import {makeAutoMenu2} from '../../screens/diet/util/autoMenu2';
+import {IProductData, IProductDetailData} from '../../shared/api/types/product';
+import {makeAutoMenu2} from '../../shared/utils/autoMenu2';
 import {
   useCreateDietDetail,
   useListDietDetail,
 } from '../../shared/api/queries/diet';
 import {useEffect} from 'react';
 
+const SELECTED_CATEGORY_IDX = [0, 1, 2, 3, 4, 5];
+const PRICE_TARGET = [0, 12000];
+const MENU_NUM = 1;
+const INITIAL_STATUS = {isLoading: true, isSuccess: false, isError: false};
+const SUCCESS_STATUS = {isLoading: false, isSuccess: true, isError: false};
+const ERROR_STATUS = {isLoading: false, isSuccess: false, isError: true};
 interface IAccordionCtaBtns extends ViewProps {
   dDData: IDietDetailData;
   dietNo: string;
@@ -57,32 +63,6 @@ const AccordionCtaBtns = ({
   const {data: bLData} = useGetBaseLine();
   const createDietDetailMutation = useCreateDietDetail();
 
-  // autoMenu custom hook
-  const {
-    data: autoMenuResult,
-    isError,
-    isLoading,
-    isSuccess,
-    reload,
-  } = useAsync<{
-    recommendedMenu: IProductData[][];
-  }>({
-    asyncFunction: async () => {
-      if (!bLData) return {recommendedMenu: []};
-      const data = await makeAutoMenu2({
-        totalFoodList,
-        initialMenu: dDData,
-        baseLine: bLData,
-        selectedCategoryIdx: [0, 1, 2, 3, 4, 5],
-        priceTarget: [0, 12000],
-        wantedPlatform: '',
-        menuNum: 1,
-      }).then(res => res);
-      return data;
-    },
-    deps: [dDData, bLData],
-  });
-
   // etc
   const nutrStatus = getNutrStatus({totalFoodList, bLData, dDData});
   const btnText =
@@ -100,10 +80,10 @@ const AccordionCtaBtns = ({
   const addBtnStyle = dDData?.length === 0 ? 'borderActive' : 'border';
 
   // fn
-  const addMenu = async () => {
+  const addMenu = async (data: IProductData[][]) => {
     // 추가할 각 product 및 dietNo
     const productToAddList: {dietNo: string; food: IProductData}[] = [];
-    autoMenuResult?.recommendedMenu.forEach((menu, idx) => {
+    data?.forEach((menu, idx) => {
       menu.forEach(product => {
         productToAddList.push({
           dietNo,
@@ -127,32 +107,45 @@ const AccordionCtaBtns = ({
     }
   };
 
-  // autoMenuStatus control
-  useEffect(() => {
-    if (isLoading) {
-      dispatch(
-        setAutoMenuStatus({isLoading: true, isSuccess: false, isError: false}),
-      );
+  const setOneAutoMenu = async () => {
+    if (!bLData || totalFoodList?.length === 0) {
+      dispatch(setAutoMenuStatus(ERROR_STATUS));
       return;
     }
 
-    if (isError) {
-      dispatch(
-        setAutoMenuStatus({isLoading: false, isSuccess: false, isError: true}),
-      );
+    dispatch(setAutoMenuStatus(INITIAL_STATUS));
+    let recommendedMenu: IProductData[][] = [];
+
+    // 자동구성
+    try {
+      recommendedMenu = (
+        await makeAutoMenu2({
+          totalFoodList,
+          initialMenu: dDData,
+          baseLine: bLData,
+          selectedCategoryIdx: SELECTED_CATEGORY_IDX,
+          priceTarget: PRICE_TARGET,
+          wantedPlatform: '',
+          menuNum: MENU_NUM,
+        })
+      ).recommendedMenu;
+    } catch (e) {
+      dispatch(setAutoMenuStatus(ERROR_STATUS));
+      console.log('자동구성 중 오류 발생: ', e);
       return;
     }
-    if (!isSuccess) return;
 
-    const addAutoMenu = async () => {
-      await addMenu();
-      isTutorialMode && dispatch(setTutorialProgress('ChangeFood'));
-      dispatch(
-        setAutoMenuStatus({isLoading: false, isSuccess: true, isError: false}),
-      );
-    };
-    addAutoMenu();
-  }, [isLoading]);
+    // 자동구성된 메뉴 추가
+    try {
+      await addMenu(recommendedMenu);
+      dispatch(setAutoMenuStatus(SUCCESS_STATUS));
+      dispatch(setTutorialProgress('ChangeFood'));
+    } catch (e) {
+      console.log('식품추가 중 오류 발생: ', e);
+      dispatch(setAutoMenuStatus(ERROR_STATUS));
+      return;
+    }
+  };
 
   return (
     <Col {...props}>
@@ -183,7 +176,7 @@ const AccordionCtaBtns = ({
               height: 48,
               borderWidth: 2,
             }}
-            onPress={() => reload()}
+            onPress={() => setOneAutoMenu()}
           />
         )}
       </Row>

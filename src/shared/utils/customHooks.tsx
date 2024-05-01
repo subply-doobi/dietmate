@@ -3,6 +3,9 @@ import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 
 import {TextMain} from '../ui/styledComps';
+import {useDispatch} from 'react-redux';
+import {setAutoMenuStatus} from '../../features/reduxSlices/commonSlice';
+import {makeAutoMenu2} from './autoMenu2';
 
 // login navigator
 /** 로그인 할 때마다 baseline 과 onBoarding 정보를 확인해서
