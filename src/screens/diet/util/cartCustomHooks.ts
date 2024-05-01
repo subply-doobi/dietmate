@@ -1,101 +1,75 @@
-import {useEffect, useReducer, Reducer} from 'react';
+import {useEffect, useReducer, Reducer, useCallback} from 'react';
 
-interface IState<T> {
+// Define the different actions our reducer can handle
+const ACTIONS = {
+  INIT: 'INIT',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
+} as const;
+
+type State<T> = {
   isLoading: boolean;
-  data: T | undefined;
-  error?: Error | undefined | any;
   isSuccess: boolean;
   isError: boolean;
-}
-interface IAction<T> {
-  type: string | 'isLoading' | 'isSuccess' | 'isError';
-  data?: T | undefined;
-  error?: Error;
-}
+  data: T | null;
+};
 
-const reducer = <T>(state: IState<T>, action: IAction<T>) => {
+type Action<T> =
+  | {type: typeof ACTIONS.INIT}
+  | {type: typeof ACTIONS.SUCCESS; payload: T}
+  | {type: typeof ACTIONS.ERROR};
+
+// Define our reducer function
+const reducer: Reducer<State<any>, Action<any>> = (state, action) => {
   switch (action.type) {
-    case 'initialized':
+    case ACTIONS.INIT:
+      return {...state, isLoading: true, isError: false};
+    case ACTIONS.SUCCESS:
       return {
+        ...state,
         isLoading: false,
-        data: undefined,
-        error: undefined,
-        isSuccess: false,
-        isError: false,
-      };
-    case 'isLoading':
-      return {
-        isLoading: true,
-        data: undefined,
-        error: undefined,
-        isSuccess: false,
-        isError: false,
-      };
-    case 'isSuccess':
-      return {
-        isLoading: false,
-        data: action.data,
-        error: undefined,
         isSuccess: true,
-        isError: false,
+        data: action.payload,
       };
-    case 'isError':
-      return {
-        isLoading: false,
-        data: undefined,
-        error: action.error,
-        isSuccess: false,
-        isError: true,
-      };
+    case ACTIONS.ERROR:
+      return {...state, isLoading: false, isError: true};
     default:
-      throw new Error('자동구성에 실패했어요. 잠시후 다시 이용하세요');
+      throw new Error();
   }
 };
 
-interface IUseAsync {
-  asyncFunction: Function;
-  enabled?: boolean;
-  deps?: any[];
-}
 export const useAsync = <T>({
   asyncFunction,
-  enabled = false,
+  autoRun = false,
   deps = [],
-}: IUseAsync) => {
-  const [state, dispatch] = useReducer<Reducer<IState<T>, IAction<T>>>(
-    reducer,
-    {
-      isLoading: false,
-      data: undefined,
-      error: undefined,
-      isSuccess: false,
-      isError: false,
-    },
-  );
-  const runAsync = async () => {
-    dispatch({type: 'isLoading'});
-    setTimeout(async () => {
-      try {
+}: {
+  asyncFunction: () => Promise<T>;
+  autoRun?: false;
+  deps?: any[];
+}) => {
+  const [state, dispatch] = useReducer<Reducer<State<T>, Action<T>>>(reducer, {
+    isLoading: false,
+    isSuccess: false,
+    isError: false,
+    data: null,
+  });
+
+  const execute = useCallback(async () => {
+    dispatch({type: ACTIONS.INIT});
+    try {
+      setTimeout(async () => {
         const data = await asyncFunction();
-        dispatch({type: 'isSuccess', data});
-      } catch (error) {
-        console.log('runAsync: error:', error);
-        dispatch({type: 'isError', error});
-      }
-    }, 1200);
-  };
+        dispatch({type: ACTIONS.SUCCESS, payload: data});
+      }, 1200);
+    } catch (error) {
+      dispatch({type: ACTIONS.ERROR});
+    }
+  }, [asyncFunction]);
 
   useEffect(() => {
-    dispatch({type: 'initialized'});
-    if (!enabled) return;
-    runAsync();
-  }, deps);
+    if (!autoRun) return;
+    execute();
+  }, [deps]);
 
-  return {
-    data: state.data,
-    isLoading: state.isLoading,
-    isError: state.error,
-    isSuccess: state.isSuccess,
-    reload: runAsync,
-  };
+  return {...state, execute};
 };
