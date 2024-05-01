@@ -1,6 +1,6 @@
 // Description: 장바구니 페이지에서 총 끼니 수, 상품 수, 금액을 보여주는 컴포넌트
 //RN, 3rd
-import {SetStateAction, useEffect, useState} from 'react';
+import {SetStateAction, useEffect} from 'react';
 import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import styled from 'styled-components/native';
@@ -71,7 +71,7 @@ const CartSummary = ({
   return regroupedDDAData && regroupedDDAData[0].length === 0 ? null : (
     //장바구니 하단에 보여지는 총 끼니 수, 상품 수, 금액
     <TotalSummaryContainer>
-      <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
+      <Row style={{marginTop: 40, justifyContent: 'space-between'}}>
         <SummaryText>총 끼니 ({menuNum} 개)</SummaryText>
         <SummaryValue>
           끼니 당{' '}
@@ -148,7 +148,7 @@ const CartSummary = ({
 export default CartSummary;
 
 const TotalSummaryContainer = styled.View`
-  padding: 0px 16px 80px 16px;
+  padding: 0px 16px 104px 16px;
   background-color: ${colors.white};
 `;
 

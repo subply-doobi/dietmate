@@ -53,6 +53,9 @@ const FlatlistHeaderComponent = ({
   const {copied: sortFilterCopied, applied: sortFilterApplied} = useSelector(
     (state: RootState) => state.sortFilter,
   );
+  const {isTutorialMode, tutorialProgress} = useSelector(
+    (state: RootState) => state.common,
+  );
 
   //state
   const [searchBarFocus, setSearchBarFocus] = useState(false);
@@ -85,7 +88,10 @@ const FlatlistHeaderComponent = ({
         position: 'absolute',
         left: 16,
         right: 16,
-        transform: [{translateY: translateY}],
+        transform:
+          isTutorialMode && tutorialProgress === 'SelectFood'
+            ? []
+            : [{translateY: translateY}],
         zIndex: 10000,
         backgroundColor: 'white',
       }}>

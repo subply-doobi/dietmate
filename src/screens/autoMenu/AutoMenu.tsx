@@ -19,8 +19,15 @@ import CtaButton from '../../shared/ui/CtaButton';
 import {useListDiet, useListDietTotal} from '../../shared/api/queries/diet';
 import colors from '../../shared/colors';
 import styled from 'styled-components/native';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../app/store/reduxStore';
 
 const AutoMenu = () => {
+  // redux
+  const {isTutorialMode, tutorialProgress} = useSelector(
+    (RootState: RootState) => RootState.common,
+  );
+
   // navigation
   const route = useRoute();
   const {setOptions, goBack} = useNavigation();
@@ -76,7 +83,7 @@ const AutoMenu = () => {
     ? 'active'
     : 'inactive';
   const guideStyle =
-    currentPage === 'Processing' ? {marginTop: 140} : {marginTop: 72};
+    currentPage === 'Processing' ? {marginTop: 140} : {marginTop: 40};
   const guideTitle = PAGES.find(p => p.name === currentPage)?.title || '';
   const guideSubTitle = PAGES.find(p => p.name === currentPage)?.subTitle || '';
   const guideTitleAlign =
@@ -109,7 +116,13 @@ const AutoMenu = () => {
   useEffect(() => {
     if (progress.length === 1) {
       setOptions({
-        headerLeft: () => <BackArrow goBackFn={goBack} />,
+        headerLeft: () => {
+          isTutorialMode && tutorialProgress === 'AutoMenu' ? (
+            <></>
+          ) : (
+            <BackArrow goBackFn={() => goBack()} />
+          );
+        },
       });
       return;
     }
@@ -128,6 +141,7 @@ const AutoMenu = () => {
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
+        if (isTutorialMode && tutorialProgress === 'AutoMenu') return true;
         if (progress.length === 1) return false;
         if (currentPage === 'Processing' || currentPage === 'Error') {
           return true;

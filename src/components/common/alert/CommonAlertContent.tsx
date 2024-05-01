@@ -2,11 +2,20 @@ import styled from 'styled-components/native';
 
 import {Col, TextMain} from '../../../shared/ui/styledComps';
 
-const CommonAlertContent = ({text}: {text: string}) => {
+const CommonAlertContent = ({
+  text,
+  subText,
+}: {
+  text: string;
+  subText?: string;
+}) => {
   return (
     <Container>
       <Col style={{marginTop: 28, alignItems: 'center'}}>
         <AlertText>{text}</AlertText>
+        {subText && (
+          <AlertText style={{fontSize: 12, marginTop: 16}}>{subText}</AlertText>
+        )}
       </Col>
     </Container>
   );

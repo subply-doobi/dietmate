@@ -44,7 +44,6 @@ const KakaoPay = () => {
       orderNo: orderNumber.orderNo,
       statusCd: 'SP006005',
     });
-    await createDietMutation.mutateAsync();
   };
   const onPaymentFail = async () => {
     await updateDietMutation.mutateAsync({

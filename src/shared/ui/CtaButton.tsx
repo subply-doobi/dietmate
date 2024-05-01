@@ -1,57 +1,73 @@
-import {TouchableOpacityProps} from 'react-native';
-import React, {ReactNode} from 'react';
+import {StyleProp, TextStyle, TouchableOpacityProps} from 'react-native';
+import React, {ReactNode, forwardRef} from 'react';
 import styled from 'styled-components/native';
 import {Row, TextMain} from './styledComps';
 import colors from '../colors';
-import DropShadow from 'react-native-drop-shadow';
 import ShadowView from './ShadowView';
 
+type IBtnStyle =
+  | 'active'
+  | 'activeDark'
+  | 'inactive'
+  | 'border'
+  | 'borderActive'
+  | 'kakao';
 interface ICtaButton extends TouchableOpacityProps {
   shadow?: boolean;
-  btnStyle: 'active' | 'inactive' | 'border' | 'borderActive' | 'kakao';
+  btnStyle: IBtnStyle;
+  btnTextStyle?: StyleProp<TextStyle>;
   btnText?: string;
   btnContent?: () => ReactNode;
   bottomFloat?: boolean;
 }
-const CtaButton = ({
-  shadow = true,
-  btnStyle,
-  btnText,
-  btnContent,
-  bottomFloat = false,
-  ...props
-}: ICtaButton) => {
+const CtaButton = forwardRef((p: ICtaButton, ref) => {
+  const {
+    shadow,
+    btnStyle,
+    btnTextStyle,
+    btnText,
+    btnContent,
+    bottomFloat,
+    ...props
+  } = p;
+
   return shadow ? (
     <ShadowView>
       <BtnCTA
+        ref={ref}
         btnStyle={btnStyle}
         disabled={btnStyle === 'inactive' ? true : false}
         bottomFloat={bottomFloat}
         {...props}>
         <Row>
           {btnContent && btnContent()}
-          <BtnText btnStyle={btnStyle}>{btnText}</BtnText>
+          <BtnText btnStyle={btnStyle} style={btnTextStyle}>
+            {btnText}
+          </BtnText>
         </Row>
       </BtnCTA>
     </ShadowView>
   ) : (
     <BtnCTA
+      ref={ref}
       btnStyle={btnStyle}
       disabled={btnStyle === 'inactive' ? true : false}
       bottomFloat={bottomFloat}
       {...props}>
       <Row>
         {btnContent && btnContent()}
-        <BtnText btnStyle={btnStyle}>{btnText}</BtnText>
+        <BtnText btnStyle={btnStyle} style={btnTextStyle}>
+          {btnText}
+        </BtnText>
       </Row>
     </BtnCTA>
   );
-};
+});
 
 export default CtaButton;
 
 interface IBtnCTA {
-  btnStyle?: 'active' | 'inactive' | 'border' | 'kakao' | 'borderActive';
+  btnStyle?: IBtnStyle;
   bottomFloat?: boolean;
 }
 export const BtnCTA = styled.TouchableOpacity<IBtnCTA>`
@@ -62,13 +78,15 @@ export const BtnCTA = styled.TouchableOpacity<IBtnCTA>`
   background-color: ${({btnStyle}) =>
     btnStyle === 'active'
       ? `${colors.main}`
-      : btnStyle === 'inactive'
-        ? `${colors.inactivated}`
-        : btnStyle === 'border'
-          ? `${colors.white}`
-          : btnStyle === 'kakao'
-            ? `${colors.kakaoColor}`
-            : `${colors.white}`};
+      : btnStyle === 'activeDark'
+        ? `${colors.dark}`
+        : btnStyle === 'inactive'
+          ? `${colors.inactivated}`
+          : btnStyle === 'border'
+            ? `${colors.white}`
+            : btnStyle === 'kakao'
+              ? `${colors.kakaoColor}`
+              : `${colors.white}`};
   align-items: center;
   align-self: center;
   justify-content: center;
@@ -83,13 +101,15 @@ export const BtnCTA = styled.TouchableOpacity<IBtnCTA>`
 `;
 
 interface IBtnText {
-  btnStyle?: 'active' | 'inactive' | 'border' | 'kakao' | 'borderActive';
+  btnStyle?: IBtnStyle;
 }
 const BtnText = styled(TextMain)<IBtnText>`
   font-size: 16px;
   line-height: 20px;
   color: ${({btnStyle}) =>
-    btnStyle === 'active' || btnStyle === 'inactive'
+    btnStyle === 'active' ||
+    btnStyle === 'activeDark' ||
+    btnStyle === 'inactive'
       ? `${colors.white}`
       : btnStyle === 'border'
         ? `${colors.textSub}`

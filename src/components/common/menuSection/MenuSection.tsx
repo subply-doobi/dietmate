@@ -189,7 +189,10 @@ const MenuSection = () => {
                 style={{height: SCREENHEIGHT - 410}}
                 showsVerticalScrollIndicator={false}>
                 <HorizontalSpace height={8} />
-                <Menu dietNo={currentDietNo} dietDetailData={dietDetailData} />
+                <Menu
+                  dietNo={currentDietNo}
+                  dietDetailData={dietDetailData || []}
+                />
               </ScrollView>
             )}
 
@@ -220,7 +223,7 @@ const MenuSection = () => {
               <HorizontalSpace height={8} />
             </>
 
-            <NutrientsProgress dietDetailData={dietDetailData} />
+            <NutrientsProgress dietDetailData={dietDetailData || []} />
             {!isAccordionActive && <Arrow source={icons.arrowDown_20} />}
           </ProgressContainer>
         ),

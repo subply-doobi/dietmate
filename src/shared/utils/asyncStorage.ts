@@ -48,7 +48,7 @@ export const initializeNotShowAgainList = async () => {
 export const getNotShowAgainList = async (): Promise<INotShowAgainInitial> => {
   try {
     const notShowAgainList = await AsyncStorage.getItem('NOT_SHOW_AGAIN');
-    if (notShowAgainList === null) return notShowAgainInitial;
+    if (!notShowAgainList) return notShowAgainInitial;
     return JSON.parse(notShowAgainList);
   } catch (error) {
     return notShowAgainInitial;
@@ -67,7 +67,6 @@ export const updateNotShowAgainList = async ({
       v => (v ? JSON.parse(v) : notShowAgainInitial),
     );
     notShowAgainList[key] = value;
-    console.log('updated: ', notShowAgainList);
     await AsyncStorage.setItem(
       'NOT_SHOW_AGAIN',
       JSON.stringify(notShowAgainList),
