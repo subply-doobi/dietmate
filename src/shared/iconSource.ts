@@ -83,4 +83,7 @@ export const icons = {
   cartWhite_40: require(`./assets/icons/40_cart_white.png`),
   search_18: require(`./assets/icons/18_search.png`),
   warning_24: require(`./assets/icons/24_warning.png`),
+  redAlert_24: require(`./assets/icons/18_redAlert.png`),
+  creditImage_24: require(`./assets/icons/18_creditImage.png`),
+  dietImage_24: require(`./assets/icons/18_dietImage.png`),
 };

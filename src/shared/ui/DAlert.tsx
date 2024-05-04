@@ -13,6 +13,7 @@ interface IDAlert extends ViewProps {
   onConfirm: Function;
   onCancel: Function;
   confirmLabel?: string;
+  cancelLabel?: string;
   showTopCancel?: boolean;
   NoOfBtn?: 0 | 1 | 2;
   contentDelay?: number;
@@ -23,6 +24,7 @@ const DAlert = ({
   onConfirm,
   onCancel,
   confirmLabel,
+  cancelLabel,
   showTopCancel = false,
   NoOfBtn,
   contentDelay,
@@ -56,7 +58,10 @@ const DAlert = ({
               <Row>
                 {NoOfBtn === 2 && (
                   <BtnLeft onPress={() => onCancel && onCancel()}>
-                    <CancelBtnText>취소</CancelBtnText>
+                    <CancelBtnText>
+                      {' '}
+                      {cancelLabel ? cancelLabel : '취소'}
+                    </CancelBtnText>
                   </BtnLeft>
                 )}
 

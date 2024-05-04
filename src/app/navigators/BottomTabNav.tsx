@@ -17,6 +17,8 @@ import colors from '../../shared/colors';
 import {useListDietDetailAll} from '../../shared/api/queries/diet';
 import {Icon} from '../../shared/ui/styledComps';
 import Diet from '../../screens/diet/Diet';
+import NewHome from '../../screens/home/NewHome';
+import HomeCheckList from '../../screens/home/HomeCheckList';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,8 +32,8 @@ const BottomTabNav = () => {
       backBehavior="history"
       screenOptions={{headerShown: false, tabBarShowLabel: false}}>
       <Tab.Screen
-        name="Home"
-        component={Home}
+        name="NewHome"
+        component={NewHome}
         options={{
           tabBarIcon: ({focused}) => (
             <Icon
@@ -41,6 +43,7 @@ const BottomTabNav = () => {
           ),
         }}
       />
+
       <Tab.Screen
         name="Search"
         component={Search}

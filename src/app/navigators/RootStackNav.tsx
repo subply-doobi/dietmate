@@ -18,6 +18,7 @@ import KakaoPay from '../../components/payment/KakaoPay';
 import CustomErrorBoundary from '../../components/common/error/CustomErrorBoundary';
 import Notice from '../../screens/notice/Notice';
 import Order from '../../screens/order/Order';
+import HomeCheckList from '../../screens/home/HomeCheckList';
 
 // doobi shared
 import {icons} from '../../shared/iconSource';
@@ -174,6 +175,15 @@ const RootStackNav = () => {
       <Stack.Screen
         name="CustomErrorBoundary"
         component={CustomErrorBoundary}
+      />
+
+      {/* 체크리스트 */}
+      <Stack.Screen
+        name="HomeCheckList"
+        component={HomeCheckList}
+        options={{
+          headerShown: true,
+        }}
       />
     </Stack.Navigator>
   );
