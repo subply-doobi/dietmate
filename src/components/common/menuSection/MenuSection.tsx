@@ -56,7 +56,7 @@ const MenuSection = () => {
       enabled: currentDietNo ? true : false,
     },
   );
-
+  console.log('currentDietNo', currentDietNo);
   // state
   const [dietNoToDelete, setDietNoToDelete] = useState<string>();
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);

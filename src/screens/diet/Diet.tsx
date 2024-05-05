@@ -80,8 +80,9 @@ const Diet = () => {
     isTutorialMode,
     tutorialProgress,
     autoMenuStatus,
+    totalFoodList,
   } = useSelector((state: RootState) => state.common);
-
+  console.log('totalFoodList', totalFoodList.length);
   // react-query
   const {data: bLData} = useGetBaseLine();
   const {data: dietData} = useListDiet();
