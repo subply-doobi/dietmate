@@ -81,6 +81,14 @@ const UserInput = () => {
     setProgress(['Start']);
   };
 
+  const onCtaPress = () => {
+    if (currentPage === 'Result' || currentPage === 'ChangeResult') {
+      dietData && onComplete();
+      return;
+    }
+    goNext(getPageItem(currentPage).getNextPage(userInputState));
+  };
+
   // Cta 버튼 설정
   const btnStyle = getPageItem(currentPage).checkIsActive(userInputState)
     ? 'active'
@@ -91,13 +99,8 @@ const UserInput = () => {
       ? `${userInputState.calorie.value} kcal 로 결정`
       : '다음';
 
-  const onCtaPress = () => {
-    if (currentPage === 'Result' || currentPage === 'ChangeResult') {
-      dietData && onComplete();
-      return;
-    }
-    goNext(getPageItem(currentPage).getNextPage(userInputState));
-  };
+  const numerator = parseInt(getPageItem(currentPage).header.split('/')[0]);
+  const denominator = parseInt(getPageItem(currentPage).header.split('/')[1]);
 
   // useEffect
   // headerTitle 설정
@@ -139,8 +142,11 @@ const UserInput = () => {
       return () => subscription.remove();
     }, [progress]),
   );
-  const numerator = parseInt(getPageItem(currentPage).header.split('/')[0]);
-  const denominator = parseInt(getPageItem(currentPage).header.split('/')[1]);
+
+  useEffect(() => {
+    route?.params?.from === 'Checklist' &&
+      setProgress(['Start', 'ChangeWeight']);
+  }, [route]);
 
   return (
     <Container>
@@ -173,15 +179,17 @@ const UserInput = () => {
       </ScrollView>
 
       <Col style={{marginTop: -120}}>
-        {route?.params?.from === 'NewHome' && currentPage === 'Start' && (
-          <>
-            <CtaButton
-              btnStyle="border"
-              btnText="몸무게, 목표영양만 변경하기"
-              onPress={() => goNext('ChangeWeight')}
-            />
-          </>
-        )}
+        {currentPage === 'Start' &&
+          baseLineData &&
+          Object.keys(baseLineData).length !== 0 && (
+            <>
+              <CtaButton
+                btnStyle="border"
+                btnText="몸무게, 목표영양만 변경하기"
+                onPress={() => goNext('ChangeWeight')}
+              />
+            </>
+          )}
         <CtaButton
           btnStyle={btnStyle}
           btnText={btnText}

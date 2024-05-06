@@ -16,3 +16,6 @@ git config --global core.autocrlf true
 code-push
 appcenter codepush release-react -a subply/dietmate -d Production -m
 appcenter codepush release-react -a subply/dietmateIos -d Production -m
+
+tags
+git push -d origin v1.0.18

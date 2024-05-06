@@ -24,6 +24,7 @@ import {useRef} from 'react';
 import SquareInput from '../../../shared/ui/SquareInput';
 import {RootState} from '../../../app/store/reduxStore';
 import {SCREENWIDTH} from '../../../shared/constants';
+import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
 
 const AcHeader = ({isActive, title}: {isActive: boolean; title: string}) => {
   return (
@@ -78,6 +79,9 @@ const AcNutrBox = ({
 };
 
 const AcManualInputs = () => {
+  // react-query
+  const {data: baseLineData} = useGetBaseLine();
+
   // redux
   const dispatch = useDispatch();
   const {calorie, carb, protein, fat} = useSelector(
@@ -99,14 +103,16 @@ const AcManualInputs = () => {
     calculateManualCalorie(carb.value, protein.value, fat.value);
   return (
     <Col style={{width: SCREENWIDTH - 48, alignSelf: 'center'}}>
-      <Row style={{marginTop: 24}}>
-        <Icon source={icons.warning_24} />
+      {baseLineData && Object.keys(baseLineData).length !== 0 && (
+        <Row style={{marginTop: 24}}>
+          <Icon source={icons.warning_24} />
 
-        <CautionMsg>
-          칼로리가 변경될 수 있어요 (기존설정:{' '}
-          <CautionMsgRed>{calorie.value}kcal</CautionMsgRed>)
-        </CautionMsg>
-      </Row>
+          <CautionMsg>
+            칼로리가 변경될 수 있어요 (기존설정:{' '}
+            <CautionMsgRed>{calorie.value}kcal</CautionMsgRed>)
+          </CautionMsg>
+        </Row>
+      )}
       <HorizontalSpace height={24} />
       <SquareInput
         isActive={!!carb.value}

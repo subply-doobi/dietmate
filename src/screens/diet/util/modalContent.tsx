@@ -50,7 +50,12 @@ export const renderAlertContent: IRenderAlertContent = {
     <CommonAlertContent text={addDietNAText} />
   ),
   autoMenuLoading: () => <LoadingAlertContent />,
-  autoMenuError: () => <ErrorAlertContent />,
+  autoMenuError: () => (
+    <CommonAlertContent
+      text={'자동구성 오류가 발생했어요'}
+      subText={'재시도 후에도 오류가 지속되면\n문의 부탁드립니다'}
+    />
+  ),
   tutorialComplete: () => (
     <CommonAlertContent
       text={'튜토리얼이 완료되었어요\n이제 자유롭게 이용해보세요!'}

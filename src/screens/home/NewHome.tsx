@@ -58,6 +58,7 @@ import {
   setFoodToOrder,
   setShippingPrice,
 } from '../../features/reduxSlices/orderSlice';
+import DTooltip from '../../components/common/tooltip/DTooltip';
 
 const NewHome = () => {
   // navigation
@@ -426,18 +427,26 @@ const NewHome = () => {
           contentDelay={2000}
           visible={isTutorialMode && tutorialProgress === 'Start'}
           renderContent={() => (
-            <CtaButton
-              onPress={() => {
-                dispatch(setTutorialProgress('AddMenu'));
-                navigate('BottomTabNav', {screen: 'Diet'});
-              }}
-              btnStyle="active"
-              btnText={ctaBtnText}
-              style={{
-                width: SCREENWIDTH - 32 - 32,
-                marginTop: tutorialCtaBtnPy,
-              }}
-            />
+            <>
+              <DTooltip
+                tooltipShow={true}
+                boxTop={tutorialCtaBtnPy - 36}
+                text="식단구성을 시작해봐요!"
+                boxLeft={32}
+              />
+              <CtaButton
+                onPress={() => {
+                  dispatch(setTutorialProgress('AddMenu'));
+                  navigate('BottomTabNav', {screen: 'Diet'});
+                }}
+                btnStyle="active"
+                btnText={ctaBtnText}
+                style={{
+                  width: SCREENWIDTH - 32 - 32,
+                  marginTop: tutorialCtaBtnPy,
+                }}
+              />
+            </>
           )}
         />
       </ScrollView>
