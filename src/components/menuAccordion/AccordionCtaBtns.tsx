@@ -116,6 +116,9 @@ const AccordionCtaBtns = ({
     dispatch(setAutoMenuStatus(INITIAL_STATUS));
     let recommendedMenu: IProductData[][] = [];
 
+    // deley for 3seconds
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
     // 자동구성
     try {
       recommendedMenu = (

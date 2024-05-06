@@ -43,7 +43,9 @@ export const sumUpPrice = (
   return price;
 };
 
-export const sumUpDietTotal = (dietTotalData: IDietTotalData | undefined) => {
+export const sumUpDietTotal = (
+  dietTotalData: IDietTotalData | IOrderedProduct[][] | undefined,
+) => {
   let menuNum = 0;
   let productNum = 0;
   let priceTotal = 0;

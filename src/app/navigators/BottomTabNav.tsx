@@ -7,10 +7,8 @@ import {useNavigation} from '@react-navigation/native';
 
 // doobi
 import Mypage from '../../screens/mypage/Mypage';
-import Cart from '../../screens/cart/Cart';
 import BackArrow from '../../components/common/navigation/BackArrow';
 import Search from '../../screens/Search/Search';
-import Home from '../../screens/home/Home';
 
 import {icons} from '../../shared/iconSource';
 import colors from '../../shared/colors';
@@ -18,7 +16,6 @@ import {useListDietDetailAll} from '../../shared/api/queries/diet';
 import {Icon} from '../../shared/ui/styledComps';
 import Diet from '../../screens/diet/Diet';
 import NewHome from '../../screens/home/NewHome';
-import HomeCheckList from '../../screens/home/HomeCheckList';
 
 const Tab = createBottomTabNavigator();
 
@@ -60,6 +57,14 @@ const BottomTabNav = () => {
         name="Mypage"
         component={Mypage}
         options={{
+          headerShown: true,
+          headerTitle: '마이페이지',
+          headerTitleAlign: 'left',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: colors.textMain,
+          },
           tabBarIcon: ({focused}) => (
             <Icon
               source={focused ? icons.mypageActivated_36 : icons.mypage_36}
@@ -105,11 +110,6 @@ const BottomTabNav = () => {
 };
 
 export default BottomTabNav;
-
-const BottomTabIcon = styled.Image`
-  width: 36px;
-  height: 36px;
-`;
 
 const CartIcon = styled.View`
   width: 36px;

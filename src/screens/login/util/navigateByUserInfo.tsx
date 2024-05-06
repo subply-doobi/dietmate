@@ -14,6 +14,6 @@ export const navigateByUserInfo = async (
   // baseline 있으면 홈으로
   navigation.reset({
     index: 0,
-    routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
+    routes: [{name: 'BottomTabNav', params: {screen: 'NewHome'}}],
   });
 };

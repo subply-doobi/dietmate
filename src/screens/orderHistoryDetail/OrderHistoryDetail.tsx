@@ -273,7 +273,7 @@ const ContentContainer = styled.View`
 
 const Card = styled.View`
   width: 100%;
-  padding: 0px 8px 16px 8px;
+  padding: 8px 8px 32px 8px;
   margin-top: 16px;
   background-color: ${colors.white};
   border-radius: 10px;

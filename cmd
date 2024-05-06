@@ -12,3 +12,7 @@ yarn android --mode release
 
 git crlf
 git config --global core.autocrlf true
+
+code-push
+appcenter codepush release-react -a subply/dietmate -d Production -m
+appcenter codepush release-react -a subply/dietmateIos -d Production -m

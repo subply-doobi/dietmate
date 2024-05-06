@@ -97,6 +97,20 @@ export const useCreateDiet = (options?: IMutationOptions) => {
   return mutation;
 };
 
+export const useCreateDietWOI = (options?: IMutationOptions) => {
+  const mutation = useMutation({
+    mutationFn: () => mutationFn(CREATE_DIET, 'put'),
+    onSuccess: data => {
+      options?.onSuccess && options?.onSuccess(data);
+    },
+    onError: e => {
+      handleError(e);
+      console.log('useCreatDietWOI error: ', e);
+    },
+  });
+  return mutation;
+};
+
 export const useCreateDietDetail = (options?: IMutationOptions) => {
   const dispatch = useDispatch();
 

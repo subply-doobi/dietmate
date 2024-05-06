@@ -27,7 +27,7 @@ import {
   useUpdateBaseLine,
   useCreateBaseLine,
 } from '../../shared/api/queries/baseLine';
-import {useListDiet, useCreateDiet} from '../../shared/api/queries/diet';
+import {useListDiet} from '../../shared/api/queries/diet';
 
 const UserInput = () => {
   // redux
@@ -73,7 +73,7 @@ const UserInput = () => {
         {
           name: 'BottomTabNav',
           params: {
-            screen: route?.params?.from === 'Mypage' ? 'Mypage' : 'Home',
+            screen: 'NewHome',
           },
         },
       ],
@@ -173,7 +173,7 @@ const UserInput = () => {
       </ScrollView>
 
       <Col style={{marginTop: -120}}>
-        {route?.params?.from === 'Mypage' && currentPage === 'Start' && (
+        {route?.params?.from === 'NewHome' && currentPage === 'Start' && (
           <>
             <CtaButton
               btnStyle="border"

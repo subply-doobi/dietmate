@@ -1,5 +1,4 @@
 // RN
-import {Pressable, Image} from 'react-native';
 
 // 3rd
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -18,16 +17,17 @@ import KakaoPay from '../../components/payment/KakaoPay';
 import CustomErrorBoundary from '../../components/common/error/CustomErrorBoundary';
 import Notice from '../../screens/notice/Notice';
 import Order from '../../screens/order/Order';
-import HomeCheckList from '../../screens/home/HomeCheckList';
 
 // doobi shared
-import {icons} from '../../shared/iconSource';
 import colors from '../../shared/colors';
 import UserInput from '../../screens/userInput/UserInput';
 import Search from '../../screens/Search/Search';
 import AutoMenu from '../../screens/autoMenu/AutoMenu';
 import Change from '../../screens/change/Change';
 import Likes from '../../screens/like/Likes';
+import CheckList from '../../screens/checklist/Checklist';
+import OrderHistory from '../../screens/orderHistory/OrderHistory';
+import OrderHistoryDetail from '../../screens/orderHistoryDetail/OrderHistoryDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -146,7 +146,37 @@ const RootStackNav = () => {
       {/* <Stack.Screen name="HistoryNav" component={HistoryNav} /> */}
 
       {/* 주문정보 */}
-      <Stack.Screen name="OrderHistoryNav" component={OrderHistoryNav} />
+      <Stack.Screen
+        name="OrderHistory"
+        component={OrderHistory}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerTitle: '구매내역',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: colors.textMain,
+          },
+          headerShadowVisible: false,
+          headerLeft: () => <BackArrow goBackFn={goBack} />,
+        }}
+      />
+      <Stack.Screen
+        name="OrderHistoryDetail"
+        component={OrderHistoryDetail}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: colors.textMain,
+          },
+          headerShadowVisible: false,
+          headerLeft: () => <BackArrow goBackFn={goBack} />,
+        }}
+      />
 
       {/* 주문완료 */}
       <Stack.Screen name="OrderComplete" component={OrderComplete} />
@@ -179,10 +209,11 @@ const RootStackNav = () => {
 
       {/* 체크리스트 */}
       <Stack.Screen
-        name="HomeCheckList"
-        component={HomeCheckList}
+        name="Checklist"
+        component={CheckList}
         options={{
           headerShown: true,
+          headerTitle: '',
         }}
       />
     </Stack.Navigator>

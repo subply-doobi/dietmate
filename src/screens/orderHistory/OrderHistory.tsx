@@ -97,12 +97,9 @@ const OrderHistory = () => {
               <OrderDate>{order[0][0].buyDate}</OrderDate>
               <DetailBtn
                 onPress={() =>
-                  navigate('OrderHistoryNav', {
-                    screen: 'OrderHistoryDetail',
-                    params: {
-                      orderDetailData: order,
-                      totalPrice: order[0][0].orderPrice,
-                    },
+                  navigate('OrderHistoryDetail', {
+                    orderDetailData: order,
+                    totalPrice: order[0][0].orderPrice,
                   })
                 }>
                 <DetailBtnText>상세보기</DetailBtnText>

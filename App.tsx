@@ -20,6 +20,7 @@ import {
   IS_ANDROID,
   IS_IOS,
   PLAY_STORE_URL,
+  codePushOptions,
 } from './src/shared/constants';
 import {getLatestVersion} from './src/shared/api/queries/version';
 import CodePush from 'react-native-code-push';
@@ -47,6 +48,8 @@ function App(): React.JSX.Element {
       await getLatestVersion().then(res => {
         appVersion !== res?.latestVersion && setIsUpdateNeeded(true);
       });
+
+      // 튜토리얼 모드 확인
       const isTutorialMode = !(await getNotShowAgainList()).tutorial;
       isTutorialMode && store.dispatch(setTutorialStart());
     };
@@ -82,5 +85,5 @@ function App(): React.JSX.Element {
   );
 }
 
-// export default CodePush(App);
-export default App;
+export default CodePush(codePushOptions)(App);
+// export default App;

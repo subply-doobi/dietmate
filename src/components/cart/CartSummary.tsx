@@ -65,7 +65,7 @@ const CartSummary = ({
   const onSearchBtnPress = (platformNm: string) => {
     dispatch(updateSearch(platformNm));
     dispatch(applySortFilter());
-    navigate('Home');
+    navigate('Search');
   };
 
   return regroupedDDAData && regroupedDDAData[0].length === 0 ? null : (

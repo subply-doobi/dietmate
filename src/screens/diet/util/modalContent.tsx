@@ -94,12 +94,12 @@ export const renderDTPContent: IRenderDTPContent = {
       <DTooltip
         tooltipShow={true}
         text="끼니를 먼저 추가해볼까요?"
-        boxTop={headerHeight + 4}
+        boxTop={headerHeight}
       />
       <AddMenuBtn
         dTData={dTData}
         onPress={fn}
-        style={{marginTop: headerHeight + 4 + 40}}
+        style={{marginTop: headerHeight + 40}}
       />
     </>
   ),

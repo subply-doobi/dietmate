@@ -75,3 +75,51 @@ export const updateNotShowAgainList = async ({
     console.error(error);
   }
 };
+
+// checklist
+// key -> orderNo
+// value -> menuNo/qtyIdx array
+
+interface IChecklist {
+  [key: string]: string[];
+}
+export const getTotalChecklist = async () => {
+  try {
+    const checklist = await AsyncStorage.getItem('CHECKLIST');
+    const parsedChecklist: IChecklist = checklist ? JSON.parse(checklist) : {};
+    return parsedChecklist;
+  } catch (e) {
+    console.log('AsyncStorage: getTotalChecklist 오류');
+    return {};
+  }
+};
+
+export const updateTotalCheckList = async ({
+  orderNo,
+  menuNoAndQtyIdx,
+}: {
+  orderNo: string;
+  menuNoAndQtyIdx: string;
+}) => {
+  try {
+    let checklist = await getTotalChecklist();
+    if (!checklist) return;
+    const currentChecklist = checklist[orderNo] || [];
+
+    const updatedChecklist = currentChecklist.includes(menuNoAndQtyIdx)
+      ? currentChecklist.filter(v => v !== menuNoAndQtyIdx)
+      : [...currentChecklist, menuNoAndQtyIdx];
+    checklist[orderNo] = updatedChecklist;
+    await AsyncStorage.setItem('CHECKLIST', JSON.stringify(checklist));
+  } catch (e) {
+    console.log('AsyncStorage: updateTotalCheckList 오류');
+  }
+};
+
+export const clearChecklist = async () => {
+  try {
+    await AsyncStorage.removeItem('CHECKLIST');
+  } catch (e) {
+    console.log('AsyncStorage: updateTotalCheckList 오류');
+  }
+};

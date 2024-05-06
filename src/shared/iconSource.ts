@@ -46,8 +46,16 @@ export const icons = {
   checkboxCheckedGrey_24: require(
     `./assets/icons/24_checkbox_checked_grey.png`,
   ),
-  checkRound_24: require(`./assets/icons/24_check_round_unchecked.png`),
-  checkRoundChecked_24: require(`./assets/icons/24_check_round_checked.png`),
+  checkRoundEmpty_24: require(`./assets/icons/24_check_round_empty.png`),
+  checkRoundCheckedGrey_24: require(
+    `./assets/icons/24_check_round_checked_grey.png`,
+  ),
+  checkRoundCheckedGreen_24: require(
+    `./assets/icons/24_check_round_checked_green.png`,
+  ),
+  checkRoundCheckedPurple_24: require(
+    `./assets/icons/24_check_round_checked_purple.png`,
+  ),
 
   // sort
   sort_24: require(`./assets/icons/24_sort.png`),
@@ -72,18 +80,14 @@ export const icons = {
   edit_24: require(`./assets/icons/24_edit.png`),
   initialize_24: require(`./assets/icons/24_initialize.png`),
   question_24: require(`./assets/icons/24_question.png`),
-  likeSmall_20: require(`./assets/icons/20_like_small.png`),
   mainPurpleLine_20: require(`./assets/icons/20_main_purpleLine.png`),
-  step1_36: require(`./assets/icons/36_step1.png`),
-  step2_36: require(`./assets/icons/36_step2.png`),
-  step3_36: require(`./assets/icons/36_step3.png`),
   like_48: require(`./assets/icons/48_like.png`),
   likeActivated_48: require(`./assets/icons/48_like_activated.png`),
   kakaoPay: require(`./assets/icons/kakao_pay.png`),
   cartWhite_40: require(`./assets/icons/40_cart_white.png`),
   search_18: require(`./assets/icons/18_search.png`),
   warning_24: require(`./assets/icons/24_warning.png`),
-  redAlert_24: require(`./assets/icons/18_redAlert.png`),
-  creditImage_24: require(`./assets/icons/18_creditImage.png`),
-  dietImage_24: require(`./assets/icons/18_dietImage.png`),
+  calendar_24: require(`./assets/icons/24_calendar.png`),
+  card_24: require(`./assets/icons/24_card.png`),
+  menu_24: require(`./assets/icons/24_menu.png`),
 };

@@ -84,7 +84,7 @@ const ChangeFoodList = ({
         <RightBtnBox>
           {isActive && (
             <Icon
-              source={icons.checkRoundChecked_24}
+              source={icons.checkRoundCheckedGreen_24}
               style={{position: 'absolute', right: 0, top: 0}}
             />
           )}

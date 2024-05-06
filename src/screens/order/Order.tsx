@@ -105,7 +105,7 @@ const Order = () => {
     {
       title: '주문식품',
       subTitle: (
-        <Row style={{}}>
+        <Row>
           <HeaderSubTitle style={{flex: 1}}>
             총 끼니 {menuNum}개 ({productNum}개 식품)
           </HeaderSubTitle>
@@ -228,6 +228,7 @@ const Order = () => {
       buyer_email: userData?.email ? userData.email : '',
       buyer_addr: listAddressData
         ? listAddressData[selectedAddrIdx]?.addr1 +
+          ' | ' +
           listAddressData[selectedAddrIdx]?.addr2
         : '',
       buyer_postcode: listAddressData

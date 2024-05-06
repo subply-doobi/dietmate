@@ -229,7 +229,6 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
             )}
             {screen === 'Likes' && (
               <DeleteLikeFoodBtn onPress={onLikeDelete}>
-                {/* <LikeImg source={icons.likeSmall_20} /> */}
                 <DeleteLikeFoodBtnText>찜 취소</DeleteLikeFoodBtnText>
               </DeleteLikeFoodBtn>
             )}

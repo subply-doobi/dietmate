@@ -20,7 +20,6 @@ const KakaoPay = () => {
 
   // 안드로이드 뒤로가기버튼 방지
   usePreventBackBtn();
-
   // SP006004 updateOrder
   // SP006001 updateDiet
   /** 실패했을 경우
@@ -32,7 +31,7 @@ const KakaoPay = () => {
     reset({
       index: 0,
       routes: [
-        {name: 'BottomTabNav', params: {screen: 'Home'}},
+        {name: 'BottomTabNav', params: {screen: 'NewHome'}},
         {name: 'OrderComplete'},
       ],
     });
