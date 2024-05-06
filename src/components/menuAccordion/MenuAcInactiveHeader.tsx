@@ -65,7 +65,9 @@ const MenuAcInactiveHeader = ({
   const priceSum = sumUpPrice(dDData);
   const nutrStatus = getNutrStatus({totalFoodList, bLData, dDData});
   const iconSource =
-    nutrStatus === 'satisfied' ? icons.checkRoundChecked_24 : icons.warning_24;
+    nutrStatus === 'satisfied'
+      ? icons.checkRoundCheckedGreen_24
+      : icons.warning_24;
   const subTitleText =
     dDData.length !== 0
       ? `${commaToNum(priceSum)}원 (${dDData.length}가지 식품)`

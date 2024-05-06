@@ -70,7 +70,7 @@ interface IBtnCTA {
   btnStyle?: IBtnStyle;
   bottomFloat?: boolean;
 }
-export const BtnCTA = styled.TouchableOpacity<IBtnCTA>`
+const BtnCTA = styled.TouchableOpacity<IBtnCTA>`
   height: 52px;
   width: 100%;
   border-radius: 4px;

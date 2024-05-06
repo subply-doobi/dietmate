@@ -41,15 +41,15 @@ const OrderComplete = () => {
     navigation.reset({
       index: 0,
       routes: [
-        {name: 'BottomTabNav', params: {screen: 'Home'}},
-        {name: 'OrderHistoryNav', params: {screen: 'OrderHistory'}},
+        {name: 'BottomTabNav', params: {screen: 'NewHome'}},
+        {name: 'OrderHistory'},
       ],
     });
   };
   const goToHome = () => {
     navigation.reset({
       index: 0,
-      routes: [{name: 'BottomTabNav', params: {screen: 'Home'}}],
+      routes: [{name: 'BottomTabNav', params: {screen: 'NewHome'}}],
     });
   };
   return (

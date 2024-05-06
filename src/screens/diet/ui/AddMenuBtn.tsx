@@ -24,8 +24,6 @@ const Btn = styled.TouchableOpacity`
 
   justify-content: center;
   align-items: center;
-
-  margin-top: 4px;
 `;
 
 const BtnText = styled(TextMain)`

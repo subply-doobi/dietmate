@@ -77,7 +77,7 @@ const Search = () => {
       enabled: currentDietNo ? true : false,
     },
   );
-  console.log('productData', productData);
+
   // Animation
   // flatList header hide Event
   const scrollY = useRef(new Animated.Value(0)).current;

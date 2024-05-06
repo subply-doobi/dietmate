@@ -4,6 +4,7 @@ import {IProductData} from '../../shared/api/types/product';
 
 type ITutorialProgress =
   | ''
+  | 'Start'
   | 'AddMenu'
   | 'AddFood'
   | 'SelectFood'
@@ -84,7 +85,7 @@ export const commonSlice = createSlice({
     },
     setTutorialStart: state => {
       state.isTutorialMode = true;
-      state.tutorialProgress = 'AddMenu';
+      state.tutorialProgress = 'Start';
     },
     setTutorialEnd: state => {
       state.isTutorialMode = false;

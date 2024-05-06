@@ -31,4 +31,5 @@ export default {
    * 90% #000000E6, 95% #000000F2, 100% #000000FF
    */
   blackOpacity50: '#00000080',
+  whiteOpacity70: '#FFFFFFB3',
 };

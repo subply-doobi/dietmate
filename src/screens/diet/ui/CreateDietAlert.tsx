@@ -3,6 +3,8 @@ import {ActivityIndicator} from 'react-native';
 
 // 3rd
 import styled from 'styled-components/native';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../app/store/reduxStore';
 
 // doobi
 import {

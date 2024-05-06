@@ -15,6 +15,7 @@ import {RootState} from '../../app/store/reduxStore';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import {
   useCreateDiet,
+  useCreateDietWOI,
   useDeleteDiet,
   useListDiet,
   useListDietTotal,
@@ -64,6 +65,8 @@ import DTPScreen from '../../shared/ui/DTPScreen';
 import CartSummary from '../../components/cart/CartSummary';
 import AddMenuBtn from './ui/AddMenuBtn';
 import {renderAlertContent, renderDTPContent} from './util/modalContent';
+import {queryClient} from '../../app/store/reactQueryStore';
+import {DIET, DIET_DETAIL, PRODUCTS} from '../../shared/api/keys';
 
 const Diet = () => {
   // navigation
@@ -80,16 +83,13 @@ const Diet = () => {
     isTutorialMode,
     tutorialProgress,
     autoMenuStatus,
-    totalFoodList,
   } = useSelector((state: RootState) => state.common);
-  console.log('totalFoodList', totalFoodList.length);
   // react-query
   const {data: bLData} = useGetBaseLine();
   const {data: dietData} = useListDiet();
   const dietTotalData =
     !!dietData && useListDietTotal(dietData, {enabled: !!dietData});
-  const createDietMutation = useCreateDiet();
-  const deleteDietMutation = useDeleteDiet();
+  const createDietMutationWOI = useCreateDietWOI();
 
   // useState
   const [forceModalQuit, setForceModalQuit] = useState(false);
@@ -155,7 +155,7 @@ const Diet = () => {
 
   const onAddCreatePressed = () => {
     if (!dTData) return;
-    dispatch(setTutorialProgress(''));
+    // dispatch(setTutorialProgress(''));
     setIsCreating(false);
     const currentNumOfMenu = dTData.length;
     if (addDietStatus === 'possible') {
@@ -173,7 +173,8 @@ const Diet = () => {
     const arr = new Array(numOfCreateDiet).fill(0);
     let firstAddedDietNo = '';
     for (let i = 0; i < arr.length; i++) {
-      const res = await createDietMutation.mutateAsync({setDietNo: false});
+      // const res = await createDietMutation.mutateAsync({setDietNo: false});
+      const res = await createDietMutationWOI.mutateAsync();
       if (i === 0) {
         firstAddedDietNo = res.dietNo;
       }
@@ -183,26 +184,16 @@ const Diet = () => {
 
     setIsCreating(false);
     setCreateAlertShow(false);
+    queryClient.invalidateQueries({queryKey: [DIET]});
+    queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
+    queryClient.invalidateQueries({queryKey: [PRODUCTS, firstAddedDietNo]});
+
     // delay for rendering
     isTutorialMode &&
       setTimeout(() => {
         dispatch(setMenuAcActive([0]));
       }, 200);
   };
-
-  // useEffect 튜토리얼모드인 경우 끼니 있으면 모두 삭제
-  useEffect(() => {
-    if (!isTutorialMode) return;
-    if (tutorialProgress !== 'AddMenu') return;
-    const deleteAllDiet = async () => {
-      const dietNoList = dietData?.map(d => d.dietNo) || [];
-      const deleteMutations = dietNoList.map(dietNo =>
-        deleteDietMutation.mutateAsync({dietNo}),
-      );
-      await Promise.all(deleteMutations);
-    };
-    deleteAllDiet();
-  }, [tutorialProgress]);
 
   // AutoMenu tutorial인 경우 스크롤 자동구성 버튼 위치로 내리기
   // Complete tutorial인 경우는 스크롤 맨 위로
@@ -290,6 +281,7 @@ const Diet = () => {
     autoMenuError: 1,
     tutorialComplete: 1,
   };
+
   const alertDelay = alertState === 'tutorialComplete' ? 1000 : 0;
   const alertConfirmLabel = alertState === 'createDiet' ? '추가' : '확인';
 
@@ -353,7 +345,7 @@ const Diet = () => {
         <HorizontalSpace height={40} />
 
         <Col style={{paddingHorizontal: 16, marginBottom: 80}}>
-          {/* menu accordion */}
+          {/* 끼니 아코디언 */}
           <Accordion
             activeSections={menuAcActive}
             sections={accordionContent}
@@ -367,7 +359,9 @@ const Diet = () => {
           />
 
           {/* 끼니추가 버튼 */}
-          {dTData && <AddMenuBtn onPress={onCreateDiet} dTData={dTData} />}
+          {dTData && (
+            <AddMenuBtn onPress={onAddCreatePressed} dTData={dTData} />
+          )}
 
           {/* 여러끼니 자동구성 버튼 */}
           <HorizontalSpace height={24} />
@@ -391,6 +385,7 @@ const Diet = () => {
             />
           )}
         </Col>
+
         {/* 끼니 정보 요약 */}
         <CartSummary
           setMenuNumSelectShow={setMenuNumSelectShow}
