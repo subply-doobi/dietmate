@@ -11,7 +11,7 @@ import colors from '../../../../shared/colors';
 import {icons} from '../../../../shared/iconSource';
 import {IUserInputState} from '../../../../features/reduxSlices/userInputSlice';
 import {calculateManualCalorie} from '../../../../shared/utils/targetCalculation';
-import ShadowView from '../../../../shared/ui/ShadowView';
+import {ShadowView} from '../../../../shared/ui/styledComps';
 import {
   KOREAN_NUTRITION_REFERENCE_URL,
   purposeCdToValue,
@@ -111,7 +111,7 @@ const Result = ({userInputState}: {userInputState: IUserInputState}) => {
             </NutrBox>
           ))}
         </Col>
-        <ShadowView style={{flex: 1.5}}>
+        <ShadowView style={{flex: 1.5, borderRadius: 5}}>
           <TMIBox>
             <Col style={{padding: 16}}>
               <BaseText>고객님의 기초대사량과</BaseText>

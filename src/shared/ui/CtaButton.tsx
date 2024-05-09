@@ -3,7 +3,7 @@ import React, {ReactNode, forwardRef} from 'react';
 import styled from 'styled-components/native';
 import {Row, TextMain} from './styledComps';
 import colors from '../colors';
-import ShadowView from './ShadowView';
+import {ShadowView} from './styledComps';
 
 type IBtnStyle =
   | 'active'
@@ -32,7 +32,7 @@ const CtaButton = forwardRef((p: ICtaButton, ref) => {
   } = p;
 
   return shadow ? (
-    <ShadowView>
+    <ShadowView style={{width: '100%', borderRadius: 5}}>
       <BtnCTA
         ref={ref}
         btnStyle={btnStyle}

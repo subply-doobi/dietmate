@@ -39,7 +39,7 @@ import {
   TextSub,
 } from '../../shared/ui/styledComps';
 import NutrTarget from './ui/NutrTarget';
-import ShadowView from '../../shared/ui/ShadowView';
+import {ShadowView} from '../../shared/ui/styledComps';
 import CtaButton from '../../shared/ui/CtaButton';
 import {
   setCurrentDiet,
@@ -251,174 +251,171 @@ const NewHome = () => {
         {/* 현재 식단 카드 (식단 있으면 구매, 없으면 식단구성버튼)*/}
         <HorizontalSpace height={40} />
         <ShadowView
-          opacity={0.16}
           style={{
+            paddingHorizontal: 16,
+            paddingTop: 24,
+            paddingBottom: 32,
             marginHorizontal: 16,
+            borderRadius: 10,
           }}>
-          <Card>
-            {dTDataStatus === 'isLoading' ? (
-              <ActivityIndicator size="small" color={colors.main} />
-            ) : (
-              <Col>
-                <Row style={{justifyContent: 'space-between'}}>
-                  <Row>
-                    <Icon source={icons.warning_24} />
-                    <CardTitle>{menuCardTitle}</CardTitle>
-                  </Row>
-
-                  {!isDietEmpty && (
-                    <TargetChangeBtn
-                      onPress={() =>
-                        navigate('BottomTabNav', {screen: 'Diet'})
-                      }>
-                      <SubText>끼니상세</SubText>
-                      <Icon size={20} source={icons.arrowRight_20} />
-                    </TargetChangeBtn>
-                  )}
+          {dTDataStatus === 'isLoading' ? (
+            <ActivityIndicator size="small" color={colors.main} />
+          ) : (
+            <Col>
+              <Row style={{justifyContent: 'space-between'}}>
+                <Row>
+                  <Icon source={icons.warning_24} />
+                  <CardTitle>{menuCardTitle}</CardTitle>
                 </Row>
+
                 {!isDietEmpty && (
-                  <Col style={{marginTop: 24}}>
-                    <Row>
-                      <Icon source={icons.menu_24} />
-                      <CardDesc>{dTData?.length}개 끼니</CardDesc>
-                    </Row>
-                    <Row style={{marginTop: 8}}>
-                      <Icon source={icons.card_24} />
-                      <CardDesc>{commaToNum(priceTotal)} 원</CardDesc>
-                    </Row>
-                  </Col>
+                  <TargetChangeBtn
+                    onPress={() => navigate('BottomTabNav', {screen: 'Diet'})}>
+                    <SubText>끼니상세</SubText>
+                    <Icon size={20} source={icons.arrowRight_20} />
+                  </TargetChangeBtn>
                 )}
-                <CtaButton
-                  ref={ctaBtnRef}
-                  onPress={onCtaPressed}
-                  btnStyle="activeDark"
-                  btnText={ctaBtnText}
-                  style={{marginTop: 40}}
-                />
-              </Col>
-            )}
-          </Card>
+              </Row>
+              {!isDietEmpty && (
+                <Col style={{marginTop: 24}}>
+                  <Row>
+                    <Icon source={icons.menu_24} />
+                    <CardDesc>{dTData?.length}개 끼니</CardDesc>
+                  </Row>
+                  <Row style={{marginTop: 8}}>
+                    <Icon source={icons.card_24} />
+                    <CardDesc>{commaToNum(priceTotal)} 원</CardDesc>
+                  </Row>
+                </Col>
+              )}
+              <CtaButton
+                ref={ctaBtnRef}
+                onPress={onCtaPressed}
+                btnStyle="activeDark"
+                btnText={ctaBtnText}
+                style={{marginTop: 40}}
+              />
+            </Col>
+          )}
         </ShadowView>
 
         {/* 주문끼니 체크리스트*/}
         <ShadowView
-          opacity={0.16}
           style={{
+            paddingHorizontal: 16,
+            paddingTop: 24,
+            paddingBottom: 32,
             marginHorizontal: 16,
+            borderRadius: 10,
             marginTop: 40,
           }}>
-          <Card>
-            <Row>
-              {isOrderEmpty && <Icon source={icons.warning_24} />}
-              <CardTitle>{checklistCardTitle}</CardTitle>
-            </Row>
+          <Row>
+            {isOrderEmpty && <Icon source={icons.warning_24} />}
+            <CardTitle>{checklistCardTitle}</CardTitle>
+          </Row>
 
-            {!isOrderEmpty && <HorizontalSpace height={40} />}
-            {!isOrderEmpty &&
-              flattenOrderData.map((order, idx) => {
-                const numerator =
-                  totalChecklist[order[0][0].orderNo]?.length || 0;
-                const denominator = order.length;
-                const percentage = Math.round((numerator / denominator) * 100);
-                return (
-                  <ShadowView key={idx}>
-                    <CheckListBox
-                      onPress={() =>
-                        navigate('Checklist', {
-                          order,
-                          checklist: totalChecklist[order[0][0].orderNo],
-                        })
-                      }>
-                      <LeftBar />
-                      <CheckListTitle>
-                        {parseDate(order[0][0].buyDate)} 주문
-                      </CheckListTitle>
-                      <Row>
-                        <CheckListSubTitle>
-                          {percentage}% 완료
-                        </CheckListSubTitle>
+          {!isOrderEmpty && <HorizontalSpace height={40} />}
+          {!isOrderEmpty &&
+            flattenOrderData.map((order, idx) => {
+              const numerator =
+                totalChecklist[order[0][0].orderNo]?.length || 0;
+              const denominator = order.length;
+              const percentage = Math.round((numerator / denominator) * 100);
+              return (
+                <ShadowView
+                  key={idx}
+                  style={{borderRadius: 5, width: '100%', height: 72}}>
+                  <CheckListBox
+                    onPress={() =>
+                      navigate('Checklist', {
+                        order,
+                        checklist: totalChecklist[order[0][0].orderNo],
+                      })
+                    }>
+                    <LeftBar />
+                    <CheckListTitle>
+                      {parseDate(order[0][0].buyDate)} 주문
+                    </CheckListTitle>
+                    <Row>
+                      <CheckListSubTitle>{percentage}% 완료</CheckListSubTitle>
 
-                        {percentage === 100 ? (
-                          <Icon
-                            style={{marginLeft: 8, zIndex: 2}}
-                            source={icons.checkRoundCheckedPurple_24}
+                      {percentage === 100 ? (
+                        <Icon
+                          style={{marginLeft: 8, zIndex: 2}}
+                          source={icons.checkRoundCheckedPurple_24}
+                        />
+                      ) : (
+                        <Col
+                          style={{
+                            width: 24,
+                            height: 24,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginLeft: 8,
+                          }}>
+                          <PieChart
+                            series={[numerator, denominator - numerator]}
+                            widthAndHeight={20}
+                            style={{zIndex: 2}}
+                            sliceColor={[colors.main, colors.white]}
+                            coverRadius={0.6}
                           />
-                        ) : (
-                          <Col
-                            style={{
-                              width: 24,
-                              height: 24,
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              marginLeft: 8,
-                            }}>
-                            <PieChart
-                              series={[numerator, denominator - numerator]}
-                              widthAndHeight={20}
-                              style={{zIndex: 2}}
-                              sliceColor={[colors.main, colors.white]}
-                              coverRadius={0.6}
-                            />
-                          </Col>
-                        )}
-                      </Row>
-                      {percentage === 100 && <OpacityView />}
-                    </CheckListBox>
-                  </ShadowView>
-                );
-              })}
-            {orderGroupedDataFlatten.length > 4 && (
-              <LoadMoreBtn onPress={() => setShowEveryList(v => !v)}>
-                <Icon
-                  source={showEveryList ? icons.arrowUp_20 : icons.arrowDown_20}
-                />
-              </LoadMoreBtn>
-            )}
-          </Card>
+                        </Col>
+                      )}
+                    </Row>
+                    {percentage === 100 && <OpacityView />}
+                  </CheckListBox>
+                </ShadowView>
+              );
+            })}
+          {orderGroupedDataFlatten.length > 4 && (
+            <LoadMoreBtn onPress={() => setShowEveryList(v => !v)}>
+              <Icon
+                source={showEveryList ? icons.arrowUp_20 : icons.arrowDown_20}
+              />
+            </LoadMoreBtn>
+          )}
         </ShadowView>
 
         {/* 마지막 주문정보 카드*/}
         {!isOrderEmpty && (
           <ShadowView
-            opacity={0.16}
             style={{
               marginHorizontal: 16,
               marginTop: 40,
+              paddingHorizontal: 16,
+              paddingTop: 24,
+              paddingBottom: 32,
+              borderRadius: 10,
             }}>
-            <Card>
-              <Row style={{justifyContent: 'space-between'}}>
-                <Row>
-                  <Icon source={icons.checkRoundCheckedGreen_24} />
-                  <CardTitle>마지막 주문정보</CardTitle>
-                </Row>
-                <TargetChangeBtn onPress={() => navigate('OrderHistory')}>
-                  <SubText>주문전체정보</SubText>
-                  <Icon size={20} source={icons.arrowRight_20} />
-                </TargetChangeBtn>
+            <Row style={{justifyContent: 'space-between'}}>
+              <Row>
+                <Icon source={icons.checkRoundCheckedGreen_24} />
+                <CardTitle>마지막 주문정보</CardTitle>
               </Row>
-              <HorizontalSpace height={40} />
-              <LastOrderNutr lastOrder={orderGroupedDataFlatten[0]} />
-              <Col style={{marginTop: 24}}>
-                <Row>
-                  <Icon source={icons.calendar_24} />
-                  <CardDesc>
-                    {orderGroupedDataFlatten[0][0][0].buyDate}
-                  </CardDesc>
-                </Row>
-                <Row style={{marginTop: 8}}>
-                  <Icon source={icons.menu_24} />
-                  <CardDesc>
-                    {orderGroupedDataFlatten[0].length}개 끼니
-                  </CardDesc>
-                </Row>
-                <Row style={{marginTop: 8}}>
-                  <Icon source={icons.card_24} />
-                  <CardDesc>
-                    {commaToNum(orderGroupedDataFlatten[0][0][0].orderPrice)} 원
-                  </CardDesc>
-                </Row>
-              </Col>
-            </Card>
+              <TargetChangeBtn onPress={() => navigate('OrderHistory')}>
+                <SubText>주문전체정보</SubText>
+                <Icon size={20} source={icons.arrowRight_20} />
+              </TargetChangeBtn>
+            </Row>
+            <HorizontalSpace height={40} />
+            <LastOrderNutr lastOrder={orderGroupedDataFlatten[0]} />
+            <Col style={{marginTop: 24}}>
+              <Row>
+                <Icon source={icons.calendar_24} />
+                <CardDesc>{orderGroupedDataFlatten[0][0][0].buyDate}</CardDesc>
+              </Row>
+              <Row style={{marginTop: 8}}>
+                <Icon source={icons.menu_24} />
+                <CardDesc>{orderGroupedDataFlatten[0].length}개 끼니</CardDesc>
+              </Row>
+              <Row style={{marginTop: 8}}>
+                <Icon source={icons.card_24} />
+                <CardDesc>
+                  {commaToNum(orderGroupedDataFlatten[0][0][0].orderPrice)} 원
+                </CardDesc>
+              </Row>
+            </Col>
           </ShadowView>
         )}
 
@@ -508,7 +505,6 @@ const CardDesc = styled(MainText)`
 `;
 
 const CheckListBox = styled.TouchableOpacity`
-  background-color: ${colors.white};
   width: 100%;
   height: 72px;
   flex-direction: row;
