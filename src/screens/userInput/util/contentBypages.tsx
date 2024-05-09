@@ -22,6 +22,25 @@ import ChangeResult from '../ui/subScreens/ChangeResult';
 
 import {IUserInputState} from '../../../features/reduxSlices/userInputSlice';
 import {SPORTS_SEQ_CD} from '../../../shared/constants';
+export type IUserInputPageNm =
+  | 'Start'
+  | 'Gender'
+  | 'Age'
+  | 'Height'
+  | 'Weight'
+  | 'Purpose'
+  | 'WOFrequency'
+  | 'Amr'
+  | 'WODuration'
+  | 'WOIntensity'
+  | 'TargetCalorie'
+  | 'TargetRatio'
+  | 'Result'
+  | 'ChangeWeight'
+  | 'ChangeCalorie'
+  | 'ChangeRatio'
+  | 'ChangeResult'
+  | 'None';
 
 export const PAGES = [
   {
@@ -190,7 +209,7 @@ export const PAGES = [
     title: '몸무게와 목표영양을\n다시 설정할게요',
     subTitle: '체형, 체중이나 목적이 변한다면\n목표섭취량도 다시 설정해야해요',
     getNextPage: (u: IUserInputState) => 'ChangeCalorie',
-    checkIsActive: (u: IUserInputState) => true,
+    checkIsActive: (u: IUserInputState) => u.weight.isValid,
     render: (u: IUserInputState, scrollRef: RefObject<ScrollView>) => (
       <ChangeWeight userInputState={u} />
     ),
@@ -201,7 +220,7 @@ export const PAGES = [
     title: '몸무게와 목표영양을\n다시 설정할게요',
     subTitle: '체형, 체중이나 목적이 변한다면\n목표섭취량도 다시 설정해야해요',
     getNextPage: (u: IUserInputState) => 'ChangeRatio',
-    checkIsActive: (u: IUserInputState) => true,
+    checkIsActive: (u: IUserInputState) => u.calorie.isValid,
     render: (u: IUserInputState, scrollRef: RefObject<ScrollView>) => (
       <ChangeCalorie userInputState={u} scrollRef={scrollRef} />
     ),
@@ -212,7 +231,16 @@ export const PAGES = [
     title: '영양성분 비율을\n다시 설정할게요',
     subTitle: '잘 모르겠다면 첫번째로\n선택해주시면 됩니다',
     getNextPage: (u: IUserInputState) => 'ChangeResult',
-    checkIsActive: (u: IUserInputState) => true,
+    checkIsActive: (u: IUserInputState) => {
+      if (u.targetOption.value.length === 0) return false;
+      if (
+        u.targetOption.value[0] === 3 &&
+        (!u.carb.isValid || !u.protein.isValid || !u.fat.isValid)
+      )
+        return false;
+
+      return true;
+    },
     render: (u: IUserInputState, scrollRef: RefObject<ScrollView>) => (
       <TargetRatio userInputState={u} scrollRef={scrollRef} />
     ),

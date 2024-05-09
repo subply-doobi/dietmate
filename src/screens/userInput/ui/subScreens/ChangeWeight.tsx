@@ -35,6 +35,7 @@ const ChangeWeight = ({userInputState}: {userInputState: IUserInputState}) => {
       weightRef?.current?.focus();
     }
   }, [isFocused()]);
+
   return (
     <Container>
       <SquareInput

@@ -6,22 +6,10 @@ import {
   IUserInputState,
   setValue,
 } from '../../../../features/reduxSlices/userInputSlice';
-import SquareInput from '../../../../shared/ui/SquareInput';
 import {useListCode} from '../../../../shared/api/queries/code';
-import {getRecommendedNutr} from '../../util/targetByUserInfo';
 import {useDispatch} from 'react-redux';
-import {
-  Col,
-  HorizontalSpace,
-  Icon,
-  Row,
-  TextMain,
-  TextSub,
-} from '../../../../shared/ui/styledComps';
-import colors from '../../../../shared/colors';
-import ToggleButton from '../../../../shared/ui/ToggleButton';
+import {HorizontalSpace} from '../../../../shared/ui/styledComps';
 import {calculateCaloriesToNutr} from '../../../../shared/utils/targetCalculation';
-import {icons} from '../../../../shared/iconSource';
 import {ScrollView, TouchableOpacity} from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
 import {getRatioAcContent} from '../../util/ratioAccordion';

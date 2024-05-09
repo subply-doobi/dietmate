@@ -1,35 +1,28 @@
-// react, RN, 3rd
+// RN
 import styled from 'styled-components/native';
+import {ViewProps} from 'react-native';
 
-// doobi util, redux, etc
-import {icons} from '../../shared/iconSource';
-
-// doobi Component
-import {BtnCTA, Col, Icon, Row, TextSub} from '../../shared/ui/styledComps';
-import {useGetBaseLine} from '../../shared/api/queries/baseLine';
-import {useDispatch, useSelector} from 'react-redux';
+// 3rd
 import {RootState} from '../../app/store/reduxStore';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+
+// doobi
+import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import {getNutrStatus, sumUpNutrients} from '../../shared/utils/sumUp';
 import {IDietDetailData} from '../../shared/api/types/diet';
-import {IBaseLineData} from '../../shared/api/types/baseLine';
-import CtaButton from '../../shared/ui/CtaButton';
-import colors from '../../shared/colors';
-import {SCREENWIDTH} from '../../shared/constants';
-import {useNavigation} from '@react-navigation/native';
-import {ViewProps} from 'react-native';
 import {
   setAutoMenuStatus,
   setTutorialProgress,
 } from '../../features/reduxSlices/commonSlice';
-import DAlert from '../../shared/ui/DAlert';
-import {useAsync} from '../../screens/diet/util/cartCustomHooks';
-import {IProductData, IProductDetailData} from '../../shared/api/types/product';
+import {IProductData} from '../../shared/api/types/product';
 import {makeAutoMenu2} from '../../shared/utils/autoMenu2';
 import {
   useCreateDietDetail,
-  useListDietDetail,
+  useDeleteDietDetail,
 } from '../../shared/api/queries/diet';
-import {useEffect} from 'react';
+import {Col, Row} from '../../shared/ui/styledComps';
+import CtaButton from '../../shared/ui/CtaButton';
 
 const SELECTED_CATEGORY_IDX = [0, 1, 2, 3, 4, 5];
 const PRICE_TARGET = [0, 12000];
@@ -62,6 +55,7 @@ const AccordionCtaBtns = ({
   // react-query
   const {data: bLData} = useGetBaseLine();
   const createDietDetailMutation = useCreateDietDetail();
+  const deleteDietDetailMutation = useDeleteDietDetail();
 
   // etc
   const nutrStatus = getNutrStatus({totalFoodList, bLData, dDData});
@@ -71,6 +65,8 @@ const AccordionCtaBtns = ({
       : nutrStatus === 'notEnough'
         ? '남은 영양만큼 자동구성'
         : '자동구성';
+
+  const autoMenuType = btnText === '자동구성 재시도' ? 'overwrite' : 'add';
   const autoBtnStyle =
     dDData?.length === 0
       ? 'border'
@@ -103,7 +99,34 @@ const AccordionCtaBtns = ({
       // 자동구성된 식품 각 끼니에 추가
       await Promise.all(createMutations);
     } catch (e) {
-      console.log('남은영양 식품 추가 중 오류: ', e);
+      console.log('식품 추가 중 오류: ', e);
+    }
+  };
+
+  const overwriteMenu = async (data: IProductData[][]) => {
+    // selectedMenu 에 대한 각 productNo
+    let productToDeleteList: {dietNo: string; productNo: string}[] = [];
+    dDData.forEach(p =>
+      productToDeleteList.push({
+        dietNo: p.dietNo,
+        productNo: p.productNo,
+      }),
+    );
+
+    // 한꺼번에 삭제할 mutation list
+    const deleteMutations = productToDeleteList.map(p =>
+      deleteDietDetailMutation.mutateAsync({
+        dietNo: p.dietNo,
+        productNo: p.productNo,
+      }),
+    );
+
+    try {
+      // 자동구성할 끼니 (선택된 끼니) 초기화 및 자동구성된 식품 각 끼니에 추가
+      await Promise.all(deleteMutations);
+      await addMenu(data);
+    } catch (e) {
+      console.log('선택된 끼니 삭제 중 오류: ', e);
     }
   };
 
@@ -117,14 +140,14 @@ const AccordionCtaBtns = ({
     let recommendedMenu: IProductData[][] = [];
 
     // deley for 3seconds
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     // 자동구성
     try {
       recommendedMenu = (
         await makeAutoMenu2({
           totalFoodList,
-          initialMenu: dDData,
+          initialMenu: autoMenuType === 'add' ? dDData : [],
           baseLine: bLData,
           selectedCategoryIdx: SELECTED_CATEGORY_IDX,
           priceTarget: PRICE_TARGET,
@@ -137,10 +160,11 @@ const AccordionCtaBtns = ({
       console.log('자동구성 중 오류 발생: ', e);
       return;
     }
-
     // 자동구성된 메뉴 추가
     try {
-      await addMenu(recommendedMenu);
+      autoMenuType === 'add'
+        ? await addMenu(recommendedMenu)
+        : await overwriteMenu(recommendedMenu);
       dispatch(setAutoMenuStatus(SUCCESS_STATUS));
       dispatch(setTutorialProgress('ChangeFood'));
     } catch (e) {

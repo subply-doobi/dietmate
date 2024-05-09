@@ -129,12 +129,14 @@ const BtnRight = styled.TouchableOpacity`
 `;
 const ConfirmBtnText = styled(TextMain)`
   font-size: 16px;
-  font-weight: 700;
+  line-height: 20px;
+  font-weight: 600;
   color: ${colors.main};
 `;
 const CancelBtnText = styled(TextMain)`
   font-size: 16px;
-  font-weight: 700;
+  line-height: 20px;
+  font-weight: 500;
   color: ${colors.textSub};
 `;
 

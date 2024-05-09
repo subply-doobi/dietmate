@@ -23,19 +23,19 @@ const ChangeResult = ({userInputState}: {userInputState: IUserInputState}) => {
     if (!baseLineData) return [];
 
     const weightDiff = Math.round(
-      parseInt(baseLineData.weight) - parseInt(weight.value),
+      parseInt(weight.value) - parseInt(baseLineData.weight),
     );
     const calorieDiff = Math.round(
-      parseInt(baseLineData.calorie) - parseInt(calorie.value),
+      parseInt(calorie.value) - parseInt(baseLineData.calorie),
     );
     const carbDiff = Math.round(
-      parseInt(baseLineData.carb) - parseInt(carb.value),
+      parseInt(carb.value) - parseInt(baseLineData.carb),
     );
     const proteinDiff = Math.round(
-      parseInt(baseLineData.protein) - parseInt(protein.value),
+      parseInt(protein.value) - parseInt(baseLineData.protein),
     );
     const fatDiff = Math.round(
-      parseInt(baseLineData.fat) - parseInt(fat.value),
+      parseInt(fat.value) - parseInt(baseLineData.fat),
     );
 
     return [
@@ -47,7 +47,7 @@ const ChangeResult = ({userInputState}: {userInputState: IUserInputState}) => {
           weightDiff < 0
             ? `(${weightDiff})`
             : weightDiff > 0
-              ? `(+${Math.abs(weightDiff)})`
+              ? `(+${weightDiff})`
               : '',
         color: colors.black,
       },
@@ -59,7 +59,7 @@ const ChangeResult = ({userInputState}: {userInputState: IUserInputState}) => {
           calorieDiff < 0
             ? `(${calorieDiff})`
             : calorieDiff > 0
-              ? `(+${Math.abs(calorieDiff)})`
+              ? `(+${calorieDiff})`
               : '',
         color: colors.main,
       },
@@ -68,11 +68,7 @@ const ChangeResult = ({userInputState}: {userInputState: IUserInputState}) => {
         prev: `${parseInt(baseLineData.carb)}g`,
         curr: `${parseInt(carb.value)}g`,
         diff:
-          carbDiff < 0
-            ? `${carbDiff}`
-            : carbDiff > 0
-              ? `+${Math.abs(carbDiff)}`
-              : '',
+          carbDiff < 0 ? `(${carbDiff})` : carbDiff > 0 ? `(+${carbDiff})` : '',
         color: colors.blue,
       },
       {
@@ -81,9 +77,9 @@ const ChangeResult = ({userInputState}: {userInputState: IUserInputState}) => {
         curr: `${parseInt(protein.value)}g`,
         diff:
           proteinDiff < 0
-            ? `${proteinDiff}`
+            ? `(${proteinDiff})`
             : proteinDiff > 0
-              ? `+${Math.abs(proteinDiff)}`
+              ? `(+${proteinDiff})`
               : '',
         color: colors.green,
       },
@@ -91,12 +87,7 @@ const ChangeResult = ({userInputState}: {userInputState: IUserInputState}) => {
         title: '지방',
         prev: `${parseInt(baseLineData.fat)}g`,
         curr: `${parseInt(fat.value)}g`,
-        diff:
-          fatDiff < 0
-            ? `${fatDiff}`
-            : fatDiff > 0
-              ? `+${Math.abs(fatDiff)}`
-              : '',
+        diff: fatDiff < 0 ? `(${fatDiff})` : fatDiff > 0 ? `(+${fatDiff})` : '',
         color: colors.orange,
       },
     ];

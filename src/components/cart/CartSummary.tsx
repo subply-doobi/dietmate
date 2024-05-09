@@ -1,6 +1,6 @@
 // Description: 장바구니 페이지에서 총 끼니 수, 상품 수, 금액을 보여주는 컴포넌트
 //RN, 3rd
-import {SetStateAction, useEffect} from 'react';
+import {SetStateAction, useEffect, useMemo} from 'react';
 import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import styled from 'styled-components/native';
@@ -19,14 +19,20 @@ import {
   sumUpDietTotal,
   getTotalShippingPrice,
   getSellerShippingPrice,
+  getTotalShippingPriceFromDTData,
 } from '../../shared/utils/sumUp';
 
 //doobi Component
 import {HorizontalLine, TextMain, TextSub} from '../../shared/ui/styledComps';
 
 // react-query
-import {useListDietDetailAll} from '../../shared/api/queries/diet';
+import {
+  useListDiet,
+  useListDietDetailAll,
+  useListDietTotal,
+} from '../../shared/api/queries/diet';
 import {reGroupByDietNo, reGroupDietBySeller} from '../../shared/utils/regroup';
+import {convertQsResultToData} from '../../shared/utils/queriesData';
 
 const CartSummary = ({
   setMenuNumSelectShow,
@@ -42,25 +48,47 @@ const CartSummary = ({
   const dispatch = useDispatch();
 
   // react-query
+  const {data: dietData} = useListDiet();
   const {data: dietDetailAllData} = useListDietDetailAll();
+  const dietTotalData =
+    !!dietData && useListDietTotal(dietData, {enabled: !!dietData});
+
+  // useMemo
+  const {
+    dTDataStatus,
+    dTData,
+    menuNum,
+    productNum,
+    priceTotal,
+    totalShippingPrice,
+  } = useMemo(() => {
+    const {dTDataStatus, dTData} = convertQsResultToData(dietTotalData);
+    // 총 끼니 수, 상품 수, 금액 계산
+    const {menuNum, productNum, priceTotal} = sumUpDietTotal(dTData);
+    const totalShippingPrice = dTData
+      ? getTotalShippingPriceFromDTData(dTData)
+      : 0;
+
+    return {
+      dTDataStatus,
+      dTData,
+      menuNum,
+      productNum,
+      priceTotal,
+      totalShippingPrice,
+    };
+  }, [dietTotalData]);
 
   // etc
   // 판매자별 상품 데이터
   const regroupedDDAData =
     dietDetailAllData && reGroupDietBySeller(dietDetailAllData);
 
-  // 총 끼니 수, 상품 수, 금액 계산
-  const dietTotalData = reGroupByDietNo(dietDetailAllData);
-  const {menuNum, productNum, priceTotal} = sumUpDietTotal(dietTotalData);
-
-  //총 배송비
-  let shippingPriceTotal = getTotalShippingPrice(regroupedDDAData);
-
   // useEffect
   // 배송비 redux에 저장
   useEffect(() => {
-    dispatch(setShippingPrice(shippingPriceTotal));
-  }, [shippingPriceTotal, dispatch]);
+    dispatch(setShippingPrice(totalShippingPrice));
+  }, [totalShippingPrice, dispatch]);
 
   const onSearchBtnPress = (platformNm: string) => {
     dispatch(updateSearch(platformNm));
@@ -80,7 +108,7 @@ const CartSummary = ({
       </Row>
       <HorizontalLine style={{marginTop: 8}} />
 
-      {/* //식품사별로 그룹핑 */}
+      {/* 식품사별로 그룹핑 */}
       {regroupedDDAData?.map((item, index) => {
         //식품사별 가격, 배송비 합계
         const {sellerPrice, sellerShippingText} = getSellerShippingPrice(item);
@@ -139,7 +167,7 @@ const CartSummary = ({
       </Row>
       <Row style={{marginTop: 2, justifyContent: 'space-between'}}>
         <SummmaryTextSub>배송비 합계</SummmaryTextSub>
-        <SummaryValueSub>{commaToNum(shippingPriceTotal)}원</SummaryValueSub>
+        <SummaryValueSub>{commaToNum(totalShippingPrice)}원</SummaryValueSub>
       </Row>
     </TotalSummaryContainer>
   );

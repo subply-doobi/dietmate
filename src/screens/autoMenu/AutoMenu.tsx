@@ -13,7 +13,6 @@ import {
 import {Container} from '../../shared/ui/styledComps';
 import {IAutoMenuSubPages, PAGES} from './util/contentByPages';
 import BackArrow from '../../components/common/navigation/BackArrow';
-import {getPageIdx} from './util/pageIdx';
 import GuideTitle from '../../shared/ui/GuideTitle';
 import CtaButton from '../../shared/ui/CtaButton';
 import {useListDiet, useListDietTotal} from '../../shared/api/queries/diet';
@@ -94,7 +93,6 @@ const AutoMenu = () => {
   // useEffect
   // 자동구성 첫 페이지 설정
   // 1. 이미 구성중인 끼니 있으면 끼니 선택 페이지에서 시작 || 카테고리선택 페이지에서 시작
-  // 2. 한 끼니 자동구성이면 카테고리 선택 페이지에서 시작
   useEffect(() => {
     if (!dTData || !dData) return;
     if (route?.params?.isOneMenuAuto) {
@@ -116,13 +114,12 @@ const AutoMenu = () => {
   useEffect(() => {
     if (progress.length === 1) {
       setOptions({
-        headerLeft: () => {
+        headerLeft: () =>
           isTutorialMode && tutorialProgress === 'AutoMenu' ? (
             <></>
           ) : (
             <BackArrow goBackFn={() => goBack()} />
-          );
-        },
+          ),
       });
       return;
     }

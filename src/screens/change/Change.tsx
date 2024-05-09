@@ -152,8 +152,10 @@ const Change = () => {
     [dDData],
   );
 
-  const onFoodChange = async () => {
-    dispatch(setTutorialProgress('AutoMenu'));
+  const onCTABtnPressed = async () => {
+    isTutorialMode &&
+      tutorialProgress === 'ChangeFood' &&
+      dispatch(setTutorialProgress('AutoMenu'));
     goBack();
     if (!!selectedProduct) {
       // change food
@@ -165,6 +167,14 @@ const Change = () => {
         dietNo,
         food: selectedProduct,
       });
+    }
+  };
+
+  const onAlertConfirm = () => {
+    setProductAlertShow(false);
+    if (isTutorialMode && tutorialProgress === 'ChangeFood') {
+      dispatch(setTutorialProgress('AutoMenu'));
+      goBack();
     }
   };
 
@@ -206,16 +216,23 @@ const Change = () => {
         btnStyle="active"
         btnText={!selectedProduct ? '취소' : '바꾸기'}
         style={{backgroundColor: colors.dark, position: 'absolute', bottom: 8}}
-        onPress={() => onFoodChange()}
+        onPress={onCTABtnPressed}
       />
       {/* 알럿창 */}
       <DAlert
         alertShow={productAlertShow}
-        onConfirm={() => setProductAlertShow(false)}
+        onConfirm={onAlertConfirm}
         onCancel={() => setProductAlertShow(false)}
-        renderContent={() => (
-          <CommonAlertContent text="해당 식품과 비슷한 상품이 없어요" />
-        )}
+        renderContent={() =>
+          isTutorialMode && tutorialProgress === 'ChangeFood' ? (
+            <CommonAlertContent
+              text="해당 식품과 비슷한 상품이 없어요"
+              subText="지금은 다음으로 넘어갈게요!"
+            />
+          ) : (
+            <CommonAlertContent text="해당 식품과 비슷한 상품이 없어요" />
+          )
+        }
         NoOfBtn={1}
       />
     </Container>

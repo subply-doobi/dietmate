@@ -24,10 +24,12 @@ import {parseDate} from '../../shared/utils/dateParsing';
 import {IFlattedOrderedProduct} from './util/menuFlat';
 import {updateTotalCheckList} from '../../shared/utils/asyncStorage';
 import PieChart from 'react-native-pie-chart';
+import DAlert from '../../shared/ui/DAlert';
+import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 
 const Checklist = () => {
   // navigation
-  const {navigate, setOptions} = useNavigation();
+  const {navigate, reset, setOptions} = useNavigation();
   const route = useRoute();
   const order: IFlattedOrderedProduct[][] = route.params?.order;
   const initialChecklist = route.params?.checklist;
@@ -36,6 +38,7 @@ const Checklist = () => {
   // map 안에서 asyncStorage에 직접 접근할 수 없음. -> state와 동시에 관리해서
   // rendering할 때는 state 값으로.
   const [checklist, setChecklist] = useState<string[]>([]);
+  const [changeTargetAlertShow, setChangeTargetAlertShow] = useState(false);
 
   // etc
   // fn
@@ -77,6 +80,11 @@ const Checklist = () => {
     initialChecklist && setChecklist(initialChecklist);
   }, [initialChecklist]);
 
+  // 몸무게, 목표 변경 알럿
+  useEffect(() => {
+    if (percentage !== 100) return;
+    percentage === 100 && setChangeTargetAlertShow(true);
+  }, [checklist]);
   return (
     <Container style={{backgroundColor: colors.backgroundLight2}}>
       <ScrollView
@@ -163,6 +171,28 @@ const Checklist = () => {
           </Card>
         </ShadowView>
       </ScrollView>
+      <DAlert
+        alertShow={changeTargetAlertShow}
+        confirmLabel="목표변경"
+        renderContent={() => (
+          <CommonAlertContent
+            text={'식단을 완료했어요\n체형이나 체중변화가 있었나요?'}
+            subText={'더 정확한 식단을 위해\n목표칼로리를 재설정해주세요'}
+          />
+        )}
+        onConfirm={() =>
+          reset({
+            index: 0,
+            routes: [
+              {name: 'BottomTabNav', params: {screen: 'NewHome'}},
+              {name: 'UserInput', params: {from: 'Checklist'}},
+            ],
+          })
+        }
+        NoOfBtn={2}
+        onCancel={() => setChangeTargetAlertShow(false)}
+        style={{width: 280}}
+      />
     </Container>
   );
 };

@@ -2,7 +2,6 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
 
 // 3rd
-import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
@@ -14,30 +13,20 @@ import colors from '../../shared/colors';
 import {RootState} from '../../app/store/reduxStore';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import {
-  useCreateDiet,
   useCreateDietWOI,
-  useDeleteDiet,
   useListDiet,
   useListDietTotal,
 } from '../../shared/api/queries/diet';
 
 import {findEmptyDietSeq} from '../../shared/utils/findDietSeq';
 import {getMenuAcContent} from '../../shared/utils/menuAccordion';
-import {
-  Col,
-  Container,
-  HorizontalSpace,
-  Icon,
-  TextMain,
-} from '../../shared/ui/styledComps';
+import {Col, Container, HorizontalSpace} from '../../shared/ui/styledComps';
 import {
   setAutoMenuStatus,
   setCurrentDiet,
-  setIsTutorialMode,
   setMenuAcActive,
   setTutorialEnd,
   setTutorialProgress,
-  setTutorialStart,
 } from '../../features/reduxSlices/commonSlice';
 import {ActivityIndicator, ScrollView, TouchableOpacity} from 'react-native';
 import CtaButton from '../../shared/ui/CtaButton';
@@ -53,8 +42,6 @@ import DBottomSheet from '../../components/common/bottomsheet/DBottomSheet';
 import MenuNumSelectContent from '../../components/cart/MenuNumSelectContent';
 import DAlert from '../../shared/ui/DAlert';
 import {getAddDietStatusFrDTData} from '../../shared/utils/getDietAddStatus';
-import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
-import CreateDietAlert from './ui/CreateDietAlert';
 import {
   commaToNum,
   getTotalShippingPriceFromDTData,

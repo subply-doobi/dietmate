@@ -30,12 +30,12 @@ export const APP_STORE_URL =
 
 export const codePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START,
-  // updateDialog: {
-  //   title: '새로운 업데이트가 있어요',
-  //   optionalUpdateMessage: '업데이트를 진행합니다',
-  //   optionalInstallButtonLabel: '예',
-  //   optionalIgnoreButtonLabel: '아니요.',
-  // },
+  updateDialog: {
+    title: '새로운 업데이트가 있어요',
+    optionalUpdateMessage: '업데이트를 진행합니다',
+    optionalInstallButtonLabel: '예',
+    optionalIgnoreButtonLabel: '아니요.',
+  },
   installMode: CodePush.InstallMode.IMMEDIATE,
 };
 
