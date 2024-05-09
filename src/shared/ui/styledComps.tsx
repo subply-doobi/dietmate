@@ -316,3 +316,13 @@ export const Icon = styled.Image<IIcon>`
   width: ${({size}) => (size ? `${size}px` : '24px')};
   height: ${({size}) => (size ? `${size}px` : '24px')};
 `;
+
+export const ShadowView = styled.View<{opacity?: number}>`
+  background-color: ${colors.white};
+  background-color: #fff;
+  shadow-color: #000;
+  shadow-offset: 1px 3px;
+  shadow-opacity: ${({opacity}) => (opacity ? opacity : 0.14)};
+  shadow-radius: 3.84px;
+  elevation: 4;
+`;

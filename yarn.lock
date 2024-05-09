@@ -7713,11 +7713,6 @@ react-native-collapsible@^1.6.1:
   resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-1.6.1.tgz#27e289831a6955aebde98abff2424a7710f36f02"
   integrity sha512-orF4BeiXd2hZW7fu9YcqIJXzN6TJcFcddY807D3MAOVktLuW9oQ+RIkrTJ5DR3v9ZOFfREkOjEmS79qeUTvkBQ==
 
-react-native-drop-shadow@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-drop-shadow/-/react-native-drop-shadow-1.0.0.tgz#a77b206424603eb87eaaf7aa215d1ebb2d4cac2d"
-  integrity sha512-om6oMDDn90ClFa+tEGMsFcACKlea5TO4jYur8PJKRpzfz+SnDIJlddhzp2kbOLpRTe7lleq6Md5QqC3u7RfOow==
-
 react-native-dropdown-picker@^5.4.6:
   version "5.4.6"
   resolved "https://registry.yarnpkg.com/react-native-dropdown-picker/-/react-native-dropdown-picker-5.4.6.tgz#3736fc468de4a295e4df8d1f65ed2eadaf9b445f"

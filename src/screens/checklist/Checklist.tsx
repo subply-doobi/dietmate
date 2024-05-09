@@ -8,7 +8,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 
 // doobi
 import FoodList from './ui/FoodList';
-import ShadowView from '../../shared/ui/ShadowView';
+import {ShadowView} from '../../shared/ui/styledComps';
 import {
   Col,
   Container,
@@ -90,86 +90,86 @@ const Checklist = () => {
       <ScrollView
         contentContainerStyle={{paddingBottom: 64}}
         showsVerticalScrollIndicator={false}>
-        <ShadowView style={{marginTop: 40, borderRadius: 10}}>
-          <Card>
-            <Row style={{alignSelf: 'center'}}>
-              <CardTitle>주문내역</CardTitle>
-              {/* 파이그래프 */}
-              {percentage === 100 ? (
-                <Icon
-                  style={{marginLeft: 8, zIndex: 2}}
-                  source={icons.checkRoundCheckedPurple_24}
+        <Card>
+          <Row style={{alignSelf: 'center'}}>
+            <CardTitle>
+              끼니 ({numerator}/{denominator})
+            </CardTitle>
+            {/* 파이그래프 */}
+            {percentage === 100 ? (
+              <Icon
+                style={{marginLeft: 8, zIndex: 2}}
+                source={icons.checkRoundCheckedPurple_24}
+              />
+            ) : (
+              <Col
+                style={{
+                  width: 24,
+                  height: 24,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginLeft: 8,
+                }}>
+                <PieChart
+                  series={[numerator, denominator - numerator]}
+                  widthAndHeight={20}
+                  style={{zIndex: 2}}
+                  sliceColor={[colors.main, colors.white]}
+                  coverRadius={0.6}
                 />
-              ) : (
-                <Col
-                  style={{
-                    width: 24,
-                    height: 24,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginLeft: 8,
-                  }}>
-                  <PieChart
-                    series={[numerator, denominator - numerator]}
-                    widthAndHeight={20}
-                    style={{zIndex: 2}}
-                    sliceColor={[colors.main, colors.white]}
-                    coverRadius={0.6}
-                  />
-                </Col>
-              )}
-            </Row>
-            <GoHistoryDetailBtn onPress={goToOrderHistoryDetail}>
-              <TextGrey>주문전체정보</TextGrey>
-              <Icon size={20} source={icons.arrowRight_20} />
-            </GoHistoryDetailBtn>
-            <HorizontalSpace height={16} />
+              </Col>
+            )}
+          </Row>
+          <GoHistoryDetailBtn onPress={goToOrderHistoryDetail}>
+            <TextGrey>주문전체정보</TextGrey>
+            <Icon size={20} source={icons.arrowRight_20} />
+          </GoHistoryDetailBtn>
+          <HorizontalSpace height={16} />
 
-            {/* 끼니 체크리스트 */}
-            {order?.map((menu, idx) => {
-              const orderNo = menu[0].orderNo;
-              const menuNoAndQtyIdx = `${menu[0].dietNo}/${menu[0].qtyIdx}`;
-              return (
-                <Col key={idx}>
-                  <ShadowView>
-                    <CheckListBox
-                      onPress={async () =>
-                        onListBoxPressed({
-                          orderNo,
-                          menuNoAndQtyIdx,
-                        })
-                      }>
-                      <LeftBar />
-                      <CheckListTitle>
-                        {menu[0].dietSeq}{' '}
-                        {menu[0].qtyIdx > 0 && `(${menu[0].qtyIdx + 1})`}
-                      </CheckListTitle>
-                      <Icon
-                        style={{
-                          position: 'absolute',
-                          right: 16,
-                          top: 24,
-                          zIndex: 2,
-                        }}
-                        source={
-                          checklist.includes(menuNoAndQtyIdx)
-                            ? icons.checkRoundCheckedGreen_24
-                            : icons.checkRoundEmpty_24
-                        }
-                      />
-                      <HorizontalSpace height={16} />
-                      <FoodList menu={menu} />
-                      {checklist.includes(menuNoAndQtyIdx) && <OpacityView />}
-                    </CheckListBox>
-                  </ShadowView>
-                  {order.length - 1 !== idx && (
-                    <HorizontalSpace style={{height: 24}} />
-                  )}
-                </Col>
-              );
-            })}
-          </Card>
-        </ShadowView>
+          {/* 끼니 체크리스트 */}
+          {order?.map((menu, idx) => {
+            const orderNo = menu[0].orderNo;
+            const menuNoAndQtyIdx = `${menu[0].dietNo}/${menu[0].qtyIdx}`;
+            return (
+              <Col key={idx}>
+                <ShadowView style={{borderRadius: 5}}>
+                  <CheckListBox
+                    onPress={async () =>
+                      onListBoxPressed({
+                        orderNo,
+                        menuNoAndQtyIdx,
+                      })
+                    }>
+                    <LeftBar />
+                    <CheckListTitle>
+                      {menu[0].dietSeq}{' '}
+                      {menu[0].qtyIdx > 0 && `(${menu[0].qtyIdx + 1})`}
+                    </CheckListTitle>
+                    <Icon
+                      style={{
+                        position: 'absolute',
+                        right: 16,
+                        top: 24,
+                        zIndex: 2,
+                      }}
+                      source={
+                        checklist.includes(menuNoAndQtyIdx)
+                          ? icons.checkRoundCheckedGreen_24
+                          : icons.checkRoundEmpty_24
+                      }
+                    />
+                    <HorizontalSpace height={16} />
+                    <FoodList menu={menu} />
+                    {checklist.includes(menuNoAndQtyIdx) && <OpacityView />}
+                  </CheckListBox>
+                </ShadowView>
+                {order.length - 1 !== idx && (
+                  <HorizontalSpace style={{height: 24}} />
+                )}
+              </Col>
+            );
+          })}
+        </Card>
       </ScrollView>
       <DAlert
         alertShow={changeTargetAlertShow}
@@ -199,10 +199,11 @@ const Checklist = () => {
 
 export default Checklist;
 
-const Card = styled.View`
+const Card = styled(ShadowView)`
   background-color: ${colors.white};
   border-radius: 10px;
   padding: 24px 16px 32px 16px;
+  margin-top: 40px;
 `;
 
 const CardTitle = styled(TextMain)`
