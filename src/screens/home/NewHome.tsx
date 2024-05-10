@@ -226,7 +226,8 @@ const NewHome = () => {
       <ScrollView
         ref={scrollRef}
         contentContainerStyle={{paddingBottom: 64}}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        bounces={false}>
         {/* 상단 프로필 */}
         <ProfileBox>
           <Row style={{paddingHorizontal: 16}}>
