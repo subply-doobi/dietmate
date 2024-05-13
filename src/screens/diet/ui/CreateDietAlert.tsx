@@ -45,7 +45,7 @@ const CreateDietAlert = ({
         action="setQty"
         currentQty={numOfCreateDiet}
         setQty={setNumOfCreateDiet}
-        maxQty={10}
+        maxQty={(dietData?.length && 10 - dietData.length) || 10}
       />
     </Container>
   );
