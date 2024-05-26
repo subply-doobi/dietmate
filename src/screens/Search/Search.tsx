@@ -14,7 +14,7 @@ import MenuSection from '../../components/common/menuSection/MenuSection';
 import {useHeaderHeight} from '@react-navigation/elements';
 
 // react-query
-import {useListDietDetail, useListDiet} from '../../shared/api/queries/diet';
+import {useListDietTotalObj} from '../../shared/api/queries/diet';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
@@ -38,12 +38,9 @@ const Search = () => {
   const headerHeight = useHeaderHeight();
 
   // redux
-  const {
-    currentDietNo,
-    totalFoodListIsLoaded,
-    isTutorialMode,
-    tutorialProgress,
-  } = useSelector((state: RootState) => state.common);
+  const {currentDietNo, isTutorialMode, tutorialProgress} = useSelector(
+    (state: RootState) => state.common,
+  );
   const {applied: appliedSortFilter} = useSelector(
     (state: RootState) => state.sortFilter,
   );
@@ -55,18 +52,10 @@ const Search = () => {
 
   // react-query
   const {isLoading: getBaseLineIsLoading} = useGetBaseLine(); // 미리 캐싱
-  const {data: dietData, isLoading: listDietIsLoading} = useListDiet();
-  const {data: dietDetailData, isLoading: listDDIsLoading} = useListDietDetail(
-    currentDietNo,
-    {
-      enabled: currentDietNo ? true : false,
-    },
-  );
-  const {
-    data: productData,
-    refetch: refetchProduct,
-    isFetching: productIsFetching,
-  } = useListProduct(
+  const {data: dTOData, isLoading: isDTODataLoading} = useListDietTotalObj();
+  const dDData = dTOData?.[currentDietNo]?.dietDetail ?? [];
+  const numOfDiet = dTOData ? Object.keys(dTOData).length : 0;
+  const {data: productData} = useListProduct(
     {
       dietNo: currentDietNo,
       appliedSortFilter: isTutorialMode
@@ -93,10 +82,10 @@ const Search = () => {
   };
 
   // etc
-  const currentNumOfFoods = dietDetailData?.length || 0;
+  const currentNumOfFoods = dDData?.length || 0;
 
   // render
-  if (getBaseLineIsLoading || listDietIsLoading || listDDIsLoading) {
+  if (getBaseLineIsLoading || isDTODataLoading) {
     return (
       <Container style={{justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator size="large" color={colors.main} />
@@ -108,7 +97,7 @@ const Search = () => {
       {/* 끼니선택, progressBar section */}
       <MenuSection />
 
-      {dietData?.length === 0 ? (
+      {numOfDiet === 0 ? (
         <ContentContainer></ContentContainer>
       ) : (
         <ContentContainer>
@@ -177,7 +166,7 @@ const Search = () => {
                 paddingHorizontal: 16,
                 marginTop: headerHeight + 40,
               }}>
-              <NutrientsProgress dietDetailData={dietDetailData || []} />
+              <NutrientsProgress dietDetailData={dDData} />
             </Col>
             <DTooltip
               tooltipShow={

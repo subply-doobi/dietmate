@@ -1,8 +1,9 @@
 import {Col, HorizontalSpace} from '../../../shared/ui/styledComps';
 import CtaButton from '../../../shared/ui/CtaButton';
+import {IAutoMenuSubPages} from '../util/contentByPages';
 
 interface IError {
-  setProgress: React.Dispatch<React.SetStateAction<number[]>>;
+  setProgress: React.Dispatch<React.SetStateAction<IAutoMenuSubPages[]>>;
 }
 const Error = ({setProgress}: IError) => {
   return (

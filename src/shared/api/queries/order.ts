@@ -1,13 +1,6 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
 
-import {
-  DIET,
-  ORDER,
-  DIET_DETAIL,
-  DIET_DETAIL_ALL,
-  ORDER_DETAIL,
-  PRODUCTS,
-} from '../keys';
+import {ORDER, ORDER_DETAIL, PRODUCTS, DIET_TOTAL_OBJ} from '../keys';
 import {queryClient} from '../../../app/store/reactQueryStore';
 
 //기존 testKakaoPay
@@ -27,9 +20,7 @@ export const useCreateOrder = () => {
       mutationFn(`${CREATE_ORDER}`, 'put', body),
     onSuccess: data => {
       queryClient.invalidateQueries({queryKey: [ORDER]});
-      queryClient.invalidateQueries({queryKey: [DIET]});
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
+      queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
     },
   });
   return mutation;
@@ -51,9 +42,7 @@ export const useUpdateOrder = () => {
       ),
     onSuccess: data => {
       queryClient.invalidateQueries({queryKey: [ORDER]});
-      queryClient.invalidateQueries({queryKey: [DIET]});
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
+      queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
       queryClient.invalidateQueries({queryKey: [PRODUCTS]});
     },
   });

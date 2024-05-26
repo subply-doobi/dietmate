@@ -1,15 +1,15 @@
 import styled from 'styled-components/native';
 import {TextMain} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
-import {IDietDetailData} from '../../../shared/api/types/diet';
+import {IDietTotalObjData} from '../../../shared/api/types/diet';
 import {TouchableOpacityProps, ViewProps} from 'react-native';
 
 interface IAddMenuBtn extends TouchableOpacityProps {
-  dTData: IDietDetailData[];
+  dTOData: IDietTotalObjData;
 }
-const AddMenuBtn = ({dTData, ...props}: IAddMenuBtn) => (
+const AddMenuBtn = ({dTOData, ...props}: IAddMenuBtn) => (
   <Btn {...props}>
-    <BtnBar isActive={dTData?.length === 0} />
+    <BtnBar isActive={Object.keys(dTOData).length === 0} />
     <BtnText>끼니 추가</BtnText>
   </Btn>
 );

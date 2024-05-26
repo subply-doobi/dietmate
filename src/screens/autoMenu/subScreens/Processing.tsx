@@ -1,4 +1,4 @@
-import {View, Text, ActivityIndicator} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import React, {useEffect, useMemo} from 'react';
 import {Col} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
@@ -10,31 +10,27 @@ import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
-  useListDiet,
-  useListDietDetail,
 } from '../../../shared/api/queries/diet';
-import {IDietDetailData} from '../../../shared/api/types/diet';
-import {findDietSeq} from '../../../shared/utils/findDietSeq';
-import {getPageIdx} from '../util/pageIdx';
+import {IDietTotalObjData} from '../../../shared/api/types/diet';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {IProductData} from '../../../shared/api/types/product';
 import {getNutrStatus} from '../../../shared/utils/sumUp';
-import CtaButton from '../../../shared/ui/CtaButton';
 import {
   setMenuAcActive,
   setTutorialProgress,
 } from '../../../features/reduxSlices/commonSlice';
+import {IAutoMenuSubPages} from '../util/contentByPages';
 
 interface IProcessing {
-  dTData: IDietDetailData[];
+  dTOData: IDietTotalObjData;
   selectedDietNo: string[];
   selectedCategory: boolean[];
   wantedCompany: string;
   priceSliderValue: number[];
-  setProgress: React.Dispatch<React.SetStateAction<number[]>>;
+  setProgress: React.Dispatch<React.SetStateAction<IAutoMenuSubPages[]>>;
 }
 const Processing = ({
-  dTData,
+  dTOData,
   selectedDietNo,
   selectedCategory,
   wantedCompany,
@@ -53,7 +49,6 @@ const Processing = ({
 
   // react-query
   const {data: bLData} = useGetBaseLine();
-  const {data: dData} = useListDiet();
   const deleteDietDetailMutation = useDeleteDietDetail();
   const createDietDetailMutation = useCreateDietDetail();
 
@@ -85,7 +80,7 @@ const Processing = ({
     recommendedMenu: IProductData[][];
   }>({
     asyncFunction: async () => {
-      if (!bLData || !dData || !dTData) return {recommendedMenu: []};
+      if (!bLData || !dTOData) return {recommendedMenu: []};
       const data = await makeAutoMenu2({
         totalFoodList,
         initialMenu: initialMenu,
@@ -101,9 +96,9 @@ const Processing = ({
   });
 
   useEffect(() => {
-    if (!bLData || !dTData) return;
+    if (!bLData || !dTOData) return;
     if (isError) {
-      setProgress(v => [...v, getPageIdx('Error')]);
+      setProgress(v => [...v, 'Error']);
       return;
     }
     execute();
@@ -114,28 +109,22 @@ const Processing = ({
     if (
       !isSuccess ||
       !bLData ||
-      !dTData ||
+      !dTOData ||
       autoMenuResult?.recommendedMenu.length === 0 ||
       autoMenuType === 'add'
     )
       return;
 
     const overwriteDiet = async () => {
-      // selectedMenu 에 대한 dTData 의 idx
-      const selectedDietIdxList = selectedDietNo.map(
-        m => findDietSeq(dData, m).idx,
-      );
-
       // selectedMenu 에 대한 각 productNo
       let productToDeleteList: {dietNo: string; productNo: string}[] = [];
-      selectedDietIdxList.forEach(i => {
-        dTData &&
-          dTData[i].forEach(p =>
-            productToDeleteList.push({
-              dietNo: p.dietNo,
-              productNo: p.productNo,
-            }),
-          );
+      selectedDietNo.forEach(dietNo => {
+        dTOData[dietNo].dietDetail.forEach(p =>
+          productToDeleteList.push({
+            dietNo: p.dietNo,
+            productNo: p.productNo,
+          }),
+        );
       });
 
       // 추가할 각 product 및 dietNo
@@ -183,7 +172,7 @@ const Processing = ({
     if (
       !isSuccess ||
       !bLData ||
-      !dTData ||
+      !dTOData ||
       autoMenuResult?.recommendedMenu.length === 0 ||
       autoMenuType === 'overwrite'
     )

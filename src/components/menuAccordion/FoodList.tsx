@@ -6,14 +6,7 @@ import styled from 'styled-components/native';
 // doobi util, redux, etc
 import {icons} from '../../shared/iconSource';
 import colors from '../../shared/colors';
-import {
-  Col,
-  HorizontalLine,
-  Icon,
-  Row,
-  TextMain,
-  TextSub,
-} from '../../shared/ui/styledComps';
+import {Icon, Row, TextMain, TextSub} from '../../shared/ui/styledComps';
 import {commaToNum} from '../../shared/utils/sumUp';
 
 import DAlert from '../../shared/ui/DAlert';
@@ -22,8 +15,7 @@ import DeleteAlertContent from '../common/alert/DeleteAlertContent';
 import {BASE_URL} from '../../shared/api/urls';
 import {
   useDeleteDietDetail,
-  useListDiet,
-  useListDietDetail,
+  useListDietTotalObj,
 } from '../../shared/api/queries/diet';
 import {SERVICE_PRICE_PER_PRODUCT} from '../../shared/constants';
 
@@ -38,8 +30,8 @@ const FoodList = ({selectedFoods, setSelectedFoods, dietNo}: IFoodList) => {
   const {navigate} = useNavigation();
 
   // react-query
-  const {data: dietData} = useListDiet();
-  const {data: dietDetailData} = useListDietDetail(dietNo);
+  const {data: dTOData} = useListDietTotalObj();
+  const dietDetailData = dTOData?.[dietNo]?.dietDetail ?? [];
   const deleteMutation = useDeleteDietDetail();
 
   // state
@@ -48,7 +40,7 @@ const FoodList = ({selectedFoods, setSelectedFoods, dietNo}: IFoodList) => {
 
   // etc
   const onDelete = () => {
-    dietData &&
+    dTOData &&
       deleteMutation.mutate({
         dietNo: dietNo,
         productNo: productNoToDelete,

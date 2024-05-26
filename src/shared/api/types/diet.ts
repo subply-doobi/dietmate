@@ -24,3 +24,10 @@ export interface IDietDetailEmptyYnData {
 }
 
 export type IDietTotalData = Array<IDietDetailData>;
+export type IDietTotalObjData = {
+  [key: string]: {
+    dietNo: string;
+    dietSeq: string;
+    dietDetail: IDietDetailData;
+  };
+};

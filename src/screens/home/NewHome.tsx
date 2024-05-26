@@ -12,22 +12,16 @@ import PieChart from 'react-native-pie-chart';
 import {RootState} from '../../app/store/reduxStore';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import {
-  useDeleteDiet,
-  useListDiet,
-  useListDietDetailAll,
-  useListDietTotal,
+  useDeleteDietAll,
+  useListDietTotalObj,
 } from '../../shared/api/queries/diet';
 import {useListOrder} from '../../shared/api/queries/order';
 
 import {loadBaseLineData} from '../../features/reduxSlices/userInputSlice';
 import colors from '../../shared/colors';
 import {icons} from '../../shared/iconSource';
-import {regroupByBuyDateAndDietNo} from '../../shared/utils/regroup';
-import {
-  commaToNum,
-  getTotalShippingPriceFromDTData,
-  sumUpDietTotal,
-} from '../../shared/utils/sumUp';
+import {regroupByBuyDateAndDietNo} from '../../shared/utils/dataTransform';
+import {commaToNum, sumUpDietFromDTOData} from '../../shared/utils/sumUp';
 
 import {
   Col,
@@ -47,7 +41,6 @@ import {
   setTutorialProgress,
 } from '../../features/reduxSlices/commonSlice';
 import {useListProduct} from '../../shared/api/queries/product';
-import {convertQsResultToData} from '../../shared/utils/queriesData';
 import LastOrderNutr from './ui/LastOrderNutr';
 import {parseDate} from '../../shared/utils/dateParsing';
 import {getTotalChecklist} from '../../shared/utils/asyncStorage';
@@ -83,11 +76,9 @@ const NewHome = () => {
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
-  const {data: dietData, refetch: refetchListDiet} = useListDiet();
-  const deleteDietMutation = useDeleteDiet();
-  const {data: dietDetailAllData} = useListDietDetailAll();
-  const dietTotalData = useListDietTotal(dietData, {enabled: !!dietData});
+  const {data: dTOData, isLoading: isDTObjLoading} = useListDietTotalObj();
   const {data: orderData} = useListOrder();
+  const deleteDietAllMutation = useDeleteDietAll();
   const {data: listProductData} = useListProduct(
     {
       dietNo: currentDietNo,
@@ -106,18 +97,17 @@ const NewHome = () => {
   }>({}); // asyncStorage checklist 전체 데이터
 
   // useMemo
-  const {dTDataStatus, dTData, priceTotal, shippingPrice} = useMemo(() => {
-    const {dTDataStatus, dTData} = convertQsResultToData(dietTotalData);
-    const {priceTotal} = sumUpDietTotal(dTData);
-    const shippingPrice = dTData ? getTotalShippingPriceFromDTData(dTData) : 0;
-
+  const {menuNum, productNum, priceTotal, totalShippingPrice} = useMemo(() => {
+    // 총 끼니 수, 상품 수, 금액 계산
+    const {menuNum, productNum, priceTotal, totalShippingPrice} =
+      sumUpDietFromDTOData(dTOData);
     return {
-      dTDataStatus,
-      dTData,
+      menuNum,
+      productNum,
       priceTotal,
-      shippingPrice,
+      totalShippingPrice,
     };
-  }, [dietTotalData]);
+  }, [dTOData]);
   // orderData regroup.
   const {orderGroupedDataFlatten} = useMemo(() => {
     if (!orderData) return {orderGroupedDataFlatten: []};
@@ -136,7 +126,12 @@ const NewHome = () => {
     : orderGroupedDataFlatten.slice(0, 4);
 
   // 현재 식단 상태, 주문 상태에 따른 카드 제목 및 버튼 텍스트
-  const isDietEmpty = dietDetailAllData?.length === 0;
+  const isDietEmpty =
+    menuNum === 0 ||
+    (dTOData &&
+      Object.keys(dTOData).every(
+        dietNo => dTOData[dietNo].dietDetail.length === 0,
+      ));
   const isOrderEmpty = flattenOrderData.length === 0;
   const ctaBtnText = isDietEmpty ? '식단 구성하기' : '식단 구매하기';
   const menuCardTitle = isDietEmpty
@@ -152,9 +147,9 @@ const NewHome = () => {
       navigate('BottomTabNav', {screen: 'Diet'});
       return;
     }
-    if (!dTData) return;
-    dTData && dispatch(setFoodToOrder(dTData));
-    dispatch(setShippingPrice(shippingPrice));
+    if (!dTOData) return;
+    dispatch(setFoodToOrder(dTOData));
+    dispatch(setShippingPrice(totalShippingPrice));
     navigate('Order');
   };
 
@@ -165,15 +160,14 @@ const NewHome = () => {
 
   // 앱 시작할 때 내가 어떤 끼니를 보고 있는지 redux에 저장해놓기 위해 필요함
   useEffect(() => {
+    if (currentDietNo !== '') return;
     const initializeDiet = async () => {
-      const dietData = (await refetchListDiet()).data;
-      if (!dietData || dietData.length === 0) return;
-      const firstDietNo = dietData[0].dietNo;
+      const firstDietNo = dTOData ? Object.keys(dTOData)[0] : '';
       dispatch(setCurrentDiet(firstDietNo));
     };
 
     initializeDiet();
-  }, []);
+  }, [dTOData]);
 
   // 처음 앱 켰을 때 totalFoodList를 redux에 저장해놓고 끼니 자동구성에 사용
   useEffect(() => {
@@ -196,24 +190,18 @@ const NewHome = () => {
   // + 스크롤 맨 위로 올리고 튜토리얼 시작 버튼 위치 저장
   useEffect(() => {
     if (!isFocused) return;
-    if (!isTutorialMode) return;
-    if (tutorialProgress !== 'Start') return;
+    if (!isTutorialMode || tutorialProgress !== 'Start') return;
 
-    setTimeout(() => {
+    const deleteAllMenuAndStartTutorial = async () => {
+      if (menuNum !== 0) await deleteDietAllMutation.mutateAsync();
+
       ctaBtnRef?.current?.measure((fx, fy, width, height, px, py) => {
         scrollRef?.current?.scrollTo({y: 0, animated: true});
         setTutorialCtaBtnPy(py);
       });
-    }, 1500);
-
-    const deleteAllDiet = async () => {
-      const dietNoList = dietData?.map(d => d.dietNo) || [];
-      const deleteMutations = dietNoList.map(dietNo =>
-        deleteDietMutation.mutateAsync({dietNo}),
-      );
-      await Promise.all(deleteMutations);
     };
-    deleteAllDiet();
+
+    deleteAllMenuAndStartTutorial();
   }, [tutorialProgress]);
 
   return (
@@ -259,7 +247,7 @@ const NewHome = () => {
             marginHorizontal: 16,
             borderRadius: 10,
           }}>
-          {dTDataStatus === 'isLoading' ? (
+          {isDTObjLoading ? (
             <ActivityIndicator size="small" color={colors.main} />
           ) : (
             <Col>
@@ -281,7 +269,7 @@ const NewHome = () => {
                 <Col style={{marginTop: 24}}>
                   <Row>
                     <Icon source={icons.menu_24} />
-                    <CardDesc>{dTData?.length}개 끼니</CardDesc>
+                    <CardDesc>{menuNum}개 끼니</CardDesc>
                   </Row>
                   <Row style={{marginTop: 8}}>
                     <Icon source={icons.card_24} />
@@ -422,7 +410,7 @@ const NewHome = () => {
 
         {/* 튜토리얼 */}
         <DTPScreen
-          contentDelay={2000}
+          contentDelay={500}
           visible={isTutorialMode && tutorialProgress === 'Start'}
           renderContent={() => (
             <>

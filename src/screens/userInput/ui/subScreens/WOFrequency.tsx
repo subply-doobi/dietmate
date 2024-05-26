@@ -1,9 +1,6 @@
-// RN
-
 // 3rd
 import styled from 'styled-components/native';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../../../app/store/reduxStore';
+import {useDispatch} from 'react-redux';
 
 // doobi
 import {Col} from '../../../../shared/ui/styledComps';

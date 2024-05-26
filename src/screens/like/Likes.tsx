@@ -19,9 +19,9 @@ import MenuSection from '../../components/common/menuSection/MenuSection';
 
 // react-query
 import {IProductData} from '../../shared/api/types/product';
-import {useListDietDetail} from '../../shared/api/queries/diet';
 import {useListProductMark} from '../../shared/api/queries/product';
 import {useCallback} from 'react';
+import {useListDietTotalObj} from '../../shared/api/queries/diet';
 
 const Likes = () => {
   // redux
@@ -33,7 +33,8 @@ const Likes = () => {
     refetch: refetchLikeData,
     isFetching: likeDataIsFetching,
   } = useListProductMark();
-  const {data: dietDetailData} = useListDietDetail(currentDietNo);
+  const {data: dTOData} = useListDietTotalObj();
+  const dietDetailData = dTOData?.[currentDietNo]?.dietDetail ?? [];
 
   // flatList render fn
   const renderFoodList = useCallback(

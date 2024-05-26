@@ -1,29 +1,17 @@
-import {
-  IDietData,
-  IDietDetailData,
-  IDietDetailEmptyYnData,
-} from '../api/types/diet';
-
-export const getDietAddStatus = (
-  dietData: IDietData | undefined,
-  dietEmptyData: IDietDetailEmptyYnData | undefined,
-) => {
-  return !dietData || !dietEmptyData
-    ? 'noData'
-    : dietData.length >= 10
-      ? 'limit'
-      : dietEmptyData.emptyYn === 'Y'
-        ? 'empty'
-        : 'possible';
-};
+import {IDietTotalObjData} from '../api/types/diet';
 
 export const getAddDietStatusFrDTData = (
-  dTData: IDietDetailData[] | undefined,
+  dTOData: IDietTotalObjData | undefined,
 ) => {
-  const hasEmptyMenu = dTData?.some(data => data.length === 0);
-  const status = !dTData
+  if (!dTOData) return {status: 'noData', text: '데이터가 없습니다.'};
+  const dietNoArr = Object.keys(dTOData);
+  const numOfMenu = dietNoArr.length;
+  const hasEmptyMenu = dietNoArr.some(
+    dietNo => dTOData[dietNo].dietDetail.length === 0,
+  );
+  const status = !dTOData
     ? 'noData'
-    : dTData.length >= 10
+    : numOfMenu >= 10
       ? 'limit'
       : hasEmptyMenu
         ? 'empty'

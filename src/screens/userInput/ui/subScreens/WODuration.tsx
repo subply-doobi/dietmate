@@ -1,5 +1,3 @@
-// RN
-
 // 3rd
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../../app/store/reduxStore';

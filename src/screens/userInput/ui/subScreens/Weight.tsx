@@ -1,11 +1,9 @@
 // 3rd
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../../../app/store/reduxStore';
+import {useDispatch} from 'react-redux';
 import styled from 'styled-components/native';
 
 // doobi
 import SquareInput from '../../../../shared/ui/SquareInput';
-import {Col} from '../../../../shared/ui/styledComps';
 import {
   IUserInputState,
   setValue,

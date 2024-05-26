@@ -1,15 +1,13 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {closeCommonAlert} from '../../../features/reduxSlices/commonAlertSlice';
-import {RootState} from '../../../app/store/reduxStore';
-import {
-  convertCodeToMsg,
-  errorActionByCode,
-} from '../../../shared/utils/handleError';
+import {RootState, store} from '../../../app/store/reduxStore';
+import {convertCodeToMsg} from '../../../shared/utils/handleError';
 import DAlert from '../../../shared/ui/DAlert';
 import {queryClient} from '../../../app/store/reactQueryStore';
 import styled from 'styled-components/native';
 import {Col, TextMain} from '../../../shared/ui/styledComps';
+import {setTutorialStart} from '../../../features/reduxSlices/commonSlice';
 
 const RequestAlertContent = () => {
   const {errorCode} = useSelector((state: RootState) => state.commonAlert);
@@ -39,22 +37,19 @@ const ErrorAlert = () => {
       <DAlert
         alertShow={errorCode ? true : false}
         onConfirm={() => {
-          // errorCode && errorActionByCode[errorCode]
-          //   ? errorActionByCode[errorCode](reset)
-          //   : reset({
-          //       index: 0,
-          //       routes: [{name: 'Login'}],
-          //     });
           dispatch(closeCommonAlert());
+          queryClient.invalidateQueries();
+          const {
+            common: {isTutorialMode},
+          } = store.getState();
+          isTutorialMode && store.dispatch(setTutorialStart());
           reset({
             index: 0,
             routes: [{name: 'Login'}],
           });
-          // queryClient.invalidateQueries();
         }}
         onCancel={() => {
           dispatch(closeCommonAlert());
-          queryClient.invalidateQueries();
         }}
         NoOfBtn={1}
         renderContent={() => <RequestAlertContent />}

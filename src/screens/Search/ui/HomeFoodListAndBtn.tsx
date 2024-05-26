@@ -1,6 +1,6 @@
 // RN
-import {SetStateAction, useCallback, useEffect, useRef, useState} from 'react';
-import {Animated, FlatList, ViewProps} from 'react-native';
+import {SetStateAction, useCallback, useEffect} from 'react';
+import {FlatList, ViewProps} from 'react-native';
 
 // 3rd
 import {useDispatch, useSelector} from 'react-redux';
@@ -10,13 +10,9 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import styled from 'styled-components/native';
 import colors from '../../../shared/colors';
 import {RootState} from '../../../app/store/reduxStore';
-import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
-import {useListDiet, useListDietDetail} from '../../../shared/api/queries/diet';
+import {useListDietTotalObj} from '../../../shared/api/queries/diet';
 import {useListProduct} from '../../../shared/api/queries/product';
-import {
-  ISortFilter,
-  applySortFilter,
-} from '../../../features/reduxSlices/sortFilterSlice';
+import {applySortFilter} from '../../../features/reduxSlices/sortFilterSlice';
 import {IProductData} from '../../../shared/api/types/product';
 import {
   FOOD_LIST_ITEM_HEIGHT,
@@ -24,12 +20,10 @@ import {
   SCREENWIDTH,
   tutorialSortFilter,
 } from '../../../shared/constants';
-import {findDietSeq} from '../../../shared/utils/findDietSeq';
 import {
   setMenuAcActive,
   setTutorialProgress,
 } from '../../../features/reduxSlices/commonSlice';
-import FlatlistHeaderComponent from './FlatlistHeaderComponent';
 import FoodList from './FoodList';
 import BusinessInfo from '../../../components/common/businessInfo/BusinessInfo';
 import CtaButton from '../../../shared/ui/CtaButton';
@@ -53,7 +47,7 @@ const HomeFoodListAndBtn = ({
   ...props
 }: IHomeFoodListAndBtn) => {
   // navigation
-  const {navigate, goBack} = useNavigation();
+  const {goBack} = useNavigation();
   const route = useRoute();
 
   // redux
@@ -69,13 +63,8 @@ const HomeFoodListAndBtn = ({
   );
 
   // react-query
-  const {data: dietData, isLoading: listDietIsLoading} = useListDiet();
-  const {data: dietDetailData, isLoading: listDDIsLoading} = useListDietDetail(
-    currentDietNo,
-    {
-      enabled: currentDietNo ? true : false,
-    },
-  );
+  const {data: dTOData} = useListDietTotalObj();
+  const dDData = dTOData?.[currentDietNo]?.dietDetail ?? [];
   const {
     data: productData,
     refetch: refetchProduct,
@@ -95,8 +84,8 @@ const HomeFoodListAndBtn = ({
   // flatList render fn
   const renderFoodList = useCallback(
     ({item}: {item: IProductData}) =>
-      dietDetailData ? <FoodList item={item} screen="Search" /> : <></>,
-    [dietDetailData],
+      dDData ? <FoodList item={item} screen="Search" /> : <></>,
+    [dDData],
   );
   const extractListKey = useCallback(
     (item: IProductData) => item.productNo,
@@ -128,25 +117,25 @@ const HomeFoodListAndBtn = ({
     if (
       isTutorialMode &&
       tutorialProgress === 'SelectFood' &&
-      dietDetailData?.length === 0
+      dDData?.length === 0
     )
       return;
     isTutorialMode && dispatch(setTutorialProgress('AutoRemain'));
     goBack();
-    const {idx} = findDietSeq(dietData, currentDietNo);
-    dispatch(setMenuAcActive([idx]));
+    const idx = Object.keys(dTOData ?? []).findIndex(
+      dietNo => dietNo === currentDietNo,
+    );
+    !!idx && dispatch(setMenuAcActive([idx]));
   };
 
-  const currentNumOfFoods = dietDetailData?.length || 0;
+  const currentNumOfFoods = dDData?.length || 0;
   const isCTABtnDisAbled =
-    isTutorialMode &&
-    tutorialProgress === 'SelectFood' &&
-    dietDetailData?.length === 0;
+    isTutorialMode && tutorialProgress === 'SelectFood' && dDData?.length === 0;
 
   return (
     <Container {...props}>
       {/* 식품 리스트 */}
-      {productData && dietDetailData && (
+      {productData && dDData && (
         <FlatList
           contentContainerStyle={{
             marginTop:

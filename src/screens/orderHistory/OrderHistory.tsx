@@ -25,7 +25,7 @@ import {icons} from '../../shared/iconSource';
 import {useListOrder} from '../../shared/api/queries/order';
 import {BASE_URL} from '../../shared/api/urls';
 import {commaToNum, sumUpNutrients, sumUpPrice} from '../../shared/utils/sumUp';
-import {regroupByBuyDateAndDietNo} from '../../shared/utils/regroup';
+import {regroupByBuyDateAndDietNo} from '../../shared/utils/dataTransform';
 import {IOrderedProduct} from '../../shared/api/types/order';
 
 const OrderedMenu = ({order}: {order: IOrderedProduct[][]}) => {

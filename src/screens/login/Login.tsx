@@ -15,11 +15,6 @@ import AppleLogin from './ui/AppleLogin';
 import {navigateByUserInfo} from './util/navigateByUserInfo';
 import {useGetGuestYn} from '../../shared/api/queries/guest';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
-import {
-  getNotShowAgainList,
-  initializeNotShowAgainList,
-  updateNotShowAgainList,
-} from '../../shared/utils/asyncStorage';
 
 // doobi Component
 import {BtnCTA, BtnText, TextMain} from '../../shared/ui/styledComps';

@@ -22,9 +22,6 @@ const Amr = ({userInputState}: {userInputState: IUserInputState}) => {
     (state: RootState) => state.userInput,
   );
 
-  // react-query
-  const {data: seqCode} = useListCode('SP009'); // SP008 : 운동빈도 (sportsSeqCd)
-
   // useRef
   const inputRef = useRef([]);
 

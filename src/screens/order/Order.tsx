@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 import {
   TouchableOpacity,
   ScrollView,
@@ -25,7 +25,7 @@ import {
 } from '../../shared/ui/styledComps';
 import colors from '../../shared/colors';
 import {KAKAOPAY_CID, SCREENWIDTH} from '../../shared/constants';
-import {commaToNum} from '../../shared/utils/sumUp';
+import {commaToNum, sumUpDietFromDTOData} from '../../shared/utils/sumUp';
 
 import FoodToOrder from './ui/FoodToOrder';
 import Orderer from './ui/Orderer';
@@ -34,11 +34,11 @@ import PaymentMethod from './ui/PaymentMethod';
 import BusinessInfo from '../../components/common/businessInfo/BusinessInfo';
 
 import {useCreateOrder} from '../../shared/api/queries/order';
-import {sumUpDietTotal} from '../../shared/utils/sumUp';
 import {useListAddress} from '../../shared/api/queries/address';
 import {useGetUser} from '../../shared/api/queries/user';
-import {useListDietDetailAll} from '../../shared/api/queries/diet';
 import CtaButton from '../../shared/ui/CtaButton';
+import {useListDietTotalObj} from '../../shared/api/queries/diet';
+import {tfDTOToDDA} from '../../shared/utils/dataTransform';
 
 interface IIamportPayment {
   pg: string; //kakaopay, html5_inicis 등등
@@ -72,11 +72,15 @@ const Order = () => {
   const {data: listAddressData, isLoading: listAddressDataLoading} =
     useListAddress();
   const {data: userData} = useGetUser();
-  const {data: dietDetailAllData} = useListDietDetailAll();
+  const dietDetailAllData = tfDTOToDDA(foodToOrder);
   const createOrderMutation = useCreateOrder();
 
-  // etc
-  const {priceTotal, menuNum, productNum} = sumUpDietTotal(foodToOrder);
+  // useMemo
+  const {priceTotal, menuNum, productNum} = useMemo(() => {
+    const {priceTotal, menuNum, productNum} = sumUpDietFromDTOData(foodToOrder);
+
+    return {priceTotal, menuNum, productNum};
+  }, [foodToOrder]);
 
   // validation
   const invalidateInput = [buyerName, buyerTel, paymentMethod].find(
@@ -115,7 +119,7 @@ const Order = () => {
     },
     {
       title: '주문자',
-      subTitle: buyerName ? (
+      subTitle: buyerName.value ? (
         <HeaderSubTitle>
           {buyerName.value} | {buyerTel.value}
         </HeaderSubTitle>
@@ -126,14 +130,17 @@ const Order = () => {
     },
     {
       title: '배송지',
-      subTitle: (
-        <HeaderSubTitle numberOfLines={1} ellipsizeMode={'tail'}>
-          <HeaderSubTitle>
-            {listAddressData && listAddressData[selectedAddrIdx]?.addr1} |{' '}
-            {listAddressData && listAddressData[selectedAddrIdx]?.addr2}
+      subTitle:
+        listAddressData?.length !== 0 ? (
+          <HeaderSubTitle numberOfLines={1} ellipsizeMode={'tail'}>
+            <HeaderSubTitle>
+              {listAddressData && listAddressData[selectedAddrIdx]?.addr1} |{' '}
+              {listAddressData && listAddressData[selectedAddrIdx]?.addr2}
+            </HeaderSubTitle>
           </HeaderSubTitle>
-        </HeaderSubTitle>
-      ),
+        ) : (
+          <HeaderSubTitle>입력해주세요</HeaderSubTitle>
+        ),
       content: <Address />,
     },
     {

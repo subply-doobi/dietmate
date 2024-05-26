@@ -1,11 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 
-import {IDietDetailData} from '../../shared/api/types/diet';
+import {IDietDetailData, IDietTotalObjData} from '../../shared/api/types/diet';
 
 export interface IOrderState {
   // 제조사별 식품리스트
-  foodToOrder: IDietDetailData[];
+  foodToOrder: IDietTotalObjData;
   selectedAddrIdx: number;
   shippingPrice: number;
 }
@@ -21,7 +21,7 @@ export const orderSlice = createSlice({
   initialState,
   reducers: {
     // foodToOrder
-    setFoodToOrder: (state, action: PayloadAction<IDietDetailData[]>) => {
+    setFoodToOrder: (state, action: PayloadAction<IDietTotalObjData>) => {
       state.foodToOrder = action.payload;
     },
     setselectedAddrIdx: (state, action: PayloadAction<number>) => {

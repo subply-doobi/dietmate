@@ -152,7 +152,8 @@ export const AccordionContentContainer = styled.View`
   width: 100%;
   height: auto;
   background-color: ${colors.white};
-  padding: 0px 16px 32px 16px;
+  padding: 16px 16px 32px 16px;
+  row-gap: 40px;
 `;
 
 export const InputContainer = styled.View`
@@ -259,6 +260,7 @@ interface IBtnSmallText {
 export const BtnSmallText = styled.Text<IBtnSmallText>`
   font-size: 14px;
   color: ${({isActivated}) => (isActivated ? colors.textMain : colors.textSub)};
+  line-height: 18px;
 `;
 
 interface IVerticalLine {

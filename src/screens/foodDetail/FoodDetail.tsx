@@ -36,8 +36,7 @@ import {BASE_URL} from '../../shared/api/urls';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
-  useListDietDetail,
-  useListDietDetailAll,
+  useListDietTotalObj,
 } from '../../shared/api/queries/diet';
 import {SCREENWIDTH, SERVICE_PRICE_PER_PRODUCT} from '../../shared/constants';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
@@ -51,6 +50,7 @@ import {
 import {ITableItem, makeTableData} from './util/makeNutrTable';
 import {ActivityIndicator} from 'react-native';
 import CtaButton from '../../shared/ui/CtaButton';
+import {tfDTOToDDA} from '../../shared/utils/dataTransform';
 
 interface IShowPart {
   clicked: string;
@@ -76,20 +76,15 @@ const FoodDetail = () => {
   const route = useRoute();
 
   // react-query
-  const {
-    data: productData,
-    refetch: refetchProduct,
-    isFetching,
-  } = useGetProduct({
+  const {data: productData, refetch: refetchProduct} = useGetProduct({
     dietNo: currentDietNo,
     productNo: route?.params?.productNo,
   });
   const {data: likeData} = useListProductMark();
   const {data: baseLineData} = useGetBaseLine();
-  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
-    enabled: currentDietNo ? true : false,
-  });
-  const {data: dietDetailAllData} = useListDietDetailAll();
+  const {data: dTOData} = useListDietTotalObj();
+  const dietDetailData = dTOData?.[currentDietNo]?.dietDetail ?? [];
+  const dietDetailAllData = tfDTOToDDA(dTOData);
   const createProductMarkMutation = useCreateProductMark();
   const deleteProductMarkMutation = useDeleteProductMark();
   const createDietDetailMutation = useCreateDietDetail();
@@ -104,6 +99,11 @@ const FoodDetail = () => {
   const isIncludedInLike =
     productData &&
     likeData?.map(food => food.productNo).includes(productData?.productNo);
+
+  const isAddedInCurrentDiet = dietDetailData.some(
+    p => p.productNo === route?.params?.productNo,
+  );
+
   // 식품마다 headerTitle바꾸기
   // TBD : route.params.item 타입 관련 해결 및 만약 null값일 시 에러처리
   useEffect(() => {
@@ -156,7 +156,7 @@ const FoodDetail = () => {
       return;
     }
 
-    productData.productChoiceYn === 'Y'
+    isAddedInCurrentDiet
       ? deleteDietDetailMutation.mutate({
           dietNo: currentDietNo,
           productNo: productData.productNo,
@@ -299,16 +299,6 @@ const FoodDetail = () => {
               source={isIncludedInLike ? icons.likeActivated_48 : icons.like_48}
             />
           </LikeBtn>
-          {/* <BtnCTA
-            btnStyle={'activated'}
-            style={{flex: 1}}
-            onPress={handlePressAddCartBtn}>
-            {productData.productChoiceYn === 'Y' ? (
-              <BtnText>현재끼니에서 제거</BtnText>
-            ) : (
-              <BtnText>현재끼니에 추가</BtnText>
-            )}
-          </BtnCTA> */}
           <CtaButton
             btnStyle="active"
             style={{
@@ -319,7 +309,7 @@ const FoodDetail = () => {
             btnText={
               route?.params?.from === 'Change'
                 ? '뒤로가기'
-                : productData.productChoiceYn === 'Y'
+                : isAddedInCurrentDiet
                   ? '현재끼니에서 제거'
                   : '현재끼니에 추가'
             }

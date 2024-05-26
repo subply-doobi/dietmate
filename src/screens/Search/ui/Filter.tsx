@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 import {Row, TextMain} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 import {RootState} from '../../../app/store/reduxStore';
-import {useListDietDetail} from '../../../shared/api/queries/diet';
+import {useListDietTotalObj} from '../../../shared/api/queries/diet';
 import {useDispatch, useSelector} from 'react-redux';
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
 import {icons} from '../../../shared/iconSource';
@@ -34,16 +34,17 @@ const Filter = ({setFilterModalShow, setSearchBarFocus}: IFilter) => {
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
-  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
-    enabled: currentDietNo ? true : false,
-  });
+  const {data: dTOData} = useListDietTotalObj();
+  const dDData = dTOData?.[currentDietNo]?.dietDetail ?? [];
 
   return (
     <Row style={{justifyContent: 'space-between'}}>
       <Row style={{columnGap: 8}}>
         <RemainNutrFilterBtn
           onPress={() =>
-            dispatch(setFilterByRemainNutr({baseLineData, dietDetailData}))
+            dispatch(
+              setFilterByRemainNutr({baseLineData, dietDetailData: dDData}),
+            )
           }>
           <FilterBtnText style={{color: 'white'}}>남은영양 이하</FilterBtnText>
         </RemainNutrFilterBtn>
@@ -97,8 +98,9 @@ const RemainNutrFilterBtn = styled.TouchableOpacity`
   background-color: ${colors.dark};
 `;
 
-const FilterBtnText = styled(TextMain)<{isActivated: boolean}>`
+const FilterBtnText = styled(TextMain)<{isActivated?: boolean}>`
   font-size: 14px;
+  line-height: 18px;
   color: ${({isActivated}) => (isActivated ? colors.textMain : colors.textSub)};
 `;
 

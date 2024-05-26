@@ -1,5 +1,5 @@
 // export const BASE_URL = 'http://subply.kr:8080';
-export const BASE_URL = 'http://52.79.213.181:8080';
+export const BASE_URL = 'http://13.124.139.135:8080';
 
 // app-version-controller
 export const GET_VERSION = `${BASE_URL}/api/every/app-version/get-app-version`;
@@ -24,13 +24,14 @@ export const UPDATE_BASE_LINE = `${BASE_URL}/api/member/baseline/update-base-lin
 
 // diet-controller
 export const CREATE_DIET = `${BASE_URL}/api/member/diet/create-diet`;
+export const CREATE_DIET_CNT = `${BASE_URL}/api/member/diet/create-diet-cnt`;
 export const CREATE_DIET_DETAIL = `${BASE_URL}/api/member/diet/create-diet-detail`;
 export const UPDATE_DIET_DETAIL = `${BASE_URL}/api/member/diet/update-diet-detail`;
 export const UPDATE_DIET = `${BASE_URL}/api/member/diet/update-diet`; //orderTable 생성
 export const LIST_DIET = `${BASE_URL}/api/member/diet/list-diet`;
-export const LIST_DIET_DETAIL = `${BASE_URL}/api/member/diet/list-diet-detail`;
 export const LIST_DIET_DETAIL_ALL = `${BASE_URL}/api/member/diet/list-diet-detail-all`;
 export const DELETE_DIET = `${BASE_URL}/api/member/diet/delete-diet`;
+export const DELETE_DIET_ALL = `${BASE_URL}/api/member/diet/delete-diet-all`;
 export const DELETE_DIET_DETAIL = `${BASE_URL}/api/member/diet/delete-diet-detail`;
 export const GET_DIET_DETAIL_EMPTY_YN = `${BASE_URL}/api/member/diet/get-diet-detail-empty-yn`;
 

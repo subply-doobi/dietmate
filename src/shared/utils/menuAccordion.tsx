@@ -1,4 +1,4 @@
-import {IDietData, IDietDetailData} from '../api/types/diet';
+import {IDietData, IDietDetailData, IDietTotalObjData} from '../api/types/diet';
 import MenuAcInactiveHeader from '../../components/menuAccordion/MenuAcInactiveHeader';
 import {IBaseLineData} from '../api/types/baseLine';
 import MenuAcActiveHeader from '../../components/menuAccordion/MenuAcActiveHeader';
@@ -7,48 +7,31 @@ import MenuAcContent from '../../components/menuAccordion/MenuAcContent';
 interface IGetMenuAcContent {
   setDietNoToNumControl?: React.Dispatch<React.SetStateAction<string>>;
   setMenuNumSelectShow?: React.Dispatch<React.SetStateAction<boolean>>;
-  screen?: string;
-  currentDietNo: string;
   bLData: IBaseLineData | undefined;
-  dData: IDietData | undefined;
-  dTData: IDietDetailData[] | undefined;
+  dTOData: IDietTotalObjData | undefined;
 }
 export const getMenuAcContent = ({
   setDietNoToNumControl,
   setMenuNumSelectShow,
-  screen = 'Home',
-  currentDietNo,
   bLData,
-  dData,
-  dTData,
+  dTOData,
 }: IGetMenuAcContent) => {
-  if (!bLData || !dTData || !dData)
+  if (!bLData || !dTOData)
     return [{activeHeader: <></>, inactiveHeader: <></>, content: <></>}];
-  return dTData.map((dDData, idx) => {
+  return Object.keys(dTOData).map((dietNo, idx) => {
     return {
-      activeHeader: (
-        <MenuAcActiveHeader
-          bLData={bLData}
-          dBData={dData[idx]}
-          dDData={dDData}
-        />
-      ),
+      activeHeader: <MenuAcActiveHeader dietNo={dietNo} bLData={bLData} />,
       inactiveHeader: (
         <MenuAcInactiveHeader
-          screen={screen}
-          currentDietNo={currentDietNo}
           bLData={bLData}
-          dBData={dData[idx]}
-          dDData={dDData}
+          dietNo={dietNo}
           setDietNoToNumControl={setDietNoToNumControl}
           setMenuNumSelectShow={setMenuNumSelectShow}
         />
       ),
       content: (
         <MenuAcContent
-          screen={screen}
-          dDData={dDData}
-          dBData={dData[idx]}
+          dietNo={dietNo}
           setDietNoToNumControl={setDietNoToNumControl}
           setMenuNumSelectShow={setMenuNumSelectShow}
         />
