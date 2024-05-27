@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Text, View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 
@@ -9,13 +8,12 @@ import {
   Col,
   Row,
   HorizontalLine,
-  HorizontalSpace,
 } from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 import {commaToNum} from '../../../shared/utils/sumUp';
-
 import {BASE_URL} from '../../../shared/api/urls';
 import {RootState} from '../../../app/store/reduxStore';
+import {regroupDDataBySeller} from '../../../shared/utils/dataTransform';
 
 const FoodToOrder = () => {
   // redux
@@ -44,6 +42,8 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
   //redux
   const {foodToOrder} = useSelector((state: RootState) => state.order);
   const dDData = foodToOrder?.[dietNo]?.dietDetail ?? [];
+  const dDDataBySeller = regroupDDataBySeller(dDData);
+  const platformNmArr = Object.keys(dDDataBySeller);
 
   if (!foodToOrder) {
     return <ActivityIndicator />;
@@ -60,33 +60,35 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
         </View>
       )}
 
-      {dDData?.map((product, index) => {
+      {platformNmArr?.map(platformNm => {
         return (
-          <View key={`${product.productNo}-${index}`}>
+          <View key={platformNm}>
             <SellerText numberOfLines={1} ellipsizeMode="tail">
-              {product.platformNm}
+              {platformNm}
             </SellerText>
-            <Row style={{marginTop: 16}}>
-              <FoodThumbnail
-                source={{
-                  uri: `${BASE_URL}${product.mainAttUrl}`,
-                }}
-              />
-              <Col style={{flex: 1, marginLeft: 8}}>
-                <ProductName numberOfLines={1} ellipsizeMode="tail">
-                  {product.productNm}
-                </ProductName>
-                <Row
-                  style={{
-                    marginTop: 8,
-                    justifyContent: 'space-between',
-                  }}>
-                  <PriceAndQuantity>
-                    {commaToNum(product.price)}원
-                  </PriceAndQuantity>
-                </Row>
-              </Col>
-            </Row>
+            {dDDataBySeller[platformNm].map(product => (
+              <Row key={product.productNo} style={{marginTop: 16}}>
+                <FoodThumbnail
+                  source={{
+                    uri: `${BASE_URL}${product.mainAttUrl}`,
+                  }}
+                />
+                <Col style={{flex: 1, marginLeft: 8}}>
+                  <ProductName numberOfLines={1} ellipsizeMode="tail">
+                    {product.productNm}
+                  </ProductName>
+                  <Row
+                    style={{
+                      marginTop: 8,
+                      justifyContent: 'space-between',
+                    }}>
+                    <PriceAndQuantity>
+                      {commaToNum(product.price)}원
+                    </PriceAndQuantity>
+                  </Row>
+                </Col>
+              </Row>
+            ))}
           </View>
         );
       })}

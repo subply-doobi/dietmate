@@ -1,5 +1,21 @@
 import {IDietDetailData, IDietTotalObjData} from '../api/types/diet';
 import {IOrderData, IOrderedProduct} from '../api/types/order';
+import {IProductData} from '../api/types/product';
+
+interface IRegroupedData {
+  [key: string]: IProductData[];
+}
+export const regroupDDataBySeller = (dDData: IDietDetailData | undefined) =>
+  !dDData
+    ? {}
+    : dDData.reduce((acc: IRegroupedData, cur) => {
+        const key = cur.platformNm;
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+        acc[key].push(cur);
+        return acc;
+      }, {});
 
 export const reGroupOrderBySeller = (
   orderData: IOrderData | undefined,
