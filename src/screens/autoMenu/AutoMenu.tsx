@@ -15,7 +15,7 @@ import {IAutoMenuSubPages, PAGES} from './util/contentByPages';
 import BackArrow from '../../components/common/navigation/BackArrow';
 import GuideTitle from '../../shared/ui/GuideTitle';
 import CtaButton from '../../shared/ui/CtaButton';
-import {useListDiet, useListDietTotal} from '../../shared/api/queries/diet';
+import {useListDietTotalObj} from '../../shared/api/queries/diet';
 import colors from '../../shared/colors';
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
@@ -32,8 +32,7 @@ const AutoMenu = () => {
   const {setOptions, goBack} = useNavigation();
 
   // react-query
-  const {data: dData} = useListDiet();
-  const dietTotalData = useListDietTotal(dData, {enabled: !!dData});
+  const {data: dTOData} = useListDietTotalObj();
 
   // useState
   const [progress, setProgress] = useState<IAutoMenuSubPages[]>(['Select']);
@@ -45,23 +44,6 @@ const AutoMenu = () => {
   const [priceSliderValue, setPriceSliderValue] = useState<number[]>([
     6000, 12000,
   ]);
-
-  // memo
-  const {dTData, dTDataStatus} = useMemo(() => {
-    const dTDataStatus =
-      dietTotalData && dietTotalData.map(menu => menu.isLoading).includes(true)
-        ? 'isLoading'
-        : 'isSuccess';
-    const dTData =
-      dietTotalData && dTDataStatus === 'isSuccess'
-        ? dietTotalData?.map((d, idx) => (d.data ? d.data : []))
-        : undefined;
-
-    return {
-      dTData,
-      dTDataStatus,
-    };
-  }, [dData, dietTotalData]);
 
   // etc
   const currentPage =
@@ -94,7 +76,7 @@ const AutoMenu = () => {
   // 자동구성 첫 페이지 설정
   // 1. 이미 구성중인 끼니 있으면 끼니 선택 페이지에서 시작 || 카테고리선택 페이지에서 시작
   useEffect(() => {
-    if (!dTData || !dData) return;
+    if (!dTOData) return;
     if (route?.params?.isOneMenuAuto) {
       setProgress(['Category']);
       route?.params?.selectedOneDietNo &&
@@ -102,9 +84,12 @@ const AutoMenu = () => {
       setPageloaded(true);
       return;
     }
-    const menuLengthList = dTData.map((m: any) => m.length);
+    const dietNoArr = Object.keys(dTOData);
+    const menuLengthList = dietNoArr.map(
+      dietNo => dTOData[dietNo].dietDetail.length,
+    );
     if (menuLengthList.every((m: number) => m === 0)) {
-      setSelectedDietNo(dData.map(v => v.dietNo));
+      setSelectedDietNo(dietNoArr.map(dietNo => dietNo));
       setProgress(['Category']);
     }
     setPageloaded(true);
@@ -174,7 +159,7 @@ const AutoMenu = () => {
           subTitle={guideSubTitle}
           titleAlign={guideTitleAlign}
         />
-        {!dTData ? (
+        {!dTOData ? (
           <ActivityIndicator
             size="large"
             color={colors.main}
@@ -182,7 +167,7 @@ const AutoMenu = () => {
           />
         ) : (
           PAGES.find(p => p.name === currentPage)?.render({
-            dTData,
+            dTOData,
             setProgress,
             selectedCategory,
             setSelectedCategory,

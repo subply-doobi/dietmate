@@ -20,8 +20,7 @@ const Purpose = ({userInputState}: {userInputState: IUserInputState}) => {
   const {dietPurposeCd} = userInputState;
 
   // react-query
-  const {data: dPCodeData, isLoading: isDPCodeDataLoading} =
-    useListCode('SP002'); // SP002 : 식단의 목적
+  const {data: dPCodeData} = useListCode('SP002'); // SP002 : 식단의 목적
 
   return (
     <Container>

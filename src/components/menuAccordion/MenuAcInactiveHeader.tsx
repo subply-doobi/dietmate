@@ -16,14 +16,15 @@ import MenuNumSelect from '../cart/MenuNumSelect';
 import DAlert from '../../shared/ui/DAlert';
 import {useState} from 'react';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
-import {useDeleteDiet} from '../../shared/api/queries/diet';
+import {
+  useDeleteDiet,
+  useListDietTotalObj,
+} from '../../shared/api/queries/diet';
 
 interface IMenuAcInactiveHeader {
   controllable?: boolean;
+  dietNo: string;
   bLData: IBaseLineData;
-  dBData: IDietBaseData;
-  dDData: IDietDetailData;
-  currentDietNo: string;
   selected?: boolean;
   leftBarInactive?: boolean;
   setDietNoToNumControl?: React.Dispatch<React.SetStateAction<string>>;
@@ -31,33 +32,36 @@ interface IMenuAcInactiveHeader {
 }
 const MenuAcInactiveHeader = ({
   controllable = true,
-  dBData,
-  dDData,
+  dietNo,
   bLData,
-  currentDietNo,
   selected = false,
   leftBarInactive,
   setDietNoToNumControl,
   setMenuNumSelectShow,
 }: IMenuAcInactiveHeader) => {
   // redux
-  const {totalFoodList} = useSelector((state: RootState) => state.common);
+  const {totalFoodList, currentDietNo} = useSelector(
+    (state: RootState) => state.common,
+  );
 
   // useState
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
 
   // react-query
+  const {data: dTOData} = useListDietTotalObj();
+  const dDData = dTOData?.[dietNo]?.dietDetail ?? [];
+  const dietSeq = dTOData?.[dietNo]?.dietSeq ?? '';
   const deleteDietMutation = useDeleteDiet();
 
   // fn
   const onMenuNoSelectPress = () => {
-    if (!setDietNoToNumControl || !setMenuNumSelectShow) return;
-    setDietNoToNumControl(dBData.dietNo);
+    if (!setDietNoToNumControl || !setMenuNumSelectShow || !dTOData) return;
+    setDietNoToNumControl(dietNo);
     setMenuNumSelectShow(true);
   };
 
   const onDietDelete = () => {
-    deleteDietMutation.mutate({dietNo: dBData.dietNo});
+    deleteDietMutation.mutate({dietNo});
     setDeleteAlertShow(false);
   };
 
@@ -73,21 +77,21 @@ const MenuAcInactiveHeader = ({
       ? `${commaToNum(priceSum)}원 (${dDData.length}가지 식품)`
       : '식품을 담아보세요';
   const barColor = selected
-    ? colors.dark
+    ? colors.main
     : leftBarInactive
       ? colors.inactivated
-      : currentDietNo === dBData.dietNo
+      : currentDietNo === dietNo
         ? colors.dark
         : colors.inactivated;
 
-  const currentQty = dDData[0]?.qty ? parseInt(dDData[0].qty, 10) : 1;
+  const currentQty = dDData.length > 0 ? parseInt(dDData[0].qty, 10) : 1;
 
   return (
     <Box selected={selected}>
       <LeftBar style={{backgroundColor: barColor}} />
       <Col style={{marginLeft: 12, rowGap: 6}}>
         <Row>
-          <Title>{dBData.dietSeq}</Title>
+          <Title>{dietSeq}</Title>
           {(nutrStatus === 'satisfied' || nutrStatus === 'exceed') && (
             <Icon style={{marginLeft: 4}} size={20} source={iconSource} />
           )}
@@ -118,7 +122,7 @@ const MenuAcInactiveHeader = ({
         onConfirm={() => onDietDelete()}
         NoOfBtn={2}
         renderContent={() => (
-          <CommonAlertContent text={`${dBData.dietSeq}을\n삭제할까요`} />
+          <CommonAlertContent text={`${dietSeq}을\n삭제할까요`} />
         )}
       />
     </Box>
@@ -139,11 +143,11 @@ const Box = styled.View<{
   border-radius: 5px;
   border-width: 1px;
   border-color: ${({selected}) =>
-    selected ? colors.dark : colors.inactivated};
-  border-width: ${({selected}) => (selected ? '2px' : '1px')};
+    selected ? colors.highlight : colors.inactivated};
+  border-width: ${({selected}) => (selected ? '1px' : '1px')};
 `;
 
-const LeftBar = styled.View<{screen?: 'Home' | 'Diet' | string}>`
+const LeftBar = styled.View`
   position: absolute;
   left: 0;
   width: 4px;

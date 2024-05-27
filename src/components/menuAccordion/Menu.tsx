@@ -1,29 +1,24 @@
 // react, RN, 3rd
 import styled from 'styled-components/native';
-import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 // doobi util, redux, etc
 import {icons} from '../../shared/iconSource';
-import {commaToNum, sumUpNutrients, sumUpPrice} from '../../shared/utils/sumUp';
 
 // doobi Component
 import {
   BtnSmall,
   BtnSmallText,
-  HorizontalLine,
   Row,
   TextMain,
 } from '../../shared/ui/styledComps';
 import DAlert from '../../shared/ui/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
-import AccordionCtaBtns from './AccordionCtaBtns';
 import FoodList from './FoodList';
 
 // react-query
 import {IDietDetailData} from '../../shared/api/types/diet';
-import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import {useDeleteDietDetail} from '../../shared/api/queries/diet';
-import MenuNumSelect from '../cart/MenuNumSelect';
 
 interface IMenu {
   dietNo: string;
@@ -41,18 +36,22 @@ const Menu = ({dietNo, dietDetailData}: IMenu) => {
     {},
   );
 
-  useEffect(() => {
-    selectedFoods[dietNo]?.length !== dietDetailData?.length &&
-      setCheckAllClicked(false);
-  }, [selectedFoods, dietDetailData, dietNo]);
+  // etc
+  const isDietEmpty = dietDetailData.length === 0;
 
-  // 현재 끼니의 식품들이 목표섭취량에 부합하는지 확인
-  // empty/notEnough/exceed 에 따라 AccordionCtaBtns 디자인이 다름
-  const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
+  useEffect(() => {
+    const numOfFoodInCurrentDiet = isDietEmpty ? 0 : dietDetailData.length;
+    selectedFoods[dietNo]?.length !== numOfFoodInCurrentDiet
+      ? setCheckAllClicked(false)
+      : setCheckAllClicked(true);
+  }, [selectedFoods, dietDetailData, dietNo]);
 
   // 전체선택 - 삭제 start
   const checkAll = () => {
-    const allArr = dietDetailData ? dietDetailData.map(v => v.productNo) : [];
+    const allArr =
+      dietDetailData && !isDietEmpty
+        ? dietDetailData.map(v => v.productNo)
+        : [];
     dietDetailData && setSelectedFoods({[dietNo]: allArr});
   };
   const unCheckAll = () => {
@@ -76,17 +75,10 @@ const Menu = ({dietNo, dietDetailData}: IMenu) => {
       .catch(e => console.log('삭제 실패', e));
   };
 
-  // 끼니수량에 따른 가격
-  const priceSum = sumUpPrice(dietDetailData);
-  const currentQty = dietDetailData[0]?.qty
-    ? parseInt(dietDetailData[0].qty, 10)
-    : 1;
-  const totalPrice = priceSum * currentQty;
-
   return (
     <Container>
       {/* 전체선택 - 삭제 */}
-      {dietDetailData && dietDetailData.length > 0 && (
+      {!isDietEmpty && (
         <SelectedDeleteRow>
           <SelectAllBox>
             <SelectAllCheckbox
@@ -113,7 +105,7 @@ const Menu = ({dietNo, dietDetailData}: IMenu) => {
       )}
 
       {/* 현재 끼니 식품들 */}
-      {dietDetailData.length > 0 && (
+      {!isDietEmpty && (
         <FoodList
           selectedFoods={selectedFoods}
           setSelectedFoods={setSelectedFoods}
@@ -157,4 +149,5 @@ const CheckboxImage = styled.Image`
 const SelectAllText = styled(TextMain)`
   margin-left: 10px;
   font-size: 14px;
+  line-height: 18px;
 `;

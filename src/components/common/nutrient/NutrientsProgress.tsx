@@ -1,41 +1,24 @@
 // RN, 3rd
-import {useMemo} from 'react';
 import styled from 'styled-components/native';
 import * as Progress from 'react-native-progress';
 
 // util, const
 import colors from '../../../shared/colors';
 import {Col, Row, VerticalSpace} from '../../../shared/ui/styledComps';
-import {
-  checkNutrSatisfied,
-  getExceedIdx,
-  sumUpNutrients,
-} from '../../../shared/utils/sumUp';
+import {sumUpNutrients} from '../../../shared/utils/sumUp';
 
 // doobi components
-import {NUTR_ERROR_RANGE, SCREENWIDTH} from '../../../shared/constants';
-import {useRoute} from '@react-navigation/native';
-import {icons} from '../../../shared/iconSource';
-import DTooltip from '../tooltip/DTooltip';
+import {NUTR_ERROR_RANGE} from '../../../shared/constants';
 
 // react-query
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
 import {IDietDetailData} from '../../../shared/api/types/diet';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../../app/store/reduxStore';
-import {setProgressTooltipShow} from '../../../features/reduxSlices/commonSlice';
 
 const indicatorColorsByTitle2: {[key: string]: string} = {
   '칼로리(kcal)': colors.main,
   '탄수화물(g)': colors.main,
   '단백질(g)': colors.main,
   '지방(g)': colors.main,
-};
-const indicatorColorsByTitle1: {[key: string]: string} = {
-  '칼로리(kcal)': colors.main,
-  '탄수화물(g)': colors.blue,
-  '단백질(g)': colors.green,
-  '지방(g)': colors.orange,
 };
 
 const nutrUpperBoundByTitle: {[key: string]: number} = {
@@ -78,72 +61,18 @@ const ProgressBar = ({title, numerator, denominator}: INutrientProgress) => {
 
 const NutrientsProgress = ({
   dietDetailData,
-  tooltipShow = true,
 }: {
   dietDetailData: IDietDetailData;
   tooltipShow?: boolean;
 }) => {
-  // redux
-  const dispatch = useDispatch();
-  const {progressTooltipShow} = useSelector((state: RootState) => state.common);
-
-  // navigation
-  const route = useRoute();
-
   // react-query
   const {data: baseLineData} = useGetBaseLine();
 
   // etc
   const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
 
-  // useMemo
-  // 1. 툴팁 보여줄 것인지, 2. 텍스트, 3. 위치 값 memo
-  const {exceedIdx, tooltipPosition, tooltipText} = useMemo(() => {
-    const isSatisfied = checkNutrSatisfied(
-      baseLineData,
-      cal,
-      carb,
-      protein,
-      fat,
-    );
-    const exceedIdx = getExceedIdx(baseLineData, cal, carb, protein, fat);
-    const tooltipPosition = isSatisfied
-      ? 0
-      : -8 + ((SCREENWIDTH - 16) / 4) * exceedIdx;
-
-    const tooltipText =
-      exceedIdx !== -1
-        ? '영양이 초과되었어요'
-        : isSatisfied
-          ? '한 끼니가 완성되었어요'
-          : '';
-
-    return {exceedIdx, tooltipPosition, tooltipText};
-  }, [baseLineData, dietDetailData, progressTooltipShow]);
-
   return (
     <Container>
-      {/* {tooltipShow && (
-        <DTooltip
-          text={tooltipText}
-          tooltipShow={progressTooltipShow && tooltipText !== ''}
-          showIcon={true}
-          renderCustomIcon={
-            exceedIdx !== -1 && route.name === 'Home'
-              ? () => <Icon source={icons.cartWhiteFilled_36} />
-              : undefined
-          }
-          reversed={true}
-          boxTop={58}
-          boxLeft={exceedIdx < 3 ? tooltipPosition : undefined}
-          boxRight={exceedIdx === 3 ? -8 : undefined}
-          triangleRight={
-            exceedIdx === 3 ? (SCREENWIDTH - 16) / 4 - 16 : undefined
-          }
-          onPressFn={() => dispatch(setProgressTooltipShow(false))}
-        />
-      )} */}
-
       <Col style={{width: '100%', height: 70}}>
         {baseLineData && Object.keys(baseLineData).length !== 0 && (
           <Row
@@ -224,10 +153,4 @@ const Container = styled.View`
   background-color: ${colors.white};
   width: 100%;
   align-items: center;
-`;
-
-const Icon = styled.Image`
-  width: 20px;
-  height: 20px;
-  margin-left: 8px;
 `;

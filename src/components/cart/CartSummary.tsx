@@ -14,25 +14,13 @@ import {
   updateSearch,
 } from '../../features/reduxSlices/sortFilterSlice';
 import {icons} from '../../shared/iconSource';
-import {
-  commaToNum,
-  sumUpDietTotal,
-  getTotalShippingPrice,
-  getSellerShippingPrice,
-  getTotalShippingPriceFromDTData,
-} from '../../shared/utils/sumUp';
+import {commaToNum, sumUpDietFromDTOData} from '../../shared/utils/sumUp';
 
 //doobi Component
 import {HorizontalLine, TextMain, TextSub} from '../../shared/ui/styledComps';
 
 // react-query
-import {
-  useListDiet,
-  useListDietDetailAll,
-  useListDietTotal,
-} from '../../shared/api/queries/diet';
-import {reGroupByDietNo, reGroupDietBySeller} from '../../shared/utils/regroup';
-import {convertQsResultToData} from '../../shared/utils/queriesData';
+import {useListDietTotalObj} from '../../shared/api/queries/diet';
 
 const CartSummary = ({
   setMenuNumSelectShow,
@@ -48,41 +36,35 @@ const CartSummary = ({
   const dispatch = useDispatch();
 
   // react-query
-  const {data: dietData} = useListDiet();
-  const {data: dietDetailAllData} = useListDietDetailAll();
-  const dietTotalData =
-    !!dietData && useListDietTotal(dietData, {enabled: !!dietData});
+  const {data: dTOData} = useListDietTotalObj();
 
   // useMemo
   const {
-    dTDataStatus,
-    dTData,
     menuNum,
     productNum,
     priceTotal,
     totalShippingPrice,
+    regroupedBySeller,
+    shippingPriceObj,
   } = useMemo(() => {
-    const {dTDataStatus, dTData} = convertQsResultToData(dietTotalData);
     // 총 끼니 수, 상품 수, 금액 계산
-    const {menuNum, productNum, priceTotal} = sumUpDietTotal(dTData);
-    const totalShippingPrice = dTData
-      ? getTotalShippingPriceFromDTData(dTData)
-      : 0;
-
-    return {
-      dTDataStatus,
-      dTData,
+    const {
       menuNum,
       productNum,
       priceTotal,
       totalShippingPrice,
+      regroupedBySeller,
+      shippingPriceObj,
+    } = sumUpDietFromDTOData(dTOData);
+    return {
+      menuNum,
+      productNum,
+      priceTotal,
+      totalShippingPrice,
+      regroupedBySeller,
+      shippingPriceObj,
     };
-  }, [dietTotalData]);
-
-  // etc
-  // 판매자별 상품 데이터
-  const regroupedDDAData =
-    dietDetailAllData && reGroupDietBySeller(dietDetailAllData);
+  }, [dTOData]);
 
   // useEffect
   // 배송비 redux에 저장
@@ -96,7 +78,8 @@ const CartSummary = ({
     navigate('Search');
   };
 
-  return regroupedDDAData && regroupedDDAData[0].length === 0 ? null : (
+  return regroupedBySeller &&
+    Object.keys(regroupedBySeller).length === 0 ? null : (
     //장바구니 하단에 보여지는 총 끼니 수, 상품 수, 금액
     <TotalSummaryContainer>
       <Row style={{marginTop: 40, justifyContent: 'space-between'}}>
@@ -109,14 +92,24 @@ const CartSummary = ({
       <HorizontalLine style={{marginTop: 8}} />
 
       {/* 식품사별로 그룹핑 */}
-      {regroupedDDAData?.map((item, index) => {
+      {Object.keys(regroupedBySeller).map((seller, index) => {
         //식품사별 가격, 배송비 합계
-        const {sellerPrice, sellerShippingText} = getSellerShippingPrice(item);
+        const {price: sellerPrice, shippingText} = shippingPriceObj[seller];
+        // 어느끼니에 속하는지 확인
+        let includingDietNoArr: {dietNo: string; dietSeq: string}[] = [];
+        for (let food of regroupedBySeller[seller]) {
+          includingDietNoArr.every(arr => arr.dietNo !== food.dietNo) &&
+            includingDietNoArr.push({
+              dietNo: food.dietNo,
+              dietSeq: food.dietSeq,
+            });
+        }
+
         return (
           <View key={index}>
             <Row style={{marginTop: 24, justifyContent: 'space-between'}}>
-              <SummarySellerText>{item[0]?.platformNm}</SummarySellerText>
-              <SearchBtn onPress={() => onSearchBtnPress(item[0].platformNm)}>
+              <SummarySellerText>{seller}</SummarySellerText>
+              <SearchBtn onPress={() => onSearchBtnPress(seller)}>
                 <SearchImage source={icons.search_18} />
               </SearchBtn>
             </Row>
@@ -125,32 +118,21 @@ const CartSummary = ({
             </SummaryText>
             <TextSub style={{marginTop: 2}}>
               배송비:
-              {sellerShippingText}
+              {shippingText}
             </TextSub>
 
             {/* 끼니 버튼 렌더링 컴포넌트 */}
             <Row style={{marginTop: 16}}>
-              {item.map((dietItem, dietIndex) => {
+              {includingDietNoArr.map(e => {
                 //dietItem.dietSeq가 중복일 경우 하나만 가져오기
-                const isDietSeq = item.findIndex(
-                  i => i.dietSeq === dietItem.dietSeq,
-                );
-                if (isDietSeq !== dietIndex) {
-                  return null;
-                }
-                //dietItem.dietSeq에서 숫자만 가져오기
-                const getNumber = parseInt(
-                  dietItem.dietSeq.replace(/[^0-9]/g, ''),
-                  10,
-                );
                 return (
                   <SmallButton
-                    key={dietIndex}
+                    key={e.dietNo}
                     onPress={() => {
-                      setDietNoToNumControl(dietItem.dietNo);
+                      setDietNoToNumControl(e.dietNo);
                       setMenuNumSelectShow(true);
                     }}>
-                    <TextMain>{dietItem.dietSeq}</TextMain>
+                    <TextMain>{e.dietSeq}</TextMain>
                   </SmallButton>
                 );
               })}

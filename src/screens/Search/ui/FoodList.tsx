@@ -29,7 +29,7 @@ import {IProductData} from '../../../shared/api/types/product';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
-  useListDietDetail,
+  useListDietTotalObj,
 } from '../../../shared/api/queries/diet';
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
 import {
@@ -52,24 +52,24 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
   );
 
   // react-query
-  const {data: dietDetailData} = useListDietDetail(currentDietNo, {
-    enabled: currentDietNo ? true : false,
-  });
+  const {data: dTOData} = useListDietTotalObj();
+  const dDData = dTOData?.[currentDietNo]?.dietDetail ?? [];
   const {data: baseLineData} = useGetBaseLine();
   const addMutation = useCreateDietDetail();
   const deleteMutation = useDeleteDietDetail();
   const deleteProductMarkMutation = useDeleteProductMark();
 
   // state
-  const [deleteAlertShow, setDeleteAlertShow] = useState(false);
   const [foodLimitAlertShow, setFoodLimitAlertShow] = useState(false);
 
   // etc
   // 장바구니에 해당 상품이 들어있는지
-  const isAdded = item.productChoiceYn === 'Y';
+  const isAdded = dTOData?.[currentDietNo]?.dietDetail.some(
+    p => p.productNo === item.productNo,
+  );
   // 남은 영양 계산
   const {calExceed, carbExceed, proteinExceed, fatExceed} = useMemo(() => {
-    if (!dietDetailData || !baseLineData) {
+    if (!dDData || !baseLineData) {
       return {
         calExceed: false,
         carbExceed: false,
@@ -77,7 +77,7 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
         fatExceed: false,
       };
     }
-    const {cal, carb, protein, fat} = sumUpNutrients(dietDetailData);
+    const {cal, carb, protein, fat} = sumUpNutrients(dDData);
     return {
       calExceed:
         parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[1] - cal <
@@ -92,7 +92,7 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
         parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[1] - fat <
         parseInt(item.fat),
     };
-  }, [dietDetailData, baseLineData]);
+  }, [dDData, baseLineData]);
 
   // onDelete | onAdd | onLikeDelete fn
   const onDelete = () => {
@@ -149,7 +149,7 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
     aniPValue.setValue(isAdded ? addedP : removedP);
   }, [item, isAdded]);
 
-  const currentNumOfFoods = dietDetailData?.length || 0;
+  const currentNumOfFoods = dDData?.length || 0;
 
   return (
     <Container>

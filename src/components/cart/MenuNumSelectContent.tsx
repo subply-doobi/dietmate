@@ -18,7 +18,6 @@ import MenuNumSelect from './MenuNumSelect';
 // util, constants
 import {commaToNum, sumUpPrice} from '../../shared/utils/sumUp';
 import colors from '../../shared/colors';
-import {findDietSeq} from '../../shared/utils/findDietSeq';
 import {BASE_URL} from '../../shared/api/urls';
 import {
   SCREENHEIGHT,
@@ -28,15 +27,13 @@ import {
 
 // react-query
 import {
-  useListDiet,
-  useListDietDetail,
-  useListDietDetailAll,
-  useListDietTotal,
+  useListDietTotalObj,
   useUpdateDietDetail,
 } from '../../shared/api/queries/diet';
-import {reGroupDietBySeller} from '../../shared/utils/regroup';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../app/store/reduxStore';
+import {
+  reGroupBySellerFromDTOData,
+  tfDTOToDDA,
+} from '../../shared/utils/dataTransform';
 
 const MenuNumSelectContent = ({
   setMenuNumSelectShow,
@@ -46,35 +43,41 @@ const MenuNumSelectContent = ({
   dietNoToNumControl: string;
 }) => {
   // react-query
-  const {data: dietData} = useListDiet();
-  const {data: dietDetailData} = useListDietDetail(dietNoToNumControl);
+  const {data: dTOData} = useListDietTotalObj();
+
   const updateDietDetailMutation = useUpdateDietDetail();
-  const {data: dDAData} = useListDietDetailAll();
+
+  // useMemo
+  const {dDData, dDAData} = useMemo(() => {
+    const dDData = dTOData?.[dietNoToNumControl]?.dietDetail ?? [];
+    const dDAData = dTOData ? tfDTOToDDA(dTOData) : [];
+    return {dDData, dDAData};
+  }, [dTOData]);
 
   // state
-  const initialQty =
-    dietDetailData && dietDetailData.length > 0
-      ? parseInt(dietDetailData[0].qty, 10)
-      : 1;
+  const initialQty = dDData.length > 0 ? parseInt(dDData[0].qty, 10) : 1;
   const [qty, setQty] = useState(initialQty);
 
   // useEffect
   useEffect(() => {
-    dietDetailData &&
-      dietDetailData.length > 0 &&
-      setQty(parseInt(dietDetailData[0].qty));
-  }, [dietDetailData]);
+    dDData && dDData.length > 0 && setQty(parseInt(dDData[0].qty));
+  }, [dDData]);
 
   // etc
-  const {dietSeq} = findDietSeq(dietData, dietNoToNumControl);
+  const dietSeq = dTOData?.[dietNoToNumControl]?.dietSeq ?? '';
 
   // useMemo
   const {currentDDDataBySeller, otherDietSellerPrice} = useMemo(() => {
-    if (!dietDetailData || !dDAData)
+    if (!dDData || !dDAData)
       return {currentDDDataBySeller: [], otherDietSellerPrice: {}};
 
     // 현재 끼니의 판매자별 식품 데이터
-    const currentDDDataBySeller = reGroupDietBySeller(dietDetailData);
+    const currentDTODataBySeller = dTOData
+      ? reGroupBySellerFromDTOData({
+          [dietNoToNumControl]: dTOData[dietNoToNumControl],
+        })
+      : {};
+    const currentDDDataBySeller = Object.values(currentDTODataBySeller);
 
     // 현재 끼니의 판매자별 식품 데이터 중 판매자명만 추출
     let currentDietSeller: string[] = [];
@@ -101,13 +104,11 @@ const MenuNumSelectContent = ({
         : (price + SERVICE_PRICE_PER_PRODUCT) * productQty;
     });
 
-    console.log('otherDietSellerPrice', otherDietSellerPrice);
-
     return {
       currentDDDataBySeller,
       otherDietSellerPrice,
     };
-  }, [dietData, dietDetailData, dDAData]);
+  }, [dDData, dDAData]);
 
   const saveQty = () => {
     updateDietDetailMutation.mutate({
@@ -129,50 +130,46 @@ const MenuNumSelectContent = ({
 
             {/* 현재 끼니 식품 리스트 */}
             <HorizontalSpace height={8} />
-            {dietDetailData &&
-              dietDetailData.map((food, idx) => (
-                <Row
-                  key={idx}
+            {dDData.map((food, idx) => (
+              <Row
+                key={idx}
+                style={{
+                  width: SCREENWIDTH - 32 - 40 - 8,
+                  marginTop: 16,
+                }}>
+                <ThumbnailImg source={{uri: `${BASE_URL}${food.mainAttUrl}`}} />
+                <Col
                   style={{
-                    width: SCREENWIDTH - 32 - 40 - 8,
-                    marginTop: 16,
+                    width: '100%',
+                    marginLeft: 8,
                   }}>
-                  <ThumbnailImg
-                    source={{uri: `${BASE_URL}${food.mainAttUrl}`}}
-                  />
-                  <Col
+                  <TextGrey>{food.platformNm}</TextGrey>
+                  <Row
                     style={{
                       width: '100%',
-                      marginLeft: 8,
                     }}>
-                    <TextGrey>{food.platformNm}</TextGrey>
-                    <Row
-                      style={{
-                        width: '100%',
-                      }}>
-                      <Col style={{flex: 1}}>
-                        <Text numberOfLines={1} ellipsizeMode="tail">
-                          {food.productNm}
-                        </Text>
-                      </Col>
-                      <TextGrey style={{marginLeft: 8, textAlign: 'right'}}>
-                        {commaToNum(
-                          parseInt(food.price) + SERVICE_PRICE_PER_PRODUCT,
-                        )}
-                        원
-                      </TextGrey>
-                    </Row>
-                  </Col>
-                </Row>
-              ))}
+                    <Col style={{flex: 1}}>
+                      <Text numberOfLines={1} ellipsizeMode="tail">
+                        {food.productNm}
+                      </Text>
+                    </Col>
+                    <TextGrey style={{marginLeft: 8, textAlign: 'right'}}>
+                      {commaToNum(
+                        parseInt(food.price) + SERVICE_PRICE_PER_PRODUCT,
+                      )}
+                      원
+                    </TextGrey>
+                  </Row>
+                </Col>
+              </Row>
+            ))}
             <HorizontalLine style={{marginTop: 24}} />
 
             {/* 전체 끼니 중 현재 끼니 판매자별 금액 보여주기 */}
             <HorizontalSpace height={24} />
             <TitleText>해당 식품사 총 금액</TitleText>
             <HorizontalSpace height={8} />
-            {dietDetailData &&
-              dietDetailData?.length > 0 &&
+            {dDData?.length > 0 &&
               currentDDDataBySeller &&
               currentDDDataBySeller.map((seller, idx) => {
                 const currentSellerPrice = sumUpPrice(seller) * qty;
@@ -205,7 +202,7 @@ const MenuNumSelectContent = ({
         {/* 수량조절버튼 */}
         <Col style={{alignSelf: 'flex-end'}}>
           <MenuNumSelect
-            disabled={!dietDetailData || dietDetailData.length === 0}
+            disabled={!dDData || dDData.length === 0}
             action="setQty"
             setQty={setQty}
             currentQty={qty}

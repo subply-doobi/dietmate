@@ -1,5 +1,8 @@
 import {SetStateAction} from 'react';
-import {IDietDetailData} from '../../../shared/api/types/diet';
+import {
+  IDietDetailData,
+  IDietTotalObjData,
+} from '../../../shared/api/types/diet';
 import colors from '../../../shared/colors';
 import Category from '../subScreens/Category';
 import Company from '../subScreens/Company';
@@ -17,7 +20,7 @@ export type IAutoMenuSubPages =
   | 'Processing'
   | 'Error';
 interface IPageRender {
-  dTData: IDietDetailData[];
+  dTOData: IDietTotalObjData;
   setProgress: React.Dispatch<React.SetStateAction<IAutoMenuSubPages[]>>;
   selectedDietNo: string[];
   setSelectedDietNo: React.Dispatch<SetStateAction<string[]>>;
@@ -55,9 +58,9 @@ export const PAGES: IPages = [
     getNextPage: () => 'Category',
     checkIsActive: ({selectedDietNo}: IPageCheckIsActive) =>
       selectedDietNo?.length === 0 ? false : true,
-    render: ({dTData, selectedDietNo, setSelectedDietNo}: IPageRender) => (
+    render: ({dTOData, selectedDietNo, setSelectedDietNo}: IPageRender) => (
       <Select
-        dTData={dTData}
+        dTOData={dTOData}
         selectedDietNo={selectedDietNo}
         setSelectedDietNo={setSelectedDietNo}
       />
@@ -120,7 +123,7 @@ export const PAGES: IPages = [
     getNextPage: () => 'Error',
     checkIsActive: () => true,
     render: ({
-      dTData,
+      dTOData,
       selectedDietNo,
       selectedCategory,
       wantedCompany,
@@ -128,7 +131,7 @@ export const PAGES: IPages = [
       setProgress,
     }: IPageRender) => (
       <Processing
-        dTData={dTData}
+        dTOData={dTOData}
         selectedDietNo={selectedDietNo}
         selectedCategory={selectedCategory}
         wantedCompany={wantedCompany}

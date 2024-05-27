@@ -5,17 +5,13 @@ export const BASE_LINE = 'BASE_LINE';
 export const USER = 'USER';
 
 // diet
-export const DIET = 'DIET';
-export const DIET_DETAIL = 'DIET_DETAIL';
-export const DIET_DETAIL_ALL = 'DIET_DETAIL_ALL';
-export const DIET_DETAIL_EMPTY_YN = 'DIET_DETAIL_EMPTY_YN';
+export const DIET_TOTAL_OBJ = 'DIET_TOTAL_OBJ';
 
 // code
 export const CODE = 'CODE';
 export const CATEGORY = `CATEGORY`;
 
 // product
-export const PRODUCT_AUTO = 'PRODUCT_AUTO';
 export const PRODUCTS = 'PRODUCTS';
 export const PRODUCT = 'PRODUCT';
 export const PRODUCT_DETIAL = 'PRODUCT_DETIAL';

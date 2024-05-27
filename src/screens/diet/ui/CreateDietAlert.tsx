@@ -3,8 +3,6 @@ import {ActivityIndicator} from 'react-native';
 
 // 3rd
 import styled from 'styled-components/native';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../../app/store/reduxStore';
 
 // doobi
 import {
@@ -12,9 +10,9 @@ import {
   TextMain,
   TextSub,
 } from '../../../shared/ui/styledComps';
-import {useListDiet} from '../../../shared/api/queries/diet';
 import MenuNumSelect from '../../../components/cart/MenuNumSelect';
 import colors from '../../../shared/colors';
+import {useListDietTotalObj} from '../../../shared/api/queries/diet';
 
 interface ICreateDietAlert {
   numOfCreateDiet: number;
@@ -27,8 +25,10 @@ const CreateDietAlert = ({
   isCreating,
 }: ICreateDietAlert) => {
   // react-query
-  const {data: dietData} = useListDiet();
-  const desc = `총 5개 끼니를 구성하는 것을 추천해요 \n${dietData?.length !== 0 ? `(현재 ${dietData?.length}개의 끼니가 있어요)` : ''}`;
+  const {data: dTOData} = useListDietTotalObj();
+
+  const NumOfMenu = dTOData ? Object.keys(dTOData).length : 0;
+  const desc = `총 5개 끼니를 구성하는 것을 추천해요 \n${NumOfMenu !== 0 ? `(현재 ${NumOfMenu}개의 끼니가 있어요)` : ''}`;
   if (isCreating)
     return (
       <Container>
@@ -45,7 +45,7 @@ const CreateDietAlert = ({
         action="setQty"
         currentQty={numOfCreateDiet}
         setQty={setNumOfCreateDiet}
-        maxQty={(dietData?.length && 10 - dietData.length) || 10}
+        maxQty={10 - NumOfMenu}
       />
     </Container>
   );

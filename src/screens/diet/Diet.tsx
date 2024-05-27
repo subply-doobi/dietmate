@@ -13,12 +13,10 @@ import colors from '../../shared/colors';
 import {RootState} from '../../app/store/reduxStore';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import {
-  useCreateDietWOI,
-  useListDiet,
-  useListDietTotal,
+  useCreateDietCnt,
+  useListDietTotalObj,
 } from '../../shared/api/queries/diet';
 
-import {findEmptyDietSeq} from '../../shared/utils/findDietSeq';
 import {getMenuAcContent} from '../../shared/utils/menuAccordion';
 import {Col, Container, HorizontalSpace} from '../../shared/ui/styledComps';
 import {
@@ -37,23 +35,16 @@ import {
   SCREENWIDTH,
 } from '../../shared/constants';
 import {setFoodToOrder} from '../../features/reduxSlices/orderSlice';
-import {convertQsResultToData} from '../../shared/utils/queriesData';
 import DBottomSheet from '../../components/common/bottomsheet/DBottomSheet';
 import MenuNumSelectContent from '../../components/cart/MenuNumSelectContent';
 import DAlert from '../../shared/ui/DAlert';
 import {getAddDietStatusFrDTData} from '../../shared/utils/getDietAddStatus';
-import {
-  commaToNum,
-  getTotalShippingPriceFromDTData,
-  sumUpDietTotal,
-} from '../../shared/utils/sumUp';
+import {commaToNum, sumUpDietFromDTOData} from '../../shared/utils/sumUp';
 import {updateNotShowAgainList} from '../../shared/utils/asyncStorage';
 import DTPScreen from '../../shared/ui/DTPScreen';
 import CartSummary from '../../components/cart/CartSummary';
 import AddMenuBtn from './ui/AddMenuBtn';
 import {renderAlertContent, renderDTPContent} from './util/modalContent';
-import {queryClient} from '../../app/store/reactQueryStore';
-import {DIET, DIET_DETAIL, PRODUCTS} from '../../shared/api/keys';
 
 const Diet = () => {
   // navigation
@@ -73,10 +64,12 @@ const Diet = () => {
   } = useSelector((state: RootState) => state.common);
   // react-query
   const {data: bLData} = useGetBaseLine();
-  const {data: dietData} = useListDiet();
-  const dietTotalData =
-    !!dietData && useListDietTotal(dietData, {enabled: !!dietData});
-  const createDietMutationWOI = useCreateDietWOI();
+  const {
+    data: dTOData,
+    isLoading: isDTObjLoading,
+    refetch: refetchDTOData,
+  } = useListDietTotalObj();
+  const createDietCntMutation = useCreateDietCnt();
 
   // useState
   const [forceModalQuit, setForceModalQuit] = useState(false);
@@ -92,63 +85,47 @@ const Diet = () => {
   const autoMenuBtnRef = useRef<TouchableOpacity>(null);
 
   // useMemo
-  const {
-    dTDataStatus,
-    dTData,
-    accordionContent,
-    emptyDietSeq,
-    shippingPrice,
-    priceTotal,
-  } = useMemo(() => {
-    const {dTDataStatus, dTData} = convertQsResultToData(dietTotalData);
-    // 비어있는 끼니 확인
-    const emptyDietSeq = findEmptyDietSeq(dTData);
-    const shippingPrice = dTData ? getTotalShippingPriceFromDTData(dTData) : 0;
-    const {priceTotal} = sumUpDietTotal(dTData);
+  const {menuNum, accordionContent, totalShippingPrice, priceTotal} =
+    useMemo(() => {
+      // 비어있는 끼니 확인
+      const {menuNum, priceTotal, totalShippingPrice} =
+        sumUpDietFromDTOData(dTOData);
 
-    // accordion
-    const accordionContent = getMenuAcContent({
-      currentDietNo,
-      bLData: bLData,
-      dData: dietData,
-      dTData,
-      screen: 'Diet',
-      setMenuNumSelectShow,
-      setDietNoToNumControl,
-    });
+      // accordion
+      const accordionContent = getMenuAcContent({
+        bLData: bLData,
+        dTOData,
+        setMenuNumSelectShow,
+        setDietNoToNumControl,
+      });
 
-    return {
-      dTDataStatus,
-      dTData,
-      accordionContent,
-      emptyDietSeq,
-      shippingPrice,
-      priceTotal,
-    };
-  }, [dietTotalData]);
+      return {
+        menuNum,
+        accordionContent,
+        totalShippingPrice,
+        priceTotal,
+      };
+    }, [dTOData]);
 
   // etc
   const {status: addDietStatus, text: addDietNAText} =
-    getAddDietStatusFrDTData(dTData);
+    getAddDietStatusFrDTData(dTOData);
 
   // fn
   const updateSections = (activeSections: number[]) => {
     dispatch(setMenuAcActive(activeSections));
-    if (activeSections.length === 0) return;
+    if (!dTOData || activeSections.length === 0) return;
     const currentIdx = activeSections[0];
-    const currentDietNo = dietData && dietData[currentIdx].dietNo;
+    const currentDietNo = Object.keys(dTOData)[currentIdx];
     currentDietNo && dispatch(setCurrentDiet(currentDietNo));
   };
 
   const onAddCreatePressed = () => {
-    if (!dTData) return;
+    if (!dTOData) return;
     // dispatch(setTutorialProgress(''));
     setIsCreating(false);
-    const currentNumOfMenu = dTData.length;
     if (addDietStatus === 'possible') {
-      currentNumOfMenu < 5
-        ? setNumOfCreateDiet(5 - currentNumOfMenu)
-        : setNumOfCreateDiet(1);
+      menuNum < 5 ? setNumOfCreateDiet(5 - menuNum) : setNumOfCreateDiet(1);
       setCreateAlertShow(true);
       return;
     }
@@ -157,25 +134,22 @@ const Diet = () => {
 
   const onCreateDiet = async () => {
     setIsCreating(true);
-    const arr = new Array(numOfCreateDiet).fill(0);
-    let firstAddedDietNo = '';
-    for (let i = 0; i < arr.length; i++) {
-      // const res = await createDietMutation.mutateAsync({setDietNo: false});
-      const res = await createDietMutationWOI.mutateAsync();
-      if (i === 0) {
-        firstAddedDietNo = res.dietNo;
-      }
-    }
-    dispatch(setCurrentDiet(firstAddedDietNo));
+
+    await createDietCntMutation.mutateAsync({
+      dietCnt: String(numOfCreateDiet),
+    });
+
     isTutorialMode && dispatch(setTutorialProgress('AddFood'));
 
     setIsCreating(false);
     setCreateAlertShow(false);
-    queryClient.invalidateQueries({queryKey: [DIET]});
-    queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
-    queryClient.invalidateQueries({queryKey: [PRODUCTS, firstAddedDietNo]});
 
-    // delay for rendering
+    const refetchedDTOData = (await refetchDTOData()).data;
+    const firstAddedDietNo = refetchedDTOData
+      ? Object.keys(refetchedDTOData)[0]
+      : '';
+    dispatch(setCurrentDiet(firstAddedDietNo));
+
     isTutorialMode &&
       setTimeout(() => {
         dispatch(setMenuAcActive([0]));
@@ -285,7 +259,7 @@ const Diet = () => {
 
   const dtpDeley: {[key: string]: number} = {
     AddMenu: 500,
-    AddFood: 800,
+    AddFood: 2000,
     AutoRemain: 500,
     ChangeFood: 500,
     AutoMenu: 2000,
@@ -299,8 +273,8 @@ const Diet = () => {
     ChangeFood: () => {
       navigate('Change', {
         dietNo: currentDietNo,
-        productNo: dTData[0][1].productNo,
-        food: dTData[0][1],
+        productNo: dTOData?.[currentDietNo]?.dietDetail[1]?.productNo ?? '',
+        food: dTOData?.[currentDietNo]?.dietDetail[1] ?? undefined,
       });
     },
     AutoMenu: () => {
@@ -313,7 +287,7 @@ const Diet = () => {
   };
 
   // render
-  if (dTDataStatus === 'isLoading' || isCreating) {
+  if (isDTObjLoading || isCreating) {
     return (
       <Container style={{justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator size={24} color={colors.main} />
@@ -346,13 +320,13 @@ const Diet = () => {
           />
 
           {/* 끼니추가 버튼 */}
-          {dTData && (
-            <AddMenuBtn onPress={onAddCreatePressed} dTData={dTData} />
+          {dTOData && (
+            <AddMenuBtn onPress={onAddCreatePressed} dTOData={dTOData} />
           )}
 
           {/* 여러끼니 자동구성 버튼 */}
           <HorizontalSpace height={24} />
-          {dTData && dTData.length > 1 && (
+          {dTOData && menuNum > 1 && (
             <CtaButton
               ref={autoMenuBtnRef}
               btnStyle="active"
@@ -361,7 +335,7 @@ const Diet = () => {
                 alignSelf: 'center',
                 height: 48,
               }}
-              btnText={`${dTData.length} 끼니 자동구성`}
+              btnText={`${menuNum} 끼니 자동구성`}
               onPress={() =>
                 navigate('AutoMenu', {
                   isOneMenuAuto: false,
@@ -389,9 +363,9 @@ const Diet = () => {
           position: 'absolute',
           bottom: 8,
         }}
-        btnText={`주문하기 (${commaToNum(priceTotal + shippingPrice)}원)`}
+        btnText={`주문하기 (${commaToNum(priceTotal + totalShippingPrice)}원)`}
         onPress={() => {
-          !!dTData && dispatch(setFoodToOrder(dTData));
+          !!dTOData && dispatch(setFoodToOrder(dTOData));
           navigate('Order');
         }}
       />
@@ -440,7 +414,7 @@ const Diet = () => {
             fn: dtpAction[tutorialProgress],
             headerHeight,
             bottomTabBarHeight,
-            dTData: dTData || [],
+            dTOData: dTOData || {},
             currentDietNo,
           })
         }

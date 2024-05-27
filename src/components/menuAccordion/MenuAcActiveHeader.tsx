@@ -11,16 +11,18 @@ import {Col, Icon, Row, TextMain, TextSub} from '../../shared/ui/styledComps';
 import {icons} from '../../shared/iconSource';
 import {getNutrStatus, sumUpPrice, commaToNum} from '../../shared/utils/sumUp';
 import {RootState} from '../../app/store/reduxStore';
-import {useDeleteDiet} from '../../shared/api/queries/diet';
+import {
+  useDeleteDiet,
+  useListDietTotalObj,
+} from '../../shared/api/queries/diet';
 import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
 
 interface IMenuAcActiveHeader {
+  dietNo: string;
   bLData: IBaseLineData;
-  dBData: IDietBaseData;
-  dDData: IDietDetailData;
 }
-const MenuAcActiveHeader = ({bLData, dBData, dDData}: IMenuAcActiveHeader) => {
+const MenuAcActiveHeader = ({bLData, dietNo}: IMenuAcActiveHeader) => {
   // redux
   const {totalFoodList} = useSelector((state: RootState) => state.common);
 
@@ -28,11 +30,13 @@ const MenuAcActiveHeader = ({bLData, dBData, dDData}: IMenuAcActiveHeader) => {
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
 
   // react-query
+  const {data: dTOData} = useListDietTotalObj();
+  const dDData = dTOData?.[dietNo]?.dietDetail ?? [];
   const deleteDietMutation = useDeleteDiet();
 
   // fn
   const onDietDelete = () => {
-    deleteDietMutation.mutate({dietNo: dBData.dietNo});
+    deleteDietMutation.mutate({dietNo: dDData[0].dietNo});
     setDeleteAlertShow(false);
   };
 
@@ -47,7 +51,7 @@ const MenuAcActiveHeader = ({bLData, dBData, dDData}: IMenuAcActiveHeader) => {
   return (
     <Box>
       <Row>
-        <Title>{dBData.dietSeq}</Title>
+        <Title>{dTOData?.[dietNo]?.dietSeq ?? ''}</Title>
         {(nutrStatus === 'satisfied' || nutrStatus === 'exceed') && (
           <Icon style={{marginLeft: 4}} size={20} source={iconSource} />
         )}
@@ -63,7 +67,7 @@ const MenuAcActiveHeader = ({bLData, dBData, dDData}: IMenuAcActiveHeader) => {
         onConfirm={() => onDietDelete()}
         NoOfBtn={2}
         renderContent={() => (
-          <CommonAlertContent text={`${dBData.dietSeq}을\n삭제할까요`} />
+          <CommonAlertContent text={`${dDData[0].dietSeq}을\n삭제할까요`} />
         )}
       />
     </Box>

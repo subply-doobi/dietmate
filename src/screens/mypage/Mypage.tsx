@@ -1,23 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+// RN
+import {useEffect, useState} from 'react';
+import {ScrollView} from 'react-native';
+
+// 3rd
+import {useDispatch} from 'react-redux';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
+
+// doobi
 import colors from '../../shared/colors';
 import {Container} from '../../shared/ui/styledComps';
-
 import DAlert from '../../shared/ui/DAlert';
-
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
-
 import {loadBaseLineData} from '../../features/reduxSlices/userInputSlice';
-import {RootState} from '../../app/store/reduxStore';
 import PageBtn from './ui/PageBtn';
 import {link} from '../../shared/utils/linking';
 import {INQUIRY_URL} from '../../shared/constants';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 import {updateNotShowAgainList} from '../../shared/utils/asyncStorage';
 import {setTutorialStart} from '../../features/reduxSlices/commonSlice';
-import {ScrollView} from 'react-native';
 
 const Mypage = () => {
   // navigation

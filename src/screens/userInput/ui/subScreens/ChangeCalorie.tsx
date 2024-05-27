@@ -30,8 +30,8 @@ const ChangeCalorie = ({userInputState, scrollRef}: IChangeCalorie) => {
     Math.abs(weightDiff) < 1
       ? '이전과 몸무게가 비슷해요'
       : weightDiff > 0
-        ? '이전보다 몸무게가 감소했어요'
-        : '이전보다 몸무게가 증가했어요';
+        ? `이전보다 몸무게가 ${weightDiff}kg 감소했어요`
+        : `이전보다 몸무게가 ${weightDiff}kg 증가했어요`;
 
   const text = `${weightText}\n
 목표와 다르게 진행되고 있다면

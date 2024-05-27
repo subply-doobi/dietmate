@@ -1,7 +1,5 @@
-import {useMutation, useQueries, useQuery} from '@tanstack/react-query';
-import {useDispatch, useSelector} from 'react-redux';
-
-import {RootState} from '../../../app/store/reduxStore';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {useDispatch} from 'react-redux';
 import {queryClient} from '../../../app/store/reactQueryStore';
 import {
   setCurrentDiet,
@@ -9,38 +7,27 @@ import {
   setProgressTooltipShow,
 } from '../../../features/reduxSlices/commonSlice';
 
-import {
-  DIET,
-  DIET_DETAIL,
-  DIET_DETAIL_ALL,
-  DIET_DETAIL_EMPTY_YN,
-  MARK,
-  PRODUCT,
-  PRODUCTS,
-} from '../keys';
+import {DIET, DIET_DETAIL_EMPTY_YN, DIET_TOTAL_OBJ, PRODUCTS} from '../keys';
 import {IMutationOptions, IQueryOptions} from '../types/common';
 import {
   IDietData,
   IDietDetailData,
   IDietDetailEmptyYnData,
-  IDietTotalData,
+  IDietTotalObjData,
 } from '../types/diet';
 import {IProductData} from '../types/product';
-import {mutationFn, queryFn} from '../requestFn';
+import {mutationFn, queryFnDDADataByDietNo} from '../requestFn';
 
 import {
   CREATE_DIET,
+  CREATE_DIET_CNT,
   CREATE_DIET_DETAIL,
   DELETE_DIET,
+  DELETE_DIET_ALL,
   DELETE_DIET_DETAIL,
-  GET_DIET_DETAIL_EMPTY_YN,
-  LIST_DIET,
-  LIST_DIET_DETAIL,
-  LIST_DIET_DETAIL_ALL,
   UPDATE_DIET,
   UPDATE_DIET_DETAIL,
 } from '../urls';
-import {findDietSeq} from '../../utils/findDietSeq';
 import {handleError} from '../../utils/handleError';
 
 // PUT //
@@ -79,8 +66,7 @@ export const useCreateDiet = (options?: IMutationOptions) => {
       dispatch(setMenuAcActive([]));
 
       // invalidation
-      queryClient.invalidateQueries({queryKey: [DIET]});
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
+      queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
       queryClient.invalidateQueries({queryKey: [PRODUCTS, data.dietNo]});
     },
     onError: (error, variables, context) => {
@@ -97,23 +83,23 @@ export const useCreateDiet = (options?: IMutationOptions) => {
   return mutation;
 };
 
-export const useCreateDietWOI = (options?: IMutationOptions) => {
+export const useCreateDietCnt = (options?: IMutationOptions) => {
   const mutation = useMutation({
-    mutationFn: () => mutationFn(CREATE_DIET, 'put'),
+    mutationFn: ({dietCnt}: {dietCnt: string}) =>
+      mutationFn(`${CREATE_DIET_CNT}/${dietCnt}`, 'put'),
     onSuccess: data => {
       options?.onSuccess && options?.onSuccess(data);
+      queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
     },
     onError: e => {
       handleError(e);
-      console.log('useCreatDietWOI error: ', e);
+      console.log('useCreateDietCnt error: ', e);
     },
   });
   return mutation;
 };
 
 export const useCreateDietDetail = (options?: IMutationOptions) => {
-  const dispatch = useDispatch();
-
   const onSuccess = options?.onSuccess;
   const mutation = useMutation({
     mutationFn: ({dietNo, food}: {dietNo: string; food: IProductData}) =>
@@ -125,158 +111,56 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
       // optimistic update
       // 1. Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries({queryKey: [PRODUCTS, dietNo]});
-      await queryClient.cancelQueries({queryKey: [DIET_DETAIL, dietNo]});
-      await queryClient.cancelQueries({queryKey: [MARK]});
+      await queryClient.cancelQueries({queryKey: [DIET_TOTAL_OBJ]});
 
       // 2. Snapshot the previous value
-      const prevProductData = queryClient.getQueryData<IProductData>([PRODUCT]);
-      const prevProductsData = queryClient.getQueryData<IProductData[]>([
-        PRODUCTS,
-        dietNo,
+      const prevDTOData = queryClient.getQueryData<IDietTotalObjData>([
+        DIET_TOTAL_OBJ,
       ]);
-      const prevDietDetailData = queryClient.getQueryData<IDietDetailData>([
-        DIET_DETAIL,
-        dietNo,
-      ]);
-      const prevMarkData = queryClient.getQueryData<IDietDetailData>([MARK]);
 
       // new value
-      const newDietDetailData: IDietDetailData = prevDietDetailData
-        ? [...prevDietDetailData, {...food, qty: 1, dietNo}]
-        : [food];
-
-      const newProductData: IProductData | undefined = prevProductData
-        ? {...prevProductData, productChoiceYn: 'Y'}
-        : undefined;
-
-      const newProductsData: IProductData[] | undefined =
-        prevProductsData &&
-        prevProductsData.map(prevFood =>
-          prevFood.productNo === food.productNo
-            ? {...food, productChoiceYn: 'Y'}
-            : prevFood,
-        );
-
-      const newMarkData: IProductData[] | undefined =
-        prevMarkData &&
-        prevMarkData.map(prevFood =>
-          prevFood.productNo === food.productNo
-            ? {...food, productChoiceYn: 'Y'}
-            : prevFood,
-        );
+      let newDTOData: IDietTotalObjData = prevDTOData
+        ? JSON.parse(JSON.stringify(prevDTOData))
+        : {};
+      const dietSeq = prevDTOData?.[dietNo]?.dietSeq ?? '';
+      newDTOData[dietNo].dietDetail.push({...food, qty: '1', dietNo, dietSeq});
 
       // 3. Optimistically update to the new value
       // (실패할 경우 onError에서 이전 데이터로 돌려주기 -> 5번)
-      queryClient.setQueryData([PRODUCT], () => {
-        return newProductData;
-      });
-      queryClient.setQueryData([PRODUCTS, dietNo], () => {
-        return newProductsData;
-      });
-      queryClient.setQueryData([DIET_DETAIL, dietNo], () => {
-        return newDietDetailData;
-      });
-      queryClient.setQueryData([MARK], () => {
-        return newMarkData;
+      queryClient.setQueryData([DIET_TOTAL_OBJ], () => {
+        return newDTOData;
       });
       // 4. Return a context with the previous and new todo
       return {
-        prevProductData,
-        newProductData,
-        prevProductsData,
-        newProductsData,
-        prevDietDetailData,
-        newDietDetailData,
-        prevMarkData,
-        newMarkData,
+        prevDTOData,
+        newDTOData,
       };
     },
     onSuccess: (data, {dietNo, food}) => {
-      // progressTooltip을 끼니나 식품을 추가/삭제 할 경우에만 띄우기 위함.
-      // 툴팁 닫은 후에 화면 옮겼을 때 다시 뜨지 않도록 방지
-      dispatch(setProgressTooltipShow(true));
-
       // 컴포넌트로부터 전달받은 onSuccess 실행
       onSuccess && onSuccess();
 
       // invalidation
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL_EMPTY_YN]});
+      queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
     },
     onError: (e, {dietNo, food}, context) => {
       // optimistic update
       // 5. Rollback to the previous value
-      queryClient.setQueryData([PRODUCTS, dietNo], context?.prevProductsData);
-      queryClient.setQueryData(
-        [DIET_DETAIL, dietNo],
-        context?.prevDietDetailData,
-      );
-      queryClient.setQueryData([PRODUCT], context?.prevProductData);
-      queryClient.setQueryData([MARK], context?.prevMarkData);
+      queryClient.setQueryData([DIET_TOTAL_OBJ], context?.prevDTOData);
       handleError(e);
       console.log('useCreateDietDetail error: ', e);
     },
-    // onSettled: (data, err, {dietNo, productNo}) => {
-    //   queryClient.invalidateQueries({queryKey: [DIET_DETAIL, dietNo]});
-    // },
   });
   return mutation;
 };
 
 // GET //
-export const useListDiet = (options?: IQueryOptions) => {
+export const useListDietTotalObj = (options?: IQueryOptions) => {
   const enabled = options?.enabled ?? true;
-  const additionalQK = options?.additionalQuerykey ?? [];
-  return useQuery<IDietData>({
-    queryKey: [DIET, ...additionalQK],
-    queryFn: () => queryFn(LIST_DIET),
+  return useQuery<IDietTotalObjData>({
+    queryKey: [DIET_TOTAL_OBJ],
+    queryFn: () => queryFnDDADataByDietNo(),
     enabled,
-  });
-};
-
-export const useListDietDetail = (dietNo: string, options?: IQueryOptions) => {
-  const enabled = options?.enabled ?? true;
-  return useQuery<IDietDetailData>({
-    queryKey: dietNo ? [DIET_DETAIL, dietNo] : [DIET_DETAIL],
-    queryFn: () => queryFn(`${LIST_DIET_DETAIL}/${dietNo}`),
-    enabled,
-  });
-};
-
-export const useListDietDetailAll = (options?: IQueryOptions) => {
-  const enabled = options?.enabled ?? true;
-  return useQuery<IDietDetailData>({
-    queryKey: [DIET_DETAIL_ALL],
-    queryFn: () => queryFn(LIST_DIET_DETAIL_ALL),
-    enabled,
-  });
-};
-
-export const useGetDietDetailEmptyYn = (options?: IQueryOptions) => {
-  const enabled = options?.enabled ?? true;
-  return useQuery<IDietDetailEmptyYnData>({
-    queryKey: [DIET_DETAIL_EMPTY_YN],
-    queryFn: () => queryFn(GET_DIET_DETAIL_EMPTY_YN),
-    enabled,
-  });
-};
-
-export const useListDietTotal = (
-  dietData: IDietData | undefined,
-  options?: IQueryOptions,
-) => {
-  const enabled = options?.enabled ?? true;
-  const dData = dietData || [];
-  return useQueries({
-    queries: dData.map(dietData => {
-      return {
-        queryKey: [DIET_DETAIL, dietData.dietNo],
-        queryFn: () =>
-          queryFn<IDietDetailData>(`${LIST_DIET_DETAIL}/${dietData.dietNo}`),
-        enabled,
-      };
-    }),
   });
 };
 
@@ -287,8 +171,7 @@ export const useUpdateDietDetail = () => {
       mutationFn(`${UPDATE_DIET_DETAIL}?dietNo=${dietNo}&qty=${qty}`, 'post'),
     onSuccess: (data, {dietNo}) => {
       console.log('updateDietDetail success: ', data);
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL, dietNo]});
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
+      queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
     },
   });
   return mutation;
@@ -303,68 +186,102 @@ export const useUpdateDiet = (options?: IMutationOptions) => {
       ),
     onSuccess: data => {
       console.log('updateDiet success: ', data);
-      queryClient.invalidateQueries({queryKey: [DIET]});
+      queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
     },
   });
   return mutation;
 };
 // DELETE //
 export const useDeleteDiet = () => {
-  const {currentDietNo} = useSelector((state: RootState) => state.common);
   const dispatch = useDispatch();
   const mutation = useMutation({
     mutationFn: ({dietNo}: {dietNo: string}) =>
       mutationFn(`${DELETE_DIET}/${dietNo}`, 'delete'),
     onMutate: async ({dietNo}) => {
       // optimistic update 1. Cancel any outgoing refetches
-      await queryClient.cancelQueries({queryKey: [DIET]});
+      await queryClient.cancelQueries({queryKey: [DIET_TOTAL_OBJ]});
 
       // optimistic update 2. Snapshot the previous value
-      const prevDietData = queryClient.getQueryData<IDietData>([DIET]);
+      const prevDTOData = queryClient.getQueryData<IDietTotalObjData>([
+        DIET_TOTAL_OBJ,
+      ]);
 
       // optimistic update 3. Optimistically update to the new value
       // (실패할 경우 onError에서 context에 담긴 이전 데이터로 돌려줘야함 -> 5번)
-      if (!prevDietData) return;
-      const newDietData = prevDietData.filter(diet => diet.dietNo !== dietNo);
-      queryClient.setQueryData([DIET], () => newDietData);
+      if (!prevDTOData) return;
+      const {[dietNo]: _, ...newDTOData} = prevDTOData;
+
+      queryClient.setQueryData([DIET_TOTAL_OBJ], () => newDTOData);
 
       // optimistic update 4. Return a context object with the snapshotted value
-      return {prevDietData, newDietData};
+      return {prevDTOData, newDTOData};
     },
     onSuccess: (data, {dietNo}: {dietNo: string}, context) => {
-      // progressTooltip을 끼니나 식품을 추가/삭제 할 경우에만 띄우기 위함.
-      // 툴팁 닫은 후에 화면 옮겼을 때 다시 뜨지 않도록 방지
-      dispatch(setProgressTooltipShow(true));
-
       // 끼니 삭제 후 현재 구성중인 끼니를 redux에 새로 저장 => 장바구니와 동기화
-      const prevDietData = context?.prevDietData;
-      if (!prevDietData) {
+      const prevDTOData = context?.prevDTOData;
+      if (!prevDTOData) {
         return;
       }
 
       let currentDietIdx = 0;
       let nextDietIdx = 0;
 
-      if (prevDietData.length === 1) {
+      const prevDietNoArr = Object.keys(prevDTOData);
+      if (prevDietNoArr.length === 1) {
         dispatch(setCurrentDiet(''));
       } else {
-        prevDietData.forEach(
-          (diet, idx) => (currentDietIdx = diet.dietNo === dietNo ? idx : 0),
+        prevDietNoArr.forEach(
+          (prevDietNo, idx) =>
+            (currentDietIdx = prevDietNo === dietNo ? idx : 0),
         );
-        nextDietIdx = currentDietIdx === 0 ? 1 : prevDietData.length - 2;
-        dispatch(setCurrentDiet(prevDietData[nextDietIdx].dietNo));
+        nextDietIdx = currentDietIdx === 0 ? 1 : prevDietNoArr.length - 2;
+        dispatch(setCurrentDiet(prevDietNoArr[nextDietIdx]));
       }
 
       // invalidation
-      queryClient.invalidateQueries({queryKey: [DIET]});
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL_EMPTY_YN]});
+      queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
       queryClient.invalidateQueries({queryKey: [PRODUCTS, dietNo]});
     },
     onError: (error, {dietNo}, context) => {
       // optimistic update 5. If the mutation fails, use the context returned
-      queryClient.setQueryData([DIET], context?.prevDietData);
+      queryClient.setQueryData([DIET_TOTAL_OBJ], context?.prevDTOData);
+      handleError(error);
+    },
+  });
+  return mutation;
+};
+
+export const useDeleteDietAll = () => {
+  const dispatch = useDispatch();
+  const mutation = useMutation({
+    mutationFn: () => mutationFn(DELETE_DIET_ALL, 'delete'),
+    onMutate: async () => {
+      // optimistic update 1. Cancel any outgoing refetches
+      await queryClient.cancelQueries({queryKey: [DIET_TOTAL_OBJ]});
+
+      // optimistic update 2. Snapshot the previous value
+      const prevDTOData = queryClient.getQueryData<IDietTotalObjData>([
+        DIET_TOTAL_OBJ,
+      ]);
+
+      // optimistic update 3. Optimistically update to the new value
+      // (실패할 경우 onError에서 context에 담긴 이전 데이터로 돌려줘야함 -> 5번)
+      if (!prevDTOData) return;
+      const newDTOData: IDietTotalObjData = {};
+
+      queryClient.setQueryData([DIET_TOTAL_OBJ], () => newDTOData);
+
+      // optimistic update 4. Return a context object with the snapshotted value
+      return {prevDTOData, newDTOData};
+    },
+    onSuccess: data => {
+      queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
+      queryClient.invalidateQueries({queryKey: [PRODUCTS]});
+      dispatch(setCurrentDiet(''));
+    },
+    onError: (error, _, context) => {
+      // optimistic update 5. If the mutation fails, use the context returned
+      queryClient.setQueryData([DIET_TOTAL_OBJ], context?.prevDTOData);
       handleError(error);
     },
   });
@@ -372,7 +289,6 @@ export const useDeleteDiet = () => {
 };
 
 export const useDeleteDietDetail = (options?: IMutationOptions) => {
-  const dispatch = useDispatch();
   const onSuccess = options?.onSuccess;
   const mutation = useMutation({
     mutationFn: ({dietNo, productNo}: {dietNo: string; productNo: string}) =>
@@ -383,80 +299,42 @@ export const useDeleteDietDetail = (options?: IMutationOptions) => {
     onMutate: async ({dietNo, productNo}) => {
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries({queryKey: [PRODUCTS, dietNo]});
+      await queryClient.cancelQueries({queryKey: [DIET_TOTAL_OBJ]});
 
       // Snapshot the previous value
-      const prevProductData = queryClient.getQueryData<IProductData>([PRODUCT]);
-      const prevProductsData = queryClient.getQueryData<IProductData[]>([
-        PRODUCTS,
-        dietNo,
-      ]);
-      const prevDietDetailData = queryClient.getQueryData<IDietDetailData>([
-        DIET_DETAIL,
-        dietNo,
+      const prevDTOData = queryClient.getQueryData<IDietDetailData>([
+        DIET_TOTAL_OBJ,
       ]);
 
       // new value
-      const newDietDetailData = prevDietDetailData?.filter(
-        food => food.productNo !== productNo,
+      let newDTOData: IDietTotalObjData = prevDTOData
+        ? JSON.parse(JSON.stringify(prevDTOData))
+        : {};
+      newDTOData[dietNo].dietDetail = newDTOData[dietNo].dietDetail.filter(
+        p => p.productNo !== productNo,
       );
 
-      const newProductData: IProductData | undefined = prevProductData
-        ? {...prevProductData, productChoiceYn: 'N'}
-        : undefined;
+      queryClient.setQueryData([DIET_TOTAL_OBJ], () => {
+        return newDTOData;
+      });
 
-      const newProductsData: IProductData[] | undefined =
-        prevProductsData &&
-        prevProductsData.map(food => {
-          return food.productNo === productNo
-            ? {...food, productChoiceYn: 'N'}
-            : food;
-        });
-
-      // Optimistically update to the new value
-      queryClient.setQueryData([PRODUCT], () => {
-        return newProductData;
-      });
-      queryClient.setQueryData([PRODUCTS, dietNo], () => {
-        return newProductsData;
-      });
-      queryClient.setQueryData([DIET_DETAIL, dietNo], () => {
-        return newDietDetailData;
-      });
       // Return a context with the previous and new todo
       return {
-        prevProductsData,
-        newProductsData,
-        prevProductData,
-        newProductData,
-        prevDietDetailData,
-        newDietDetailData,
+        prevDTOData,
+        newDTOData,
       };
     },
     onSuccess: (data, {dietNo, productNo}) => {
-      // progressTooltip을 끼니나 식품을 추가/삭제 할 경우에만 띄우기 위함.
-      // 툴팁 닫은 후에 화면 옮겼을 때 다시 뜨지 않도록 방지
-      dispatch(setProgressTooltipShow(true));
-
       // 컴포넌트로부터 option으로 받은 onSuccess 실행
       onSuccess && onSuccess();
 
       // invalidation
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL_ALL]});
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL_EMPTY_YN]});
+      queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
     },
     onError: (e, {dietNo, productNo}, context) => {
-      queryClient.setQueryData([PRODUCTS, dietNo], context?.prevProductsData);
-      queryClient.setQueryData(
-        [DIET_DETAIL, dietNo],
-        context?.prevDietDetailData,
-      );
-      queryClient.setQueryData([PRODUCT], context?.prevProductData);
+      queryClient.setQueryData([DIET_TOTAL_OBJ], context?.prevDTOData);
       handleError(e);
     },
-    // onSettled: (data, err, {dietNo, productNo}) => {
-    //   queryClient.invalidateQueries({queryKey: [DIET_DETAIL, dietNo]});
-    // },
   });
   return mutation;
 };

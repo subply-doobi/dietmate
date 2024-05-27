@@ -12,18 +12,29 @@ import Search from '../../screens/Search/Search';
 
 import {icons} from '../../shared/iconSource';
 import colors from '../../shared/colors';
-import {useListDietDetailAll} from '../../shared/api/queries/diet';
+import {useListDietTotalObj} from '../../shared/api/queries/diet';
 import {Icon} from '../../shared/ui/styledComps';
 import Diet from '../../screens/diet/Diet';
 import NewHome from '../../screens/home/NewHome';
+import {useMemo} from 'react';
+import {tfDTOToDDA} from '../../shared/utils/dataTransform';
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNav = () => {
-  // react-query
-  const {data: dietDetailAllData} = useListDietDetailAll();
+  // navigation
   const navigation = useNavigation();
   const {goBack} = navigation;
+
+  // react-query
+  const {data: dTOData} = useListDietTotalObj();
+
+  // useMemo
+  const dietDetailAllData = useMemo(() => {
+    const dietDetailAllData = dTOData ? tfDTOToDDA(dTOData) : [];
+    return dietDetailAllData;
+  }, [dTOData]);
+
   return (
     <Tab.Navigator
       backBehavior="history"
@@ -84,7 +95,7 @@ const BottomTabNav = () => {
                 source={focused ? icons.cartActivated_36 : icons.cart_36}
                 size={36}
               />
-              {dietDetailAllData && dietDetailAllData.length !== 0 && (
+              {dietDetailAllData.length !== 0 && (
                 <Badge>
                   <BadgeText>{dietDetailAllData.length}</BadgeText>
                 </Badge>

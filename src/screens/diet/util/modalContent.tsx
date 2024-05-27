@@ -2,11 +2,10 @@ import styled from 'styled-components/native';
 import CommonAlertContent from '../../../components/common/alert/CommonAlertContent';
 import DTooltip from '../../../components/common/tooltip/DTooltip';
 import CreateDietAlert from '../ui/CreateDietAlert';
-import ErrorAlertContent from '../ui/ErrorAlertContent';
 import LoadingAlertContent from '../ui/LoadingAlertContent';
 import colors from '../../../shared/colors';
-import {Col, Icon, TextMain} from '../../../shared/ui/styledComps';
-import {IDietDetailData} from '../../../shared/api/types/diet';
+import {Col, Icon} from '../../../shared/ui/styledComps';
+import {IDietTotalObjData} from '../../../shared/api/types/diet';
 import NutrientsProgress from '../../../components/common/nutrient/NutrientsProgress';
 import AccordionCtaBtns from '../../../components/menuAccordion/AccordionCtaBtns';
 import AddMenuBtn from '../ui/AddMenuBtn';
@@ -70,19 +69,19 @@ interface IDTP {
   bottomTabBarHeight: number;
 }
 interface IAddMenuDTP extends IDTP {
-  dTData: IDietDetailData[];
+  dTOData: IDietTotalObjData;
 }
 interface IAddFoodDTP extends IDTP {
   fn: ((event: GestureResponderEvent) => void) | undefined;
-  dTData: IDietDetailData[];
+  dTOData: IDietTotalObjData;
   currentDietNo: string;
 }
 interface IAutoRemainDTP extends IDTP {
-  dTData: IDietDetailData[];
+  dTOData: IDietTotalObjData;
   currentDietNo: string;
 }
 interface IAutoMenuDTP extends IDTP {
-  dTData: IDietDetailData[];
+  dTOData: IDietTotalObjData;
 }
 interface IRenderDTPContent {
   AddMenu: (p: IAddMenuDTP) => ReactElement;
@@ -94,7 +93,7 @@ interface IRenderDTPContent {
 }
 
 export const renderDTPContent: IRenderDTPContent = {
-  AddMenu: ({fn, headerHeight, dTData}) => (
+  AddMenu: ({fn, headerHeight, dTOData}) => (
     <>
       <DTooltip
         tooltipShow={true}
@@ -102,13 +101,13 @@ export const renderDTPContent: IRenderDTPContent = {
         boxTop={headerHeight}
       />
       <AddMenuBtn
-        dTData={dTData}
+        dTOData={dTOData}
         onPress={fn}
         style={{marginTop: headerHeight + 40}}
       />
     </>
   ),
-  AddFood: ({headerHeight, dTData, currentDietNo}) => (
+  AddFood: ({headerHeight, dTOData, currentDietNo}) => (
     <>
       <DTooltip
         tooltipShow={true}
@@ -121,13 +120,13 @@ export const renderDTPContent: IRenderDTPContent = {
           paddingHorizontal: 8,
           marginTop: headerHeight + 40 + 48 + 8 + 70 + 40,
         }}
-        dDData={dTData ? dTData[0] : []}
+        dDData={dTOData?.[Object.keys(dTOData)[0]]?.dietDetail ?? []}
         dietNo={currentDietNo}
         onlyAdd={true}
       />
     </>
   ),
-  AutoRemain: ({dTData, currentDietNo, headerHeight}) => (
+  AutoRemain: ({dTOData, currentDietNo, headerHeight}) => (
     <>
       <Col
         style={{
@@ -137,7 +136,9 @@ export const renderDTPContent: IRenderDTPContent = {
           paddingHorizontal: 8,
           marginTop: headerHeight + 40 + 48 + 8,
         }}>
-        <NutrientsProgress dietDetailData={dTData ? dTData[0] : []} />
+        <NutrientsProgress
+          dietDetailData={dTOData?.[Object.keys(dTOData)[0]]?.dietDetail ?? []}
+        />
       </Col>
       <DTooltip
         tooltipShow={true}
@@ -150,7 +151,7 @@ export const renderDTPContent: IRenderDTPContent = {
           paddingHorizontal: 8,
           marginTop: headerHeight + 40 + 48 + 8 + 70 + 24 + 32 + 24 + 104 + 41,
         }}
-        dDData={dTData ? dTData[0] : []}
+        dDData={dTOData?.[Object.keys(dTOData)[0]]?.dietDetail ?? []}
         dietNo={currentDietNo}
         onlyAuto={true}
       />
@@ -202,7 +203,7 @@ export const renderDTPContent: IRenderDTPContent = {
       </ChangeBtn>
     </>
   ),
-  AutoMenu: ({fn, bottomTabBarHeight, dTData}) => (
+  AutoMenu: ({fn, bottomTabBarHeight, dTOData}) => (
     <>
       <DTooltip
         tooltipShow={true}
@@ -220,7 +221,7 @@ export const renderDTPContent: IRenderDTPContent = {
           bottom: bottomTabBarHeight + 8 + 52 + 24,
           alignSelf: 'center',
         }}
-        btnText={`${dTData?.length} 끼니 자동구성`}
+        btnText={`${dTOData ? Object.keys(dTOData).length : ''} 끼니 자동구성`}
         onPress={fn}
       />
     </>

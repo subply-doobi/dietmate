@@ -11,12 +11,11 @@ import CtaButton from '../../shared/ui/CtaButton';
 import {useCallback, useEffect, useState} from 'react';
 import {IProductData} from '../../shared/api/types/product';
 import ChangeSummary from './ui/ChangeSummary';
-import GuideTitle from '../../shared/ui/GuideTitle';
-import {FlatList, ScrollView} from 'react-native';
+import {FlatList} from 'react-native';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
-  useListDietDetail,
+  useListDietTotalObj,
 } from '../../shared/api/queries/diet';
 import ChangeFoodList from './ui/ChangeFoodList';
 import colors from '../../shared/colors';
@@ -99,9 +98,8 @@ const Change = () => {
   // react-query
   const createDietDetailMutation = useCreateDietDetail();
   const deleteDietDetailMutation = useDeleteDietDetail();
-  const {data: dDData} = useListDietDetail(dietNo, {
-    enabled: dietNo ? true : false,
-  });
+  const {data: dTOData} = useListDietTotalObj();
+  const dDData = dTOData?.[dietNo]?.dietDetail ?? [];
   const {
     data: listProductData,
     refetch: refetchProduct,
@@ -118,8 +116,9 @@ const Change = () => {
 
   useEffect(() => {
     const refetchAndAlert = async () => {
-      (await refetchProduct()).data?.filter(v => v.productChoiceYn === 'N')
-        .length === 0 && setProductAlertShow(true);
+      (await refetchProduct()).data?.filter(p =>
+        dDData.some(dDP => dDP.productNo !== p.productNo),
+      ).length === 0 && setProductAlertShow(true);
     };
     refetchAndAlert();
   }, []);
@@ -196,7 +195,9 @@ const Change = () => {
           paddingBottom: 120,
           marginTop: 8,
         }} // 숨겨지는 header의 높이만큼 margin
-        data={listProductData?.filter(v => v.productChoiceYn === 'N')}
+        data={listProductData?.filter(p =>
+          dDData.some(dDP => dDP.productNo !== p.productNo),
+        )}
         keyExtractor={extractListKey}
         renderItem={renderFoodList}
         getItemLayout={getItemLayout}

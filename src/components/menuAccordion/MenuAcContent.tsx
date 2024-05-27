@@ -1,4 +1,3 @@
-import {IDietBaseData, IDietDetailData} from '../../shared/api/types/diet';
 import styled from 'styled-components/native';
 import NutrientsProgress from '../common/nutrient/NutrientsProgress';
 import colors from '../../shared/colors';
@@ -8,43 +7,47 @@ import {
   Col,
   HorizontalLine,
   HorizontalSpace,
-  Row,
   TextMain,
 } from '../../shared/ui/styledComps';
 import MenuNumSelect from '../cart/MenuNumSelect';
 import {commaToNum, sumUpPrice} from '../../shared/utils/sumUp';
+import {useListDietTotalObj} from '../../shared/api/queries/diet';
 
 interface IMenuAcContent {
-  dBData: IDietBaseData;
-  dDData: IDietDetailData;
+  dietNo: string;
   setDietNoToNumControl?: React.Dispatch<React.SetStateAction<string>>;
   setMenuNumSelectShow?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const MenuAcContent = ({
-  dDData,
-  dBData,
+  dietNo,
   setDietNoToNumControl,
   setMenuNumSelectShow,
 }: IMenuAcContent) => {
-  // fn
-  const onMenuNoSelectPress = () => {
-    if (!setDietNoToNumControl || !setMenuNumSelectShow) return;
-    setDietNoToNumControl(dBData.dietNo);
-    setMenuNumSelectShow(true);
-  };
+  // react-query
+  const {data: dTOData} = useListDietTotalObj();
+  const dDData = dTOData?.[dietNo]?.dietDetail ?? [];
 
   // etc
   const dietPrice = sumUpPrice(dDData);
   const currentQty = dDData[0]?.qty ? parseInt(dDData[0].qty, 10) : 1;
+  const isEmpty = dDData.length === 0;
+
+  // fn
+  const onMenuNoSelectPress = () => {
+    if (isEmpty || !setDietNoToNumControl || !setMenuNumSelectShow) return;
+    setDietNoToNumControl(dietNo);
+    setMenuNumSelectShow(true);
+  };
+
   return (
     <Container>
       <HorizontalSpace height={8} />
       <NutrientsProgress dietDetailData={dDData} tooltipShow={false} />
-      <Menu dietDetailData={dDData} dietNo={dBData.dietNo} />
+      <Menu dietDetailData={dDData} dietNo={dietNo} />
 
       {/* 식품추가 - 자동구성 버튼 */}
       <HorizontalSpace height={40} />
-      <AccordionCtaBtns dDData={dDData} dietNo={dBData.dietNo} />
+      <AccordionCtaBtns dDData={dDData} dietNo={dietNo} />
 
       {/* 수량조절 - 가격 */}
       {dDData.length !== 0 && (
@@ -56,7 +59,7 @@ const MenuAcContent = ({
           <HorizontalLine />
           <HorizontalSpace height={24} />
           <MenuNumSelect
-            disabled={dDData.length === 0}
+            disabled={isEmpty}
             action="openModal"
             currentQty={currentQty}
             openMenuNumSelect={onMenuNoSelectPress}

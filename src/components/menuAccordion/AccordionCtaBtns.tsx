@@ -9,7 +9,7 @@ import {useNavigation} from '@react-navigation/native';
 
 // doobi
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
-import {getNutrStatus, sumUpNutrients} from '../../shared/utils/sumUp';
+import {getNutrStatus} from '../../shared/utils/sumUp';
 import {IDietDetailData} from '../../shared/api/types/diet';
 import {
   setAutoMenuStatus,
@@ -68,12 +68,12 @@ const AccordionCtaBtns = ({
 
   const autoMenuType = btnText === '자동구성 재시도' ? 'overwrite' : 'add';
   const autoBtnStyle =
-    dDData?.length === 0
+    nutrStatus === 'empty'
       ? 'border'
       : nutrStatus === 'notEnough'
         ? 'borderActive'
         : 'border';
-  const addBtnStyle = dDData?.length === 0 ? 'borderActive' : 'border';
+  const addBtnStyle = nutrStatus === 'empty' ? 'borderActive' : 'border';
 
   // fn
   const addMenu = async (data: IProductData[][]) => {
@@ -106,11 +106,13 @@ const AccordionCtaBtns = ({
   const overwriteMenu = async (data: IProductData[][]) => {
     // selectedMenu 에 대한 각 productNo
     let productToDeleteList: {dietNo: string; productNo: string}[] = [];
-    dDData.forEach(p =>
-      productToDeleteList.push({
-        dietNo: p.dietNo,
-        productNo: p.productNo,
-      }),
+    dDData.forEach(
+      p =>
+        p.productNo &&
+        productToDeleteList.push({
+          dietNo: p.dietNo,
+          productNo: p.productNo,
+        }),
     );
 
     // 한꺼번에 삭제할 mutation list
@@ -147,7 +149,7 @@ const AccordionCtaBtns = ({
       recommendedMenu = (
         await makeAutoMenu2({
           totalFoodList,
-          initialMenu: autoMenuType === 'add' ? dDData : [],
+          initialMenu: autoMenuType === 'add' && dDData ? dDData : [],
           baseLine: bLData,
           selectedCategoryIdx: SELECTED_CATEGORY_IDX,
           priceTarget: PRICE_TARGET,

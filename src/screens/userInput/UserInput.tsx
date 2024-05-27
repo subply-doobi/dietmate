@@ -27,7 +27,6 @@ import {
   useUpdateBaseLine,
   useCreateBaseLine,
 } from '../../shared/api/queries/baseLine';
-import {useListDiet} from '../../shared/api/queries/diet';
 
 const UserInput = () => {
   // redux
@@ -41,7 +40,6 @@ const UserInput = () => {
   const {data: baseLineData} = useGetBaseLine();
   const updateBaseLineMutation = useUpdateBaseLine();
   const createBaseLineMutation = useCreateBaseLine();
-  const {data: dietData} = useListDiet();
 
   // useState
   const [progress, setProgress] = useState<string[]>(['Start']);
@@ -83,7 +81,7 @@ const UserInput = () => {
 
   const onCtaPress = () => {
     if (currentPage === 'Result' || currentPage === 'ChangeResult') {
-      dietData && onComplete();
+      onComplete();
       return;
     }
     goNext(getPageItem(currentPage).getNextPage(userInputState));

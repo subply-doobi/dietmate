@@ -23,14 +23,14 @@ import {icons} from '../../shared/iconSource';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
-  useListDietDetail,
+  useListDietTotalObj,
 } from '../../shared/api/queries/diet';
 import {IProductData} from '../../shared/api/types/product';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {IOrderedProduct} from '../../shared/api/types/order';
 import {INQUIRY_URL, SERVICE_PRICE_PER_PRODUCT} from '../../shared/constants';
 import {link} from '../../shared/utils/linking';
-import {reGroupOrderBySeller} from '../../shared/utils/regroup';
+import {reGroupOrderBySeller} from '../../shared/utils/dataTransform';
 
 const NUTRIENT_TYPE = [
   {id: 'calorie', label: '칼로리'},
@@ -44,7 +44,8 @@ const OrderedMenu = ({menu}: {menu: IOrderedProduct[]}) => {
   const {currentDietNo} = useSelector((state: RootState) => state.common);
 
   // react-query
-  const {data: dietDetailData} = useListDietDetail(currentDietNo);
+  const {data: dTOData} = useListDietTotalObj();
+  const dDData = dTOData?.[currentDietNo]?.dietDetail ?? [];
   const addMutation = useCreateDietDetail();
   const deleteMutation = useDeleteDietDetail();
 
@@ -81,9 +82,7 @@ const OrderedMenu = ({menu}: {menu: IOrderedProduct[]}) => {
               {'    '}지 <NutrientValue>{parseInt(item.fat)}g</NutrientValue>
             </NutrientText>
           </MakeVertical>
-          {dietDetailData?.find(
-            ({productNo}) => productNo === item.productNo,
-          ) ? (
+          {dDData?.find(({productNo}) => productNo === item.productNo) ? (
             <DeleteBtn
               onPress={() => {
                 onDelete(item);

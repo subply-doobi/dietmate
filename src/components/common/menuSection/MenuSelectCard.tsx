@@ -9,16 +9,13 @@ import {
 } from '../../../features/reduxSlices/commonSlice';
 import {Col, Row} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
-import {getDietAddStatus} from '../../../shared/utils/getDietAddStatus';
+import {getAddDietStatusFrDTData} from '../../../shared/utils/getDietAddStatus';
 import DAlert from '../../../shared/ui/DAlert';
-import CreateLimitAlertContent from '../alert/CreateLimitAlertContent';
 import CommonAlertContent from '../alert/CommonAlertContent';
 
 import {
   useCreateDiet,
-  useGetDietDetailEmptyYn,
-  useListDiet,
-  useListDietTotal,
+  useListDietTotalObj,
 } from '../../../shared/api/queries/diet';
 import {getNutrStatus} from '../../../shared/utils/sumUp';
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
@@ -32,40 +29,17 @@ const MenuSelectCard = () => {
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
-  const {data: dietData} = useListDiet();
-  const dietTotalData = useListDietTotal(dietData, {enabled: !!dietData});
-  const {data: dietEmptyData} = useGetDietDetailEmptyYn();
+  const {data: dTOData} = useListDietTotalObj();
   const createDietMutation = useCreateDiet();
-
-  // memo
-  const {dTData, dTDataStatus} = useMemo(() => {
-    const dTDataStatus =
-      dietTotalData && dietTotalData.map(menu => menu.isLoading).includes(true)
-        ? 'isLoading'
-        : 'isSuccess';
-    const dTData =
-      dietTotalData && dTDataStatus === 'isSuccess'
-        ? dietTotalData?.map((d, idx) => (d.data ? d.data : []))
-        : undefined;
-
-    return {
-      dTDataStatus: 'isSuccess',
-      dTData,
-    };
-  }, [dietData, dietTotalData]);
 
   // state
   const [createErrShow, setCreateErrShow] = useState(false);
 
-  // MenuSelect랑 겹치는 기능  //
-  const dietAddStatus = getDietAddStatus(dietData, dietEmptyData);
-  const dietErrText =
-    dietAddStatus === 'empty'
-      ? `비어있는 끼니를\n먼저 구성하고 이용해보세요`
-      : dietAddStatus === 'limit'
-        ? `끼니 추가는\n최대 10개까지 가능해요`
-        : '';
+  // etc
+  const {status: dietAddStatus, text: dietErrText} =
+    getAddDietStatusFrDTData(dTOData);
 
+  // fn
   const onCreateDiet = () => {
     if (dietAddStatus === 'possible') {
       createDietMutation.mutate({setDietNo: true});
@@ -84,30 +58,32 @@ const MenuSelectCard = () => {
           alignItems: 'flex-end',
           columnGap: 4,
         }}>
-        {dietData?.map((menu, idx) => {
-          const nutrStatus = getNutrStatus({
-            totalFoodList,
-            bLData: baseLineData,
-            dDData: dTData && dTData[idx],
-          });
-          const isActivated = menu.dietNo === currentDietNo ? true : false;
-          return (
-            <Row key={menu.dietNo}>
-              <CardBtn
-                isActivated={isActivated}
-                onPress={() => {
-                  if (isActivated) return;
-                  dispatch(setMenuAcActive([]));
-                  dispatch(setCurrentDiet(menu.dietNo));
-                }}>
-                {(nutrStatus === 'exceed' || nutrStatus === 'satisfied') && (
-                  <GuideCircle nutrStatus={nutrStatus} />
-                )}
-                <CardText isActivated={isActivated}>{menu?.dietSeq}</CardText>
-              </CardBtn>
-            </Row>
-          );
-        })}
+        {dTOData &&
+          Object.keys(dTOData).map((dietNo, idx) => {
+            const nutrStatus = getNutrStatus({
+              totalFoodList,
+              bLData: baseLineData,
+              dDData: dTOData[dietNo].dietDetail,
+            });
+            const isActivated = dietNo === currentDietNo ? true : false;
+            return (
+              <Row key={dietNo}>
+                <CardBtn
+                  isActivated={isActivated}
+                  onPress={() => {
+                    if (isActivated) return;
+                    dispatch(setMenuAcActive([]));
+                    dispatch(setCurrentDiet(dietNo));
+                  }}>
+                  {(nutrStatus === 'exceed' || nutrStatus === 'satisfied') && (
+                    <GuideCircle nutrStatus={nutrStatus} />
+                  )}
+                  <CardText
+                    isActivated={isActivated}>{`끼니 ${idx + 1}`}</CardText>
+                </CardBtn>
+              </Row>
+            );
+          })}
         <Row>
           <CardBtn onPress={() => onCreateDiet()}>
             <CardText style={{color: colors.textSub}}>+</CardText>

@@ -1,35 +1,27 @@
-import {useSelector} from 'react-redux';
 import MenuAcInactiveHeader from '../../../components/menuAccordion/MenuAcInactiveHeader';
-import {IDietDetailData} from '../../../shared/api/types/diet';
+import {IDietTotalObjData} from '../../../shared/api/types/diet';
 import {Col} from '../../../shared/ui/styledComps';
-import {RootState} from '../../../app/store/reduxStore';
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
-import {useListDiet, useListDietTotal} from '../../../shared/api/queries/diet';
-import {SetStateAction, useEffect, useMemo} from 'react';
+import {SetStateAction, useEffect} from 'react';
 import styled from 'styled-components/native';
-import colors from '../../../shared/colors';
 
 interface ISelect {
-  dTData: IDietDetailData[];
+  dTOData: IDietTotalObjData;
   selectedDietNo: string[];
   setSelectedDietNo: React.Dispatch<SetStateAction<string[]>>;
 }
-const Select = ({dTData, selectedDietNo, setSelectedDietNo}: ISelect) => {
-  // redux
-  const {currentDietNo} = useSelector((state: RootState) => state.common);
-
+const Select = ({dTOData, selectedDietNo, setSelectedDietNo}: ISelect) => {
   // react-query
   const {data: bLData} = useGetBaseLine();
-  const {data: dData} = useListDiet();
-  const dietTotalData = useListDietTotal(dData, {enabled: !!dData});
 
   // useEffect
   // 첫 렌더링 시 비어있는 끼니 자동으로 선택
   useEffect(() => {
-    if (!dTData || !dData) return;
+    if (!dTOData) return;
     let emptyDietNoList: string[] = [];
-    for (let i = 0; i < dTData.length; i++) {
-      dTData[i].length === 0 && emptyDietNoList.push(dData[i].dietNo);
+    const dietNoArr = Object.keys(dTOData);
+    for (let dietNo of dietNoArr) {
+      dTOData[dietNo]?.dietDetail.length === 0 && emptyDietNoList.push(dietNo);
     }
     setSelectedDietNo(v => [...emptyDietNoList]);
   }, []);
@@ -46,17 +38,14 @@ const Select = ({dTData, selectedDietNo, setSelectedDietNo}: ISelect) => {
   return (
     <Col style={{rowGap: 20, marginTop: 64}}>
       {bLData &&
-        dData &&
-        dTData &&
-        dTData.map((dDData, idx) => (
-          <MenuSelectBtn key={idx} onPress={() => onPress(dData[idx].dietNo)}>
+        dTOData &&
+        Object.keys(dTOData).map((dietNo, idx) => (
+          <MenuSelectBtn key={idx} onPress={() => onPress(dietNo)}>
             <MenuAcInactiveHeader
               controllable={false}
-              dBData={dData[idx]}
-              dDData={dDData}
+              dietNo={dietNo}
               bLData={bLData}
-              currentDietNo={currentDietNo}
-              selected={selectedDietNo.includes(dData[idx].dietNo)}
+              selected={selectedDietNo.includes(dietNo)}
               leftBarInactive={true}
             />
           </MenuSelectBtn>

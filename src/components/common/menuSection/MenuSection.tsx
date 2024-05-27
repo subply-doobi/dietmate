@@ -7,15 +7,13 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import Accordion from 'react-native-collapsible/Accordion';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {RootState} from '../../../app/store/reduxStore';
-import {useNavigation} from '@react-navigation/native';
 
 // doobi util, constant etc
 import {icons} from '../../../shared/iconSource';
-import {findDietSeq} from '../../../shared/utils/findDietSeq';
 import colors from '../../../shared/colors';
-import {SCREENHEIGHT, SCREENWIDTH} from '../../../shared/constants';
+import {SCREENHEIGHT} from '../../../shared/constants';
 import {
   HorizontalSpace,
   Icon,
@@ -35,8 +33,7 @@ import Menu from '../../menuAccordion/Menu';
 // react-query
 import {
   useDeleteDiet,
-  useListDiet,
-  useListDietDetail,
+  useListDietTotalObj,
 } from '../../../shared/api/queries/diet';
 import MenuNumSelect from '../../cart/MenuNumSelect';
 import {commaToNum, sumUpPrice} from '../../../shared/utils/sumUp';
@@ -48,15 +45,9 @@ const MenuSection = () => {
 
   // react-query
   const {data: baseLineData, isLoading: getBLIsLoading} = useGetBaseLine();
-  const {data: dietData, isLoading: listDietIsLoading} = useListDiet();
   const deleteDietMutation = useDeleteDiet();
-  const {data: dietDetailData, isLoading: listDDIsLoading} = useListDietDetail(
-    currentDietNo,
-    {
-      enabled: currentDietNo ? true : false,
-    },
-  );
-
+  const {data: dTOData, isLoading: isDTODataLoading} = useListDietTotalObj();
+  const dietDetailData = dTOData?.[currentDietNo]?.dietDetail ?? [];
   // state
   const [dietNoToDelete, setDietNoToDelete] = useState<string>();
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
@@ -66,16 +57,18 @@ const MenuSection = () => {
 
   // etc
   const isAccordionActive = activeSection.length > 0;
-  const onDeleteDiet = () => {
-    if (!dietData) return;
-    dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
-    setDeleteAlertShow(false);
-  };
   const priceSum = sumUpPrice(dietDetailData);
   const currentQty =
     dietDetailData && dietDetailData.length > 0
       ? parseInt(dietDetailData[0].qty)
       : 0;
+  const hasNoDiet =
+    !dTOData || Object.keys(dTOData).length === 0 ? true : false;
+  const onDeleteDiet = () => {
+    if (!dTOData) return;
+    dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
+    setDeleteAlertShow(false);
+  };
 
   const onMenuNoSelectPress = () => {
     setDietNoToNumControl(currentDietNo);
@@ -99,8 +92,7 @@ const MenuSection = () => {
     // 로딩 중
     if (
       getBLIsLoading ||
-      listDietIsLoading ||
-      listDDIsLoading ||
+      isDTODataLoading ||
       (baseLineData && Object.keys(baseLineData).length === 0)
     )
       return [
@@ -120,7 +112,7 @@ const MenuSection = () => {
       ];
 
     // 끼니 없는 경우
-    if (dietData && dietData.length === 0)
+    if (hasNoDiet)
       return [
         {
           inactiveHeader: (
@@ -229,7 +221,7 @@ const MenuSection = () => {
         ),
       },
     ];
-  }, [dietDetailData, dietData, baseLineData, activeSection]);
+  }, [dTOData, baseLineData, activeSection]);
 
   return (
     <Container>
@@ -238,7 +230,7 @@ const MenuSection = () => {
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <MenuSelectCard />
         </ScrollView>
-        {dietData && dietData.length > 0 && (
+        {!hasNoDiet && (
           <DeleteBtn
             onPress={() => {
               setDietNoToDelete(currentDietNo);
@@ -255,9 +247,7 @@ const MenuSection = () => {
         alertShow={deleteAlertShow}
         renderContent={() => (
           <DeleteAlertContent
-            deleteText={
-              dietData ? findDietSeq(dietData, dietNoToDelete).dietSeq : ''
-            }
+            deleteText={dTOData?.[currentDietNo]?.dietSeq ?? ''}
           />
         )}
         onConfirm={() => onDeleteDiet()}
