@@ -1,6 +1,4 @@
 {
-  "androidAppName": "dietmate",
-  "iosAppName": "DietMate",
-
+  "appName": "dietmate",
   "displayName": "DietMate"
 }
