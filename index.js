@@ -2,12 +2,8 @@
  * @format
  */
 
-import {AppRegistry, Platform} from 'react-native';
+import {AppRegistry} from 'react-native';
 import App from './App';
-import {androidAppName, iosAppName} from './app.json';
+import {appName} from './app.json';
 
-if (Platform.OS === 'ios') {
-  AppRegistry.registerComponent(iosAppName, () => App);
-} else if (Platform.OS === 'android') {
-  AppRegistry.registerComponent(androidAppName, () => App);
-}
+AppRegistry.registerComponent(appName, () => App);
