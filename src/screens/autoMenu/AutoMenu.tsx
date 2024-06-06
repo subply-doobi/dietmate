@@ -12,7 +12,7 @@ import {
 // doobi
 import {Container} from '../../shared/ui/styledComps';
 import {IAutoMenuSubPages, PAGES} from './util/contentByPages';
-import BackArrow from '../../components/common/navigation/BackArrow';
+import BackArrow from '../../shared/ui/BackArrow';
 import GuideTitle from '../../shared/ui/GuideTitle';
 import CtaButton from '../../shared/ui/CtaButton';
 import {useListDietTotalObj} from '../../shared/api/queries/diet';

@@ -1,9 +1,8 @@
 import styled from 'styled-components/native';
 
-import colors from '../../../shared/colors';
-import {icons} from '../../../shared/iconSource';
 import {Image} from 'react-native';
-import {Col} from '../../../shared/ui/styledComps';
+import {icons} from '../iconSource';
+import colors from '../colors';
 
 interface IDtooltip {
   tooltipShow: boolean;

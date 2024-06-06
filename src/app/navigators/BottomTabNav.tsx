@@ -7,8 +7,8 @@ import {useNavigation} from '@react-navigation/native';
 
 // doobi
 import Mypage from '../../screens/mypage/Mypage';
-import BackArrow from '../../components/common/navigation/BackArrow';
-import Search from '../../screens/Search/Search';
+import BackArrow from '../../shared/ui/BackArrow';
+import Search from '../../screens/search/Search';
 
 import {icons} from '../../shared/iconSource';
 import colors from '../../shared/colors';

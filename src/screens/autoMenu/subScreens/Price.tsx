@@ -2,8 +2,8 @@ import {View, Text} from 'react-native';
 import React, {SetStateAction} from 'react';
 import styled from 'styled-components/native';
 import {TextMain} from '../../../shared/ui/styledComps';
-import DSlider from '../../../components/common/slider/DSlider';
 import {SCREENWIDTH} from '../../../shared/constants';
+import DSlider from '../../../shared/ui/DSlider';
 
 interface IPrice {
   priceSliderValue: number[];

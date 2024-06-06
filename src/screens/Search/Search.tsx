@@ -21,14 +21,12 @@ import CommonAlertContent from '../../components/common/alert/CommonAlertContent
 
 import SortModalContent from './ui/SortModalContent';
 import DTPScreen from '../../shared/ui/DTPScreen';
-import HomeContainer from './ui/HomeFoodListAndBtn';
 import DBottomSheet from '../../components/common/bottomsheet/DBottomSheet';
 import FlatlistHeaderComponent from './ui/FlatlistHeaderComponent';
 import {useListProduct} from '../../shared/api/queries/product';
-import {ISortFilter} from '../../features/reduxSlices/sortFilterSlice';
 import HomeFoodListAndBtn from './ui/HomeFoodListAndBtn';
 import {IProductData} from '../../shared/api/types/product';
-import DTooltip from '../../components/common/tooltip/DTooltip';
+import DTooltip from '../../shared/ui/DTooltip';
 import {Col} from '../../shared/ui/styledComps';
 import NutrientsProgress from '../../components/common/nutrient/NutrientsProgress';
 import {tutorialSortFilter} from '../../shared/constants';

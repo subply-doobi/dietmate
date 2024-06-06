@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import CommonAlertContent from '../../../components/common/alert/CommonAlertContent';
-import DTooltip from '../../../components/common/tooltip/DTooltip';
+import DTooltip from '../../../shared/ui/DTooltip';
 import CreateDietAlert from '../ui/CreateDietAlert';
 import LoadingAlertContent from '../ui/LoadingAlertContent';
 import colors from '../../../shared/colors';

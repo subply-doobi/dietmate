@@ -11,9 +11,7 @@ import {useNavigation} from '@react-navigation/native';
 import colors from '../../shared/colors';
 import {Container} from '../../shared/ui/styledComps';
 import DAlert from '../../shared/ui/DAlert';
-import {useGetBaseLine} from '../../shared/api/queries/baseLine';
-import {loadBaseLineData} from '../../features/reduxSlices/userInputSlice';
-import PageBtn from './ui/PageBtn';
+import ListBtns from '../../shared/ui/ListBtns';
 import {link} from '../../shared/utils/linking';
 import {INQUIRY_URL} from '../../shared/constants';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
@@ -27,16 +25,8 @@ const Mypage = () => {
   // redux
   const dispatch = useDispatch();
 
-  // react-query
-  const {data: baseLineData} = useGetBaseLine();
-
   // useState
   const [restartTutorial, setRestartTutorial] = useState(false);
-
-  // useEffect
-  useEffect(() => {
-    baseLineData && dispatch(loadBaseLineData(baseLineData));
-  }, [baseLineData]);
 
   // etc
   // btns
@@ -45,6 +35,11 @@ const Mypage = () => {
       title: '이용방법',
       btnId: 'Tutorial',
       onPress: () => setRestartTutorial(true),
+    },
+    {
+      title: '추천코드',
+      btnId: 'recommendCode',
+      onPress: () => navigate('RecommendCode'),
     },
     {
       title: '찜한상품',
@@ -91,7 +86,7 @@ const Mypage = () => {
       {/* 메뉴 */}
       <ScrollView showsVerticalScrollIndicator={false}>
         <Card>
-          <PageBtn btns={myPageBtns} />
+          <ListBtns btns={myPageBtns} />
         </Card>
       </ScrollView>
 

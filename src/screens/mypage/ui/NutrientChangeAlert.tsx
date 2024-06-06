@@ -12,7 +12,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../app/store/reduxStore';
 import {setValue} from '../../../features/reduxSlices/userInputSlice';
-import DTextInput from '../../../components/common/textInput/DTextInput';
+import DTextInput from '../../../shared/ui/DTextInput';
 
 const nutrTextByNutr: {[key: string]: string} = {
   carbChange: '탄수화물 (g)',

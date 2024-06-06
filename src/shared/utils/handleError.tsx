@@ -1,5 +1,3 @@
-// 3rd library
-
 // doobi util
 import {openCommonAlert} from '../../features/reduxSlices/commonAlertSlice';
 import {store} from '../../app/store/reduxStore';

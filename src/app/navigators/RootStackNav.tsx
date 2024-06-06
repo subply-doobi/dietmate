@@ -6,28 +6,28 @@ import {useNavigation} from '@react-navigation/native';
 
 // doobi comps
 import BottomTabNav from './BottomTabNav';
-import OrderHistoryNav from './OrderHistoryNav';
 import Login from '../../screens/login/Login';
 import FoodDetail from '../../screens/foodDetail/FoodDetail';
 import Account from '../../screens/account/Account';
 import AddressEdit from '../../screens/addressEdit/AddressEdit';
 import OrderComplete from '../../screens/orderComplete/OrderComplete';
-import BackArrow from '../../components/common/navigation/BackArrow';
+import BackArrow from '../../shared/ui/BackArrow';
 import KakaoPay from '../../components/payment/KakaoPay';
-import CustomErrorBoundary from '../../components/common/error/CustomErrorBoundary';
 import Notice from '../../screens/notice/Notice';
 import Order from '../../screens/order/Order';
 
 // doobi shared
 import colors from '../../shared/colors';
 import UserInput from '../../screens/userInput/UserInput';
-import Search from '../../screens/Search/Search';
+import Search from '../../screens/search/Search';
 import AutoMenu from '../../screens/autoMenu/AutoMenu';
 import Change from '../../screens/change/Change';
 import Likes from '../../screens/like/Likes';
 import CheckList from '../../screens/checklist/Checklist';
 import OrderHistory from '../../screens/orderHistory/OrderHistory';
 import OrderHistoryDetail from '../../screens/orderHistoryDetail/OrderHistoryDetail';
+import MyBonus from '../../screens/MyBonus/MyBonus';
+import RecommendCode from '../../screens/recommendCode/RecommendCode';
 
 const Stack = createNativeStackNavigator();
 
@@ -56,7 +56,6 @@ const RootStackNav = () => {
         component={UserInput}
         options={{
           headerShown: true,
-          headerShadowVisible: false,
           headerTitle: '',
         }}
       />
@@ -100,13 +99,6 @@ const RootStackNav = () => {
         options={{
           headerShown: true,
           headerTitle: '',
-          // headerRight: () => {
-          //   return (
-          //     <Pressable onPress={() => navigate('Diet')}>
-          //       <Image source={icons.cart_36} style={{width: 36, height: 36}} />
-          //     </Pressable>
-          //   );
-          // },
         }}
       />
 
@@ -126,16 +118,7 @@ const RootStackNav = () => {
         component={AddressEdit}
         options={{
           headerShown: true,
-          headerTitle: '배송지 수정',
-          headerLeft: () => (
-            <BackArrow
-              goBackFn={() =>
-                navigate('Order', {
-                  params: {from: 'AddressEdit'},
-                })
-              }
-            />
-          ),
+          headerTitle: '배송지',
         }}
       />
 
@@ -151,15 +134,7 @@ const RootStackNav = () => {
         component={OrderHistory}
         options={{
           headerShown: true,
-          headerTitleAlign: 'center',
           headerTitle: '구매내역',
-          headerTitleStyle: {
-            fontSize: 18,
-            fontWeight: 'bold',
-            color: colors.textMain,
-          },
-          headerShadowVisible: false,
-          headerLeft: () => <BackArrow goBackFn={goBack} />,
         }}
       />
       <Stack.Screen
@@ -167,14 +142,6 @@ const RootStackNav = () => {
         component={OrderHistoryDetail}
         options={{
           headerShown: true,
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontSize: 18,
-            fontWeight: 'bold',
-            color: colors.textMain,
-          },
-          headerShadowVisible: false,
-          headerLeft: () => <BackArrow goBackFn={goBack} />,
         }}
       />
 
@@ -201,10 +168,24 @@ const RootStackNav = () => {
         }}
       />
 
-      {/* 에러 */}
+      {/* 추천코드 */}
       <Stack.Screen
-        name="CustomErrorBoundary"
-        component={CustomErrorBoundary}
+        name="RecommendCode"
+        component={RecommendCode}
+        options={{
+          headerShown: true,
+          headerTitle: '추천코드',
+        }}
+      />
+
+      {/* 내 보너스 현황 */}
+      <Stack.Screen
+        name="MyBonus"
+        component={MyBonus}
+        options={{
+          headerShown: true,
+          headerTitle: '내 보너스 현황',
+        }}
       />
 
       {/* 체크리스트 */}

@@ -21,5 +21,9 @@ export const MARK = 'MARK';
 export const ORDER = 'ORDER';
 export const ORDER_DETAIL = 'ORDER_DETAIL';
 
-//guest
+// guest
 export const GUEST_YN = 'GUEST_YN';
+
+// suggestCd
+export const SUGGEST_USER_EXIST_YN = 'SUGGEST_USER_EXIST_YN';
+export const SUGGEST_USER = 'SUGGEST_USER';

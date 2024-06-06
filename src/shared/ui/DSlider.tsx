@@ -1,10 +1,9 @@
 import {SetStateAction} from 'react';
 import styled from 'styled-components/native';
 import {Slider} from '@miblanchard/react-native-slider';
-
-import colors from '../../../shared/colors';
-import {TextMain} from '../../../shared/ui/styledComps';
-import {commaToNum} from '../../../shared/utils/sumUp';
+import colors from '../colors';
+import {commaToNum} from '../utils/sumUp';
+import {TextMain} from './styledComps';
 
 interface IDSlider {
   sliderValue: number[];

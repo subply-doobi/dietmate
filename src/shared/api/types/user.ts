@@ -1,4 +1,4 @@
-export interface IGetUserInfo {
+export interface IUserData {
   companyCd: string;
   userId: string;
   nickNm: string;
@@ -9,4 +9,6 @@ export interface IGetUserInfo {
   accessIp: string;
   accessDevice: string;
   userRole: string;
+  suggestCd: string;
+  suggestFromCd: string;
 }

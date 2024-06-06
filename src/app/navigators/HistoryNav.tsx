@@ -4,7 +4,7 @@ import colors from '../../shared/colors';
 
 import History from '../../screens/myPageScreen/history/History';
 import HistoryDetail from '../../screens/myPageScreen/history/HistoryDetail';
-import BackArrow from '../../components/common/navigation/BackArrow';
+import BackArrow from '../../shared/ui/BackArrow';
 import {useNavigation} from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();

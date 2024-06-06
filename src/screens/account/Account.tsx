@@ -7,13 +7,13 @@ import {
   initializeNotShowAgainList,
   removeToken,
 } from '../../shared/utils/asyncStorage';
-import {useDeleteUser} from '../../shared/api/queries/member';
+import {useDeleteUser} from '../../shared/api/queries/user';
 
 import colors from '../../shared/colors';
 import {useNavigation} from '@react-navigation/native';
 import DAlert from '../../shared/ui/DAlert';
 import {initializeInput} from '../../features/reduxSlices/userInputSlice';
-import PageBtn from '../mypage/ui/PageBtn';
+import ListBtns from '../../shared/ui/ListBtns';
 import {queryClient} from '../../app/store/reactQueryStore';
 
 const WithdrawalContent = ({deleteText}: {deleteText: string}) => {
@@ -99,7 +99,7 @@ const Account = () => {
 
   return (
     <Container>
-      <PageBtn btns={accountBtns} />
+      <ListBtns btns={accountBtns} />
       <WithdrawalAlert />
     </Container>
   );

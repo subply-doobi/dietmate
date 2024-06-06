@@ -36,7 +36,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {setAddrBase, setValue} from '../../features/reduxSlices/userInputSlice';
 import {OnCompleteParams} from '@actbase/react-daum-postcode/lib/types';
-import DTextInput from '../../components/common/textInput/DTextInput';
+import DTextInput from '../../shared/ui/DTextInput';
 
 const renderDeleteAlertContent = () => (
   <AlertContentContainer>
@@ -66,13 +66,6 @@ const AddressEdit = () => {
   // useState
   const [postModalVisible, setPostModalVisible] = useState(false);
   const [addressDeleteAlertShow, setAddressDeleteAlertShow] = useState(false);
-
-  // useEffect
-  useEffect(() => {
-    setOptions({
-      headerTitle: isUpdate ? '배송지 변경' : '배송지 추가',
-    });
-  }, [route?.params]);
 
   // etc
   const addrNo = route.params?.addrNo ?? route.params?.addrNo;
@@ -133,6 +126,13 @@ const AddressEdit = () => {
     dispatch(setselectedAddrIdx(nextAddrIdx));
     navigate('Order');
   };
+
+  // useEffect
+  useEffect(() => {
+    setOptions({
+      headerTitle: isUpdate ? '배송지 변경' : '배송지 추가',
+    });
+  }, [route?.params]);
 
   return (
     <>

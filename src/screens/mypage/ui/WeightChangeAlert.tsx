@@ -15,7 +15,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {setValue} from '../../../features/reduxSlices/userInputSlice';
 import {RootState} from '../../../app/store/reduxStore';
-import DTextInput from '../../../components/common/textInput/DTextInput';
+import DTextInput from '../../../shared/ui/DTextInput';
 
 const WeightChangeAlert = ({
   autoCalculate,

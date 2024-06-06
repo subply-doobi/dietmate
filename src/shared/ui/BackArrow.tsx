@@ -1,7 +1,7 @@
 import {TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
 
-import {icons} from '../../../shared/iconSource';
+import {icons} from '../iconSource';
 
 const Back = styled.Image`
   width: 24px;

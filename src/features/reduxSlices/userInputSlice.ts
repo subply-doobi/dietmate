@@ -163,6 +163,13 @@ export interface IUserInputState {
     isValid: boolean;
     errMsg: string;
   };
+
+  // recommnedCd
+  friendCd: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
 }
 
 // 선택사항 input의 경우는 isValid를 true로 설정, errMsg는 빈 문자열로 설정
@@ -315,6 +322,13 @@ export const initialState: IUserInputState = {
   },
   paymentMethod: {
     value: 'kakao',
+    isValid: true,
+    errMsg: '',
+  },
+
+  // recommnedCd
+  friendCd: {
+    value: '',
     isValid: true,
     errMsg: '',
   },

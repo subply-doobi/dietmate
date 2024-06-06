@@ -14,7 +14,7 @@ import {
   TextMain,
   TextSub,
 } from '../../shared/ui/styledComps';
-import FoodList from '../Search/ui/FoodList';
+import FoodList from '../search/ui/FoodList';
 import MenuSection from '../../components/common/menuSection/MenuSection';
 
 // react-query

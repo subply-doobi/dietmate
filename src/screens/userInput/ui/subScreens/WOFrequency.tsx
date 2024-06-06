@@ -11,7 +11,7 @@ import {
   IUserInputState,
   setValue,
 } from '../../../../features/reduxSlices/userInputSlice';
-import DTooltip from '../../../../components/common/tooltip/DTooltip';
+import DTooltip from '../../../../shared/ui/DTooltip';
 
 const WOFrequency = ({userInputState}: {userInputState: IUserInputState}) => {
   // redux

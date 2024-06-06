@@ -1,17 +1,12 @@
 import styled from 'styled-components/native';
-import {
-  Col,
-  HorizontalLine,
-  Row,
-  TextMain,
-} from '../../../shared/ui/styledComps';
-import {icons} from '../../../shared/iconSource';
+import {Col, HorizontalLine, Row, TextMain} from './styledComps';
+import {icons} from '../iconSource';
 
 interface IPageBtn {
   btns: {title: string; btnId: string; onPress: Function}[];
 }
 
-const PageBtn = ({btns}: IPageBtn) => {
+const ListBtns = ({btns}: IPageBtn) => {
   return (
     <>
       {btns.map((item, index) => (
@@ -29,7 +24,7 @@ const PageBtn = ({btns}: IPageBtn) => {
   );
 };
 
-export default PageBtn;
+export default ListBtns;
 
 const Btn = styled.TouchableOpacity`
   width: 100%;

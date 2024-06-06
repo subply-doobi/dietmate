@@ -90,4 +90,5 @@ export const icons = {
   calendar_24: require(`./assets/icons/24_calendar.png`),
   card_24: require(`./assets/icons/24_card.png`),
   menu_24: require(`./assets/icons/24_menu.png`),
+  userRound_24: require(`./assets/icons/24_user_round.png`),
 };

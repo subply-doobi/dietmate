@@ -17,7 +17,7 @@ import {SCREENWIDTH} from '../../shared/constants';
 import colors from '../../shared/colors';
 import {Col, Container} from '../../shared/ui/styledComps';
 import GuideTitle from '../../shared/ui/GuideTitle';
-import BackArrow from '../../components/common/navigation/BackArrow';
+import BackArrow from '../../shared/ui/BackArrow';
 import {getPageItem} from './util/pageIdx';
 import {BackHandler, ScrollView} from 'react-native';
 import CtaButton from '../../shared/ui/CtaButton';
