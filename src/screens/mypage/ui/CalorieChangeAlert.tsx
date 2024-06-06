@@ -20,7 +20,7 @@ import colors from '../../../shared/colors';
 import {RootState} from '../../../app/store/reduxStore';
 import {setValue} from '../../../features/reduxSlices/userInputSlice';
 import {useDispatch, useSelector} from 'react-redux';
-import DTextInput from '../../../components/common/textInput/DTextInput';
+import DTextInput from '../../../shared/ui/DTextInput';
 
 //mutation 넣고 계산까지
 const CalChangeAlert = () => {

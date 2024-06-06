@@ -27,7 +27,7 @@ import {
 import FoodList from './FoodList';
 import BusinessInfo from '../../../components/common/businessInfo/BusinessInfo';
 import CtaButton from '../../../shared/ui/CtaButton';
-import DTooltip from '../../../components/common/tooltip/DTooltip';
+import DTooltip from '../../../shared/ui/DTooltip';
 
 interface IHomeFoodListAndBtn extends ViewProps {
   scrollTop: any;

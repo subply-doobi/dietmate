@@ -1,8 +1,8 @@
 import styled from 'styled-components/native';
-import {UserInfoTextInput} from '../../../shared/ui/styledComps';
+import {UserInfoTextInput} from './styledComps';
 import React, {forwardRef} from 'react';
 import {TextInput, TextInputProps} from 'react-native';
-import colors from '../../../shared/colors';
+import colors from '../colors';
 
 interface IDTextInput extends TextInputProps {
   isActivated: boolean;

@@ -17,7 +17,7 @@ import {
   HorizontalSpace,
   Col,
 } from '../../../shared/ui/styledComps';
-import DTooltip from '../../../components/common/tooltip/DTooltip';
+import DTooltip from '../../../shared/ui/DTooltip';
 import {
   applySortFilter,
   initializeSort,

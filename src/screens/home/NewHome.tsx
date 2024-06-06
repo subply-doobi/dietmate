@@ -51,7 +51,7 @@ import {
   setFoodToOrder,
   setShippingPrice,
 } from '../../features/reduxSlices/orderSlice';
-import DTooltip from '../../components/common/tooltip/DTooltip';
+import DTooltip from '../../shared/ui/DTooltip';
 
 const NewHome = () => {
   // navigation

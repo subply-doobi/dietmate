@@ -7,7 +7,7 @@ import {
   PRIVACY_POLICY_URL,
   TERMS_OF_USE_URL,
 } from '../../shared/constants';
-import PageBtn from '../mypage/ui/PageBtn';
+import ListBtns from '../../shared/ui/ListBtns';
 
 const Notice = () => {
   // etc
@@ -32,7 +32,7 @@ const Notice = () => {
 
   return (
     <Container>
-      <PageBtn btns={noticeBtns} />
+      <ListBtns btns={noticeBtns} />
     </Container>
   );
 };

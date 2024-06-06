@@ -2,7 +2,7 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 
 import {queryClient} from '../../../app/store/reactQueryStore';
 import {mutationFn, queryFn} from '../requestFn';
-import {DIET_DETAIL, PRODUCTS, PRODUCT, MARK, PRODUCT_DETIAL} from '../keys';
+import {PRODUCTS, PRODUCT, MARK, PRODUCT_DETIAL} from '../keys';
 import {IQueryOptions} from '../types/common';
 
 import {
@@ -33,30 +33,6 @@ export const useCreateProductMark = () => {
   });
   return mutation;
 };
-
-export const useCreateProductAuto = () => {
-  const mutation = useMutation({
-    mutationFn: ({
-      dietNo,
-      categoryText = '',
-      priceText = '',
-    }: {
-      dietNo: string;
-      categoryText?: string;
-      priceText?: string;
-    }) => {
-      return mutationFn(
-        `${CREATE_PRODUCT_AUTO}/${dietNo}?categoryText=${categoryText}&priceText=${priceText}`,
-        'put',
-      );
-    },
-    onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: [DIET_DETAIL]});
-    },
-  });
-  return mutation;
-};
-// optional params 어떻게 받을 것인지
 
 // GET //
 export const useGetProduct = (

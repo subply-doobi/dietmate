@@ -26,7 +26,7 @@ import {
 } from '../../../features/reduxSlices/userInputSlice';
 import {setselectedAddrIdx} from '../../../features/reduxSlices/orderSlice';
 import {IAddressData} from '../../../shared/api/types/address';
-import DTextInput from '../../../components/common/textInput/DTextInput';
+import DTextInput from '../../../shared/ui/DTextInput';
 
 const EntranceMethodContainer = () => {
   // redux
