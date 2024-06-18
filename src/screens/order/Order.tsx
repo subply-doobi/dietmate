@@ -307,7 +307,7 @@ const Order = () => {
       {/* 결제버튼 */}
       <CtaButton
         btnStyle={ctaBtnStyle}
-        style={{width: SCREENWIDTH - 32}}
+        style={{width: SCREENWIDTH - 32, position: 'absolute', bottom: 8}}
         onPress={async () => onHandleOrder()}
         btnText={ctaBtnText}
       />

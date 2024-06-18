@@ -153,7 +153,7 @@ export const AccordionContentContainer = styled.View`
   height: auto;
   background-color: ${colors.white};
   padding: 16px 16px 32px 16px;
-  row-gap: 40px;
+  /* row-gap: 40px; */
 `;
 
 export const InputContainer = styled.View`

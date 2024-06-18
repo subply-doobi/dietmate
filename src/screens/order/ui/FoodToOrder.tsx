@@ -23,7 +23,7 @@ const FoodToOrder = () => {
     return <ActivityIndicator />;
   }
   return (
-    <AccordionContentContainer>
+    <AccordionContentContainer style={{rowGap: 40}}>
       {foodToOrder &&
         Object.keys(foodToOrder).map((dietNo, index) => {
           return (
