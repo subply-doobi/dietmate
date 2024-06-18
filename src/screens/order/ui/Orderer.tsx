@@ -4,8 +4,8 @@ import {
   AccordionContentContainer,
   ErrorBox,
   ErrorText,
+  HorizontalSpace,
   InputHeaderText,
-  UserInfoTextInput,
 } from '../../../shared/ui/styledComps';
 import {useDispatch, useSelector} from 'react-redux';
 import {setValue} from '../../../features/reduxSlices/userInputSlice';
@@ -18,7 +18,7 @@ const Orderer = () => {
     (state: RootState) => state.userInput,
   );
   return (
-    <AccordionContentContainer>
+    <AccordionContentContainer style={{paddingBottom: 48}}>
       {/* orderer */}
       <InputHeader style={{marginTop: 0}} isActivated={!!buyerName.value}>
         주문자
@@ -36,6 +36,8 @@ const Orderer = () => {
           <ErrorText>{buyerName.errMsg}</ErrorText>
         </ErrorBox>
       )}
+
+      <HorizontalSpace height={24} />
 
       {/* ordererContact */}
       <InputHeader isActivated={!!buyerTel.value}>휴대전화</InputHeader>
