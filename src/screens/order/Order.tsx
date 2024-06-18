@@ -307,7 +307,7 @@ const Order = () => {
       {/* 결제버튼 */}
       <CtaButton
         btnStyle={ctaBtnStyle}
-        style={{width: SCREENWIDTH - 32}}
+        style={{width: SCREENWIDTH - 32, position: 'absolute', bottom: 8}}
         onPress={async () => onHandleOrder()}
         btnText={ctaBtnText}
       />
@@ -329,6 +329,7 @@ const AccordionHeader = styled.View`
 
 const AccordionHeaderTitle = styled(TextMain)`
   font-size: 18px;
+  line-height: 22px;
   font-weight: bold;
 `;
 
@@ -336,6 +337,7 @@ const HeaderSubTitleBox = styled.View``;
 
 const HeaderSubTitle = styled(TextSub)`
   font-size: 14px;
+  line-height: 18px;
   margin-top: 4px;
 `;
 const UpDownArrow = styled.Image`

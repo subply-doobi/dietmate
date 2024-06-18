@@ -102,25 +102,6 @@ export const InputHeaderText = styled(TextMain)<IInputHeaderText>`
   color: ${({isActivated}) => (isActivated ? colors.textMain : colors.white)};
 `;
 
-interface IUserInfoTextInput {
-  isValid?: boolean;
-  isActivated?: boolean;
-}
-export const UserInfoTextInput = styled.TextInput<IUserInfoTextInput>`
-  justify-content: center;
-  align-items: flex-start;
-  font-size: 16px;
-  color: ${({isValid}) => (isValid ? colors.textMain : colors.warning)};
-
-  line-height: 24px;
-
-  border-bottom-width: 1px;
-  border-color: ${({isActivated}) =>
-    isActivated ? colors.main : colors.inactivated};
-  margin-top: -4px;
-  padding-bottom: 6px;
-`;
-
 export const InputHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;
@@ -143,7 +124,6 @@ export const ErrorBox = styled.View`
 
   margin-top: 4px;
   margin-bottom: -28px;
-
   padding: 0px 10px 0px 10px;
 `;
 
@@ -153,7 +133,7 @@ export const AccordionContentContainer = styled.View`
   height: auto;
   background-color: ${colors.white};
   padding: 16px 16px 32px 16px;
-  row-gap: 40px;
+  /* row-gap: 40px; */
 `;
 
 export const InputContainer = styled.View`

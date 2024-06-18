@@ -19,7 +19,6 @@ import {
   StickyFooter,
   TextMain,
   TextSub,
-  UserInfoTextInput,
 } from '../../shared/ui/styledComps';
 import colors from '../../shared/colors';
 

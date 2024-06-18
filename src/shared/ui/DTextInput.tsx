@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import {UserInfoTextInput} from './styledComps';
 import React, {forwardRef} from 'react';
 import {TextInput, TextInputProps} from 'react-native';
 import colors from '../colors';
@@ -24,4 +23,20 @@ const DTextInput = forwardRef((props: IDTextInput, ref) => {
 
 export default DTextInput;
 
-const Input = styled(UserInfoTextInput)``;
+const Input = styled.TextInput<{
+  isValid?: boolean;
+  isActivated?: boolean;
+}>`
+  height: 40px;
+  justify-content: center;
+  align-items: flex-start;
+  font-size: 16px;
+  color: ${({isValid}) => (isValid ? colors.textMain : colors.warning)};
+
+  line-height: 24px;
+
+  border-bottom-width: 1px;
+  border-color: ${({isActivated}) =>
+    isActivated ? colors.main : colors.inactivated};
+  padding-bottom: 8px;
+`;
