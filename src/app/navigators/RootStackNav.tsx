@@ -28,6 +28,7 @@ import OrderHistory from '../../screens/orderHistory/OrderHistory';
 import OrderHistoryDetail from '../../screens/orderHistoryDetail/OrderHistoryDetail';
 import MyBonus from '../../screens/MyBonus/MyBonus';
 import RecommendCode from '../../screens/recommendCode/RecommendCode';
+import ErrorPage from '../../screens/error/ErrorPage';
 
 const Stack = createNativeStackNavigator();
 

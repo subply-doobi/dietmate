@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {KakaoOAuthToken, login} from '@react-native-seoul/kakao-login';
 import axios, {AxiosError} from 'axios';
 import {storeToken} from '../../utils/asyncStorage';
-import {IGetAuthData} from '../types/member';
+import {IGetAuthData} from '../types/';
 import {IReIssueTokenData} from '../types/token';
 import {queryFn} from '../requestFn';
 
