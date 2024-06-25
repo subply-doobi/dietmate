@@ -91,4 +91,5 @@ export const icons = {
   card_24: require(`./assets/icons/24_card.png`),
   menu_24: require(`./assets/icons/24_menu.png`),
   userRound_24: require(`./assets/icons/24_user_round.png`),
+  networkError_80: require(`./assets/icons/80_network_error.png`),
 };

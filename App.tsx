@@ -26,6 +26,7 @@ import {getLatestVersion} from './src/shared/api/queries/version';
 import CodePush from 'react-native-code-push';
 import {getNotShowAgainList} from './src/shared/utils/asyncStorage';
 import {setTutorialStart} from './src/features/reduxSlices/commonSlice';
+import ErrorPage from './src/screens/error/ErrorPage';
 
 const loadSplash = new Promise(resolve =>
   setTimeout(() => {
@@ -36,6 +37,7 @@ const loadSplash = new Promise(resolve =>
 function App(): React.JSX.Element {
   // useState
   const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
+  const [isNetworkError, setIsNetworkError] = useState(false);
 
   const navigationRef = useNavigationContainerRef();
 
@@ -44,14 +46,18 @@ function App(): React.JSX.Element {
       // 앱 로딩
       await loadSplash;
 
-      // 최신 앱 버전을 서버에서 관리. 일단 임시코드
-      await getLatestVersion().then(res => {
-        appVersion !== res?.latestVersion && setIsUpdateNeeded(true);
-      });
-
       // 튜토리얼 모드 확인
       const isTutorialMode = !(await getNotShowAgainList()).tutorial;
       isTutorialMode && store.dispatch(setTutorialStart());
+
+      // 최신 앱 버전을 서버에서 관리. 일단 임시코드
+      const latestVersion = await getLatestVersion();
+      if (!latestVersion) {
+        setIsNetworkError(true);
+        return;
+      }
+
+      appVersion !== latestVersion && setIsUpdateNeeded(true);
     };
 
     init().finally(async () => {
@@ -66,9 +72,9 @@ function App(): React.JSX.Element {
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <NavigationContainer ref={navigationRef}>
-          <RootStackNav />
-          <ErrorAlert />
+          {isNetworkError ? <ErrorPage /> : <RootStackNav />}
           {/* 업데이트 알럿 */}
+          <ErrorAlert />
           <DAlert
             alertShow={isUpdateNeeded}
             onConfirm={() => visitStore()}
