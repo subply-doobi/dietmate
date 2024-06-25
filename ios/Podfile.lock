@@ -1118,6 +1118,8 @@ PODS:
     - Yoga
   - react-native-pinchable (0.2.1):
     - React-Core
+  - react-native-restart (0.0.27):
+    - React-Core
   - react-native-safe-area-context (4.10.5):
     - React-Core
   - react-native-webview (13.10.3):
@@ -1508,6 +1510,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-pinchable (from `../node_modules/react-native-pinchable`)
+  - react-native-restart (from `../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
@@ -1657,6 +1660,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-pager-view"
   react-native-pinchable:
     :path: "../node_modules/react-native-pinchable"
+  react-native-restart:
+    :path: "../node_modules/react-native-restart"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-webview:
@@ -1793,6 +1798,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: a9fb296ef51c0a77a3a0b2702cfacec9edd1204a
   react-native-pager-view: 50783067e56e20482c43d066112b1a775a29d7b8
   react-native-pinchable: b4381b0807d15c12b14bfacd927128f52d96f0f1
+  react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
   react-native-safe-area-context: a240ad4b683349e48b1d51fed1611138d1bdad97
   react-native-webview: 8d9a168c762d031dd94105191737f871cae153dc
   React-nativeconfig: 5d452e509d6fbedc1522e21b566451fc673ac6b7
