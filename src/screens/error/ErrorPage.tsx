@@ -12,14 +12,30 @@ import {
   TextSub,
 } from '../../shared/ui/styledComps';
 import colors from '../../shared/colors';
+import {useRoute} from '@react-navigation/native';
 
+// 1. app splash 에서 버전 확인할 때 서버오류
+// 2. 로그인시 서버오류
+// 3. 일반 404 오류일 때 ErrorPage 띄우기
+// (나머지는 commonAlert로 처리)
 const ErrorPage = () => {
+  const route = useRoute();
+  console.log('ErrorPage: route: ', route);
+
+  const errorCode = route.params?.errorCode;
+  const errorText = errorCode
+    ? `서버에 문제가 있어요`
+    : `서버에 문제가 있거나\n네트워크가 불안정해요`;
+  const subText = errorCode
+    ? `빠른 시일 내에 해결할게요`
+    : `잠시 후 다시 이용해주세요`;
+
   return (
     <Container style={{alignItems: 'center', justifyContent: 'center'}}>
       <Col style={{alignItems: 'center'}}>
         <Icon source={icons.networkError_80} size={80} />
-        <ErrorText>{`서버에 문제가 있거나\n네트워크가 불안정해요`}</ErrorText>
-        <Sub>잠시 후 다시 이용해주세요</Sub>
+        <ErrorText>{errorText}</ErrorText>
+        <Sub>{subText}</Sub>
         <RestartBtn onPress={() => RNRestart.restart()}>
           <Icon source={icons.initialize_24} />
           <RestartText>재시작</RestartText>

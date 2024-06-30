@@ -8,13 +8,8 @@ const queryFnGetGuestYn = async () => {
   const requestConfig = {
     timeout: AXIOS_TIMEOUT,
   };
-  try {
-    const res = await axios.get(GET_GUEST_YN, requestConfig);
-    return res.data;
-  } catch (e) {
-    console.log('queryFnGetGuestYn: ', e);
-  }
-  return {enableYn: 'N'};
+  const res = await axios.get(GET_GUEST_YN, requestConfig);
+  return res.data;
 };
 
 export const useGetGuestYn = () => {

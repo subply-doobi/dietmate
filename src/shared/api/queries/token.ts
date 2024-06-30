@@ -14,50 +14,16 @@ const requestConfig = {
 };
 
 export const getDoobiToken = async (kakaoAccessToken: string | null) => {
-  try {
-    const result = await axios.get(
-      `${GET_TOKEN}/${kakaoAccessToken}`,
-      requestConfig,
-    );
-    return result?.status === 200 ? result.data : undefined;
-  } catch (e) {
-    console.log('getDoobiToken error: ', e);
-  }
+  const result = await axios.get(
+    `${GET_TOKEN}dddd/${kakaoAccessToken}`,
+    requestConfig,
+  );
+  return result?.status === 200 ? result.data : undefined;
 };
 
 export const getGuestToken = async () => {
-  try {
-    const result = await axios.get(`${GET_GUEST}`, requestConfig);
-    return result?.status === 200 ? result.data : undefined;
-  } catch (e) {
-    console.log('getGuestToken error: ', e);
-  }
-};
-
-export const kakaoLogin = async () => {
-  console.log('kakaoLogin start');
-  try {
-    const kakaoToken: KakaoOAuthToken = await login();
-    const kakaoAccessToken = kakaoToken?.accessToken;
-    const {accessToken, refreshToken} = await getDoobiToken(kakaoAccessToken);
-    if (accessToken && refreshToken)
-      await storeToken(accessToken, refreshToken);
-    return accessToken;
-  } catch (e) {
-    console.log('kakaoLoginError: ', e);
-  }
-};
-
-export const guestLogin = async () => {
-  console.log('guestLogin start');
-  try {
-    const {accessToken, refreshToken} = await getGuestToken();
-    if (accessToken && refreshToken)
-      await storeToken(accessToken, refreshToken);
-    return accessToken;
-  } catch (e) {
-    console.log('guestLogin error: ', e);
-  }
+  const result = await axios.get(`${GET_GUEST}`, requestConfig);
+  return result?.status === 200 ? result.data : undefined;
 };
 
 export const validateToken = async () => {
