@@ -1,3 +1,6 @@
+// version
+export const VERSION = 'VERSION';
+
 // baseLine
 export const BASE_LINE = 'BASE_LINE';
 

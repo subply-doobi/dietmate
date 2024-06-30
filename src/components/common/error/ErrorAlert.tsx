@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {closeCommonAlert} from '../../../features/reduxSlices/commonAlertSlice';
-import {RootState, store} from '../../../app/store/reduxStore';
+import {RootState} from '../../../app/store/reduxStore';
 import {convertCodeToMsg} from '../../../shared/utils/handleError';
 import DAlert from '../../../shared/ui/DAlert';
 import {queryClient} from '../../../app/store/reactQueryStore';
@@ -11,10 +11,7 @@ import {setTutorialStart} from '../../../features/reduxSlices/commonSlice';
 
 const RequestAlertContent = () => {
   const {errorCode} = useSelector((state: RootState) => state.commonAlert);
-  const message = errorCode
-    ? convertCodeToMsg[errorCode] ??
-      `오류가 발생했어요. 오류가 지속되면 문의 바랍니다\n(errorCode: ${errorCode})`
-    : ``;
+  const message = convertCodeToMsg(errorCode);
   return (
     <Container>
       <Col style={{marginTop: 28, alignItems: 'center'}}>
@@ -26,28 +23,28 @@ const RequestAlertContent = () => {
 
 const ErrorAlert = () => {
   // navigation
-  const {reset} = useNavigation();
+  const {navigate, reset} = useNavigation();
 
   // redux
+  const {isTutorialMode} = useSelector((state: RootState) => state.common);
   const {errorCode} = useSelector((state: RootState) => state.commonAlert);
   const dispatch = useDispatch();
+
+  const onConfirm = () => {
+    dispatch(closeCommonAlert());
+    queryClient.invalidateQueries();
+    isTutorialMode && dispatch(setTutorialStart());
+    reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
+  };
 
   return (
     <>
       <DAlert
         alertShow={errorCode ? true : false}
-        onConfirm={() => {
-          dispatch(closeCommonAlert());
-          queryClient.invalidateQueries();
-          const {
-            common: {isTutorialMode},
-          } = store.getState();
-          isTutorialMode && store.dispatch(setTutorialStart());
-          reset({
-            index: 0,
-            routes: [{name: 'Login'}],
-          });
-        }}
+        onConfirm={onConfirm}
         onCancel={() => {
           dispatch(closeCommonAlert());
         }}
