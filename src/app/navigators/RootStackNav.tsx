@@ -198,6 +198,9 @@ const RootStackNav = () => {
           headerTitle: '',
         }}
       />
+
+      {/* 에러페이지 */}
+      <Stack.Screen name="ErrorPage" component={ErrorPage} />
     </Stack.Navigator>
   );
 };

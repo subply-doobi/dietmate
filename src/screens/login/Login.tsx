@@ -4,11 +4,7 @@ import {useEffect} from 'react';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../shared/colors';
-import {
-  kakaoLogin,
-  validateToken,
-  guestLogin,
-} from '../../shared/api/queries/token';
+import {validateToken} from '../../shared/api/queries/token';
 import AppleLogin from './ui/AppleLogin';
 
 // doobi util, redux, etc
@@ -19,11 +15,7 @@ import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 // doobi Component
 import {BtnCTA, BtnText, TextMain} from '../../shared/ui/styledComps';
 import {IS_IOS} from '../../shared/constants';
-
-const login: {[key: string]: Function} = {
-  kakao: kakaoLogin,
-  guest: guestLogin,
-};
+import {ILoginType, useLoginByType} from '../../shared/api/queries/login';
 
 const Login = () => {
   // navigation
@@ -32,11 +24,12 @@ const Login = () => {
   // react-query
   const {data: guestYnData} = useGetGuestYn();
   const {refetch} = useGetBaseLine({enabled: false});
+  const loginByTypeMutation = useLoginByType();
 
   // kakaoLogin || guest login (플레이스토어, 앱스토어, 카드사 심사용: 서버 값으로 사용유무 결정)
-  const signIn = async (option: string): Promise<void> => {
-    let loginData = await login[option]();
-    if (loginData === undefined) return;
+  const signIn = async (option: ILoginType): Promise<void> => {
+    const res = await loginByTypeMutation.mutateAsync({type: option});
+    if (!res) return;
     const baseLineData = await refetch().then(res => res.data);
     baseLineData && navigateByUserInfo(baseLineData, navigation);
   };

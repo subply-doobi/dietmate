@@ -5,29 +5,24 @@ import {View} from 'react-native';
 import appleAuth, {
   AppleButton,
 } from '@invertase/react-native-apple-authentication';
-import styled from 'styled-components/native';
-import {BtnCTA, BtnText} from '../../../shared/ui/styledComps';
-import colors from '../../../shared/colors';
-import {
-  kakaoLogin,
-  validateToken,
-  guestLogin,
-} from '../../../shared/api/queries/token';
 
 // doobi util, redux, etc
 import {navigateByUserInfo} from '../util/navigateByUserInfo';
 //react-query
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
 import {useNavigation} from '@react-navigation/native';
+import {useLoginByType} from '../../../shared/api/queries/login';
 
 function AppleLogin() {
+  // react-query
+  const loginByTypeMutation = useLoginByType();
   const {refetch} = useGetBaseLine({enabled: false});
   const navigation = useNavigation();
 
   //check apple login & navigate screen
   const signInWithApple = async (): Promise<void> => {
-    const GLdata = await guestLogin();
-    if (GLdata === undefined) return;
+    const GLdata = await loginByTypeMutation.mutateAsync({type: 'guest'});
+    if (!GLdata) return;
     const baseLineData = await refetch().then(res => res.data);
     baseLineData && navigateByUserInfo(baseLineData, navigation);
   };

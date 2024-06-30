@@ -18,15 +18,11 @@ import {link} from './src/shared/utils/linking';
 import {
   APP_STORE_URL,
   IS_ANDROID,
-  IS_IOS,
   PLAY_STORE_URL,
-  codePushOptions,
 } from './src/shared/constants';
 import {getLatestVersion} from './src/shared/api/queries/version';
-import CodePush from 'react-native-code-push';
 import {getNotShowAgainList} from './src/shared/utils/asyncStorage';
 import {setTutorialStart} from './src/features/reduxSlices/commonSlice';
-import ErrorPage from './src/screens/error/ErrorPage';
 
 const loadSplash = new Promise(resolve =>
   setTimeout(() => {
@@ -64,6 +60,17 @@ function App(): React.JSX.Element {
       await BootSplash.hide({fade: true});
     });
   }, []);
+
+  useEffect(() => {
+    if (!isNetworkError) return;
+    if (navigationRef.isReady()) {
+      navigationRef.reset({
+        index: 0,
+        routes: [{name: 'ErrorPage', params: {errorCode: 404}}],
+      });
+    }
+  }, [isNetworkError]);
+
   const visitStore = () => {
     IS_ANDROID ? link(PLAY_STORE_URL) : link(APP_STORE_URL);
     setIsUpdateNeeded(false);
@@ -72,7 +79,7 @@ function App(): React.JSX.Element {
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <NavigationContainer ref={navigationRef}>
-          {isNetworkError ? <ErrorPage /> : <RootStackNav />}
+          <RootStackNav />
           {/* 업데이트 알럿 */}
           <ErrorAlert />
           <DAlert
