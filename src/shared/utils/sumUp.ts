@@ -195,16 +195,7 @@ export const sumUpDietFromDTOData = (
       shippingText: string;
     };
   } = {};
-  if (!dTOData)
-    return {
-      menuNum,
-      productNum,
-      priceTotal,
-      totalShippingPrice,
-      regroupedBySeller,
-      shippingPriceObj,
-    };
-  if (Object.keys(dTOData).length === 0)
+  if (!dTOData || Object.keys(dTOData).length === 0)
     return {
       menuNum,
       productNum,
@@ -219,7 +210,8 @@ export const sumUpDietFromDTOData = (
     menuNum += dTOData[dietNo].dietDetail[0]
       ? 1 * parseInt(dTOData[dietNo].dietDetail[0].qty)
       : 1;
-    priceTotal += sumUpPrice(dTOData[dietNo].dietDetail, true);
+    const sum = sumUpPrice(dTOData[dietNo].dietDetail, true);
+    priceTotal += sum;
     for (let p of dTOData[dietNo].dietDetail) {
       productNum += parseInt(p.qty);
       if (!regroupedBySeller[p.platformNm]) {

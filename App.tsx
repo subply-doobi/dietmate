@@ -4,10 +4,7 @@ import {useEffect} from 'react';
 // 3rd
 import {Provider} from 'react-redux';
 import {QueryClientProvider} from '@tanstack/react-query';
-import {
-  NavigationContainer,
-  useNavigationContainerRef,
-} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import BootSplash from 'react-native-bootsplash';
 
 // doobi
@@ -17,6 +14,7 @@ import {getNotShowAgainList} from './src/shared/utils/asyncStorage';
 import {setTutorialStart} from './src/features/reduxSlices/commonSlice';
 import RootStackNav from './src/app/navigators/RootStackNav';
 import ErrorAlert from './src/components/common/error/ErrorAlert';
+import {navigationRef} from './src/app/navigators/navigationRef';
 
 const loadSplash = new Promise(resolve =>
   setTimeout(() => {
@@ -25,8 +23,6 @@ const loadSplash = new Promise(resolve =>
 );
 
 function App(): React.JSX.Element {
-  const navigationRef = useNavigationContainerRef();
-
   useEffect(() => {
     const init = async () => {
       // 앱 로딩

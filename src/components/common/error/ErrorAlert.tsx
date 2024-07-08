@@ -1,8 +1,11 @@
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {closeCommonAlert} from '../../../features/reduxSlices/commonAlertSlice';
+import {closeErrorAlert} from '../../../features/reduxSlices/errorAlertSlice';
 import {RootState} from '../../../app/store/reduxStore';
-import {convertCodeToMsg} from '../../../shared/utils/handleError';
+import {
+  getErrAlertActionByCode,
+  msgByCode,
+} from '../../../shared/utils/handleError';
 import DAlert from '../../../shared/ui/DAlert';
 import {queryClient} from '../../../app/store/reactQueryStore';
 import styled from 'styled-components/native';
@@ -10,12 +13,11 @@ import {Col, TextMain} from '../../../shared/ui/styledComps';
 import {setTutorialStart} from '../../../features/reduxSlices/commonSlice';
 
 const RequestAlertContent = () => {
-  const {errorCode} = useSelector((state: RootState) => state.commonAlert);
-  const message = convertCodeToMsg(errorCode);
+  const {msg} = useSelector((state: RootState) => state.errorAlert);
   return (
     <Container>
       <Col style={{marginTop: 28, alignItems: 'center'}}>
-        <AlertText>{message}</AlertText>
+        <AlertText>{msg}</AlertText>
       </Col>
     </Container>
   );
@@ -27,17 +29,18 @@ const ErrorAlert = () => {
 
   // redux
   const {isTutorialMode} = useSelector((state: RootState) => state.common);
-  const {errorCode} = useSelector((state: RootState) => state.commonAlert);
+  const {errorCode} = useSelector((state: RootState) => state.errorAlert);
   const dispatch = useDispatch();
 
   const onConfirm = () => {
-    dispatch(closeCommonAlert());
-    queryClient.invalidateQueries();
-    isTutorialMode && dispatch(setTutorialStart());
-    reset({
-      index: 0,
-      routes: [{name: 'Login'}],
-    });
+    // dispatch(closeErrorAlert());
+    // queryClient.invalidateQueries();
+    // isTutorialMode && dispatch(setTutorialStart());
+    // reset({
+    //   index: 0,
+    //   routes: [{name: 'Login'}],
+    // });
+    getErrAlertActionByCode(errorCode)?.();
   };
 
   return (
@@ -46,7 +49,7 @@ const ErrorAlert = () => {
         alertShow={errorCode ? true : false}
         onConfirm={onConfirm}
         onCancel={() => {
-          dispatch(closeCommonAlert());
+          dispatch(closeErrorAlert());
         }}
         NoOfBtn={1}
         renderContent={() => <RequestAlertContent />}

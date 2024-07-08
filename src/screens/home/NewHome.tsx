@@ -52,6 +52,7 @@ import {
   setShippingPrice,
 } from '../../features/reduxSlices/orderSlice';
 import DTooltip from '../../shared/ui/DTooltip';
+import {useTestQuery} from '../../shared/api/queries/test';
 
 const NewHome = () => {
   // navigation

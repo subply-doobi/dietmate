@@ -4,10 +4,14 @@ import {AXIOS_TIMEOUT} from '../constants';
 import {IDietDetailAllData, IDietTotalObjData} from './types/diet';
 import {LIST_DIET_DETAIL_ALL} from './urls';
 
-export const queryFn = async <T>(url: string): Promise<T> => {
-  const {accessToken} = await getStoredToken();
+export const queryFn = async <T>(
+  url: string,
+  forReIssue?: boolean,
+): Promise<T> => {
+  const {accessToken, refreshToken} = await getStoredToken();
+  const token = forReIssue ? refreshToken : accessToken;
   const requestConfig = {
-    headers: {authorization: `Bearer ${accessToken}`},
+    headers: {authorization: `Bearer ${token}`},
     timeout: AXIOS_TIMEOUT,
   };
   const res = await axios.get(url, requestConfig);
@@ -16,10 +20,10 @@ export const queryFn = async <T>(url: string): Promise<T> => {
 
 export const mutationFn = async <T>(
   url: string,
-  method: string,
+  method: 'put' | 'post' | 'delete',
   requestBody?: T,
 ) => {
-  const {accessToken} = await getStoredToken();
+  const {accessToken, refreshToken} = await getStoredToken();
   const requestConfig = {
     url,
     method,

@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 
-import {IDietDetailData, IDietTotalObjData} from '../../shared/api/types/diet';
+import {IDietTotalObjData} from '../../shared/api/types/diet';
 
 export interface IOrderState {
   // 제조사별 식품리스트
@@ -11,7 +11,7 @@ export interface IOrderState {
 }
 
 const initialState: IOrderState = {
-  foodToOrder: [[]],
+  foodToOrder: {},
   selectedAddrIdx: 0,
   shippingPrice: 0,
 };

@@ -3527,6 +3527,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/netinfo@npm:^11.3.2":
+  version: 11.3.2
+  resolution: "@react-native-community/netinfo@npm:11.3.2"
+  peerDependencies:
+    react-native: ">=0.59"
+  checksum: 10c0/1f54960ca49edbc226e48e7b7788e457e25d1a0770501c09f63e587873a905b80168231ebd13f4013bb34c865f5a36f26e330058c3e1be84e865c21b5aca92b6
+  languageName: node
+  linkType: hard
+
 "@react-native-firebase/app@npm:^18.9.0":
   version: 18.9.0
   resolution: "@react-native-firebase/app@npm:18.9.0"
@@ -6492,6 +6501,7 @@ __metadata:
     "@invertase/react-native-apple-authentication": "npm:^2.3.0"
     "@miblanchard/react-native-slider": "npm:^2.3.1"
     "@react-native-async-storage/async-storage": "npm:^1.23.1"
+    "@react-native-community/netinfo": "npm:^11.3.2"
     "@react-native-firebase/app": "npm:^18.9.0"
     "@react-native-firebase/crashlytics": "npm:^18.9.0"
     "@react-native-seoul/kakao-login": "npm:^5.3.1"

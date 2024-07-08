@@ -88,16 +88,16 @@ const AccordionCtaBtns = ({
       });
     });
     // 한꺼번에 추가할 mutation list
-    const createMutations = productToAddList.map(p =>
-      createDietDetailMutation.mutateAsync({
-        food: p.food,
-        dietNo: p.dietNo,
-      }),
-    );
-
     try {
       // 자동구성된 식품 각 끼니에 추가
-      await Promise.all(createMutations);
+      await Promise.all(
+        productToAddList.map(p =>
+          createDietDetailMutation.mutateAsync({
+            food: p.food,
+            dietNo: p.dietNo,
+          }),
+        ),
+      );
     } catch (e) {
       console.log('식품 추가 중 오류: ', e);
     }
@@ -115,17 +115,16 @@ const AccordionCtaBtns = ({
         }),
     );
 
-    // 한꺼번에 삭제할 mutation list
-    const deleteMutations = productToDeleteList.map(p =>
-      deleteDietDetailMutation.mutateAsync({
-        dietNo: p.dietNo,
-        productNo: p.productNo,
-      }),
-    );
-
     try {
       // 자동구성할 끼니 (선택된 끼니) 초기화 및 자동구성된 식품 각 끼니에 추가
-      await Promise.all(deleteMutations);
+      await Promise.all(
+        productToDeleteList.map(p =>
+          deleteDietDetailMutation.mutateAsync({
+            dietNo: p.dietNo,
+            productNo: p.productNo,
+          }),
+        ),
+      );
       await addMenu(data);
     } catch (e) {
       console.log('선택된 끼니 삭제 중 오류: ', e);
