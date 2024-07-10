@@ -1,5 +1,6 @@
 import {QueryCache, QueryClient} from '@tanstack/react-query';
 import {handleError} from '../../shared/utils/handleError';
+import {AxiosError} from 'axios';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,7 +23,9 @@ export const queryClient = new QueryClient({
   },
   queryCache: new QueryCache({
     onError: (error, query) => {
-      handleError(error, query.meta?.from);
+      console.log('error', error);
+      console.log('queryCache onError: ', error.response);
+      handleError(error);
     },
   }),
 });

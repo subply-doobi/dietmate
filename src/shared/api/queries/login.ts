@@ -8,13 +8,11 @@ import {useNavigation} from '@react-navigation/native';
 export type ILoginType = 'kakao' | 'guest';
 
 const loginMutation = async (type: ILoginType) => {
-  console.log('loginMtion start');
   let accessToken = undefined;
   let refreshToken = undefined;
 
   // kakaoLogin
   if (type === 'kakao') {
-    console.log('kakao login start');
     const kakaoToken: KakaoOAuthToken = await login();
     const kakaoAccessToken = kakaoToken?.accessToken;
     const res = await getDoobiToken(kakaoAccessToken);

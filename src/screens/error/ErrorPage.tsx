@@ -23,18 +23,16 @@ const ErrorPage = () => {
   console.log('ErrorPage: route: ', route);
 
   const errorCode = route.params?.errorCode;
-  const errorText = errorCode
-    ? `서버에 문제가 있어요`
-    : `서버에 문제가 있거나\n네트워크가 불안정해요`;
-  const subText = errorCode
-    ? `빠른 시일 내에 해결할게요`
-    : `잠시 후 다시 이용해주세요`;
+  const msg = route.params?.msg;
+
+  const subText =
+    errorCode === null ? '잠시 후 다시 시도해주세요' : `code: ${errorCode}`;
 
   return (
     <Container style={{alignItems: 'center', justifyContent: 'center'}}>
       <Col style={{alignItems: 'center'}}>
         <Icon source={icons.networkError_80} size={80} />
-        <ErrorText>{errorText}</ErrorText>
+        <ErrorText>{msg}</ErrorText>
         <Sub>{subText}</Sub>
         <RestartBtn onPress={() => RNRestart.restart()}>
           <Icon source={icons.initialize_24} />

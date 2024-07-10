@@ -4,17 +4,11 @@ import {queryClient} from '../../../app/store/reactQueryStore';
 import {
   setCurrentDiet,
   setMenuAcActive,
-  setProgressTooltipShow,
 } from '../../../features/reduxSlices/commonSlice';
 
-import {DIET, DIET_DETAIL_EMPTY_YN, DIET_TOTAL_OBJ, PRODUCTS} from '../keys';
+import {DIET_TOTAL_OBJ, PRODUCTS} from '../keys';
 import {IMutationOptions, IQueryOptions} from '../types/common';
-import {
-  IDietData,
-  IDietDetailData,
-  IDietDetailEmptyYnData,
-  IDietTotalObjData,
-} from '../types/diet';
+import {IDietDetailData, IDietTotalObjData} from '../types/diet';
 import {IProductData} from '../types/product';
 import {mutationFn, queryFnDDADataByDietNo} from '../requestFn';
 
@@ -35,29 +29,7 @@ export const useCreateDiet = (options?: IMutationOptions) => {
   const dispatch = useDispatch();
   const mutation = useMutation({
     mutationFn: () => mutationFn(CREATE_DIET, 'put'),
-    onMutate: async ({setDietNo = false}: {setDietNo?: boolean}) => {
-      // optimistic update
-      // 1. Cancel any outgoing refetches
-      // (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries({queryKey: [DIET_DETAIL_EMPTY_YN]});
-
-      // 2. Snapshot the previous value
-      const prevEmptyData = queryClient.getQueryData<IDietDetailEmptyYnData>([
-        DIET_DETAIL_EMPTY_YN,
-      ]);
-      const newEmptyData: IDietDetailEmptyYnData = {emptyYn: 'Y'};
-      // 3. Optimistically update to the new value
-      if (prevEmptyData) {
-        queryClient.setQueryData([DIET_DETAIL_EMPTY_YN], () => newEmptyData);
-      }
-      // 4. Return a context object with the snapshotted value
-      return {prevEmptyData, setDietNo};
-    },
-    onSuccess: (data, {setDietNo}, context) => {
-      // progressTooltip을 끼니나 식품을 추가/삭제 할 경우에만 띄우기 위함.
-      // 툴팁 닫은 후에 화면 옮겼을 때 다시 뜨지 않도록 방지
-      dispatch(setProgressTooltipShow(true));
-
+    onSuccess: (data, {setDietNo}: {setDietNo?: boolean}, context) => {
       options?.onSuccess && options?.onSuccess(data);
       // 현재 구성중인 끼니의 dietNo, dietIdx를 redux에 저장 => 장바구니와 동기화
       setDietNo && dispatch(setCurrentDiet(data.dietNo));
@@ -70,14 +42,8 @@ export const useCreateDiet = (options?: IMutationOptions) => {
       queryClient.invalidateQueries({queryKey: [PRODUCTS, data.dietNo]});
     },
     onError: (error, variables, context) => {
+      console.log('useCreateDiet error: ', error);
       handleError(error);
-      // 5. Rollback to the previous value
-      if (context?.prevEmptyData) {
-        queryClient.setQueryData(
-          [DIET_DETAIL_EMPTY_YN],
-          () => context.prevEmptyData,
-        );
-      }
     },
   });
   return mutation;

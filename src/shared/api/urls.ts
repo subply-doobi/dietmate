@@ -1,5 +1,6 @@
 // export const BASE_URL = 'http://subply.kr:8080';
-export const BASE_URL = 'http://13.124.139.135:8080';
+// export const BASE_URL = 'http://13.124.139.135:8080';
+export const BASE_URL = 'http://54.180.92.57:8080';
 
 // app-version-controller
 export const GET_VERSION = `${BASE_URL}/api/every/app-version/get-app-version`;
