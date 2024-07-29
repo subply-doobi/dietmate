@@ -11,13 +11,12 @@ import {commaToNum} from '../../shared/utils/sumUp';
 
 import DAlert from '../../shared/ui/DAlert';
 import DeleteAlertContent from '../common/alert/DeleteAlertContent';
-
-import {BASE_URL} from '../../shared/api/urls';
 import {
   useDeleteDietDetail,
   useListDietTotalObj,
 } from '../../shared/api/queries/diet';
 import {SERVICE_PRICE_PER_PRODUCT} from '../../shared/constants';
+import Config from 'react-native-config';
 
 interface IFoodList {
   selectedFoods: {[key: string]: string[]};
@@ -85,7 +84,7 @@ const FoodList = ({selectedFoods, setSelectedFoods, dietNo}: IFoodList) => {
                   });
                 }}>
                 <ThumbnailImage
-                  source={{uri: `${BASE_URL}${food.mainAttUrl}`}}
+                  source={{uri: `${Config.BASE_URL}${food.mainAttUrl}`}}
                   resizeMode="center"
                 />
               </FoodDetailBtn>

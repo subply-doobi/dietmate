@@ -17,7 +17,6 @@ import {RootState} from '../../../app/store/reduxStore';
 import {icons} from '../../../shared/iconSource';
 import colors from '../../../shared/colors';
 import {commaToNum, sumUpNutrients} from '../../../shared/utils/sumUp';
-import {BASE_URL} from '../../../shared/api/urls';
 
 // doobi Component
 import {Col, Row, TextMain, TextSub} from '../../../shared/ui/styledComps';
@@ -38,6 +37,7 @@ import {
 } from '../../../shared/constants';
 import {useDeleteProductMark} from '../../../shared/api/queries/product';
 import CommonAlertContent from '../../../components/common/alert/CommonAlertContent';
+import Config from 'react-native-config';
 
 interface IFoodList {
   item: IProductData;
@@ -163,7 +163,7 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
           }}>
           <Thumbnail
             source={{
-              uri: `${BASE_URL}${item?.mainAttUrl}`,
+              uri: `${Config.BASE_URL}${item?.mainAttUrl}`,
             }}
             resizeMode="contain"
           />

@@ -1,12 +1,12 @@
 import axios from 'axios';
 import {GET_VERSION} from '../urls';
-import {AXIOS_TIMEOUT} from '../../constants';
 import {IQueryOptions} from '../types/common';
 import {useQuery} from '@tanstack/react-query';
 import {VERSION} from '../keys';
+import Config from 'react-native-config';
 
 const requestConfig = {
-  timeout: AXIOS_TIMEOUT,
+  timeout: Number(Config.AXIOS_TIMEOUT),
 };
 
 const queryFn = async () => {

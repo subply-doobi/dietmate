@@ -22,8 +22,6 @@ export const TERMS_OF_USE_URL =
 export const INQUIRY_URL = 'http://pf.kakao.com/_DvmEG/chat';
 export const KOREAN_NUTRITION_REFERENCE_URL =
   'https://www.kns.or.kr/FileRoom/FileRoom_view.asp?idx=108&BoardID=Kdr';
-export const KAKAOPAY_CID = 'CAZ1OZBO5O';
-export const IAMPORT_USER_CODE = 'imp88778331';
 export const PLAY_STORE_URL = 'market://details?id=com.subply.dietmate';
 export const APP_STORE_URL =
   'itms-apps://itunes.apple.com/us/app//id6472628268';
@@ -38,9 +36,6 @@ export const codePushOptions = {
   },
   installMode: CodePush.InstallMode.IMMEDIATE,
 };
-
-// axios timeout
-export const AXIOS_TIMEOUT = 2000;
 
 // tutorial sortFilter
 export const tutorialSortFilter: ISortFilter = {

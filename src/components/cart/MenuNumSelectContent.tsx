@@ -18,7 +18,6 @@ import MenuNumSelect from './MenuNumSelect';
 // util, constants
 import {commaToNum, sumUpPrice} from '../../shared/utils/sumUp';
 import colors from '../../shared/colors';
-import {BASE_URL} from '../../shared/api/urls';
 import {
   SCREENHEIGHT,
   SCREENWIDTH,
@@ -34,6 +33,7 @@ import {
   reGroupBySellerFromDTOData,
   tfDTOToDDA,
 } from '../../shared/utils/dataTransform';
+import Config from 'react-native-config';
 
 const MenuNumSelectContent = ({
   setMenuNumSelectShow,
@@ -137,7 +137,9 @@ const MenuNumSelectContent = ({
                   width: SCREENWIDTH - 32 - 40 - 8,
                   marginTop: 16,
                 }}>
-                <ThumbnailImg source={{uri: `${BASE_URL}${food.mainAttUrl}`}} />
+                <ThumbnailImg
+                  source={{uri: `${Config.BASE_URL}${food.mainAttUrl}`}}
+                />
                 <Col
                   style={{
                     width: '100%',

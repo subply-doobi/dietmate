@@ -6537,6 +6537,7 @@ __metadata:
     react-native-bootsplash: "npm:^5.4.1"
     react-native-code-push: "npm:^8.2.2"
     react-native-collapsible: "npm:^1.6.1"
+    react-native-config: "npm:^1.5.2"
     react-native-dropdown-picker: "npm:^5.4.6"
     react-native-fast-image: "npm:^8.6.3"
     react-native-gesture-handler: "npm:^2.15.0"
@@ -11329,6 +11330,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/e6f1abede070d9cfe88b11e858b00ce16945f189766ac786a72e024636c45722fbe00d9c09d63c2d9426e522729268a6cc585a8339afcf020f78ecfe3c40b115
+  languageName: node
+  linkType: hard
+
+"react-native-config@npm:^1.5.2":
+  version: 1.5.2
+  resolution: "react-native-config@npm:1.5.2"
+  peerDependencies:
+    react-native-windows: ">=0.61"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: 10c0/af957f35547a74583dae9946120e5c23569b8a7203e4c0c87a036f0ab2011675ec3b5d572501091d9cd57c8258b90983e9b5bf4279a1cccedafeadac6fbfb9f2
   languageName: node
   linkType: hard
 
