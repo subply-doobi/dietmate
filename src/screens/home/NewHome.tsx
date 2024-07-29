@@ -190,18 +190,19 @@ const NewHome = () => {
   // useEffect 튜토리얼모드인 경우 끼니 있으면 모두 삭제
   // + 스크롤 맨 위로 올리고 튜토리얼 시작 버튼 위치 저장
   useEffect(() => {
-    if (!dTOData) return;
-    if (!isFocused) return;
     if (!isTutorialMode || tutorialProgress !== 'Start') return;
+
+    ctaBtnRef?.current?.measure((fx, fy, width, height, px, py) => {
+      scrollRef?.current?.scrollTo({y: 0, animated: true});
+      setTutorialCtaBtnPy(py);
+    });
+
+    if (!isFocused) return;
+    if (!dTOData) return;
     if (menuNum === 0) return;
 
     const deleteAllMenuAndStartTutorial = async () => {
       await deleteDietAllMutation.mutateAsync();
-
-      ctaBtnRef?.current?.measure((fx, fy, width, height, px, py) => {
-        scrollRef?.current?.scrollTo({y: 0, animated: true});
-        setTutorialCtaBtnPy(py);
-      });
     };
 
     deleteAllMenuAndStartTutorial();
