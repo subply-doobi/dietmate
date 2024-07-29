@@ -4,10 +4,10 @@ import {IReIssueTokenData} from '../types/token';
 import {queryFn} from '../requestFn';
 
 import {GET_TOKEN, GET_AUTH, RE_ISSUE_TOKEN, GET_GUEST} from '../urls';
-import {AXIOS_TIMEOUT} from '../../constants';
+import Config from 'react-native-config';
 
 const requestConfig = {
-  timeout: AXIOS_TIMEOUT,
+  timeout: Number(Config.AXIOS_TIMEOUT),
 };
 
 export const getDoobiToken = async (kakaoAccessToken: string | null) => {

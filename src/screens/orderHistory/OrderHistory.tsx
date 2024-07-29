@@ -1,5 +1,5 @@
 // react, RN, 3rd
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
@@ -23,10 +23,10 @@ import {icons} from '../../shared/iconSource';
 
 // react-query
 import {useListOrder} from '../../shared/api/queries/order';
-import {BASE_URL} from '../../shared/api/urls';
-import {commaToNum, sumUpNutrients, sumUpPrice} from '../../shared/utils/sumUp';
+import {commaToNum, sumUpNutrients} from '../../shared/utils/sumUp';
 import {regroupByBuyDateAndDietNo} from '../../shared/utils/dataTransform';
 import {IOrderedProduct} from '../../shared/api/types/order';
+import Config from 'react-native-config';
 
 const OrderedMenu = ({order}: {order: IOrderedProduct[][]}) => {
   return (
@@ -49,7 +49,7 @@ const OrderedMenu = ({order}: {order: IOrderedProduct[][]}) => {
                 <ThumbnailImage
                   key={productIdx}
                   source={{
-                    uri: `${BASE_URL}${product.mainAttUrl}`,
+                    uri: `${Config.BASE_URL}${product.mainAttUrl}`,
                   }}
                 />
               ))}

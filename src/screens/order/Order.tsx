@@ -24,7 +24,7 @@ import {
   TextSub,
 } from '../../shared/ui/styledComps';
 import colors from '../../shared/colors';
-import {KAKAOPAY_CID, SCREENWIDTH} from '../../shared/constants';
+import {SCREENWIDTH} from '../../shared/constants';
 import {commaToNum, sumUpDietFromDTOData} from '../../shared/utils/sumUp';
 
 import FoodToOrder from './ui/FoodToOrder';
@@ -39,6 +39,7 @@ import {useGetUser} from '../../shared/api/queries/user';
 import CtaButton from '../../shared/ui/CtaButton';
 import {useListDietTotalObj} from '../../shared/api/queries/diet';
 import {tfDTOToDDA} from '../../shared/utils/dataTransform';
+import Config from 'react-native-config';
 
 interface IIamportPayment {
   pg: string; //kakaopay, html5_inicis 등등
@@ -224,7 +225,7 @@ const Order = () => {
 
     // payment data
     const kakaopayData: IIamportPayment = {
-      pg: `kakaopay.${KAKAOPAY_CID}`,
+      pg: `kakaopay.${Config.KAKAOPAY_CID}`,
       escrow: false,
       pay_method: 'card',
       name: `총 ${menuNum}개 끼니 (${productNum}개 식품)`,

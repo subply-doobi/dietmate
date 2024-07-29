@@ -4,9 +4,9 @@ import {useUpdateDiet, useCreateDiet} from '../../shared/api/queries/diet';
 import {useUpdateOrder, useDeleteOrder} from '../../shared/api/queries/order';
 import Loading from './Loading';
 import {usePreventBackBtn} from '../../screens/order/util/backEventHook';
-import {IAMPORT_USER_CODE} from '../../shared/constants';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
+import Config from 'react-native-config';
 
 const KakaoPay = () => {
   const route = useRoute();
@@ -56,7 +56,7 @@ const KakaoPay = () => {
   return (
     <Container>
       <IMP.Payment
-        userCode={IAMPORT_USER_CODE} // this one you can get in the iamport console.
+        userCode={Config.IAMPORT_USER_CODE} // this one you can get in the iamport console.
         data={kakaopayData}
         callback={response => {
           // success가 아닌 경우 1. 아임포트 자체오류 || 2. 사용자 취소 구분은 아직 없음

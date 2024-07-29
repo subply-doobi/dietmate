@@ -17,7 +17,6 @@ import {
   BtnSmall,
   BtnSmallText,
 } from '../../shared/ui/styledComps';
-import {BASE_URL} from '../../shared/api/urls';
 import MenuSection from '../../components/common/menuSection/MenuSection';
 import {icons} from '../../shared/iconSource';
 import {
@@ -31,6 +30,7 @@ import {IOrderedProduct} from '../../shared/api/types/order';
 import {INQUIRY_URL, SERVICE_PRICE_PER_PRODUCT} from '../../shared/constants';
 import {link} from '../../shared/utils/linking';
 import {reGroupOrderBySeller} from '../../shared/utils/dataTransform';
+import Config from 'react-native-config';
 
 const NUTRIENT_TYPE = [
   {id: 'calorie', label: '칼로리'},
@@ -63,7 +63,9 @@ const OrderedMenu = ({menu}: {menu: IOrderedProduct[]}) => {
   return menu.map((item, thumbnailIndex: number) => (
     <Col key={thumbnailIndex} style={{marginTop: 24}}>
       <Row style={{alignItems: 'flex-start'}}>
-        <ThumbnailImage source={{uri: `${BASE_URL}${item?.mainAttUrl}`}} />
+        <ThumbnailImage
+          source={{uri: `${Config.BASE_URL}${item?.mainAttUrl}`}}
+        />
         <Col
           style={{
             marginLeft: 8,

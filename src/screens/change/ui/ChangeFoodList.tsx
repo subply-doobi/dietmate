@@ -3,11 +3,11 @@ import styled from 'styled-components/native';
 import {Icon, Row, TextMain, TextSub} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 import {IProductData} from '../../../shared/api/types/product';
-import {BASE_URL} from '../../../shared/api/urls';
 import {commaToNum} from '../../../shared/utils/sumUp';
 import {SERVICE_PRICE_PER_PRODUCT} from '../../../shared/constants';
 import {useNavigation} from '@react-navigation/native';
 import {icons} from '../../../shared/iconSource';
+import Config from 'react-native-config';
 
 interface IChangeFoodList {
   food: IProductData;
@@ -39,7 +39,7 @@ const ChangeFoodList = ({
             });
           }}>
           <ThumbnailImage
-            source={{uri: `${BASE_URL}${food.mainAttUrl}`}}
+            source={{uri: `${Config.BASE_URL}${food.mainAttUrl}`}}
             resizeMode="center"
           />
         </FoodDetailBtn>

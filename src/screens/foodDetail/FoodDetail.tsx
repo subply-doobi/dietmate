@@ -32,7 +32,6 @@ import ShippingPart from './ui/ShippingPart';
 import FoodPart from './ui/FoodPart';
 import BusinessInfo from '../../components/common/businessInfo/BusinessInfo';
 
-import {BASE_URL} from '../../shared/api/urls';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
@@ -51,6 +50,7 @@ import {ITableItem, makeTableData} from './util/makeNutrTable';
 import {ActivityIndicator} from 'react-native';
 import CtaButton from '../../shared/ui/CtaButton';
 import {tfDTOToDDA} from '../../shared/utils/dataTransform';
+import Config from 'react-native-config';
 
 interface IShowPart {
   clicked: string;
@@ -198,7 +198,7 @@ const FoodDetail = () => {
             {/* 식품 썸네일 */}
             <FoodImageContainer
               source={{
-                uri: `${BASE_URL}${productData.mainAttUrl}`,
+                uri: `${Config.BASE_URL}${productData.mainAttUrl}`,
               }}
               style={{resizeMode: 'contain'}}
             />
