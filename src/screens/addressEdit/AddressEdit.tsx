@@ -151,17 +151,17 @@ const AddressEdit = () => {
                   )}
                 </Row>
                 <AddressBase>{addr1.value}</AddressBase>
-                <HorizontalSpace height={8} />
+                <HorizontalSpace height={24} />
 
                 {/* 상세주소 */}
-                <InputHeader isActivated={!!addr2.value}>상세주소</InputHeader>
                 <DTextInput
+                  headerText="상세주소"
                   placeholder={'상세주소'}
                   value={addr2.value}
                   onChangeText={v =>
                     dispatch(setValue({name: 'addr2', value: v}))
                   }
-                  isActivated={!!addr2.value}
+                  isActive={!!addr2.value}
                   isValid={addr2.isValid}
                   keyboardType="default"
                 />
@@ -243,10 +243,6 @@ const AddressDeleteIcon = styled.Image`
 const AddressBase = styled(TextMain)`
   font-size: 20px;
   margin-top: 16px;
-`;
-
-const InputHeader = styled(InputHeaderText)`
-  margin-top: 24px;
 `;
 
 const AddressEditBtn = styled(BtnCTA)`

@@ -86,16 +86,15 @@ const CalChangeAlert = () => {
       </Col>
 
       {/* 칼로리 변경 input */}
-      <InputHeader isActivated={!!calorieChange.value}>
-        칼로리 (kcal)
-      </InputHeader>
+      <InputHeader isActive={!!calorieChange.value}>칼로리 (kcal)</InputHeader>
       <DTextInput
+        headerText="칼로리 (kcal)"
         placeholder="칼로리(kcal)"
         value={calorieChange.value}
         onChangeText={v =>
           dispatch(setValue({name: 'calorieChange', value: v}))
         }
-        isActivated={!!calorieChange.value}
+        isActive={!!calorieChange.value}
         isValid={calorieChange.isValid}
         keyboardType="numeric"
         maxLength={4}
@@ -142,16 +141,9 @@ const WeightDifference = styled(TextMain)`
   font-size: 18px;
   margin-top: 16px;
 `;
-const WeightDifferenceValue = styled(WeightDifference)`
-  font-weight: bold;
-`;
 
 const GuideText = styled(TextSub)`
   font-size: 14px;
-`;
-
-const InputHeader = styled(InputHeaderText)`
-  margin-top: 24px;
 `;
 
 const TooltipText = styled(TextMain)`

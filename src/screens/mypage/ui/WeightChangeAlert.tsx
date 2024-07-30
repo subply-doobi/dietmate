@@ -30,12 +30,12 @@ const WeightChangeAlert = ({
   return (
     <Container>
       {/* 몸무게 변경 input */}
-      <InputHeader isActivated={!!weightChange.value}>몸무게 (kg)</InputHeader>
       <DTextInput
+        headerText="몸무게 (kg)"
         placeholder="몸무게 (kg)"
         value={weightChange.value}
         onChangeText={v => dispatch(setValue({name: 'weightChange', value: v}))}
-        isActivated={!!weightChange.value}
+        isActive={!!weightChange.value}
         isValid={weightChange.isValid}
         keyboardType="numeric"
         maxLength={3}
@@ -68,10 +68,6 @@ export default WeightChangeAlert;
 
 const Container = styled.View`
   padding: 0px 16px 24px 16px;
-`;
-
-const InputHeader = styled(InputHeaderText)`
-  margin-top: 24px;
 `;
 
 const CheckboxContainer = styled.TouchableOpacity``;

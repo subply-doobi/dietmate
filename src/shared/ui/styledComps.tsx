@@ -95,11 +95,11 @@ export const AlertContentContainer = styled.View`
 `;
 
 interface IInputHeaderText {
-  isActivated?: boolean;
+  isActive?: boolean;
 }
 export const InputHeaderText = styled(TextMain)<IInputHeaderText>`
   font-size: 14px;
-  color: ${({isActivated}) => (isActivated ? colors.textMain : colors.white)};
+  color: ${({isActive}) => (isActive ? colors.textMain : colors.white)};
 `;
 
 export const InputHeader = styled(InputHeaderText)`

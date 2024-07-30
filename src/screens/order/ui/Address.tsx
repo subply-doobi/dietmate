@@ -60,14 +60,12 @@ const EntranceMethodContainer = () => {
         );
       })}
 
-      <InputHeader isActivated={!!entranceNote.value}>
-        배송 참고사항
-      </InputHeader>
       <DTextInput
         placeholder={'예) 3847*'}
+        headerText={'배송 참고사항'}
         value={entranceNote.value}
         onChangeText={v => dispatch(setValue({name: 'entranceNote', value: v}))}
-        isActivated={!!entranceNote.value}
+        isActive={!!entranceNote.value}
         isValid={entranceNote.isValid}
         keyboardType="default"
       />

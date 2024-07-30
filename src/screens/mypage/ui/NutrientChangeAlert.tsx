@@ -52,14 +52,12 @@ const NutrChangeAlert = ({
       </Col>
 
       {/* 영양 변경 input */}
-      <InputHeader isActivated={!!userInputState[type].value}>
-        {nutrText}
-      </InputHeader>
       <DTextInput
         placeholder={nutrText}
+        headerText={nutrText}
         value={userInputState[type].value}
         onChangeText={v => dispatch(setValue({name: type, value: v}))}
-        isActivated={!!userInputState[type].value}
+        isActive={!!userInputState[type].value}
         isValid={userInputState[type].isValid}
         keyboardType="numeric"
         maxLength={3}
@@ -84,8 +82,4 @@ const GuideText = styled(TextMain)`
 `;
 const GuideTextSub = styled(TextSub)`
   font-size: 16px;
-`;
-
-const InputHeader = styled(InputHeaderText)`
-  margin-top: 24px;
 `;

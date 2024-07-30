@@ -20,14 +20,12 @@ const Orderer = () => {
   return (
     <AccordionContentContainer style={{paddingBottom: 48}}>
       {/* orderer */}
-      <InputHeader style={{marginTop: 0}} isActivated={!!buyerName.value}>
-        주문자
-      </InputHeader>
       <DTextInput
         placeholder={'주문자'}
+        headerText="주문자"
         value={buyerName.value}
         onChangeText={v => dispatch(setValue({name: 'buyerName', value: v}))}
-        isActivated={!!buyerName.value}
+        isActive={!!buyerName.value}
         isValid={buyerName.isValid}
         keyboardType="default"
       />
@@ -40,12 +38,12 @@ const Orderer = () => {
       <HorizontalSpace height={24} />
 
       {/* ordererContact */}
-      <InputHeader isActivated={!!buyerTel.value}>휴대전화</InputHeader>
       <DTextInput
         placeholder={'휴대전화'}
+        headerText="휴대전화"
         value={buyerTel.value}
         onChangeText={v => dispatch(setValue({name: 'buyerTel', value: v}))}
-        isActivated={!!buyerTel.value}
+        isActive={!!buyerTel.value}
         isValid={buyerTel.isValid}
         maxLength={13}
         keyboardType="number-pad"
@@ -60,7 +58,3 @@ const Orderer = () => {
 };
 
 export default Orderer;
-
-const InputHeader = styled(InputHeaderText)`
-  margin-top: 24px;
-`;
