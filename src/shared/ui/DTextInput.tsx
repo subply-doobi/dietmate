@@ -1,31 +1,42 @@
 import styled from 'styled-components/native';
 import React, {forwardRef} from 'react';
-import {TextInput, TextInputProps} from 'react-native';
+import {StyleProp, TextInput, TextInputProps, ViewProps} from 'react-native';
 import colors from '../colors';
+import {Col, InputHeaderText} from './styledComps';
 
 interface IDTextInput extends TextInputProps {
-  isActivated: boolean;
+  isActive: boolean;
   isValid: boolean;
+  headerText?: string;
+  boxStyle?: StyleProp<ViewProps>;
 }
-const DTextInput = forwardRef((props: IDTextInput, ref) => {
+const DTextInput = forwardRef((p: IDTextInput, ref) => {
+  const {headerText, boxStyle, ...props} = p;
   return (
-    <Input
-      {...props}
-      placeholderTextColor={colors.textSub}
-      ref={ref}
-      style={{
-        includeFontPadding: false,
-        fontFamily: 'NotoSansKR',
-      }}
-    />
+    <Col style={boxStyle}>
+      {headerText && (
+        <InputHeader isActive={props.isActive}>{headerText}</InputHeader>
+      )}
+      <Input
+        {...props}
+        placeholderTextColor={colors.textSub}
+        ref={ref}
+        style={{
+          includeFontPadding: false,
+          fontFamily: 'NotoSansKR',
+        }}
+      />
+    </Col>
   );
 });
 
 export default DTextInput;
 
+const InputHeader = styled(InputHeaderText)``;
+
 const Input = styled.TextInput<{
   isValid?: boolean;
-  isActivated?: boolean;
+  isActive?: boolean;
 }>`
   height: 40px;
   justify-content: center;
@@ -36,7 +47,7 @@ const Input = styled.TextInput<{
   line-height: 24px;
 
   border-bottom-width: 1px;
-  border-color: ${({isActivated}) =>
-    isActivated ? colors.main : colors.inactivated};
+  border-color: ${({isActive}) =>
+    isActive ? colors.main : colors.inactivated};
   padding-bottom: 8px;
 `;
