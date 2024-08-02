@@ -192,10 +192,12 @@ const NewHome = () => {
   useEffect(() => {
     if (!isTutorialMode || tutorialProgress !== 'Start') return;
 
-    ctaBtnRef?.current?.measure((fx, fy, width, height, px, py) => {
-      scrollRef?.current?.scrollTo({y: 0, animated: true});
-      setTutorialCtaBtnPy(py);
-    });
+    const timeoutId = setTimeout(() => {
+      ctaBtnRef?.current?.measure((fx, fy, width, height, px, py) => {
+        scrollRef?.current?.scrollTo({y: 0, animated: true});
+        setTutorialCtaBtnPy(py);
+      });
+    }, 0);
 
     if (!isFocused) return;
     if (!dTOData) return;
@@ -206,6 +208,7 @@ const NewHome = () => {
     };
 
     deleteAllMenuAndStartTutorial();
+    return () => clearTimeout(timeoutId);
   }, [tutorialProgress, dTOData, menuNum]);
 
   return (

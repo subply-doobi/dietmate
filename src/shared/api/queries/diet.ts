@@ -1,5 +1,5 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {queryClient} from '../../../app/store/reactQueryStore';
 import {
   setCurrentDiet,
@@ -23,6 +23,7 @@ import {
   UPDATE_DIET_DETAIL,
 } from '../urls';
 import {handleError} from '../../utils/handleError';
+import {RootState} from '../../../app/store/reduxStore';
 
 // PUT //
 export const useCreateDiet = (options?: IMutationOptions) => {
@@ -161,8 +162,13 @@ export const useUpdateDiet = (options?: IMutationOptions) => {
 export const useDeleteDiet = () => {
   const dispatch = useDispatch();
   const mutation = useMutation({
-    mutationFn: ({dietNo}: {dietNo: string}) =>
-      mutationFn(`${DELETE_DIET}/${dietNo}`, 'delete'),
+    mutationFn: ({
+      dietNo,
+      currentDietNo,
+    }: {
+      dietNo: string;
+      currentDietNo: string;
+    }) => mutationFn(`${DELETE_DIET}/${dietNo}`, 'delete'),
     onMutate: async ({dietNo}) => {
       // optimistic update 1. Cancel any outgoing refetches
       await queryClient.cancelQueries({queryKey: [DIET_TOTAL_OBJ]});
@@ -182,31 +188,40 @@ export const useDeleteDiet = () => {
       // optimistic update 4. Return a context object with the snapshotted value
       return {prevDTOData, newDTOData};
     },
-    onSuccess: (data, {dietNo}: {dietNo: string}, context) => {
+    onSuccess: (data, {dietNo, currentDietNo}, context) => {
       // 끼니 삭제 후 현재 구성중인 끼니를 redux에 새로 저장 => 장바구니와 동기화
       const prevDTOData = context?.prevDTOData;
       if (!prevDTOData) {
         return;
       }
 
-      let currentDietIdx = 0;
-      let nextDietIdx = 0;
-
       const prevDietNoArr = Object.keys(prevDTOData);
       if (prevDietNoArr.length === 1) {
         dispatch(setCurrentDiet(''));
-      } else {
-        prevDietNoArr.forEach(
-          (prevDietNo, idx) =>
-            (currentDietIdx = prevDietNo === dietNo ? idx : 0),
-        );
-        nextDietIdx = currentDietIdx === 0 ? 1 : prevDietNoArr.length - 2;
-        dispatch(setCurrentDiet(prevDietNoArr[nextDietIdx]));
+        queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
+        queryClient.invalidateQueries({queryKey: [PRODUCTS]});
+        return;
       }
+
+      if (currentDietNo !== dietNo) {
+        queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
+        // queryClient.invalidateQueries({queryKey: [PRODUCTS, dietNo]});
+        return;
+      }
+
+      let deleteDietIdx = 0;
+      let nextDietIdx = 0;
+
+      deleteDietIdx = prevDietNoArr.findIndex(
+        (prevDietNo, idx) => prevDietNo === dietNo,
+      );
+      nextDietIdx = deleteDietIdx === 0 ? 1 : deleteDietIdx - 1;
+      dispatch(setCurrentDiet(prevDietNoArr[nextDietIdx]));
 
       // invalidation
       queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
       queryClient.invalidateQueries({queryKey: [PRODUCTS, dietNo]});
+      return;
     },
     onError: (error, {dietNo}, context) => {
       // optimistic update 5. If the mutation fails, use the context returned
