@@ -66,7 +66,8 @@ const MenuSection = () => {
     !dTOData || Object.keys(dTOData).length === 0 ? true : false;
   const onDeleteDiet = () => {
     if (!dTOData) return;
-    dietNoToDelete && deleteDietMutation.mutate({dietNo: dietNoToDelete});
+    dietNoToDelete &&
+      deleteDietMutation.mutate({dietNo: dietNoToDelete, currentDietNo});
     setDeleteAlertShow(false);
   };
 

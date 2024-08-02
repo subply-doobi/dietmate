@@ -61,7 +61,7 @@ const MenuAcInactiveHeader = ({
   };
 
   const onDietDelete = () => {
-    deleteDietMutation.mutate({dietNo});
+    deleteDietMutation.mutate({dietNo, currentDietNo});
     setDeleteAlertShow(false);
   };
 

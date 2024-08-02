@@ -24,7 +24,9 @@ interface IMenuAcActiveHeader {
 }
 const MenuAcActiveHeader = ({bLData, dietNo}: IMenuAcActiveHeader) => {
   // redux
-  const {totalFoodList} = useSelector((state: RootState) => state.common);
+  const {totalFoodList, currentDietNo} = useSelector(
+    (state: RootState) => state.common,
+  );
 
   // useState
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
@@ -36,7 +38,7 @@ const MenuAcActiveHeader = ({bLData, dietNo}: IMenuAcActiveHeader) => {
 
   // fn
   const onDietDelete = () => {
-    deleteDietMutation.mutate({dietNo: dDData[0].dietNo});
+    deleteDietMutation.mutate({dietNo: dDData[0].dietNo, currentDietNo});
     setDeleteAlertShow(false);
   };
 
