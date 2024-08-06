@@ -53,12 +53,14 @@ const OrderedMenu = ({order}: {order: IOrderedProduct[][]}) => {
                   }}
                 />
               ))}
-              <VerticalLine
-                style={{
-                  backgroundColor: colors.line,
-                  marginRight: 8,
-                }}
-              />
+              {menuIdx !== order.length - 1 && (
+                <VerticalLine
+                  style={{
+                    backgroundColor: colors.lineLight,
+                    marginRight: 8,
+                  }}
+                />
+              )}
             </Row>
           </Col>
         ))}

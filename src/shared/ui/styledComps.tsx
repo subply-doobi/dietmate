@@ -306,5 +306,5 @@ export const ShadowView = styled.View<{opacity?: number}>`
   shadow-offset: 1px 3px;
   shadow-opacity: ${({opacity}) => (opacity ? opacity : 0.14)};
   shadow-radius: 3.84px;
-  elevation: 4;
+  elevation: 3;
 `;

@@ -311,59 +311,63 @@ const NewHome = () => {
           </Row>
 
           {!isOrderEmpty && <HorizontalSpace height={40} />}
-          {!isOrderEmpty &&
-            flattenOrderData.map((order, idx) => {
-              const numerator =
-                totalChecklist[order[0][0].orderNo]?.length || 0;
-              const denominator = order.length;
-              const percentage = Math.round((numerator / denominator) * 100);
-              return (
-                <ShadowView
-                  key={idx}
-                  style={{borderRadius: 5, width: '100%', height: 72}}>
-                  <CheckListBox
-                    onPress={() =>
-                      navigate('Checklist', {
-                        order,
-                        checklist: totalChecklist[order[0][0].orderNo],
-                      })
-                    }>
-                    <LeftBar />
-                    <CheckListTitle>
-                      {parseDate(order[0][0].buyDate)} 주문
-                    </CheckListTitle>
-                    <Row>
-                      <CheckListSubTitle>{percentage}% 완료</CheckListSubTitle>
+          <ChecklistBox>
+            {!isOrderEmpty &&
+              flattenOrderData.map((order, idx) => {
+                const numerator =
+                  totalChecklist[order[0][0].orderNo]?.length || 0;
+                const denominator = order.length;
+                const percentage = Math.round((numerator / denominator) * 100);
+                return (
+                  <ShadowView
+                    key={idx}
+                    style={{borderRadius: 5, width: '100%', height: 72}}>
+                    <ChecklistBtn
+                      onPress={() =>
+                        navigate('Checklist', {
+                          order,
+                          checklist: totalChecklist[order[0][0].orderNo],
+                        })
+                      }>
+                      <LeftBar />
+                      <CheckListTitle>
+                        {parseDate(order[0][0].buyDate)} 주문
+                      </CheckListTitle>
+                      <Row>
+                        <CheckListSubTitle>
+                          {percentage}% 완료
+                        </CheckListSubTitle>
 
-                      {percentage === 100 ? (
-                        <Icon
-                          style={{marginLeft: 8, zIndex: 2}}
-                          source={icons.checkRoundCheckedPurple_24}
-                        />
-                      ) : (
-                        <Col
-                          style={{
-                            width: 24,
-                            height: 24,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginLeft: 8,
-                          }}>
-                          <PieChart
-                            series={[numerator, denominator - numerator]}
-                            widthAndHeight={20}
-                            style={{zIndex: 2}}
-                            sliceColor={[colors.main, colors.white]}
-                            coverRadius={0.6}
+                        {percentage === 100 ? (
+                          <Icon
+                            style={{marginLeft: 8, zIndex: 2}}
+                            source={icons.checkRoundCheckedPurple_24}
                           />
-                        </Col>
-                      )}
-                    </Row>
-                    {percentage === 100 && <OpacityView />}
-                  </CheckListBox>
-                </ShadowView>
-              );
-            })}
+                        ) : (
+                          <Col
+                            style={{
+                              width: 24,
+                              height: 24,
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              marginLeft: 8,
+                            }}>
+                            <PieChart
+                              series={[numerator, denominator - numerator]}
+                              widthAndHeight={20}
+                              style={{zIndex: 2}}
+                              sliceColor={[colors.main, colors.white]}
+                              coverRadius={0.6}
+                            />
+                          </Col>
+                        )}
+                      </Row>
+                      {percentage === 100 && <OpacityView />}
+                    </ChecklistBtn>
+                  </ShadowView>
+                );
+              })}
+          </ChecklistBox>
           {orderGroupedDataFlatten.length > 4 && (
             <LoadMoreBtn onPress={() => setShowEveryList(v => !v)}>
               <Icon
@@ -485,12 +489,6 @@ const TargetChangeBtn = styled.TouchableOpacity`
   align-items: center;
 `;
 
-const Card = styled.View`
-  padding: 24px 16px 32px 16px;
-  background-color: ${colors.white};
-  border-radius: 10px;
-`;
-
 const CardTitle = styled(MainText)`
   font-weight: bold;
   margin-left: 4px;
@@ -500,14 +498,18 @@ const CardDesc = styled(MainText)`
   margin-left: 4px;
 `;
 
-const CheckListBox = styled.TouchableOpacity`
+const ChecklistBox = styled.View`
+  row-gap: 24px;
+`;
+
+const ChecklistBtn = styled.TouchableOpacity`
   width: 100%;
   height: 72px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   border-radius: 5px;
-  border-width: 0.5px;
+  border-width: 0.3px;
   border-color: ${colors.lineLight};
   padding: 0px 16px;
 `;
