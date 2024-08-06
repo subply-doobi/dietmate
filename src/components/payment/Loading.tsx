@@ -5,7 +5,7 @@ const logo = require('../../shared/assets/appIcon/appIcon.png');
 function Loading() {
   return (
     <View style={styles.container}>
-      <Image source={logo} style={{width: 100, height: 100}} />
+      <Image source={logo} style={{width: 50, height: 50}} />
       <Text style={styles.text}>잠시만 기다려주세요...</Text>
     </View>
   );

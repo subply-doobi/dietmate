@@ -80,10 +80,13 @@ const Login = () => {
   return (
     <Container>
       <Box>
-        <Logo
-          source={require('../../shared/assets/appIcon/appIcon_black.png')}
-        />
-        <TitleText>다이어트메이트</TitleText>
+        <LogoBox>
+          <Logo
+            resizeMode="contain"
+            source={require('../../shared/assets/appIcon/appIcon_black.png')}
+          />
+        </LogoBox>
+        <TitleText>근의공식</TitleText>
         <BtnKakaoLogin btnStyle="kakao" onPress={() => signIn('kakao')}>
           <BtnTextKakao>카카오 로그인</BtnTextKakao>
         </BtnKakaoLogin>
@@ -139,12 +142,19 @@ const TitleText = styled(TextMain)`
   include-font-padding: false;
 `;
 
-const Logo = styled.Image`
+const LogoBox = styled.View`
   width: 100px;
   height: 100px;
   align-self: center;
+  justify-content: center;
+  align-items: center;
   background-color: ${colors.inactivated};
   border-radius: 40px;
+`;
+
+const Logo = styled.Image`
+  width: 40px;
+  height: 40px;
 `;
 
 const BtnKakaoLogin = styled(BtnCTA)`
