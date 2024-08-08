@@ -215,19 +215,22 @@ export const sumUpDietFromDTOData = (
     for (let p of dTOData[dietNo].dietDetail) {
       productNum += parseInt(p.qty);
       if (!regroupedBySeller[p.platformNm]) {
-        regroupedBySeller[p.platformNm] = [p];
+        regroupedBySeller[p.platformNm] = [{...p}];
         continue;
       }
       const isExist = regroupedBySeller[p.platformNm].some(
         sp => sp.productNo === p.productNo,
       );
       if (!isExist) {
-        regroupedBySeller[p.platformNm].push(p);
+        regroupedBySeller[p.platformNm].push({...p});
       } else {
         let productToMod = regroupedBySeller[p.platformNm].find(
           sp => sp.productNo === p.productNo,
         );
-        if (productToMod) productToMod.qty += p.qty;
+        if (productToMod)
+          productToMod.qty = String(
+            parseInt(productToMod.qty) + parseInt(p.qty),
+          );
       }
     }
   }
