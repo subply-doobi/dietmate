@@ -280,8 +280,8 @@ const Order = () => {
   };
 
   return listAddressDataLoading ? (
-    <Container>
-      <ActivityIndicator />
+    <Container style={{justifyContent: 'center', alignItems: 'center'}}>
+      <ActivityIndicator size="small" color={colors.main} />
     </Container>
   ) : (
     <Container
