@@ -31,7 +31,7 @@ const ErrorPage = () => {
   return (
     <Container style={{alignItems: 'center', justifyContent: 'center'}}>
       <Col style={{alignItems: 'center'}}>
-        <Icon source={icons.networkError_80} size={80} />
+        <Icon source={icons.networkError_80} size={64} />
         <ErrorText>{msg}</ErrorText>
         <Sub>{subText}</Sub>
         <RestartBtn onPress={() => RNRestart.restart()}>

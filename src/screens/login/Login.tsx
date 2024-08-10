@@ -86,7 +86,7 @@ const Login = () => {
             source={require('../../shared/assets/appIcon/appIcon_black.png')}
           />
         </LogoBox>
-        <TitleText>근의공식</TitleText>
+        <TitleText>다이어트메이트</TitleText>
         <BtnKakaoLogin btnStyle="kakao" onPress={() => signIn('kakao')}>
           <BtnTextKakao>카카오 로그인</BtnTextKakao>
         </BtnKakaoLogin>
@@ -143,18 +143,18 @@ const TitleText = styled(TextMain)`
 `;
 
 const LogoBox = styled.View`
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   align-self: center;
   justify-content: center;
   align-items: center;
   background-color: ${colors.inactivated};
-  border-radius: 40px;
+  border-radius: 30px;
 `;
 
 const Logo = styled.Image`
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
 `;
 
 const BtnKakaoLogin = styled(BtnCTA)`

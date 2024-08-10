@@ -12,14 +12,19 @@ import {isAxiosError} from 'axios';
 import {navigationRef} from '../../app/navigators/navigationRef';
 import {queryClient} from '../../app/store/reactQueryStore';
 import {setTutorialStart} from '../../features/reduxSlices/commonSlice';
+import Config from 'react-native-config';
 
 // 에러 -> 에러코드
 // null -> 네트워크 없음
 // 네트워크 연결 있는데 Network Error인 경우 -> 999 (지금은 서버 주소 바뀌었을 때 발생)
 const convertErrorToCode = async (error: unknown) => {
+  console.log('convertErrorToCode: config: ', Config.BASE_URL);
   if (!error) return undefined;
   if (!isAxiosError(error)) return 520;
-  if (error.message === 'Network Error') {
+  if (
+    error.message === 'Network Error' ||
+    error.message === `timeout of ${Config.AXIOS_TIMEOUT}ms exceeded`
+  ) {
     const isOnline = (await NetInfo.fetch()).isConnected;
     return isOnline ? 999 : null;
   }
