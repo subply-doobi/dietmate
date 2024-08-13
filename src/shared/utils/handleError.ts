@@ -18,7 +18,6 @@ import Config from 'react-native-config';
 // null -> 네트워크 없음
 // 네트워크 연결 있는데 Network Error인 경우 -> 999 (지금은 서버 주소 바뀌었을 때 발생)
 const convertErrorToCode = async (error: unknown) => {
-  console.log('convertErrorToCode: config: ', Config.BASE_URL);
   if (!error) return undefined;
   if (!isAxiosError(error)) return 520;
   if (

@@ -12,7 +12,7 @@ import Account from '../../screens/account/Account';
 import AddressEdit from '../../screens/addressEdit/AddressEdit';
 import OrderComplete from '../../screens/orderComplete/OrderComplete';
 import BackArrow from '../../shared/ui/BackArrow';
-import KakaoPay from '../../components/payment/KakaoPay';
+import Payment from '../../components/payment/Payment';
 import Notice from '../../screens/notice/Notice';
 import Order from '../../screens/order/Order';
 
@@ -124,7 +124,7 @@ const RootStackNav = () => {
       />
 
       {/* 카카오페이 */}
-      <Stack.Screen name="KakaoPay" component={KakaoPay} />
+      <Stack.Screen name="Payment" component={Payment} />
 
       {/* history는 추후 추가 */}
       {/* <Stack.Screen name="HistoryNav" component={HistoryNav} /> */}

@@ -1,4 +1,8 @@
-import {IDietDetailData, IDietTotalObjData} from '../api/types/diet';
+import {
+  IDietDetailData,
+  IDietDetailProductData,
+  IDietTotalObjData,
+} from '../api/types/diet';
 import {IOrderData, IOrderedProduct} from '../api/types/order';
 import {IProductData} from '../api/types/product';
 
@@ -106,17 +110,18 @@ export const reGroupBySellerFromDTOData = (
 
 export const tfDTOToDDA = (dTOData: IDietTotalObjData | undefined) => {
   if (!dTOData) return [];
-  let flattedMenu: IDietDetailData = [];
+
+  const productMap = new Map<string, IDietDetailProductData>();
+
   Object.values(dTOData).forEach(menu => {
     menu.dietDetail.forEach(p => {
-      flattedMenu.forEach(sp => {
-        if (sp.productNo === p.productNo) {
-          sp.qty += p.qty;
-        } else {
-          flattedMenu.push(p);
-        }
-      });
+      if (productMap.has(p.productNo)) {
+        productMap.get(p.productNo)!.qty += p.qty;
+      } else {
+        productMap.set(p.productNo, {...p});
+      }
     });
   });
-  return flattedMenu;
+
+  return Array.from(productMap.values());
 };

@@ -8,12 +8,14 @@ export interface IOrderState {
   foodToOrder: IDietTotalObjData;
   selectedAddrIdx: number;
   shippingPrice: number;
+  merchant_uid: string;
 }
 
 const initialState: IOrderState = {
   foodToOrder: {},
   selectedAddrIdx: 0,
   shippingPrice: 0,
+  merchant_uid: '',
 };
 
 export const orderSlice = createSlice({
@@ -30,9 +32,16 @@ export const orderSlice = createSlice({
     setShippingPrice: (state, action: PayloadAction<number>) => {
       state.shippingPrice = action.payload;
     },
+    setMerchantUid: (state, action: PayloadAction<string>) => {
+      state.merchant_uid = action.payload;
+    },
   },
 });
 
-export const {setFoodToOrder, setselectedAddrIdx, setShippingPrice} =
-  orderSlice.actions;
+export const {
+  setFoodToOrder,
+  setselectedAddrIdx,
+  setShippingPrice,
+  setMerchantUid,
+} = orderSlice.actions;
 export default orderSlice.reducer;

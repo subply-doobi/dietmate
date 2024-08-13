@@ -6,7 +6,7 @@ function Loading() {
   return (
     <View style={styles.container}>
       <Image source={logo} style={{width: 50, height: 50}} />
-      <Text style={styles.text}>잠시만 기다려주세요...</Text>
+      <Text style={styles.text}>잠시만 기다려주세요</Text>
     </View>
   );
 }
@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontSize: 20,
+    fontSize: 14,
     marginTop: 20,
-    lineHeight: 25,
+    lineHeight: 20,
   },
 });
 

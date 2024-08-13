@@ -7,16 +7,26 @@ import {usePreventBackBtn} from '../../screens/order/util/backEventHook';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 import Config from 'react-native-config';
+import {IPayParams} from '../../screens/order/util/setPayData';
+import {useGetPaymentStatus} from '../../shared/api/queries/payment';
 
-const KakaoPay = () => {
+const Payment = () => {
+  // navigation
   const route = useRoute();
   const {navigate, reset} = useNavigation();
-
-  const {kakaopayData, orderNumber} = route?.params;
+  const {payParams, orderNo} = route?.params as {
+    payParams: IPayParams;
+    orderNo: string;
+  };
+  console.log('Payment: payParams.merchant_uid', payParams.merchant_uid);
+  // react-query
+  const {refetch: refetchPaymentStatus} = useGetPaymentStatus({
+    enabled: false,
+    merchant_uid: payParams.merchant_uid,
+  });
   const updateDietMutation = useUpdateDiet();
   const updateOrderMutation = useUpdateOrder();
   const deleteOrderMutation = useDeleteOrder();
-  const createDietMutation = useCreateDiet();
 
   // 안드로이드 뒤로가기버튼 방지
   usePreventBackBtn();
@@ -37,32 +47,50 @@ const KakaoPay = () => {
     });
     await updateDietMutation.mutateAsync({
       statusCd: 'SP006005',
-      orderNo: orderNumber.orderNo,
+      orderNo,
     });
     await updateOrderMutation.mutateAsync({
-      orderNo: orderNumber.orderNo,
+      orderNo,
       statusCd: 'SP006005',
     });
   };
   const onPaymentFail = async () => {
     await updateDietMutation.mutateAsync({
       statusCd: 'SP006001',
-      orderNo: orderNumber.orderNo,
+      orderNo,
     });
-    await deleteOrderMutation.mutateAsync({orderNo: orderNumber.orderNo});
+    await deleteOrderMutation.mutateAsync({orderNo: orderNo});
     navigate('Order');
   };
+
+  console.log('Payment: orderNo', orderNo);
+  console.log('Payment: ', payParams.pg);
 
   return (
     <Container>
       <IMP.Payment
         userCode={Config.IAMPORT_USER_CODE} // this one you can get in the iamport console.
-        data={kakaopayData}
-        callback={response => {
-          // success가 아닌 경우 1. 아임포트 자체오류 || 2. 사용자 취소 구분은 아직 없음
-          response.imp_success === 'true'
-            ? onPaymentSuccess()
-            : onPaymentFail();
+        data={payParams}
+        callback={async response => {
+          console.log('IMP Payment Callback: response: ', response);
+          // callback response 자체가 실패한 경우
+          if (response.imp_success === 'false') {
+            onPaymentFail();
+            return;
+          }
+
+          // callback response는 성공, 실제 결제성공여부 확인
+          const paymentStatus = (await refetchPaymentStatus()).data?.status;
+          console.log('IMP Payment Callback: paymentStatus', paymentStatus);
+
+          // 결제실패
+          if (paymentStatus === 'failed') {
+            onPaymentFail();
+            return;
+          }
+
+          // 결제성공
+          onPaymentSuccess();
         }}
         loading={<Loading />}
       />
@@ -70,7 +98,7 @@ const KakaoPay = () => {
   );
 };
 
-export default KakaoPay;
+export default Payment;
 
 const Container = styled(SafeAreaView)`
   flex: 1;

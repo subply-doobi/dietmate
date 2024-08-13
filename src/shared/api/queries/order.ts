@@ -22,6 +22,9 @@ export const useCreateOrder = () => {
       queryClient.invalidateQueries({queryKey: [ORDER]});
       queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
     },
+    onError: error => {
+      console.log('useCreateOrder error', error);
+    },
   });
   return mutation;
 };
