@@ -151,7 +151,7 @@ const Address = () => {
 
       {/* 배송지 추가 버튼 */}
       <AddressAddBtn
-        btnStyle={listAddressData?.length === 0 ? 'borderActivated' : 'border'}
+        btnStyle={listAddressData?.length === 0 ? 'borderActive' : 'border'}
         onPress={() => onAddrAddPress()}>
         <Row>
           <PlusSquareIcon

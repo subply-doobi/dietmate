@@ -159,12 +159,7 @@ export const Seperator = styled.View`
 interface IBtnCTA {
   height?: number;
   width?: number;
-  btnStyle?:
-    | 'activated'
-    | 'inactivated'
-    | 'border'
-    | 'kakao'
-    | 'borderActivated';
+  btnStyle?: 'activated' | 'inactivated' | 'border' | 'kakao' | 'borderActive';
   btnColor?: string;
 }
 export const BtnCTA = styled.TouchableOpacity<IBtnCTA>`
@@ -187,11 +182,11 @@ export const BtnCTA = styled.TouchableOpacity<IBtnCTA>`
   align-self: center;
   justify-content: center;
   border-width: ${({btnStyle}) =>
-    btnStyle === 'border' || btnStyle === 'borderActivated' ? '1px' : '0px'};
+    btnStyle === 'border' || btnStyle === 'borderActive' ? '1px' : '0px'};
   border-color: ${({btnStyle}) =>
     btnStyle === 'border'
       ? colors.inactivated
-      : btnStyle === 'borderActivated'
+      : btnStyle === 'borderActive'
         ? colors.main
         : colors.white};
 `;
