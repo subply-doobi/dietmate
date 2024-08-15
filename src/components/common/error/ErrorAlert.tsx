@@ -24,22 +24,11 @@ const RequestAlertContent = () => {
 };
 
 const ErrorAlert = () => {
-  // navigation
-  const {navigate, reset} = useNavigation();
-
   // redux
-  const {isTutorialMode} = useSelector((state: RootState) => state.common);
   const {errorCode} = useSelector((state: RootState) => state.errorAlert);
   const dispatch = useDispatch();
 
   const onConfirm = () => {
-    // dispatch(closeErrorAlert());
-    // queryClient.invalidateQueries();
-    // isTutorialMode && dispatch(setTutorialStart());
-    // reset({
-    //   index: 0,
-    //   routes: [{name: 'Login'}],
-    // });
     getErrAlertActionByCode(errorCode)?.();
   };
 

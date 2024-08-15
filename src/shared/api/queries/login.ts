@@ -42,7 +42,12 @@ export const useLoginByType = (options?: IQueryOptions) => {
       if (isKakaoError) return;
       navigation.reset({
         index: 0,
-        routes: [{name: 'ErrorPage', params: {errorCode: 404}}],
+        routes: [
+          {
+            name: 'ErrorPage',
+            params: {errorCode: 404, msg: '로그인에 실패했어요'},
+          },
+        ],
       });
     },
   });

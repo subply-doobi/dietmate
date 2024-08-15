@@ -7,7 +7,7 @@ import appleAuth, {
 } from '@invertase/react-native-apple-authentication';
 
 // doobi util, redux, etc
-import {navigateByUserInfo} from '../util/navigateByUserInfo';
+import {navigateByUserInfo} from '../../../shared/utils/navigateByUserInfo';
 //react-query
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
 import {useNavigation} from '@react-navigation/native';

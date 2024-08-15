@@ -6,46 +6,37 @@ import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 
 // doobi
-import {navigateByUserInfo} from './util/navigateByUserInfo';
+import {navigateByUserInfo} from '../../shared/utils/navigateByUserInfo';
 import {useGetGuestYn} from '../../shared/api/queries/guest';
 import {useGetBaseLine} from '../../shared/api/queries/baseLine';
-import {version as appVersion} from '../../../package.json';
 import colors from '../../shared/colors';
 import {validateToken} from '../../shared/api/queries/token';
 import {ILoginType, useLoginByType} from '../../shared/api/queries/login';
-import {link} from '../../shared/utils/linking';
-import {useGetLatestVersion} from '../../shared/api/queries/version';
-import {
-  APP_STORE_URL,
-  IS_ANDROID,
-  IS_IOS,
-  PLAY_STORE_URL,
-} from '../../shared/constants';
-
+import {IS_IOS} from '../../shared/constants';
 import AppleLogin from './ui/AppleLogin';
 import {BtnCTA, BtnText, TextMain} from '../../shared/ui/styledComps';
-import DAlert from '../../shared/ui/DAlert';
-import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 
 const Login = () => {
-  // useState
-  const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
-
   // navigation
   const navigation = useNavigation();
 
   // react-query
   const {data: guestYnData} = useGetGuestYn();
-  const {refetch: refetchBaseLine} = useGetBaseLine({enabled: false});
-  const {refetch: refetchLatestVersion} = useGetLatestVersion({enabled: false});
+  const {data: baseLineData, refetch: refetchBaseLine} = useGetBaseLine({
+    enabled: false,
+  });
   const loginByTypeMutation = useLoginByType();
 
   // kakaoLogin || guest login (플레이스토어, 앱스토어, 카드사 심사용: 서버 값으로 사용유무 결정)
   const signIn = async (option: ILoginType): Promise<void> => {
     const res = await loginByTypeMutation.mutateAsync({type: option});
     if (!res) return;
-    const baseLineData = await refetchBaseLine().then(res => res.data);
-    baseLineData && navigateByUserInfo(baseLineData, navigation);
+    if (baseLineData) {
+      baseLineData && navigateByUserInfo(baseLineData, navigation);
+      return;
+    }
+    const newBLData = await refetchBaseLine().then(res => res.data);
+    navigateByUserInfo(newBLData, navigation);
   };
 
   // useEffect
@@ -59,23 +50,6 @@ const Login = () => {
     };
     checkUser();
   }, []);
-
-  // 앱 업데이트 확인
-  useEffect(() => {
-    const checkVersion = async () => {
-      const latestVersion = (await refetchLatestVersion()).data;
-      console.log('Login: latestVersion: ', latestVersion);
-      if (!latestVersion) return;
-      appVersion !== latestVersion && setIsUpdateNeeded(true);
-    };
-    checkVersion();
-  }, []);
-
-  // etc
-  const visitStore = () => {
-    IS_ANDROID ? link(PLAY_STORE_URL) : link(APP_STORE_URL);
-    setIsUpdateNeeded(false);
-  };
 
   return (
     <Container>
@@ -102,18 +76,6 @@ const Login = () => {
           <AppleLogin />
         )}
       </Box>
-
-      {/* 앱 버전 확인 알럿 */}
-      <DAlert
-        alertShow={isUpdateNeeded}
-        onConfirm={() => visitStore()}
-        onCancel={() => setIsUpdateNeeded(false)}
-        NoOfBtn={2}
-        confirmLabel="업데이트"
-        renderContent={() => (
-          <CommonAlertContent text="앱 업데이트가 필요합니다" />
-        )}
-      />
     </Container>
   );
 };
