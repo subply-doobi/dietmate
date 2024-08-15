@@ -33,13 +33,11 @@ export const useCreateBaseLine = () => {
 // GET
 
 export const useGetBaseLine = (options?: IQueryOptions) => {
-  const route = useRoute();
   const enabled = options?.enabled ?? true;
   return useQuery<IBaseLineData>({
     queryKey: [BASE_LINE],
     queryFn: () => queryFn(GET_BASE_LINE),
     enabled,
-    meta: {from: route.name},
   });
 };
 

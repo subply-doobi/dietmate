@@ -1,5 +1,5 @@
 import {NavigationProp} from '@react-navigation/native';
-import {IBaseLineData} from '../../../shared/api/types/baseLine';
+import {IBaseLineData} from '../api/types/baseLine';
 
 export const navigateByUserInfo = async (
   data: IBaseLineData | any,
