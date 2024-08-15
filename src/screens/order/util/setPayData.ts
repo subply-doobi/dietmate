@@ -115,7 +115,6 @@ export const setPayParams = ({
   customData,
 }: ISetPayParams): IPayParams => {
   const merchant_uid = `mid_${userData.userId}_${new Date().getTime()}`;
-  store.dispatch(setMerchantUid(merchant_uid));
 
   return {
     pg:

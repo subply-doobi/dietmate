@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import Accordion from 'react-native-collapsible/Accordion';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
 import {RootState} from '../../app/store/reduxStore';
@@ -37,15 +37,18 @@ import {useGetUser} from '../../shared/api/queries/user';
 import CtaButton from '../../shared/ui/CtaButton';
 import {tfDTOToDDA} from '../../shared/utils/dataTransform';
 import {setCustomData, setPayParams} from './util/setPayData';
+import DAlert from '../../shared/ui/DAlert';
+import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
+import {setPayFailAlertMsg} from '../../features/reduxSlices/orderSlice';
 
 const Order = () => {
   //navigation
   const {navigate} = useNavigation();
 
   // redux
-  const {foodToOrder, selectedAddrIdx, shippingPrice} = useSelector(
-    (state: RootState) => state.order,
-  );
+  const dispatch = useDispatch();
+  const {foodToOrder, selectedAddrIdx, shippingPrice, payFailAlertMsg} =
+    useSelector((state: RootState) => state.order);
 
   const {buyerName, buyerTel, entranceType, entranceNote, paymentMethod} =
     useSelector((state: RootState) => state.userInput);
@@ -275,6 +278,17 @@ const Order = () => {
         style={{width: SCREENWIDTH - 32, position: 'absolute', bottom: 8}}
         onPress={async () => onHandleOrder()}
         btnText={ctaBtnText}
+      />
+
+      {/* 결제실패알럿 */}
+      <DAlert
+        alertShow={!!payFailAlertMsg}
+        NoOfBtn={1}
+        onCancel={() => dispatch(setPayFailAlertMsg(''))}
+        onConfirm={() => dispatch(setPayFailAlertMsg(''))}
+        renderContent={() => (
+          <CommonAlertContent text="결제실패" subText={payFailAlertMsg} />
+        )}
       />
     </Container>
   );

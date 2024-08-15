@@ -23,7 +23,6 @@ const fetchPaymentStatus = async (merchant_uid: string) => {
   );
   console.log('fetchPaymentStatus: tokenRes', getTokenRes);
   const accessToken = getTokenRes?.data?.response?.access_token;
-  console.log('accessToken: ', accessToken);
 
   const response = await axios.get(
     `https://api.iamport.kr/payments/find/${merchant_uid}`,
@@ -42,10 +41,10 @@ export const useGetPaymentStatus = (
   options: IQueryOptions & {merchant_uid: string},
 ) => {
   const enabled = options?.enabled ?? true;
-  const imp_uid = options?.merchant_uid;
+  const merchant_uid = options?.merchant_uid;
   return useQuery({
     queryKey: ['paymentStatus'],
-    queryFn: () => fetchPaymentStatus(imp_uid),
+    queryFn: () => fetchPaymentStatus(merchant_uid),
     enabled,
   });
 };

@@ -9,6 +9,8 @@ import styled from 'styled-components/native';
 import Config from 'react-native-config';
 import {IPayParams} from '../../screens/order/util/setPayData';
 import {useGetPaymentStatus} from '../../shared/api/queries/payment';
+import {useDispatch} from 'react-redux';
+import {setPayFailAlertMsg} from '../../features/reduxSlices/orderSlice';
 
 const Payment = () => {
   // navigation
@@ -18,7 +20,10 @@ const Payment = () => {
     payParams: IPayParams;
     orderNo: string;
   };
-  console.log('Payment: payParams.merchant_uid', payParams.merchant_uid);
+
+  // redux
+  const dispatch = useDispatch();
+
   // react-query
   const {refetch: refetchPaymentStatus} = useGetPaymentStatus({
     enabled: false,
@@ -54,17 +59,15 @@ const Payment = () => {
       statusCd: 'SP006005',
     });
   };
-  const onPaymentFail = async () => {
+  const onPaymentFail = async (msg: string) => {
     await updateDietMutation.mutateAsync({
       statusCd: 'SP006001',
       orderNo,
     });
     await deleteOrderMutation.mutateAsync({orderNo: orderNo});
+    dispatch(setPayFailAlertMsg(msg));
     navigate('Order');
   };
-
-  console.log('Payment: orderNo', orderNo);
-  console.log('Payment: ', payParams.pg);
 
   return (
     <Container>
@@ -72,20 +75,20 @@ const Payment = () => {
         userCode={Config.IAMPORT_USER_CODE} // this one you can get in the iamport console.
         data={payParams}
         callback={async response => {
-          console.log('IMP Payment Callback: response: ', response);
           // callback response 자체가 실패한 경우
           if (response.imp_success === 'false') {
-            onPaymentFail();
+            onPaymentFail(response.error_msg);
             return;
           }
 
           // callback response는 성공, 실제 결제성공여부 확인
-          const paymentStatus = (await refetchPaymentStatus()).data?.status;
-          console.log('IMP Payment Callback: paymentStatus', paymentStatus);
+          const payRes = (await refetchPaymentStatus()).data;
+          const paymentStatus = payRes?.response?.status;
+          const errMsg = payRes?.response?.fail_reason;
 
           // 결제실패
           if (paymentStatus === 'failed') {
-            onPaymentFail();
+            onPaymentFail(errMsg);
             return;
           }
 
