@@ -4,10 +4,9 @@ import {useSelector} from 'react-redux';
 import {useState} from 'react';
 
 // doobi
-import {IDietBaseData, IDietDetailData} from '../../shared/api/types/diet';
 import colors from '../../shared/colors';
 import {IBaseLineData} from '../../shared/api/types/baseLine';
-import {Col, Icon, Row, TextMain, TextSub} from '../../shared/ui/styledComps';
+import {Icon, Row, TextMain, TextSub} from '../../shared/ui/styledComps';
 import {icons} from '../../shared/iconSource';
 import {getNutrStatus, sumUpPrice, commaToNum} from '../../shared/utils/sumUp';
 import {RootState} from '../../app/store/reduxStore';
@@ -34,11 +33,12 @@ const MenuAcActiveHeader = ({bLData, dietNo}: IMenuAcActiveHeader) => {
   // react-query
   const {data: dTOData} = useListDietTotalObj();
   const dDData = dTOData?.[dietNo]?.dietDetail ?? [];
+  const dietSeq = dTOData?.[dietNo]?.dietSeq ?? '';
   const deleteDietMutation = useDeleteDiet();
 
   // fn
   const onDietDelete = () => {
-    deleteDietMutation.mutate({dietNo: dDData[0].dietNo, currentDietNo});
+    deleteDietMutation.mutate({dietNo, currentDietNo});
     setDeleteAlertShow(false);
   };
 
@@ -69,7 +69,7 @@ const MenuAcActiveHeader = ({bLData, dietNo}: IMenuAcActiveHeader) => {
         onConfirm={() => onDietDelete()}
         NoOfBtn={2}
         renderContent={() => (
-          <CommonAlertContent text={`${dDData[0].dietSeq}을\n삭제할까요`} />
+          <CommonAlertContent text={`${dietSeq}\n삭제할까요`} />
         )}
       />
     </Box>
