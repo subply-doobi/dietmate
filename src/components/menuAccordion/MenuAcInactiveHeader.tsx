@@ -122,7 +122,7 @@ const MenuAcInactiveHeader = ({
         onConfirm={() => onDietDelete()}
         NoOfBtn={2}
         renderContent={() => (
-          <CommonAlertContent text={`${dietSeq}을\n삭제할까요`} />
+          <CommonAlertContent text={`${dietSeq}\n삭제할까요`} />
         )}
       />
     </Box>
