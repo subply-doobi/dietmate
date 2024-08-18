@@ -71,7 +71,7 @@ const AccordionCtaBtns = ({
     nutrStatus === 'empty'
       ? 'border'
       : nutrStatus === 'notEnough'
-        ? 'borderActive'
+        ? 'borderActiveDark'
         : 'border';
   const addBtnStyle = nutrStatus === 'empty' ? 'borderActive' : 'border';
 
