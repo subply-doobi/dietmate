@@ -1,6 +1,5 @@
 import {Image} from 'react-native';
 import styled from 'styled-components/native';
-import FastImage from 'react-native-fast-image';
 
 // react-query
 import {useListProductDetail} from '../../../shared/api/queries/product';
@@ -90,12 +89,11 @@ const FoodPart = ({productData}: IFoodPart) => {
       {imgLoading && <ActivityIndicator color={colors.black} />}
       {imageData?.map((item, index) =>
         item.result === 'success' ? (
-          <FastImage
+          <DetailImage
             key={index}
             style={{width: item.width, height: item.height}}
             source={{uri: item.imageLink}}
-            onError={() => console.log('fastImage onError')}
-            resizeMode={FastImage.resizeMode.contain}
+            onError={() => console.log('DetailImage onError')}
           />
         ) : (
           <ErrorBox>
@@ -135,8 +133,6 @@ const ImageErrorMsg = styled(TextSub)`
   border-radius: 4px;
 `;
 
-const BtnTest = styled.TouchableOpacity`
-  width: 100px;
-  height: 100px;
-  background-color: red;
+const DetailImage = styled.Image`
+  width: 100%;
 `;

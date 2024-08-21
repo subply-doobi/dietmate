@@ -94,10 +94,15 @@ const MenuAcInactiveHeader = ({
       <Col
         style={{
           flex: 1,
-          paddingHorizontal: 8,
+          paddingHorizontal: 16,
           paddingVertical: 16,
         }}>
-        <Row style={{alignItems: 'flex-end', columnGap: 12}}>
+        <Row
+          style={{
+            alignItems: 'flex-end',
+            columnGap: 12,
+            marginLeft: 2,
+          }}>
           <Title>{dietSeq}</Title>
           <SubTitle>{priceText}</SubTitle>
         </Row>
@@ -109,8 +114,8 @@ const MenuAcInactiveHeader = ({
             style={{
               flex: 1,
               alignItems: 'flex-end',
-              marginTop: 8,
               columnGap: 16,
+              marginTop: 8,
             }}>
             <ThumnailBox style={{borderColor: thumbnailBorderColor}}>
               {dDData.map(p => (
@@ -217,7 +222,6 @@ const ThumnailBox = styled.View`
   align-items: center;
   overflow: hidden;
 
-  margin-top: 16px;
   padding: 0 8px;
   column-gap: 4px;
 `;
