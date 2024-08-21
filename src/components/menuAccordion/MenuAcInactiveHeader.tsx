@@ -6,7 +6,6 @@ import {RootState} from '../../app/store/reduxStore';
 import {useSelector} from 'react-redux';
 
 // doobi
-import {IDietBaseData, IDietDetailData} from '../../shared/api/types/diet';
 import {Col, Icon, Row, TextMain, TextSub} from '../../shared/ui/styledComps';
 import colors from '../../shared/colors';
 import {commaToNum, getNutrStatus, sumUpPrice} from '../../shared/utils/sumUp';
@@ -20,6 +19,7 @@ import {
   useDeleteDiet,
   useListDietTotalObj,
 } from '../../shared/api/queries/diet';
+import Config from 'react-native-config';
 
 interface IMenuAcInactiveHeader {
   controllable?: boolean;
@@ -72,10 +72,7 @@ const MenuAcInactiveHeader = ({
     nutrStatus === 'satisfied'
       ? icons.checkRoundCheckedGreen_24
       : icons.warning_24;
-  const subTitleText =
-    dDData.length !== 0
-      ? `${commaToNum(priceSum)}원 (${dDData.length}가지 식품)`
-      : '식품을 담아보세요';
+  const priceText = dDData.length !== 0 ? `${commaToNum(priceSum)}원` : '';
   const barColor = selected
     ? colors.main
     : leftBarInactive
@@ -83,37 +80,70 @@ const MenuAcInactiveHeader = ({
       : currentDietNo === dietNo
         ? colors.dark
         : colors.inactivated;
-
+  const thumbnailBorderColor =
+    nutrStatus === 'satisfied'
+      ? colors.green2Opacity20
+      : nutrStatus === 'exceed'
+        ? colors.warningOpacity20
+        : colors.lineLight;
   const currentQty = dDData.length > 0 ? parseInt(dDData[0].qty, 10) : 1;
 
   return (
     <Box selected={selected}>
       <LeftBar style={{backgroundColor: barColor}} />
-      <Col style={{marginLeft: 12, rowGap: 6}}>
-        <Row>
+      <Col
+        style={{
+          flex: 1,
+          paddingHorizontal: 8,
+          paddingVertical: 16,
+        }}>
+        <Row style={{alignItems: 'flex-end', columnGap: 12}}>
           <Title>{dietSeq}</Title>
-          {(nutrStatus === 'satisfied' || nutrStatus === 'exceed') && (
-            <Icon style={{marginLeft: 4}} size={20} source={iconSource} />
-          )}
+          <SubTitle>{priceText}</SubTitle>
         </Row>
-        <SubTitle>{subTitleText}</SubTitle>
+
+        {dDData.length === 0 ? (
+          <SubTitle style={{marginTop: 8}}>식품을 담아보세요</SubTitle>
+        ) : (
+          <Row
+            style={{
+              flex: 1,
+              alignItems: 'flex-end',
+              marginTop: 8,
+              columnGap: 16,
+            }}>
+            <ThumnailBox style={{borderColor: thumbnailBorderColor}}>
+              {dDData.map(p => (
+                <Thumbnail
+                  key={p.productNo}
+                  source={{uri: `${Config.BASE_URL}${p.mainAttUrl}`}}
+                />
+              ))}
+              {(nutrStatus === 'satisfied' || nutrStatus === 'exceed') && (
+                <Icon
+                  size={20}
+                  source={iconSource}
+                  style={{position: 'absolute', right: 0, top: 0}}
+                />
+              )}
+            </ThumnailBox>
+
+            {controllable && dDData.length !== 0 && (
+              <MenuNumSelect
+                disabled={dDData.length === 0}
+                action="openModal"
+                currentQty={currentQty}
+                openMenuNumSelect={onMenuNoSelectPress}
+              />
+            )}
+          </Row>
+        )}
       </Col>
 
       {controllable && (
         <DeleteBtn onPress={() => setDeleteAlertShow(true)}>
           <Icon source={icons.cancelRound_24} />
         </DeleteBtn>
-      )}
-
-      {controllable && (
-        <Col style={{position: 'absolute', right: 8, bottom: 8}}>
-          <MenuNumSelect
-            disabled={dDData.length === 0}
-            action="openModal"
-            currentQty={currentQty}
-            openMenuNumSelect={onMenuNoSelectPress}
-          />
-        </Col>
       )}
 
       <DAlert
@@ -136,9 +166,7 @@ const Box = styled.View<{
 }>`
   background-color: ${colors.white};
   width: 100%;
-  height: 84px;
   flex-direction: row;
-  align-items: center;
   justify-content: space-between;
   border-radius: 5px;
   border-width: 1px;
@@ -148,7 +176,6 @@ const Box = styled.View<{
 `;
 
 const LeftBar = styled.View`
-  position: absolute;
   left: 0;
   width: 4px;
   height: 100%;
@@ -165,7 +192,6 @@ const Title = styled(TextMain)`
 
 const SubTitle = styled(TextSub)`
   font-size: 14px;
-  margin-right: 56px;
   line-height: 18px;
 `;
 
@@ -177,4 +203,28 @@ const DeleteBtn = styled.TouchableOpacity`
   height: 32px;
   justify-content: center;
   align-items: center;
+`;
+
+const ThumnailBox = styled.View`
+  flex: 1;
+  height: 56px;
+  background-color: ${colors.backgroundLight};
+  border-width: 1px;
+  border-color: ${colors.lineLight};
+  border-radius: 5px;
+
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+
+  margin-top: 16px;
+  padding: 0 8px;
+  column-gap: 4px;
+`;
+
+const Thumbnail = styled.Image`
+  width: 40px;
+  height: 40px;
+  background-color: ${colors.backgroundLight2};
+  border-radius: 4px;
 `;
