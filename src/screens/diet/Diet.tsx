@@ -72,6 +72,7 @@ const Diet = () => {
   const createDietCntMutation = useCreateDietCnt();
 
   // useState
+  const [dTPShow, setDTPShow] = useState(false);
   const [forceModalQuit, setForceModalQuit] = useState(false);
   const [createAlertShow, setCreateAlertShow] = useState(false);
   const [numOfCreateDiet, setNumOfCreateDiet] = useState(5);
@@ -247,15 +248,22 @@ const Diet = () => {
   const alertConfirmLabel = alertState === 'createDiet' ? '추가' : '확인';
 
   // DTP state
-  const dTPShow =
-    !forceModalQuit &&
-    !alertShow &&
-    isTutorialMode &&
-    (tutorialProgress === 'AddMenu' ||
-      tutorialProgress === 'AddFood' ||
-      tutorialProgress === 'AutoRemain' ||
-      tutorialProgress === 'ChangeFood' ||
-      tutorialProgress === 'AutoMenu');
+  useEffect(() => {
+    if (
+      !forceModalQuit &&
+      !alertShow &&
+      isTutorialMode &&
+      (tutorialProgress === 'AddMenu' ||
+        tutorialProgress === 'AddFood' ||
+        tutorialProgress === 'AutoRemain' ||
+        tutorialProgress === 'ChangeFood' ||
+        tutorialProgress === 'AutoMenu')
+    ) {
+      setDTPShow(true);
+      return;
+    }
+    setDTPShow(false);
+  }, [tutorialProgress, alertShow, forceModalQuit]);
 
   const dtpDeley: {[key: string]: number} = {
     AddMenu: 500,
