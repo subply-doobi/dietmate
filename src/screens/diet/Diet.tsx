@@ -335,7 +335,7 @@ const Diet = () => {
                 alignSelf: 'center',
                 height: 48,
               }}
-              btnText={`${menuNum} 끼니 자동구성`}
+              btnText={`전체 자동구성`}
               onPress={() =>
                 navigate('AutoMenu', {
                   isOneMenuAuto: false,

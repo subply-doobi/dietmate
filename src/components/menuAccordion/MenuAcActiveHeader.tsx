@@ -54,9 +54,9 @@ const MenuAcActiveHeader = ({bLData, dietNo}: IMenuAcActiveHeader) => {
     <Box>
       <Row>
         <Title>{dTOData?.[dietNo]?.dietSeq ?? ''}</Title>
-        {(nutrStatus === 'satisfied' || nutrStatus === 'exceed') && (
+        {/* {(nutrStatus === 'satisfied' || nutrStatus === 'exceed') && (
           <Icon style={{marginLeft: 4}} size={20} source={iconSource} />
-        )}
+        )} */}
       </Row>
       <SubTitle>{`${commaToNum(priceSum)}원 (${dDData.length}가지 식품)`}</SubTitle>
       <DeleteBtn onPress={() => setDeleteAlertShow(true)}>
