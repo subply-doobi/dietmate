@@ -221,7 +221,7 @@ export const renderDTPContent: IRenderDTPContent = {
           bottom: bottomTabBarHeight + 8 + 52 + 24,
           alignSelf: 'center',
         }}
-        btnText={`${dTOData ? Object.keys(dTOData).length : ''} 끼니 자동구성`}
+        btnText={`전체 자동구성`}
         onPress={fn}
       />
     </>

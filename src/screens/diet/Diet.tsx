@@ -259,7 +259,9 @@ const Diet = () => {
         tutorialProgress === 'ChangeFood' ||
         tutorialProgress === 'AutoMenu')
     ) {
-      setDTPShow(true);
+      setTimeout(() => {
+        setDTPShow(true);
+      }, 100);
       return;
     }
     setDTPShow(false);
@@ -267,7 +269,7 @@ const Diet = () => {
 
   const dtpDeley: {[key: string]: number} = {
     AddMenu: 500,
-    AddFood: 2000,
+    AddFood: 1000,
     AutoRemain: 500,
     ChangeFood: 500,
     AutoMenu: 2000,

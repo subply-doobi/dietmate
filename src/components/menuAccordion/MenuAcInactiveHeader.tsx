@@ -94,23 +94,30 @@ const MenuAcInactiveHeader = ({
       <Col
         style={{
           flex: 1,
-          paddingHorizontal: 8,
+          paddingHorizontal: 16,
           paddingVertical: 16,
         }}>
-        <Row style={{alignItems: 'flex-end', columnGap: 12}}>
+        <Row
+          style={{
+            alignItems: 'flex-end',
+            columnGap: 12,
+            marginLeft: 2,
+          }}>
           <Title>{dietSeq}</Title>
           <SubTitle>{priceText}</SubTitle>
         </Row>
 
         {dDData.length === 0 ? (
-          <SubTitle style={{marginTop: 8}}>식품을 담아보세요</SubTitle>
+          <SubTitle style={{marginTop: 4, marginLeft: 2}}>
+            식품을 담아보세요
+          </SubTitle>
         ) : (
           <Row
             style={{
               flex: 1,
               alignItems: 'flex-end',
-              marginTop: 8,
               columnGap: 16,
+              marginTop: 8,
             }}>
             <ThumnailBox style={{borderColor: thumbnailBorderColor}}>
               {dDData.map(p => (
@@ -119,13 +126,13 @@ const MenuAcInactiveHeader = ({
                   source={{uri: `${Config.BASE_URL}${p.mainAttUrl}`}}
                 />
               ))}
-              {(nutrStatus === 'satisfied' || nutrStatus === 'exceed') && (
+              {/* {(nutrStatus === 'satisfied' || nutrStatus === 'exceed') && (
                 <Icon
                   size={20}
                   source={iconSource}
                   style={{position: 'absolute', right: 0, top: 0}}
                 />
-              )}
+              )} */}
             </ThumnailBox>
 
             {controllable && dDData.length !== 0 && (
@@ -217,7 +224,6 @@ const ThumnailBox = styled.View`
   align-items: center;
   overflow: hidden;
 
-  margin-top: 16px;
   padding: 0 8px;
   column-gap: 4px;
 `;

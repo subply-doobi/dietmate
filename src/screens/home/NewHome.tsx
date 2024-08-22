@@ -197,7 +197,7 @@ const NewHome = () => {
         scrollRef?.current?.scrollTo({y: 0, animated: true});
         setTutorialCtaBtnPy(py);
       });
-    }, 0);
+    }, 300);
 
     if (!isFocused) return;
     if (!dTOData) return;
