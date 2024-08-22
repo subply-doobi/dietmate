@@ -25,11 +25,9 @@ const DTPScreen = ({
       setContentVisible(true);
     }, contentDelay);
   }, [visible]);
+
   return (
-    <Modal
-      animationType="none"
-      transparent={true}
-      visible={visible ? true : false}>
+    <Modal animationType="none" transparent={true} visible={visible}>
       <ModalBackGround {...props}>
         {contentVisible && (
           <ContentContainer>{renderContent()}</ContentContainer>

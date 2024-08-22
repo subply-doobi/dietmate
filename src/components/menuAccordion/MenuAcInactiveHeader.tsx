@@ -108,7 +108,9 @@ const MenuAcInactiveHeader = ({
         </Row>
 
         {dDData.length === 0 ? (
-          <SubTitle style={{marginTop: 8}}>식품을 담아보세요</SubTitle>
+          <SubTitle style={{marginTop: 4, marginLeft: 2}}>
+            식품을 담아보세요
+          </SubTitle>
         ) : (
           <Row
             style={{
@@ -124,13 +126,13 @@ const MenuAcInactiveHeader = ({
                   source={{uri: `${Config.BASE_URL}${p.mainAttUrl}`}}
                 />
               ))}
-              {(nutrStatus === 'satisfied' || nutrStatus === 'exceed') && (
+              {/* {(nutrStatus === 'satisfied' || nutrStatus === 'exceed') && (
                 <Icon
                   size={20}
                   source={iconSource}
                   style={{position: 'absolute', right: 0, top: 0}}
                 />
-              )}
+              )} */}
             </ThumnailBox>
 
             {controllable && dDData.length !== 0 && (
