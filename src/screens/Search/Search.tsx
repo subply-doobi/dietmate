@@ -1,5 +1,5 @@
 // react, RN, 3rd
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {ActivityIndicator, Animated, FlatList} from 'react-native';
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
@@ -44,6 +44,7 @@ const Search = () => {
   );
 
   // state
+  const [dtpShow, setDTPShow] = useState(false);
   const [productAlertShow, setProductAlertShow] = useState(false);
   const [sortModalShow, setSortModalShow] = useState(false);
   const [filterModalShow, setFilterModalShow] = useState(false);
@@ -81,6 +82,15 @@ const Search = () => {
 
   // etc
   const currentNumOfFoods = dDData?.length || 0;
+  useEffect(() => {
+    if (isTutorialMode && tutorialProgress === 'SelectFood') {
+      setTimeout(() => {
+        setDTPShow(true);
+      }, 100);
+    } else {
+      setDTPShow(false);
+    }
+  }, [isTutorialMode, tutorialProgress]);
 
   // render
   if (getBaseLineIsLoading || isDTODataLoading) {
@@ -153,7 +163,7 @@ const Search = () => {
       {/* 튜토리얼 */}
       <DTPScreen
         contentDelay={500}
-        visible={isTutorialMode && tutorialProgress === 'SelectFood'}
+        visible={dtpShow}
         renderContent={() => (
           <>
             <Col

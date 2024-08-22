@@ -1,13 +1,6 @@
 // react, RN, 3rd
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {
-  Animated,
-  Pressable,
-  PanResponder,
-  View,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import {Animated, Pressable, Image, TouchableOpacity} from 'react-native';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -63,36 +56,45 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
   const [foodLimitAlertShow, setFoodLimitAlertShow] = useState(false);
 
   // etc
-  // 장바구니에 해당 상품이 들어있는지
-  const isAdded = dTOData?.[currentDietNo]?.dietDetail.some(
-    p => p.productNo === item.productNo,
-  );
+
   // 남은 영양 계산
-  const {calExceed, carbExceed, proteinExceed, fatExceed} = useMemo(() => {
-    if (!dDData || !baseLineData) {
+  const {isAdded, calExceed, carbExceed, proteinExceed, fatExceed} =
+    useMemo(() => {
+      const isAdded = dTOData?.[currentDietNo]?.dietDetail.some(
+        p => p.productNo === item.productNo,
+      );
+      if (!dDData || !baseLineData) {
+        return {
+          isAdded,
+          calExceed: false,
+          carbExceed: false,
+          proteinExceed: false,
+          fatExceed: false,
+        };
+      }
+      const {cal, carb, protein, fat} = sumUpNutrients(dDData);
       return {
-        calExceed: false,
-        carbExceed: false,
-        proteinExceed: false,
-        fatExceed: false,
+        isAdded,
+        calExceed: isAdded
+          ? false
+          : parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[1] - cal <
+            parseInt(item.calorie),
+        carbExceed: isAdded
+          ? false
+          : parseInt(baseLineData.carb) + NUTR_ERROR_RANGE.carb[1] - carb <
+            parseInt(item.carb),
+        proteinExceed: isAdded
+          ? false
+          : parseInt(baseLineData.protein) +
+              NUTR_ERROR_RANGE.protein[1] -
+              protein <
+            parseInt(item.protein),
+        fatExceed: isAdded
+          ? false
+          : parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[1] - fat <
+            parseInt(item.fat),
       };
-    }
-    const {cal, carb, protein, fat} = sumUpNutrients(dDData);
-    return {
-      calExceed:
-        parseInt(baseLineData.calorie) + NUTR_ERROR_RANGE.calorie[1] - cal <
-        parseInt(item.calorie),
-      carbExceed:
-        parseInt(baseLineData.carb) + NUTR_ERROR_RANGE.carb[1] - carb <
-        parseInt(item.carb),
-      proteinExceed:
-        parseInt(baseLineData.protein) + NUTR_ERROR_RANGE.protein[1] - protein <
-        parseInt(item.protein),
-      fatExceed:
-        parseInt(baseLineData.fat) + NUTR_ERROR_RANGE.fat[1] - fat <
-        parseInt(item.fat),
-    };
-  }, [dDData, baseLineData]);
+    }, [dDData, baseLineData]);
 
   // onDelete | onAdd | onLikeDelete fn
   const onDelete = () => {

@@ -82,9 +82,9 @@ const MenuAcInactiveHeader = ({
         : colors.inactivated;
   const thumbnailBorderColor =
     nutrStatus === 'satisfied'
-      ? colors.green2Opacity20
+      ? colors.green2Opacity30
       : nutrStatus === 'exceed'
-        ? colors.warningOpacity20
+        ? colors.warningOpacity30
         : colors.lineLight;
   const currentQty = dDData.length > 0 ? parseInt(dDData[0].qty, 10) : 1;
 
@@ -216,7 +216,7 @@ const ThumnailBox = styled.View`
   flex: 1;
   height: 56px;
   background-color: ${colors.backgroundLight};
-  border-width: 1px;
+  border-width: 2px;
   border-color: ${colors.lineLight};
   border-radius: 5px;
 
