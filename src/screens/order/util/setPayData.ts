@@ -2,8 +2,6 @@ import Config from 'react-native-config';
 import {IAddressData} from '../../../shared/api/types/address';
 import {IDietDetailAllData} from '../../../shared/api/types/diet';
 import {IUserData} from '../../../shared/api/types/user';
-import {store} from '../../../app/store/reduxStore';
-import {setMerchantUid} from '../../../features/reduxSlices/orderSlice';
 
 interface ICustomData {
   amount: string;
@@ -91,6 +89,7 @@ export const setCustomData = ({
 interface ISetPayParams {
   userData: IUserData;
   paymentMethod: string;
+  pg: string;
   menuNum: number;
   productNum: number;
   priceTotal: number;
@@ -104,6 +103,7 @@ interface ISetPayParams {
 export const setPayParams = ({
   userData,
   paymentMethod,
+  pg,
   menuNum,
   productNum,
   priceTotal,
@@ -115,16 +115,16 @@ export const setPayParams = ({
   customData,
 }: ISetPayParams): IPayParams => {
   const merchant_uid = `mid_${userData.userId}_${new Date().getTime()}`;
-
   return {
     pg:
       {
-        kakao: `${paymentMethod}.${Config.KAKAOPAY_CID}`,
-        smartro: `${paymentMethod}.${Config.SMARTRO_MID}`,
-      }[paymentMethod] || 'kakao',
+        kakaopay: `kakaopay.${Config.KAKAOPAY_CID}`,
+        smartro: `smartro.${Config.SMARTRO_MID}`,
+        // smartro: `kcp.AO09C`,
+      }[pg] || `kakaopay.${Config.KAKAOPAY_CID}`,
     escrow: false,
-    pay_method: 'card',
-    name: `총 ${menuNum}개 끼니 (${productNum}개 식품)`,
+    pay_method: paymentMethod === 'simple' ? 'card' : paymentMethod,
+    name: `${menuNum}개 끼니 (식품 ${productNum}개)`,
     merchant_uid,
     amount: String(priceTotal + shippingPrice),
     buyer_name: buyerName,

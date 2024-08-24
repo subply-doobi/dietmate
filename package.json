@@ -30,7 +30,7 @@
     "appcenter-analytics": "5.0.1",
     "appcenter-crashes": "5.0.1",
     "axios": "^1.6.7",
-    "iamport-react-native": "^2.0.11",
+    "iamport-react-native": "^2.0.12",
     "lottie-ios": "4.4.1",
     "lottie-react-native": "^6.6.0",
     "native-base": "^3.4.28",

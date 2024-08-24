@@ -40,6 +40,7 @@ import {setCustomData, setPayParams} from './util/setPayData';
 import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 import {setPayFailAlertMsg} from '../../features/reduxSlices/orderSlice';
+import {PAY_METHOD} from './util/payConsts';
 
 const Order = () => {
   //navigation
@@ -50,7 +51,7 @@ const Order = () => {
   const {foodToOrder, selectedAddrIdx, shippingPrice, payFailAlertMsg} =
     useSelector((state: RootState) => state.order);
 
-  const {buyerName, buyerTel, entranceType, entranceNote, paymentMethod} =
+  const {buyerName, buyerTel, entranceType, entranceNote, paymentMethod, pg} =
     useSelector((state: RootState) => state.userInput);
 
   // react-query
@@ -89,6 +90,10 @@ const Order = () => {
 
   // accordion
   const [activeSections, setActiveSections] = useState<number[]>([]);
+  const currentPayMethodItem = PAY_METHOD.find(
+    item => item.value === paymentMethod.value,
+  );
+
   const CONTENT = [
     {
       title: '주문식품',
@@ -131,8 +136,10 @@ const Order = () => {
       title: '결제수단',
       subTitle: (
         <HeaderSubTitle>
-          {{kakao: '카카오페이', smartro: '일반결제'}[paymentMethod.value] ||
-            ''}
+          {currentPayMethodItem?.label}
+          {currentPayMethodItem?.subBtn
+            ? ` (${currentPayMethodItem.pg[0].label})`
+            : ''}
         </HeaderSubTitle>
       ),
       content: <PaymentMethod />,
@@ -202,6 +209,7 @@ const Order = () => {
     const payParams = setPayParams({
       userData,
       paymentMethod: paymentMethod.value,
+      pg: pg.value,
       menuNum,
       productNum,
       priceTotal,
@@ -223,7 +231,7 @@ const Order = () => {
         // 아임포트 결제 정보 ,
         pg: payParams.pg,
         escrow: String(payParams.escrow),
-        payMethod: paymentMethod.value,
+        payMethod: payParams.pay_method,
         payName: payParams.name,
         payAmount: payParams.amount,
         merchantUid: payParams.merchant_uid,
@@ -318,6 +326,7 @@ const HeaderSubTitle = styled(TextSub)`
   font-size: 14px;
   line-height: 18px;
   margin-top: 4px;
+  margin-left: 1px;
 `;
 const UpDownArrow = styled.Image`
   width: 20px;
