@@ -8,7 +8,7 @@ import {Container, HorizontalSpace} from '../../shared/ui/styledComps';
 import {useListProduct} from '../../shared/api/queries/product';
 import {ISortFilter} from '../../features/reduxSlices/sortFilterSlice';
 import CtaButton from '../../shared/ui/CtaButton';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {IProductData} from '../../shared/api/types/product';
 import ChangeSummary from './ui/ChangeSummary';
 import {FlatList} from 'react-native';
@@ -47,6 +47,7 @@ const Change = () => {
 
   // useState
   const [productAlertShow, setProductAlertShow] = useState(false);
+  const [flatlistData, setFlatlistData] = useState<IProductData[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<
     IProductData | undefined
   >();
@@ -110,20 +111,26 @@ const Change = () => {
       appliedSortFilter,
     },
     {
-      enabled: dietNo ? true : false,
+      enabled: false,
     },
   );
 
   useEffect(() => {
     const refetchAndAlert = async () => {
-      (await refetchProduct()).data?.filter(p =>
-        dDData.some(dDP => dDP.productNo !== p.productNo),
-      ).length === 0 && setProductAlertShow(true);
+      const data = (await refetchProduct()).data?.filter(
+        p => !dDData.some(dDP => dDP.productNo === p.productNo),
+      );
+      if (!data) return;
+      if (data && data.length === 0) {
+        setProductAlertShow(true);
+        return;
+      }
+      setFlatlistData(data);
     };
     refetchAndAlert();
-  }, []);
+  }, [productNo]);
 
-  // flatList render fn
+  // flatList
   const renderFoodList = useCallback(
     ({item}: {item: IProductData}) => {
       return !dDData || productIsFetching ? (
@@ -195,9 +202,7 @@ const Change = () => {
           paddingBottom: 120,
           marginTop: 8,
         }} // 숨겨지는 header의 높이만큼 margin
-        data={listProductData?.filter(p =>
-          dDData.some(dDP => dDP.productNo !== p.productNo),
-        )}
+        data={flatlistData}
         keyExtractor={extractListKey}
         renderItem={renderFoodList}
         getItemLayout={getItemLayout}
