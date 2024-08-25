@@ -158,6 +158,11 @@ export interface IUserInputState {
     isValid: boolean;
     errMsg: string;
   };
+  pg: {
+    value: string;
+    isValid: boolean;
+    errMsg: string;
+  };
   paymentMethod: {
     value: string;
     isValid: boolean;
@@ -320,8 +325,13 @@ export const initialState: IUserInputState = {
     isValid: true,
     errMsg: '',
   },
+  pg: {
+    value: 'kakaopay',
+    isValid: true,
+    errMsg: '',
+  },
   paymentMethod: {
-    value: 'kakao',
+    value: 'simple',
     isValid: true,
     errMsg: '',
   },

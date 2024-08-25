@@ -6,51 +6,87 @@ import {
   AccordionContentContainer,
   BtnCTA,
   HorizontalSpace,
+  Icon,
   Row,
   TextMain,
 } from '../../../shared/ui/styledComps';
 import {useDispatch, useSelector} from 'react-redux';
 import {setValue} from '../../../features/reduxSlices/userInputSlice';
 import {RootState} from '../../../app/store/reduxStore';
+import {PAY_METHOD} from '../util/payConsts';
 
 const PaymentMethod = () => {
   // redux
-  const {paymentMethod} = useSelector(
+  const {paymentMethod, pg} = useSelector(
     (rootstate: RootState) => rootstate.userInput,
   );
   const dispatch = useDispatch();
 
+  const currentMethodItem = PAY_METHOD.find(
+    item => item.value === paymentMethod.value,
+  );
   return (
     <AccordionContentContainer>
-      {/* 다른 결제방법은 추후 추가 */}
-      <KakaoPayBtn
-        btnStyle="border"
-        isActive={paymentMethod.value === 'kakao'}
-        onPress={() =>
-          dispatch(setValue({name: 'paymentMethod', value: 'kakao'}))
-        }>
-        <Row>
-          <KakaoLogo
-            source={icons.kakaoPay}
-            style={{opacity: paymentMethod.value === 'kakao' ? 1 : 0.2}}
-          />
-          <PayBtnText isActive={paymentMethod.value === 'kakao'}>
-            카카오페이
-          </PayBtnText>
-        </Row>
-      </KakaoPayBtn>
+      <Row style={{columnGap: 8}}>
+        {PAY_METHOD.map(method => {
+          const isActive = paymentMethod.value === method.value;
+          const backgroundColor = isActive ? colors.dark : colors.white;
+          const borderWidth = isActive ? 0 : 1;
+          const borderColor = isActive ? colors.dark : colors.inactivated;
+          const textColor = isActive ? colors.white : colors.textSub;
+          return (
+            <MethodBtn
+              key={method.value}
+              style={{
+                backgroundColor,
+                borderWidth,
+                borderColor,
+              }}
+              onPress={() => {
+                dispatch(
+                  setValue({name: 'paymentMethod', value: method.value}),
+                );
+                dispatch(setValue({name: 'pg', value: method.pg[0].value}));
+              }}>
+              <Row>
+                <MethodBtnText style={{color: textColor}}>
+                  {method.label}
+                </MethodBtnText>
+              </Row>
+            </MethodBtn>
+          );
+        })}
+      </Row>
       <HorizontalSpace height={16} />
-      <CommonPayBtn
-        btnStyle={paymentMethod.value === 'smartro' ? 'borderActive' : 'border'}
-        onPress={() =>
-          dispatch(setValue({name: 'paymentMethod', value: 'smartro'}))
-        }>
-        <Row>
-          <PayBtnText isActive={paymentMethod.value === 'smartro'}>
-            일반결제
-          </PayBtnText>
-        </Row>
-      </CommonPayBtn>
+      <Row style={{columnGap: 8}}>
+        {currentMethodItem?.subBtn &&
+          currentMethodItem.pg.map(item => {
+            const isActive = item.value === pg.value;
+            const backgroundColor = item.btnActiveBg;
+            const borderWidth = isActive ? 0 : 1;
+            const borderColor = colors.lineLight;
+            const color = item.textColor;
+            const opacity = isActive ? 1 : 0.5;
+            return (
+              <MethodBtn
+                key={item.value}
+                style={{backgroundColor, borderColor, borderWidth, opacity}}
+                onPress={() =>
+                  dispatch(setValue({name: 'pg', value: item.value}))
+                }>
+                {item.iconSource && (
+                  <Icon
+                    source={item.iconSource}
+                    resizeMode="contain"
+                    size={40}
+                  />
+                )}
+                <MethodBtnText style={{color}}>{item.label}</MethodBtnText>
+              </MethodBtn>
+            );
+          })}
+      </Row>
+
       <GuideText>
         다른 결제수단은 <BoldText>정식출시</BoldText>를 조금만 기다려주세요
       </GuideText>
@@ -66,14 +102,23 @@ const KakaoPayBtn = styled(BtnCTA)<{isActive: boolean}>`
     isActive ? `${colors.kakaoColor}` : `${colors.inactivated}`};
 `;
 
-const CommonPayBtn = styled(BtnCTA)`
+const MethodBtn = styled.TouchableOpacity`
+  flex-direction: row;
+  flex: 1;
   height: 48px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  column-gap: 8px;
 `;
-const PayBtnText = styled(TextMain)<{isActive: boolean}>`
+
+const MethodBtnText = styled(TextMain)`
   font-size: 16px;
-  margin-left: 8px;
   line-height: 20px;
-  opacity: ${({isActive}) => (isActive ? 1 : 0.5)};
+`;
+const PayBtnText = styled(TextMain)`
+  font-size: 16px;
+  line-height: 20px;
 `;
 const KakaoLogo = styled.Image`
   width: 48px;

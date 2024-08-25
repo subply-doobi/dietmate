@@ -71,6 +71,12 @@ const Diet = () => {
   } = useListDietTotalObj();
   const createDietCntMutation = useCreateDietCnt();
 
+  if (dTOData) {
+    console.log(
+      'Diet: dTOData test:',
+      dTOData[Object.keys(dTOData)[0]].dietDetail[0],
+    );
+  }
   // useState
   const [dTPShow, setDTPShow] = useState(false);
   const [forceModalQuit, setForceModalQuit] = useState(false);

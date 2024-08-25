@@ -6830,7 +6830,7 @@ __metadata:
     axios: "npm:^1.6.7"
     babel-jest: "npm:^29.7.0"
     eslint: "npm:^8.57.0"
-    iamport-react-native: "npm:^2.0.11"
+    iamport-react-native: "npm:^2.0.12"
     jest: "npm:^29.7.0"
     lottie-ios: "npm:4.4.1"
     lottie-react-native: "npm:^6.6.0"
@@ -8404,15 +8404,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iamport-react-native@npm:^2.0.11":
-  version: 2.0.11
-  resolution: "iamport-react-native@npm:2.0.11"
+"iamport-react-native@npm:^2.0.12":
+  version: 2.0.12
+  resolution: "iamport-react-native@npm:2.0.12"
   peerDependencies:
     query-string: 8.x
     react: "*"
     react-native: "*"
     react-native-webview: ">=11.x"
-  checksum: 10c0/655b1ef06c9d120d8092ac8381d86d2bea2d9d615c55c229f808fccfb893110f99ea15dd38553036648fc2fa5d96501d9bd41ce56add6e3077c07175b7b299fb
+  checksum: 10c0/2ae59224dfbe3a6a0bdae4f43de6797810c9655db142aefb16da5a96020b050e62a0a236341bec40179e80f6267dd1e465b1fbd8d414455f6c3999c71ce53afd
   languageName: node
   linkType: hard
 

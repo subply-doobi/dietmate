@@ -137,7 +137,7 @@ export const useUpdateDietDetail = () => {
     mutationFn: ({dietNo, qty}: {dietNo: string; qty: string}) =>
       mutationFn(`${UPDATE_DIET_DETAIL}?dietNo=${dietNo}&qty=${qty}`, 'post'),
     onSuccess: (data, {dietNo}) => {
-      console.log('updateDietDetail success: ', data);
+      // console.log('updateDietDetail success: ', data);
       queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
     },
   });

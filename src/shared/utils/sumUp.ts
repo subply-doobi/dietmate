@@ -251,3 +251,5 @@ export const sumUpDietFromDTOData = (
     totalShippingPrice,
   };
 };
+
+export const checkProductStock = () => {};

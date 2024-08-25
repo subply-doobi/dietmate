@@ -83,7 +83,7 @@ PODS:
   - hermes-engine (0.75.2):
     - hermes-engine/Pre-built (= 0.75.2)
   - hermes-engine/Pre-built (0.75.2)
-  - iamport-react-native (2.0.11):
+  - iamport-react-native (2.0.12):
     - React-Core
   - JWT (3.0.0-beta.14):
     - Base64 (~> 1.1.2)
@@ -2120,7 +2120,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   hermes-engine: 3b6e0717ca847e2fc90a201e59db36caf04dee88
-  iamport-react-native: fea0fef8a72782184820257bfa3bc14e7895dcdf
+  iamport-react-native: 6bf55d1aa1e932658da5e6ddd502dfed42940a6f
   JWT: ef71dfb03e1f842081e64dc42eef0e164f35d251
   kakao-login: d3dad7a7bc1a3d187cedb4de83b1ec2e9b1cda30
   KakaoSDKAuth: bb2dfa7be30daa8403c9cfc8001aa6fde7a5b779

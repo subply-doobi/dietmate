@@ -21,7 +21,6 @@ const fetchPaymentStatus = async (merchant_uid: string) => {
       },
     },
   );
-  console.log('fetchPaymentStatus: tokenRes', getTokenRes);
   const accessToken = getTokenRes?.data?.response?.access_token;
 
   const response = await axios.get(
