@@ -30,7 +30,7 @@ const loadSplash = new Promise(resolve =>
 const AppLoading = () => {
   // react-query
   const {refetch: refetchBaseLine} = useGetBaseLine({enabled: false});
-  const {refetch: refetchLatestVersion} = useGetLatestVersion({enabled: false});
+  const {data: latestAppVersion, refetch: refetchLatestVersion} = useGetLatestVersion({enabled: false});
 
   // useState
   const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
@@ -82,7 +82,7 @@ const AppLoading = () => {
       NoOfBtn={2}
       confirmLabel="업데이트"
       renderContent={() => (
-        <CommonAlertContent text="앱 업데이트가 필요합니다" />
+        <CommonAlertContent text="앱 업데이트가 필요합니다" subText={`${appVersion} -> ${latestAppVersion}`}/>
       )}
     />
   );
