@@ -37,7 +37,6 @@ const OrderComplete = () => {
   const navigation = useNavigation();
 
   const goToOrderHistory = () => {
-    console.log('주문내역 바로가기');
     navigation.reset({
       index: 0,
       routes: [

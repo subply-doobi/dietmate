@@ -84,6 +84,7 @@ export const icons = {
   like_48: require(`./assets/icons/48_like.png`),
   likeActivated_48: require(`./assets/icons/48_like_activated.png`),
   kakaoPay: require(`./assets/icons/kakao_pay.png`),
+  naverPay: require(`./assets/icons/naver_pay.png`),
   cartWhite_40: require(`./assets/icons/40_cart_white.png`),
   search_18: require(`./assets/icons/18_search.png`),
   warning_24: require(`./assets/icons/24_warning.png`),

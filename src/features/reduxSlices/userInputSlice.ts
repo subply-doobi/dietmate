@@ -11,6 +11,7 @@ import {IBaseLineData} from '../../shared/api/types/baseLine';
 import {IAddressCreate, IAddressData} from '../../shared/api/types/address';
 import {formatPhone} from '../../shared/utils/format';
 import {validateInput} from '../../shared/utils/validation';
+import {IPayMethod, IPG} from '../../screens/order/util/payConsts';
 
 export interface IUserInputState {
   // FirstInput
@@ -159,12 +160,12 @@ export interface IUserInputState {
     errMsg: string;
   };
   pg: {
-    value: string;
+    value: IPG;
     isValid: boolean;
     errMsg: string;
   };
   paymentMethod: {
-    value: string;
+    value: IPayMethod;
     isValid: boolean;
     errMsg: string;
   };

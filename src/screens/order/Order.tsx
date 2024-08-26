@@ -1,10 +1,5 @@
 import {useMemo, useState} from 'react';
-import {
-  TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-  ActivityIndicator,
-} from 'react-native';
+import {TouchableOpacity, ScrollView, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import Accordion from 'react-native-collapsible/Accordion';
 import {useDispatch, useSelector} from 'react-redux';
@@ -138,7 +133,7 @@ const Order = () => {
         <HeaderSubTitle>
           {currentPayMethodItem?.label}
           {currentPayMethodItem?.subBtn
-            ? ` (${currentPayMethodItem.pg[0].label})`
+            ? ` (${currentPayMethodItem.pg.find(i => i.value === pg.value)?.label})`
             : ''}
         </HeaderSubTitle>
       ),

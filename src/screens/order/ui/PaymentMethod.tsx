@@ -67,6 +67,7 @@ const PaymentMethod = () => {
             const borderColor = colors.lineLight;
             const color = item.textColor;
             const opacity = isActive ? 1 : 0.5;
+            const iconSize = item.iconSize;
             return (
               <MethodBtn
                 key={item.value}
@@ -78,7 +79,7 @@ const PaymentMethod = () => {
                   <Icon
                     source={item.iconSource}
                     resizeMode="contain"
-                    size={40}
+                    size={iconSize}
                   />
                 )}
                 <MethodBtnText style={{color}}>{item.label}</MethodBtnText>
@@ -96,12 +97,6 @@ const PaymentMethod = () => {
 
 export default PaymentMethod;
 
-const KakaoPayBtn = styled(BtnCTA)<{isActive: boolean}>`
-  height: 48px;
-  border-color: ${({isActive}) =>
-    isActive ? `${colors.kakaoColor}` : `${colors.inactivated}`};
-`;
-
 const MethodBtn = styled.TouchableOpacity`
   flex-direction: row;
   flex: 1;
@@ -116,14 +111,7 @@ const MethodBtnText = styled(TextMain)`
   font-size: 16px;
   line-height: 20px;
 `;
-const PayBtnText = styled(TextMain)`
-  font-size: 16px;
-  line-height: 20px;
-`;
-const KakaoLogo = styled.Image`
-  width: 48px;
-  height: 20px;
-`;
+
 const GuideText = styled(TextMain)`
   margin-top: 16px;
   font-size: 14px;
