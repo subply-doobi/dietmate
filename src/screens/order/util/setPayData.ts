@@ -2,6 +2,7 @@ import Config from 'react-native-config';
 import {IAddressData} from '../../../shared/api/types/address';
 import {IDietDetailAllData} from '../../../shared/api/types/diet';
 import {IUserData} from '../../../shared/api/types/user';
+import {IPG, PGString} from './payConsts';
 
 interface ICustomData {
   amount: string;
@@ -89,7 +90,7 @@ export const setCustomData = ({
 interface ISetPayParams {
   userData: IUserData;
   paymentMethod: string;
-  pg: string;
+  pg: IPG;
   menuNum: number;
   productNum: number;
   priceTotal: number;
@@ -116,12 +117,7 @@ export const setPayParams = ({
 }: ISetPayParams): IPayParams => {
   const merchant_uid = `mid_${userData.userId}_${new Date().getTime()}`;
   return {
-    pg:
-      {
-        kakaopay: `kakaopay.${Config.KAKAOPAY_CID}`,
-        smartro: `smartro.${Config.SMARTRO_MID}`,
-        // smartro: `kcp.AO09C`,
-      }[pg] || `kakaopay.${Config.KAKAOPAY_CID}`,
+    pg: PGString[pg],
     escrow: false,
     pay_method: paymentMethod === 'simple' ? 'card' : paymentMethod,
     name: `${menuNum}개 끼니 (식품 ${productNum}개)`,

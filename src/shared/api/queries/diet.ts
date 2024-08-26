@@ -152,7 +152,7 @@ export const useUpdateDiet = (options?: IMutationOptions) => {
         'post',
       ),
     onSuccess: data => {
-      console.log('updateDiet success: ', data);
+      // console.log('updateDiet success: ', data);
       queryClient.invalidateQueries({queryKey: [DIET_TOTAL_OBJ]});
     },
   });

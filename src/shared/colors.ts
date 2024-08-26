@@ -23,6 +23,7 @@ export default {
   line: '#8f8f8f',
   lineLight: '#E5E5E5',
   kakaoColor: '#ffe812',
+  naverColor: '#03C75A',
   backgroundModal: '#000000a6',
   cartMark: '#000000BF',
   /**
