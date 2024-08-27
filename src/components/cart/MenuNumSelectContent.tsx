@@ -29,10 +29,7 @@ import {
   useListDietTotalObj,
   useUpdateDietDetail,
 } from '../../shared/api/queries/diet';
-import {
-  reGroupBySellerFromDTOData,
-  tfDTOToDDA,
-} from '../../shared/utils/dataTransform';
+import {reGroupBySellerFromDTOData} from '../../shared/utils/dataTransform';
 import Config from 'react-native-config';
 
 const MenuNumSelectContent = ({
@@ -44,71 +41,37 @@ const MenuNumSelectContent = ({
 }) => {
   // react-query
   const {data: dTOData} = useListDietTotalObj();
-
   const updateDietDetailMutation = useUpdateDietDetail();
 
-  // useMemo
-  const {dDData, dDAData} = useMemo(() => {
-    const dDData = dTOData?.[dietNoToNumControl]?.dietDetail ?? [];
-    const dDAData = dTOData ? tfDTOToDDA(dTOData) : [];
-    return {dDData, dDAData};
-  }, [dTOData]);
-
   // state
-  const initialQty = dDData.length > 0 ? parseInt(dDData[0].qty, 10) : 1;
-  const [qty, setQty] = useState(initialQty);
+  const [qty, setQty] = useState(1);
+
+  // useMemo
+  const {dDData, dietSeq, currentDietBySeller, otherDietBySeller} =
+    useMemo(() => {
+      const dDData = dTOData?.[dietNoToNumControl]?.dietDetail ?? [];
+      dDData.length > 0 && setQty(parseInt(dDData[0].qty));
+
+      const dietSeq = dTOData?.[dietNoToNumControl]?.dietSeq ?? '';
+
+      const dTODataBySeller = reGroupBySellerFromDTOData(dTOData);
+      const currentDietBySeller = {
+        [dietNoToNumControl]: dTODataBySeller[dietNoToNumControl],
+      };
+      const dietNoArr = dTOData ? Object.keys(dTOData) : [];
+      const otherDietNoArr = dietNoArr.filter(p => p !== dietNoToNumControl);
+      let otherDietBySeller: typeof dTODataBySeller = {};
+      otherDietNoArr.forEach(dietNo => {
+        otherDietBySeller[dietNo] = dTODataBySeller[dietNo];
+      });
+
+      return {dDData, dietSeq, currentDietBySeller, otherDietBySeller};
+    }, [dTOData]);
 
   // useEffect
   useEffect(() => {
     dDData && dDData.length > 0 && setQty(parseInt(dDData[0].qty));
   }, [dDData]);
-
-  // etc
-  const dietSeq = dTOData?.[dietNoToNumControl]?.dietSeq ?? '';
-
-  // useMemo
-  const {currentDDDataBySeller, otherDietSellerPrice} = useMemo(() => {
-    if (!dDData || !dDAData)
-      return {currentDDDataBySeller: [], otherDietSellerPrice: {}};
-
-    // 현재 끼니의 판매자별 식품 데이터
-    const currentDTODataBySeller = dTOData
-      ? reGroupBySellerFromDTOData({
-          [dietNoToNumControl]: dTOData[dietNoToNumControl],
-        })
-      : {};
-    const currentDDDataBySeller = Object.values(currentDTODataBySeller);
-
-    // 현재 끼니의 판매자별 식품 데이터 중 판매자명만 추출
-    let currentDietSeller: string[] = [];
-    currentDDDataBySeller.forEach(menu => {
-      !currentDietSeller.includes(menu[0].platformNm) &&
-        currentDietSeller.push(menu[0].platformNm);
-    });
-
-    // 다른 끼니의 현재끼니 판매자의 식품 데이터
-    const otherDDData = dDAData
-      .filter(p => p.dietNo !== dietNoToNumControl)
-      .filter(p => p && currentDietSeller.includes(p.platformNm));
-
-    // 다른 끼니의 현재끼니 판매자의 식품 데이터 중 판매자별 금액 합산
-    let otherDietSellerPrice: {[key: string]: number} = {};
-    otherDDData.forEach(p => {
-      const price = parseInt(p.price, 10);
-      const productQty = parseInt(p.qty, 10);
-      otherDietSellerPrice[p.platformNm] = otherDietSellerPrice[p.platformNm]
-        ? (otherDietSellerPrice[p.platformNm] +
-            price +
-            SERVICE_PRICE_PER_PRODUCT) *
-          productQty
-        : (price + SERVICE_PRICE_PER_PRODUCT) * productQty;
-    });
-
-    return {
-      currentDDDataBySeller,
-      otherDietSellerPrice,
-    };
-  }, [dDData, dDAData]);
 
   const saveQty = () => {
     updateDietDetailMutation.mutate({
@@ -172,30 +135,47 @@ const MenuNumSelectContent = ({
             <TitleText>해당 식품사 총 금액</TitleText>
             <HorizontalSpace height={8} />
             {dDData?.length > 0 &&
-              currentDDDataBySeller &&
-              currentDDDataBySeller.map((seller, idx) => {
-                const currentSellerPrice = sumUpPrice(seller) * qty;
-                const sellerPriceInOtherDiet =
-                  otherDietSellerPrice[seller[0].platformNm] || 0;
-                const sellerPrice = currentSellerPrice + sellerPriceInOtherDiet;
-                const sellerShippingPrice = seller[0].shippingPrice;
-                const freeShippingPrice = parseInt(seller[0].freeShippingPrice);
-                const noticeText =
-                  freeShippingPrice <= sellerPrice
-                    ? '무료'
-                    : `${commaToNum(sellerShippingPrice)}원 (${commaToNum(
-                        freeShippingPrice - sellerPrice,
-                      )}원 더 담으면 무료배송)`;
-
-                return (
-                  <Col key={idx} style={{marginTop: 16}}>
-                    <Text>{seller[0].platformNm}</Text>
-                    <HorizontalSpace height={12} />
-                    <TextGrey>식품 : {commaToNum(sellerPrice)}원</TextGrey>
-                    <TextGrey>배송비 : {noticeText}</TextGrey>
-                  </Col>
-                );
-              })}
+              Object.keys(currentDietBySeller[dietNoToNumControl]).map(
+                (seller, idx) => {
+                  const currentDietSellerPrice =
+                    sumUpPrice(
+                      currentDietBySeller[dietNoToNumControl]?.[seller],
+                    ) * qty;
+                  let otherDietSellerPrice = 0;
+                  for (let dietNo of Object.keys(otherDietBySeller)) {
+                    otherDietSellerPrice += sumUpPrice(
+                      otherDietBySeller[dietNo]?.[seller],
+                      true,
+                    );
+                  }
+                  const sellerPrice =
+                    currentDietSellerPrice + otherDietSellerPrice;
+                  const sellerShippingPrice = parseInt(
+                    currentDietBySeller[dietNoToNumControl]?.[seller]?.[0]
+                      ?.shippingPrice,
+                    10,
+                  );
+                  const freeShippingPrice = parseInt(
+                    currentDietBySeller[dietNoToNumControl]?.[seller]?.[0]
+                      ?.freeShippingPrice,
+                    10,
+                  );
+                  const noticeText =
+                    freeShippingPrice <= sellerPrice
+                      ? '무료'
+                      : `${commaToNum(sellerShippingPrice)}원 (${commaToNum(
+                          freeShippingPrice - sellerPrice,
+                        )}원 더 담으면 무료배송)`;
+                  return (
+                    <Col key={idx} style={{marginTop: 16}}>
+                      <Text>{seller}</Text>
+                      <HorizontalSpace height={12} />
+                      <TextGrey>식품 : {commaToNum(sellerPrice)}원</TextGrey>
+                      <TextGrey>배송비 : {noticeText}</TextGrey>
+                    </Col>
+                  );
+                },
+              )}
           </Col>
         </TouchableWithoutFeedback>
       </ScrollView>

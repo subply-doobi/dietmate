@@ -78,33 +78,29 @@ export const regroupByBuyDateAndDietNo = (
   return regrouped;
 };
 
+interface IRegroupedBySellerFromDTOData {
+  [dietNo: string]: {
+    [platformNm: string]: IDietDetailData;
+  };
+}
 export const reGroupBySellerFromDTOData = (
   dTOData: IDietTotalObjData | undefined,
-) => {
-  let regroupedBySeller: {
-    [key: string]: IDietDetailData;
-  } = {};
+): IRegroupedBySellerFromDTOData => {
+  let regroupedBySeller: IRegroupedBySellerFromDTOData = {};
   if (!dTOData) return regroupedBySeller;
+
   const dietNoArr = Object.keys(dTOData);
-  for (let dietNo of dietNoArr) {
-    for (let p of dTOData[dietNo].dietDetail) {
-      if (!regroupedBySeller[p.platformNm]) {
-        regroupedBySeller[p.platformNm] = [p];
-        continue;
-      }
-      const isExist = regroupedBySeller[p.platformNm].some(
-        sp => sp.productNo === p.productNo,
-      );
-      if (!isExist) {
-        regroupedBySeller[p.platformNm].push(p);
+  dietNoArr.forEach(dietNo => {
+    dTOData[dietNo].dietDetail.forEach(p => {
+      if (!regroupedBySeller[dietNo]) {
+        regroupedBySeller[dietNo] = {[p.platformNm]: [p]};
+      } else if (!regroupedBySeller[dietNo][p.platformNm]) {
+        regroupedBySeller[dietNo][p.platformNm] = [p];
       } else {
-        let productToMod = regroupedBySeller[p.platformNm].find(
-          sp => sp.productNo === p.productNo,
-        );
-        if (productToMod) productToMod.qty += p.qty;
+        regroupedBySeller[dietNo][p.platformNm].push(p);
       }
-    }
-  }
+    });
+  });
   return regroupedBySeller;
 };
 
