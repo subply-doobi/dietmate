@@ -26,11 +26,12 @@ const FoodToOrder = () => {
     <AccordionContentContainer style={{rowGap: 40}}>
       {foodToOrder &&
         Object.keys(foodToOrder).map((dietNo, index) => {
-          return (
-            <Col key={`${dietNo}-${index}`}>
-              <FoodsInOneDiet dietNo={dietNo} />
-            </Col>
-          );
+          if (foodToOrder[dietNo].dietDetail.length > 0)
+            return (
+              <Col key={`${dietNo}-${index}`}>
+                <FoodsInOneDiet dietNo={dietNo} />
+              </Col>
+            );
         })}
     </AccordionContentContainer>
   );
