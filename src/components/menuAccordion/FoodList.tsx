@@ -17,6 +17,7 @@ import {
 } from '../../shared/api/queries/diet';
 import {SERVICE_PRICE_PER_PRODUCT} from '../../shared/constants';
 import Config from 'react-native-config';
+import DTooltip from '../../shared/ui/DTooltip';
 
 interface IFoodList {
   selectedFoods: {[key: string]: string[]};
@@ -69,6 +70,7 @@ const FoodList = ({selectedFoods, setSelectedFoods, dietNo}: IFoodList) => {
     <Container>
       {dietDetailData?.map((food, idx) => {
         const isSelected = selectedFoods[dietNo]?.includes(food.productNo);
+        const hasNoStock = food.statusCd === 'SP012001' ? false : true;
         return (
           <FoodBox key={idx}>
             <Row
@@ -150,7 +152,13 @@ const FoodList = ({selectedFoods, setSelectedFoods, dietNo}: IFoodList) => {
                   <Icon source={icons.changeRound_24} />
                 </ChangeBtn>
               </RightBtnBox>
+              {hasNoStock && <OpacityBox />}
             </Row>
+            <DTooltip
+              tooltipShow={hasNoStock}
+              text="재고가 없어요 식품을 교체하거나 삭제해주세요"
+              boxTop={-16}
+            />
           </FoodBox>
         );
       })}
@@ -178,6 +186,17 @@ const Container = styled.View`
 const FoodBox = styled.View`
   width: 100%;
   height: 104px;
+`;
+
+const OpacityBox = styled.View`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 5px;
+  z-index: 1;
+  background-color: ${colors.blackOpacity70};
 `;
 
 const FoodDetailBtn = styled.TouchableOpacity``;
@@ -211,6 +230,7 @@ const RightBtnBox = styled.View`
   border-radius: 5px;
   border-width: 1px;
   border-color: ${colors.lineLight};
+  z-index: 2;
 `;
 
 const DeleteBtn = styled.TouchableOpacity`
@@ -218,11 +238,13 @@ const DeleteBtn = styled.TouchableOpacity`
   height: 50%;
   justify-content: center;
   align-items: center;
+  background-color: ${colors.white};
 `;
 
 const ChangeBtn = styled.TouchableOpacity`
   width: 100%;
   height: 50%;
+  background-color: ${colors.white};
   justify-content: center;
   align-items: center;
   border-top-width: 1px;

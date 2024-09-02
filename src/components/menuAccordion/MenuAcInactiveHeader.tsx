@@ -20,6 +20,8 @@ import {
   useListDietTotalObj,
 } from '../../shared/api/queries/diet';
 import Config from 'react-native-config';
+import DTooltip from '../../shared/ui/DTooltip';
+import {checkNoStockP} from '../../shared/utils/productStatusCheck';
 
 interface IMenuAcInactiveHeader {
   controllable?: boolean;
@@ -88,6 +90,9 @@ const MenuAcInactiveHeader = ({
         : colors.lineLight;
   const currentQty = dDData.length > 0 ? parseInt(dDData[0].qty, 10) : 1;
 
+  // 재고없는 상품 확인
+  const hasNoStockP = checkNoStockP(dTOData, dietNo);
+
   return (
     <Box selected={selected}>
       <LeftBar style={{backgroundColor: barColor}} />
@@ -119,6 +124,11 @@ const MenuAcInactiveHeader = ({
               columnGap: 16,
               marginTop: 8,
             }}>
+            <DTooltip
+              tooltipShow={hasNoStockP}
+              text="재고없는 상품이 있어요 눌러서 교체해주세요"
+              boxTop={-36}
+            />
             <ThumnailBox style={{borderColor: thumbnailBorderColor}}>
               {dDData.map(p => (
                 <Thumbnail
@@ -162,6 +172,7 @@ const MenuAcInactiveHeader = ({
           <CommonAlertContent text={`${dietSeq}\n삭제할까요`} />
         )}
       />
+      {hasNoStockP && <OpacityBox />}
     </Box>
   );
 };
@@ -180,6 +191,18 @@ const Box = styled.View<{
   border-color: ${({selected}) =>
     selected ? colors.highlight : colors.inactivated};
   border-width: ${({selected}) => (selected ? '1px' : '1px')};
+`;
+
+const OpacityBox = styled.View`
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 5px;
+  z-index: 1;
+  background-color: ${colors.blackOpacity70};
 `;
 
 const LeftBar = styled.View`
@@ -210,6 +233,8 @@ const DeleteBtn = styled.TouchableOpacity`
   height: 32px;
   justify-content: center;
   align-items: center;
+
+  z-index: 2;
 `;
 
 const ThumnailBox = styled.View`
@@ -226,6 +251,8 @@ const ThumnailBox = styled.View`
 
   padding: 0 8px;
   column-gap: 4px;
+
+  z-index: 2;
 `;
 
 const Thumbnail = styled.Image`
