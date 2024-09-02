@@ -61,6 +61,12 @@ export const renderAlertContent: IRenderAlertContent = {
       subText={'튜토리얼은 마이페이지에서\n다시 진행할 수 있어요'}
     />
   ),
+  noStock: () => (
+    <CommonAlertContent
+      text={'재고없는 식품이 있어요'}
+      subText={'끼니를 확인하고\n식품을 교체해주세요'}
+    />
+  ),
 };
 
 interface IDTP {

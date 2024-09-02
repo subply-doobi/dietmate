@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 import {Image} from 'react-native';
 import {icons} from '../iconSource';
 import colors from '../colors';
+import {TextMain} from './styledComps';
 
 interface IDtooltip {
   tooltipShow: boolean;
@@ -109,9 +110,10 @@ const TooltipBox = styled.View`
   border-radius: 3px;
 `;
 
-const TooltipText = styled.Text`
+const TooltipText = styled(TextMain)`
   font-size: 14px;
   color: ${colors.white};
+  line-height: 18px;
 `;
 
 const IconContainer = styled.View`

@@ -45,6 +45,7 @@ import DTPScreen from '../../shared/ui/DTPScreen';
 import CartSummary from '../../components/cart/CartSummary';
 import AddMenuBtn from './ui/AddMenuBtn';
 import {renderAlertContent, renderDTPContent} from './util/modalContent';
+import {checkNoStockPAll} from '../../shared/utils/productStatusCheck';
 
 const Diet = () => {
   // navigation
@@ -80,33 +81,43 @@ const Diet = () => {
   const [createNAAlertShow, setCreateNAAlertShow] = useState(false);
   const [menuNumSelectShow, setMenuNumSelectShow] = useState(false);
   const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
+  const [noStockAlertShow, setNoStockAlertShow] = useState(false);
 
   // useRef
   const scrollRef = useRef<ScrollView>(null);
   const autoMenuBtnRef = useRef<TouchableOpacity>(null);
 
   // useMemo
-  const {menuNum, accordionContent, totalShippingPrice, priceTotal} =
-    useMemo(() => {
-      // 비어있는 끼니 확인
-      const {menuNum, priceTotal, totalShippingPrice} =
-        sumUpDietFromDTOData(dTOData);
+  const {
+    menuNum,
+    accordionContent,
+    totalShippingPrice,
+    priceTotal,
+    hasNoStockP,
+  } = useMemo(() => {
+    // 비어있는 끼니 확인
+    const {menuNum, priceTotal, totalShippingPrice} =
+      sumUpDietFromDTOData(dTOData);
 
-      // accordion
-      const accordionContent = getMenuAcContent({
-        bLData: bLData,
-        dTOData,
-        setMenuNumSelectShow,
-        setDietNoToNumControl,
-      });
+    // 재고없거나 삭제된 상품 있는지 확인
+    const hasNoStockP = checkNoStockPAll(dTOData);
 
-      return {
-        menuNum,
-        accordionContent,
-        totalShippingPrice,
-        priceTotal,
-      };
-    }, [dTOData]);
+    // accordion
+    const accordionContent = getMenuAcContent({
+      bLData: bLData,
+      dTOData,
+      setMenuNumSelectShow,
+      setDietNoToNumControl,
+    });
+
+    return {
+      menuNum,
+      accordionContent,
+      totalShippingPrice,
+      priceTotal,
+      hasNoStockP,
+    };
+  }, [dTOData]);
 
   // etc
   const {status: addDietStatus, text: addDietNAText} =
@@ -211,7 +222,9 @@ const Diet = () => {
           ? 'autoMenuError'
           : isTutorialMode && tutorialProgress === 'Complete'
             ? 'tutorialComplete'
-            : '';
+            : noStockAlertShow
+              ? 'noStock'
+              : '';
   const alertShow = !forceModalQuit && alertState !== '';
   // alert confirm fn
   const alertConfirmFn: {[key: string]: Function} = {
@@ -223,6 +236,7 @@ const Diet = () => {
       dispatch(setTutorialEnd());
       updateNotShowAgainList({key: 'tutorial', value: true});
     },
+    noStock: () => setNoStockAlertShow(false),
   };
   // alert cancel fn
   const alertCancelFn: {[key: string]: Function} = {
@@ -231,6 +245,7 @@ const Diet = () => {
     autoMenuLoading: () => {},
     autoMenuError: () => dispatch(setAutoMenuStatus({isError: false})),
     tutorialComplete: () => {},
+    noStock: () => setNoStockAlertShow(false),
   };
   const alertNumOfBtn: {[key: string]: 0 | 1 | 2} = {
     createDiet: isCreating
@@ -242,6 +257,7 @@ const Diet = () => {
     autoMenuLoading: 0,
     autoMenuError: 1,
     tutorialComplete: 1,
+    noStock: 1,
   };
 
   const alertDelay = alertState === 'tutorialComplete' ? 1000 : 0;
@@ -374,7 +390,13 @@ const Diet = () => {
           bottom: 8,
         }}
         btnText={`주문하기 (${commaToNum(priceTotal + totalShippingPrice)}원)`}
-        onPress={() => {
+        onPress={async () => {
+          const refetchedDTOData = (await refetchDTOData()).data;
+          const hasNoStock = checkNoStockPAll(refetchedDTOData);
+          if (hasNoStock) {
+            setNoStockAlertShow(true);
+            return;
+          }
           !!dTOData && dispatch(setFoodToOrder(dTOData));
           navigate('Order');
         }}
