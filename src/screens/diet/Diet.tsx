@@ -88,36 +88,27 @@ const Diet = () => {
   const autoMenuBtnRef = useRef<TouchableOpacity>(null);
 
   // useMemo
-  const {
-    menuNum,
-    accordionContent,
-    totalShippingPrice,
-    priceTotal,
-    hasNoStockP,
-  } = useMemo(() => {
-    // 비어있는 끼니 확인
-    const {menuNum, priceTotal, totalShippingPrice} =
-      sumUpDietFromDTOData(dTOData);
+  const {menuNum, accordionContent, totalShippingPrice, priceTotal} =
+    useMemo(() => {
+      // 비어있는 끼니 확인
+      const {menuNum, priceTotal, totalShippingPrice} =
+        sumUpDietFromDTOData(dTOData);
 
-    // 재고없거나 삭제된 상품 있는지 확인
-    const hasNoStockP = checkNoStockPAll(dTOData);
+      // accordion
+      const accordionContent = getMenuAcContent({
+        bLData: bLData,
+        dTOData,
+        setMenuNumSelectShow,
+        setDietNoToNumControl,
+      });
 
-    // accordion
-    const accordionContent = getMenuAcContent({
-      bLData: bLData,
-      dTOData,
-      setMenuNumSelectShow,
-      setDietNoToNumControl,
-    });
-
-    return {
-      menuNum,
-      accordionContent,
-      totalShippingPrice,
-      priceTotal,
-      hasNoStockP,
-    };
-  }, [dTOData]);
+      return {
+        menuNum,
+        accordionContent,
+        totalShippingPrice,
+        priceTotal,
+      };
+    }, [dTOData]);
 
   // etc
   const {status: addDietStatus, text: addDietNAText} =

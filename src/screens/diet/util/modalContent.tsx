@@ -14,6 +14,10 @@ import CtaButton from '../../../shared/ui/CtaButton';
 import {SCREENWIDTH} from '../../../shared/constants';
 import {ReactElement} from 'react';
 import {GestureResponderEvent} from 'react-native';
+import DSmallBtn from '../../../shared/ui/DSmallBtn';
+import {updateNotShowAgainList} from '../../../shared/utils/asyncStorage';
+import {store} from '../../../app/store/reduxStore';
+import {setTutorialEnd} from '../../../features/reduxSlices/commonSlice';
 
 interface ICreateDietAlert {
   numOfCreateDiet: number;
@@ -101,6 +105,14 @@ interface IRenderDTPContent {
 export const renderDTPContent: IRenderDTPContent = {
   AddMenu: ({fn, headerHeight, dTOData}) => (
     <>
+      <DSmallBtn
+        btnText="튜토리얼 건너뛰기"
+        style={{position: 'absolute', top: 16, right: 0}}
+        onPress={() => {
+          store.dispatch(setTutorialEnd());
+          updateNotShowAgainList({key: 'tutorial', value: true});
+        }}
+      />
       <DTooltip
         tooltipShow={true}
         text="끼니를 먼저 추가해볼까요?"
@@ -115,6 +127,14 @@ export const renderDTPContent: IRenderDTPContent = {
   ),
   AddFood: ({headerHeight, dTOData, currentDietNo}) => (
     <>
+      <DSmallBtn
+        btnText="튜토리얼 건너뛰기"
+        style={{position: 'absolute', top: 16, right: 0}}
+        onPress={() => {
+          store.dispatch(setTutorialEnd());
+          updateNotShowAgainList({key: 'tutorial', value: true});
+        }}
+      />
       <DTooltip
         tooltipShow={true}
         text="식품을 추가할 차례에요!"
@@ -134,6 +154,14 @@ export const renderDTPContent: IRenderDTPContent = {
   ),
   AutoRemain: ({dTOData, currentDietNo, headerHeight}) => (
     <>
+      <DSmallBtn
+        btnText="튜토리얼 건너뛰기"
+        style={{position: 'absolute', top: 16, right: 0}}
+        onPress={() => {
+          store.dispatch(setTutorialEnd());
+          updateNotShowAgainList({key: 'tutorial', value: true});
+        }}
+      />
       <Col
         style={{
           position: 'absolute',
@@ -165,6 +193,14 @@ export const renderDTPContent: IRenderDTPContent = {
   ),
   ChangeFood: ({fn, headerHeight}) => (
     <>
+      <DSmallBtn
+        btnText="튜토리얼 건너뛰기"
+        style={{position: 'absolute', top: 16, right: 0}}
+        onPress={() => {
+          store.dispatch(setTutorialEnd());
+          updateNotShowAgainList({key: 'tutorial', value: true});
+        }}
+      />
       <DTooltip
         tooltipShow={true}
         triangleRight={16}
@@ -211,6 +247,14 @@ export const renderDTPContent: IRenderDTPContent = {
   ),
   AutoMenu: ({fn, bottomTabBarHeight, dTOData}) => (
     <>
+      <DSmallBtn
+        btnText="튜토리얼 건너뛰기"
+        style={{position: 'absolute', top: 16, right: 0}}
+        onPress={() => {
+          store.dispatch(setTutorialEnd());
+          updateNotShowAgainList({key: 'tutorial', value: true});
+        }}
+      />
       <DTooltip
         tooltipShow={true}
         text="전체 자동구성도 해볼게요"
