@@ -38,12 +38,16 @@ import CtaButton from '../../shared/ui/CtaButton';
 import {
   setCurrentDiet,
   setTotalFoodList,
+  setTutorialEnd,
   setTutorialProgress,
 } from '../../features/reduxSlices/commonSlice';
 import {useListProduct} from '../../shared/api/queries/product';
 import LastOrderNutr from './ui/LastOrderNutr';
 import {parseDate} from '../../shared/utils/dateParsing';
-import {getTotalChecklist} from '../../shared/utils/asyncStorage';
+import {
+  getTotalChecklist,
+  updateNotShowAgainList,
+} from '../../shared/utils/asyncStorage';
 import {flatOrderMenuWithQty} from '../checklist/util/menuFlat';
 import DTPScreen from '../../shared/ui/DTPScreen';
 import {SCREENWIDTH} from '../../shared/constants';
@@ -53,6 +57,7 @@ import {
 } from '../../features/reduxSlices/orderSlice';
 import DTooltip from '../../shared/ui/DTooltip';
 import {useTestQuery} from '../../shared/api/queries/test';
+import DSmallBtn from '../../shared/ui/DSmallBtn';
 
 const NewHome = () => {
   // navigation
@@ -425,6 +430,14 @@ const NewHome = () => {
           visible={isTutorialMode && tutorialProgress === 'Start'}
           renderContent={() => (
             <>
+              <DSmallBtn
+                btnText="튜토리얼 건너뛰기"
+                style={{position: 'absolute', top: 16, right: 16}}
+                onPress={() => {
+                  dispatch(setTutorialEnd());
+                  updateNotShowAgainList({key: 'tutorial', value: true});
+                }}
+              />
               <DTooltip
                 tooltipShow={true}
                 boxTop={tutorialCtaBtnPy - 36}
