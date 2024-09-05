@@ -15,7 +15,7 @@ import {RootState} from '../../app/store/reduxStore';
 // doobi
 import {SCREENWIDTH} from '../../shared/constants';
 import colors from '../../shared/colors';
-import {Col, Container} from '../../shared/ui/styledComps';
+import {Col, Container, Row} from '../../shared/ui/styledComps';
 import GuideTitle from '../../shared/ui/GuideTitle';
 import BackArrow from '../../shared/ui/BackArrow';
 import {getPageItem} from './util/pageIdx';
@@ -80,7 +80,11 @@ const UserInput = () => {
   };
 
   const onCtaPress = () => {
-    if (currentPage === 'Result' || currentPage === 'ChangeResult') {
+    if (
+      currentPage === 'Result' ||
+      currentPage === 'ChangeResult' ||
+      currentPage === 'ResultSimple'
+    ) {
       onComplete();
       return;
     }
@@ -103,7 +107,7 @@ const UserInput = () => {
   // useEffect
   // headerTitle 설정
   useEffect(() => {
-    if (currentPage === 'Start') {
+    if (currentPage === 'Start' || currentPage === 'CalculationOptions') {
       setOptions({
         headerTitle: '',
         headerLeft: () => <BackArrow goBackFn={goBack} />,
@@ -176,25 +180,43 @@ const UserInput = () => {
         {getPageItem(currentPage).render(userInputState, scrollRef)}
       </ScrollView>
 
-      <Col style={{marginTop: -120}}>
-        {currentPage === 'Start' &&
-          baseLineData &&
-          Object.keys(baseLineData).length !== 0 && (
-            <>
-              <CtaButton
-                btnStyle="border"
-                btnText="몸무게, 목표영양만 변경하기"
-                onPress={() => goNext('ChangeWeight')}
-              />
-            </>
-          )}
-        <CtaButton
-          btnStyle={btnStyle}
-          btnText={btnText}
-          style={{marginTop: 8, marginBottom: 16}}
-          onPress={() => onCtaPress()}
-        />
-      </Col>
+      {/* CTA버튼 */}
+      {currentPage !== 'CalculationOptions' ? (
+        <Col style={{marginTop: -120}}>
+          {currentPage === 'Start' &&
+            baseLineData &&
+            Object.keys(baseLineData).length !== 0 && (
+              <>
+                <CtaButton
+                  btnStyle="border"
+                  btnText="몸무게, 목표영양만 변경하기"
+                  onPress={() => goNext('ChangeWeight')}
+                />
+              </>
+            )}
+          <CtaButton
+            btnStyle={btnStyle}
+            btnText={btnText}
+            style={{marginTop: 8, marginBottom: 16}}
+            onPress={() => onCtaPress()}
+          />
+        </Col>
+      ) : (
+        <Row style={{columnGap: 8, marginBottom: 16}}>
+          <CtaButton
+            btnStyle="border"
+            btnText="자세하게"
+            onPress={() => goNext('Gender')}
+            style={{flex: 1}}
+          />
+          <CtaButton
+            btnStyle="active"
+            btnText="간단하게"
+            onPress={() => goNext('GenderSimple')}
+            style={{flex: 1}}
+          />
+        </Row>
+      )}
     </Container>
   );
 };

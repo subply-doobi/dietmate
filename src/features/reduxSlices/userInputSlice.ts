@@ -14,7 +14,7 @@ import {validateInput} from '../../shared/utils/validation';
 import {IPayMethod, IPG} from '../../screens/order/util/payConsts';
 
 export interface IUserInputState {
-  // FirstInput
+  // UserInput (영양정보계산)
   gender: {
     value: string;
     isValid: boolean;

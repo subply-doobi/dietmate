@@ -9,7 +9,10 @@ import {getRecommendedNutr} from '../../util/targetByUserInfo';
 import {Col, Row, TextMain} from '../../../../shared/ui/styledComps';
 import colors from '../../../../shared/colors';
 import {icons} from '../../../../shared/iconSource';
-import {IUserInputState} from '../../../../features/reduxSlices/userInputSlice';
+import {
+  IUserInputState,
+  setValue,
+} from '../../../../features/reduxSlices/userInputSlice';
 import {calculateManualCalorie} from '../../../../shared/utils/targetCalculation';
 import {ShadowView} from '../../../../shared/ui/styledComps';
 import {
@@ -18,8 +21,13 @@ import {
 } from '../../../../shared/constants';
 import {link} from '../../../../shared/utils/linking';
 import AdditionalGuide from '../AdditionalGuide';
+import {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 
-const Result = ({userInputState}: {userInputState: IUserInputState}) => {
+const ResultSimple = ({userInputState}: {userInputState: IUserInputState}) => {
+  // redux
+  const dispatch = useDispatch();
+
   // react-query
   const {data: seqCodeData} = useListCode('SP008'); // SP008 : 운동빈도 (sportsSeqCd)
   const {data: timeCodeData} = useListCode('SP009'); // SP009 : 운동시간 (sportsTimeCd)
@@ -37,14 +45,31 @@ const Result = ({userInputState}: {userInputState: IUserInputState}) => {
     dietPurposeCd,
   } = userInputState;
 
-  // 권장영양
-  const recommendedNutr = getRecommendedNutr(
+  const {
+    calorie: calorieAuto,
+    carb: carbAuto,
+    protein: proteinAuto,
+    fat: fatAuto,
+    tmr,
+  } = getRecommendedNutr(
     seqCodeData,
     timeCodeData,
     strengthCodeData,
     userInputState,
   );
-  const {calorie: calorieAuto, tmr} = recommendedNutr;
+
+  // 권장영양
+  useEffect(() => {
+    const calPerMeal = String(Math.round(Number(calorieAuto) / 3));
+    const carbPerMeal = String(Math.round(Number(carbAuto) / 3));
+    const proteinPerMeal = String(Math.round(Number(proteinAuto) / 3));
+    const fatPerMeal = String(Math.round(Number(fatAuto) / 3));
+
+    dispatch(setValue({name: 'calorie', value: calPerMeal}));
+    dispatch(setValue({name: 'carb', value: carbPerMeal}));
+    dispatch(setValue({name: 'protein', value: proteinPerMeal}));
+    dispatch(setValue({name: 'fat', value: fatPerMeal}));
+  }, [userInputState]);
 
   // 칼로리 비율
   const {totalCalorie, carbRatio, proteinRatio, fatRatio} =
@@ -188,7 +213,7 @@ const Result = ({userInputState}: {userInputState: IUserInputState}) => {
   );
 };
 
-export default Result;
+export default ResultSimple;
 
 const Container = styled.View`
   flex: 1;

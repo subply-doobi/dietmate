@@ -246,7 +246,11 @@ const NewHome = () => {
             </TargetChangeBtn>
           </HighlightBox>
           <HorizontalSpace height={16} />
-          {baseLineData && <NutrTarget baseLineData={baseLineData} />}
+          {baseLineData && (
+            <NutrBtn onPress={() => navigate('UserInput', {from: 'NewHome'})}>
+              <NutrTarget baseLineData={baseLineData} />
+            </NutrBtn>
+          )}
         </ProfileBox>
 
         {/* 현재 식단 카드 (식단 있으면 구매, 없으면 식단구성버튼)*/}
@@ -501,6 +505,8 @@ const TargetChangeBtn = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
 `;
+
+const NutrBtn = styled.TouchableOpacity``;
 
 const CardTitle = styled(MainText)`
   font-weight: bold;
