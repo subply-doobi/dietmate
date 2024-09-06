@@ -32,6 +32,7 @@ import Menu from '../../menuAccordion/Menu';
 
 // react-query
 import {
+  useCreateDiet,
   useDeleteDiet,
   useListDietTotalObj,
 } from '../../../shared/api/queries/diet';
@@ -45,8 +46,13 @@ const MenuSection = () => {
 
   // react-query
   const {data: baseLineData, isLoading: getBLIsLoading} = useGetBaseLine();
+  const createDietMutation = useCreateDiet();
   const deleteDietMutation = useDeleteDiet();
-  const {data: dTOData, isLoading: isDTODataLoading} = useListDietTotalObj();
+  const {
+    data: dTOData,
+    isLoading: isDTOLoading,
+    isFetching: isDTOFetching,
+  } = useListDietTotalObj();
   const dietDetailData = dTOData?.[currentDietNo]?.dietDetail ?? [];
   // state
   const [dietNoToDelete, setDietNoToDelete] = useState<string>();
@@ -54,6 +60,7 @@ const MenuSection = () => {
   const [activeSection, setActiveSection] = useState<number[]>([]); // accordion
   const [menuNumSelectShow, setMenuNumSelectShow] = useState(false);
   const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
+  const [isCreating, setIsCreating] = useState(false);
 
   // etc
   const isAccordionActive = activeSection.length > 0;
@@ -93,7 +100,7 @@ const MenuSection = () => {
     // 로딩 중
     if (
       getBLIsLoading ||
-      isDTODataLoading ||
+      isDTOLoading ||
       (baseLineData && Object.keys(baseLineData).length === 0)
     )
       return [
@@ -117,22 +124,27 @@ const MenuSection = () => {
       return [
         {
           inactiveHeader: (
-            <IndicatorBox>
-              <Row>
-                <Icon source={icons.warning_24} size={20} />
-                <AddMenuText>+ 버튼을 눌러 끼니를 추가해보세요</AddMenuText>
-              </Row>
+            <IndicatorBox
+              disabled={isCreating || isDTOFetching}
+              onPress={async () => {
+                setIsCreating(true);
+                await createDietMutation.mutateAsync({
+                  setDietNo: true,
+                });
+                setIsCreating(false);
+              }}>
+              {isCreating || isDTOFetching ? (
+                <ActivityIndicator size="small" color={colors.main} />
+              ) : (
+                <Row>
+                  <Icon source={icons.warning_24} size={20} />
+                  <AddMenuText>+ 버튼을 눌러 끼니를 추가해보세요</AddMenuText>
+                </Row>
+              )}
             </IndicatorBox>
           ),
           content: <></>,
-          activeHeader: (
-            <IndicatorBox>
-              <Row>
-                <Icon source={icons.warning_24} size={20} />
-                <AddMenuText>+ 버튼을 눌러 끼니를 추가해보세요</AddMenuText>
-              </Row>
-            </IndicatorBox>
-          ),
+          activeHeader: <></>,
         },
       ];
 
@@ -222,14 +234,17 @@ const MenuSection = () => {
         ),
       },
     ];
-  }, [dTOData, baseLineData, activeSection]);
+  }, [dTOData, baseLineData, activeSection, isCreating]);
 
   return (
     <Container>
       {/* 끼니 선택 책갈피 */}
       <HeaderRow>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <MenuSelectCard />
+          <MenuSelectCard
+            isCreating={isCreating}
+            setIsCreating={setIsCreating}
+          />
         </ScrollView>
         {!hasNoDiet && (
           <DeleteBtn
@@ -289,7 +304,7 @@ const AddMenuText = styled(TextMain)`
   margin-left: 4px;
 `;
 
-const IndicatorBox = styled.View`
+const IndicatorBox = styled.TouchableOpacity`
   width: 100%;
   height: 70px;
   background-color: ${colors.white};
