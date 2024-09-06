@@ -436,7 +436,12 @@ const NewHome = () => {
             <>
               <DSmallBtn
                 btnText="튜토리얼 건너뛰기"
-                style={{position: 'absolute', top: 16, right: 16}}
+                style={{
+                  position: 'absolute',
+                  bottom: 40,
+                  right: 16,
+                  backgroundColor: colors.blackOpacity70,
+                }}
                 onPress={() => {
                   dispatch(setTutorialEnd());
                   updateNotShowAgainList({key: 'tutorial', value: true});

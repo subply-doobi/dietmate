@@ -107,7 +107,12 @@ export const renderDTPContent: IRenderDTPContent = {
     <>
       <DSmallBtn
         btnText="튜토리얼 건너뛰기"
-        style={{position: 'absolute', top: 16, right: 0}}
+        style={{
+          position: 'absolute',
+          bottom: 40,
+          right: 0,
+          backgroundColor: colors.blackOpacity70,
+        }}
         onPress={() => {
           store.dispatch(setTutorialEnd());
           updateNotShowAgainList({key: 'tutorial', value: true});
@@ -129,7 +134,12 @@ export const renderDTPContent: IRenderDTPContent = {
     <>
       <DSmallBtn
         btnText="튜토리얼 건너뛰기"
-        style={{position: 'absolute', top: 16, right: 0}}
+        style={{
+          position: 'absolute',
+          bottom: 40,
+          right: 0,
+          backgroundColor: colors.blackOpacity70,
+        }}
         onPress={() => {
           store.dispatch(setTutorialEnd());
           updateNotShowAgainList({key: 'tutorial', value: true});
@@ -156,7 +166,12 @@ export const renderDTPContent: IRenderDTPContent = {
     <>
       <DSmallBtn
         btnText="튜토리얼 건너뛰기"
-        style={{position: 'absolute', top: 16, right: 0}}
+        style={{
+          position: 'absolute',
+          bottom: 40,
+          right: 0,
+          backgroundColor: colors.blackOpacity70,
+        }}
         onPress={() => {
           store.dispatch(setTutorialEnd());
           updateNotShowAgainList({key: 'tutorial', value: true});
@@ -195,7 +210,12 @@ export const renderDTPContent: IRenderDTPContent = {
     <>
       <DSmallBtn
         btnText="튜토리얼 건너뛰기"
-        style={{position: 'absolute', top: 16, right: 0}}
+        style={{
+          position: 'absolute',
+          bottom: 40,
+          right: 0,
+          backgroundColor: colors.blackOpacity70,
+        }}
         onPress={() => {
           store.dispatch(setTutorialEnd());
           updateNotShowAgainList({key: 'tutorial', value: true});
@@ -249,7 +269,12 @@ export const renderDTPContent: IRenderDTPContent = {
     <>
       <DSmallBtn
         btnText="튜토리얼 건너뛰기"
-        style={{position: 'absolute', top: 16, right: 0}}
+        style={{
+          position: 'absolute',
+          bottom: 40,
+          right: 0,
+          backgroundColor: colors.blackOpacity70,
+        }}
         onPress={() => {
           store.dispatch(setTutorialEnd());
           updateNotShowAgainList({key: 'tutorial', value: true});

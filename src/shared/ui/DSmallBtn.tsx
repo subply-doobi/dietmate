@@ -13,7 +13,12 @@ const DSmallBtn = ({btnText, iconSource, iconSize, ...props}: IDSmallBtn) => {
   return (
     <Btn {...props}>
       <BtnText>{btnText}</BtnText>
-      <Icon size={iconSize || 20} source={iconSource || icons.arrowRight_20} />
+      {iconSource && (
+        <Icon
+          size={iconSize || 20}
+          source={iconSource || icons.arrowRight_20}
+        />
+      )}
     </Btn>
   );
 };
@@ -21,7 +26,6 @@ const DSmallBtn = ({btnText, iconSource, iconSize, ...props}: IDSmallBtn) => {
 export default DSmallBtn;
 
 const Btn = styled.TouchableOpacity`
-  height: 32px;
   flex-direction: row;
   background-color: ${colors.white};
   border-radius: 5px;
@@ -30,7 +34,7 @@ const Btn = styled.TouchableOpacity`
   align-items: center;
   column-gap: 4px;
 
-  padding: 0 8px;
+  padding: 8px 16px;
 `;
 
 const BtnText = styled(TextSub)`
