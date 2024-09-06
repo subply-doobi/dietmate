@@ -13,7 +13,7 @@ import {icons} from '../../shared/iconSource';
 import {IBaseLineData} from '../../shared/api/types/baseLine';
 import MenuNumSelect from '../cart/MenuNumSelect';
 import DAlert from '../../shared/ui/DAlert';
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
 import {
   useDeleteDiet,
@@ -22,6 +22,8 @@ import {
 import Config from 'react-native-config';
 import DTooltip from '../../shared/ui/DTooltip';
 import {checkNoStockP} from '../../shared/utils/productStatusCheck';
+import {ActivityIndicator} from 'react-native';
+import {IDietTotalObjData} from '../../shared/api/types/diet';
 
 interface IMenuAcInactiveHeader {
   controllable?: boolean;
@@ -48,9 +50,10 @@ const MenuAcInactiveHeader = ({
 
   // useState
   const [deleteAlertShow, setDeleteAlertShow] = useState(false);
+  const [prevDTO, setPrevDTO] = useState<IDietTotalObjData>({});
 
   // react-query
-  const {data: dTOData} = useListDietTotalObj();
+  const {data: dTOData, isFetching: isDTOFetching} = useListDietTotalObj();
   const dDData = dTOData?.[dietNo]?.dietDetail ?? [];
   const dietSeq = dTOData?.[dietNo]?.dietSeq ?? '';
   const deleteDietMutation = useDeleteDiet();
@@ -90,8 +93,34 @@ const MenuAcInactiveHeader = ({
         : colors.lineLight;
   const currentQty = dDData.length > 0 ? parseInt(dDData[0].qty, 10) : 1;
 
-  // 재고없는 상품 확인
-  const hasNoStockP = checkNoStockP(dTOData, dietNo);
+  const {hasNoStockP, changedDietNo} = useMemo(() => {
+    // 재고없는 상품 확인
+    const hasNoStockP = checkNoStockP(dTOData, dietNo);
+    if (!dTOData) return {hasNoStockP, changedDietNo: []};
+    Object.keys(prevDTO).length === 0 && setPrevDTO(dTOData);
+    // 자동구성으로 어떤 끼니가 바뀌었는지 확인
+    const changedDietNo = Object.keys(dTOData).filter(dietNo => {
+      const prevDTOLength = prevDTO[dietNo]?.dietDetail?.length || 0;
+      const currentDTOLength = dTOData[dietNo]?.dietDetail?.length;
+      const hasSamePNum = prevDTOLength === currentDTOLength;
+      if (!hasSamePNum) return true;
+      const prevProductArr = prevDTO[dietNo]?.dietDetail?.map(p => p.productNo);
+      const hasSameP = dTOData[dietNo]?.dietDetail?.every(p =>
+        prevProductArr?.includes(p.productNo),
+      );
+      if (!hasSameP) return true;
+      return false;
+    });
+    changedDietNo.length > 0 && setPrevDTO(dTOData);
+    return {
+      hasNoStockP,
+      changedDietNo,
+    };
+  }, [dTOData]);
+
+  // useEffect(() => {
+  //   if (dTOData) setPrevDTO(dTOData);
+  // }, []);
 
   return (
     <Box selected={selected}>
@@ -130,12 +159,20 @@ const MenuAcInactiveHeader = ({
               boxTop={-36}
             />
             <ThumnailBox style={{borderColor: thumbnailBorderColor}}>
-              {dDData.map(p => (
-                <Thumbnail
-                  key={p.productNo}
-                  source={{uri: `${Config.BASE_URL}${p.mainAttUrl}`}}
+              {isDTOFetching && changedDietNo.includes(dietNo) ? (
+                <ActivityIndicator
+                  size={'small'}
+                  color={colors.dark}
+                  style={{flex: 1, alignSelf: 'center'}}
                 />
-              ))}
+              ) : (
+                dDData.map(p => (
+                  <Thumbnail
+                    key={p.productNo}
+                    source={{uri: `${Config.BASE_URL}${p.mainAttUrl}`}}
+                  />
+                ))
+              )}
               {/* {(nutrStatus === 'satisfied' || nutrStatus === 'exceed') && (
                 <Icon
                   size={20}
