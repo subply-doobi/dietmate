@@ -207,7 +207,7 @@ export const PAGES = [
     header: '13/13',
     name: 'Result',
     title: '목표섭취량 계산이\n완료되었어요',
-    subTitle: '목표섭취량은 마이페이지에서\n언제든지 변경이 가능합니다',
+    subTitle: '목표섭취량은 홈화면 목표변경에서\n언제든지 변경이 가능합니다',
     getNextPage: (u: IUserInputState) => 'None',
     checkIsActive: (u: IUserInputState) => true,
     render: (u: IUserInputState, scrollRef: RefObject<ScrollView>) => (
@@ -275,7 +275,7 @@ export const PAGES = [
     header: '6/6',
     name: 'ResultSimple',
     title: '목표섭취량 계산이\n완료되었어요',
-    subTitle: '목표섭취량은 메인페이지에서\n언제든지 변경이 가능합니다',
+    subTitle: '목표섭취량은 홈화면 목표변경에서\n언제든지 변경이 가능합니다',
     getNextPage: (u: IUserInputState) => 'None',
     checkIsActive: (u: IUserInputState) => true,
     render: (u: IUserInputState, scrollRef: RefObject<ScrollView>) => (

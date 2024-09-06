@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import {SetStateAction, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components/native';
 
@@ -20,7 +20,11 @@ import {
 import {getNutrStatus} from '../../../shared/utils/sumUp';
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
 
-const MenuSelectCard = () => {
+interface IMenuSelectCard {
+  isCreating: boolean;
+  setIsCreating: React.Dispatch<SetStateAction<boolean>>;
+}
+const MenuSelectCard = ({isCreating, setIsCreating}: IMenuSelectCard) => {
   // redux
   const {totalFoodList, currentDietNo} = useSelector(
     (state: RootState) => state.common,
@@ -29,7 +33,7 @@ const MenuSelectCard = () => {
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
-  const {data: dTOData} = useListDietTotalObj();
+  const {data: dTOData, isFetching: isDTOFetching} = useListDietTotalObj();
   const createDietMutation = useCreateDiet();
 
   // state
@@ -40,9 +44,11 @@ const MenuSelectCard = () => {
     getAddDietStatusFrDTData(dTOData);
 
   // fn
-  const onCreateDiet = () => {
+  const onCreateDiet = async () => {
     if (dietAddStatus === 'possible') {
-      createDietMutation.mutate({setDietNo: true});
+      setIsCreating(true);
+      const res = await createDietMutation.mutateAsync({setDietNo: true});
+      setIsCreating(false);
       return;
     }
     setCreateErrShow(true);
@@ -85,7 +91,9 @@ const MenuSelectCard = () => {
             );
           })}
         <Row>
-          <CardBtn onPress={() => onCreateDiet()}>
+          <CardBtn
+            disabled={isCreating || isDTOFetching}
+            onPress={async () => onCreateDiet()}>
             <CardText style={{color: colors.textSub}}>+</CardText>
           </CardBtn>
         </Row>
