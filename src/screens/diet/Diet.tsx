@@ -304,14 +304,6 @@ const Diet = () => {
   };
 
   // render
-  if (isDTObjLoading || isCreating) {
-    return (
-      <Container style={{justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size={24} color={colors.main} />
-      </Container>
-    );
-  }
-
   return (
     <Container
       style={{

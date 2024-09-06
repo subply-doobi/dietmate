@@ -90,7 +90,14 @@ export const useCreateDietDetail = (options?: IMutationOptions) => {
         ? JSON.parse(JSON.stringify(prevDTOData))
         : {};
       const dietSeq = prevDTOData?.[dietNo]?.dietSeq ?? '';
-      newDTOData[dietNo].dietDetail.push({...food, qty: '1', dietNo, dietSeq});
+      newDTOData[dietNo].dietDetail.push({
+        ...food,
+        qty: '1',
+        dietNo,
+        dietSeq,
+        statusCd: 'SP012001',
+        statusNm: '판매중',
+      });
 
       // 3. Optimistically update to the new value
       // (실패할 경우 onError에서 이전 데이터로 돌려주기 -> 5번)
