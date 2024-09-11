@@ -34,8 +34,8 @@ import {tfDTOToDDA} from '../../shared/utils/dataTransform';
 import {setCustomData, setPayParams} from './util/setPayData';
 import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
-import {setPayFailAlertMsg} from '../../features/reduxSlices/orderSlice';
 import {PAY_METHOD} from './util/payConsts';
+import {closeModal} from '../../features/reduxSlices/modalSlice';
 
 const Order = () => {
   //navigation
@@ -43,11 +43,14 @@ const Order = () => {
 
   // redux
   const dispatch = useDispatch();
-  const {foodToOrder, selectedAddrIdx, shippingPrice, payFailAlertMsg} =
-    useSelector((state: RootState) => state.order);
-
+  const {foodToOrder, selectedAddrIdx, shippingPrice} = useSelector(
+    (state: RootState) => state.order,
+  );
   const {buyerName, buyerTel, entranceType, entranceNote, paymentMethod, pg} =
     useSelector((state: RootState) => state.userInput);
+  const payFailAlert = useSelector(
+    (state: RootState) => state.modal.modal.payFailAlert,
+  );
 
   // react-query
   const {data: listAddressData, isLoading: listAddressDataLoading} =
@@ -249,6 +252,8 @@ const Order = () => {
     });
   };
 
+  console.log('Order: payFailAlert: ', payFailAlert);
+
   return listAddressDataLoading ? (
     <Container style={{justifyContent: 'center', alignItems: 'center'}}>
       <ActivityIndicator size="small" color={colors.main} />
@@ -285,12 +290,15 @@ const Order = () => {
 
       {/* 결제실패알럿 */}
       <DAlert
-        alertShow={!!payFailAlertMsg}
+        alertShow={payFailAlert.isOpen}
         NoOfBtn={1}
-        onCancel={() => dispatch(setPayFailAlertMsg(''))}
-        onConfirm={() => dispatch(setPayFailAlertMsg(''))}
+        onCancel={() => dispatch(closeModal({name: 'payFailAlert'}))}
+        onConfirm={() => dispatch(closeModal({name: 'payFailAlert'}))}
         renderContent={() => (
-          <CommonAlertContent text="결제실패" subText={payFailAlertMsg} />
+          <CommonAlertContent
+            text="결제실패"
+            subText={payFailAlert.values?.payFailMsg}
+          />
         )}
       />
     </Container>

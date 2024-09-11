@@ -31,14 +31,18 @@ import {
 } from '../../shared/api/queries/diet';
 import {reGroupBySellerFromDTOData} from '../../shared/utils/dataTransform';
 import Config from 'react-native-config';
+import {useDispatch, useSelector} from 'react-redux';
+import {closeModal} from '../../features/reduxSlices/modalSlice';
+import {RootState} from '../../app/store/reduxStore';
 
-const MenuNumSelectContent = ({
-  setMenuNumSelectShow,
-  dietNoToNumControl,
-}: {
-  setMenuNumSelectShow: React.Dispatch<SetStateAction<boolean>>;
-  dietNoToNumControl: string;
-}) => {
+const MenuNumSelectContent = () => {
+  // redux
+  const dispatch = useDispatch();
+  const menuNumSelectBS = useSelector(
+    (state: RootState) => state.modal.modal.menuNumSelectBS,
+  );
+  const dietNoToNumControl = menuNumSelectBS.values?.dietNo ?? '';
+
   // react-query
   const {data: dTOData} = useListDietTotalObj();
   const updateDietDetailMutation = useUpdateDietDetail();
@@ -78,7 +82,7 @@ const MenuNumSelectContent = ({
       dietNo: dietNoToNumControl,
       qty: String(qty),
     });
-    setMenuNumSelectShow(false);
+    dispatch(closeModal({name: 'menuNumSelectBS'}));
   };
 
   return (
@@ -198,7 +202,7 @@ const MenuNumSelectContent = ({
             height={48}
             width={(SCREENWIDTH - 16 - 16 - 8) / 2}
             btnStyle="border"
-            onPress={() => setMenuNumSelectShow(false)}>
+            onPress={() => dispatch(closeModal({name: 'menuNumSelectBS'}))}>
             <BtnText style={{color: colors.textSub}}>취소</BtnText>
           </BtnCTA>
           <BtnCTA

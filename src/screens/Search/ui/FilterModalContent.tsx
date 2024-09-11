@@ -26,6 +26,7 @@ import NutritionFilter from './NutritionFilter';
 import {AnyAction, Dispatch} from '@reduxjs/toolkit';
 import PriceFilter from './PriceFilter';
 import {checkisFiltered} from '../../home/util/filterUtils';
+import {closeModal} from '../../../features/reduxSlices/modalSlice';
 
 const initializeSome = (
   dispatch: Dispatch<AnyAction>,
@@ -37,11 +38,7 @@ const initializeSome = (
   else return;
 };
 
-interface IFilterModalContent {
-  setFilterModalShow: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const FilterModalContent = ({setFilterModalShow}: IFilterModalContent) => {
+const FilterModalContent = () => {
   // redux
   // 0: 카테고리 | 1: 영양성분 | 2: 가격
   const dispatch = useDispatch();
@@ -104,7 +101,7 @@ const FilterModalContent = ({setFilterModalShow}: IFilterModalContent) => {
           width={(SCREENWIDTH - 32 - 8) / 2}
           onPress={() => {
             dispatch(applySortFilter());
-            setFilterModalShow(false);
+            dispatch(closeModal({name: 'filterBS'}));
           }}>
           <BtnText>확인</BtnText>
         </BtnCTA>
@@ -132,13 +129,13 @@ const FilterTitleRow = styled.View`
 const FilterTitleBtn = styled.Pressable`
   flex-direction: row;
 `;
-const FilterTitle = styled(TextMain)`
+const FilterTitle = styled(TextMain)<{isActivated: boolean}>`
   font-size: 18px;
   font-weight: bold;
   color: ${({isActivated}: {isActivated: boolean}) =>
     isActivated ? colors.textMain : colors.textSub};
 `;
-const FilterDot = styled.View`
+const FilterDot = styled.View<{isActivated: boolean}>`
   width: 6px;
   height: 6px;
   border-radius: 3px;
@@ -162,7 +159,7 @@ const InitializeIcon = styled.Image`
 
 const BottomBtnBox = styled.View`
   position: absolute;
-  bottom: 0px;
+  bottom: 16px;
   justify-content: center;
   column-gap: 8px;
   flex-direction: row;

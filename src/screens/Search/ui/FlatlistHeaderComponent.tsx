@@ -23,6 +23,7 @@ import {
 import {RootState} from '../../../app/store/reduxStore';
 import Filter from './Filter';
 import {SORT_LIST} from '../../../shared/constants';
+import {openModal} from '../../../features/reduxSlices/modalSlice';
 
 interface ISortImg {
   [key: string]: any;
@@ -39,14 +40,10 @@ const sortImg: ISortImg = {
 interface IFlatlistHeaderComponent {
   translateY: any;
   searchedNum: number | undefined;
-  setFilterModalShow: React.Dispatch<React.SetStateAction<boolean>>;
-  setSortModalShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const FlatlistHeaderComponent = ({
   translateY,
   searchedNum,
-  setSortModalShow,
-  setFilterModalShow,
 }: IFlatlistHeaderComponent) => {
   // redux
   const dispatch = useDispatch();
@@ -137,7 +134,7 @@ const FlatlistHeaderComponent = ({
           onPress={() => {
             // sort bottom sheet 열 때 적용되어있는 sort, filter 복사
             dispatch(copySortFilter());
-            setSortModalShow(true);
+            dispatch(openModal({name: 'sortBS'}));
           }}>
           <SortBtnText>{sortLabel}</SortBtnText>
           <SortImage source={sortImg[sortValue]} />
@@ -148,10 +145,7 @@ const FlatlistHeaderComponent = ({
       <HorizontalSpace height={8} />
 
       {/* 필터 (검색 제외) */}
-      <Filter
-        setFilterModalShow={setFilterModalShow}
-        setSearchBarFocus={setSearchBarFocus}
-      />
+      <Filter setSearchBarFocus={setSearchBarFocus} />
 
       <HorizontalSpace height={16} />
     </Animated.View>

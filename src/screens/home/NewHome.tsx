@@ -1,6 +1,11 @@
 // RN
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {ActivityIndicator, ScrollView, TouchableOpacity} from 'react-native';
+import {
+  ActivityIndicator,
+  ScrollView,
+  Touchable,
+  TouchableOpacity,
+} from 'react-native';
 
 // 3rd
 import {useIsFocused, useNavigation} from '@react-navigation/native';
@@ -58,6 +63,7 @@ import {
 import DTooltip from '../../shared/ui/DTooltip';
 import {useTestQuery} from '../../shared/api/queries/test';
 import DSmallBtn from '../../shared/ui/DSmallBtn';
+import {closeModal, openModal} from '../../features/reduxSlices/modalSlice';
 
 const NewHome = () => {
   // navigation
@@ -75,10 +81,13 @@ const NewHome = () => {
   const {applied: appliedSortFilter} = useSelector(
     (state: RootState) => state.sortFilter,
   );
+  const tutorialTPS = useSelector(
+    (state: RootState) => state.modal.modal.tutorialTPS,
+  );
 
   // useRef (튜토리얼 식단 구성하기 버튼 위치)
   const scrollRef = useRef<ScrollView | null>(null);
-  const ctaBtnRef = useRef<TouchableOpacity | null>(null);
+  const ctaBtnRef = useRef<React.ElementRef<typeof TouchableOpacity>>(null);
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
@@ -192,10 +201,16 @@ const NewHome = () => {
     loadCheckList();
   }, [isFocused]);
 
-  // useEffect 튜토리얼모드인 경우 끼니 있으면 모두 삭제
+  // useEffect
+  // 튜토리얼 시작
   // + 스크롤 맨 위로 올리고 튜토리얼 시작 버튼 위치 저장
   useEffect(() => {
-    if (!isTutorialMode || tutorialProgress !== 'Start') return;
+    if (!isFocused) return;
+    if (!dTOData) return;
+    if (!isTutorialMode || tutorialProgress !== 'Start') {
+      tutorialTPS.isOpen && dispatch(closeModal({name: 'tutorialTPS'}));
+      return;
+    }
 
     const timeoutId = setTimeout(() => {
       ctaBtnRef?.current?.measure((fx, fy, width, height, px, py) => {
@@ -204,15 +219,13 @@ const NewHome = () => {
       });
     }, 300);
 
-    if (!isFocused) return;
-    if (!dTOData) return;
-    if (menuNum === 0) return;
-
+    // 끼니 있는 경우는 모두 삭제
     const deleteAllMenuAndStartTutorial = async () => {
       await deleteDietAllMutation.mutateAsync();
     };
 
-    deleteAllMenuAndStartTutorial();
+    dispatch(openModal({name: 'tutorialTPS', modalId: 'NewHome'}));
+    if (Object.keys(dTOData).length !== 0) deleteAllMenuAndStartTutorial();
     return () => clearTimeout(timeoutId);
   }, [tutorialProgress, dTOData, menuNum]);
 
@@ -431,7 +444,7 @@ const NewHome = () => {
         {/* 튜토리얼 */}
         <DTPScreen
           contentDelay={500}
-          visible={isTutorialMode && tutorialProgress === 'Start'}
+          visible={tutorialTPS.isOpen && tutorialTPS.modalId === 'NewHome'}
           renderContent={() => (
             <>
               <DSmallBtn
@@ -456,6 +469,7 @@ const NewHome = () => {
               <CtaButton
                 onPress={() => {
                   dispatch(setTutorialProgress('AddMenu'));
+                  dispatch(closeModal({name: 'tutorialTPS'}));
                   navigate('BottomTabNav', {screen: 'Diet'});
                 }}
                 btnStyle="active"

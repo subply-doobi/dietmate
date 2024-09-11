@@ -23,6 +23,7 @@ import {
   initializeSort,
   updateSort,
 } from '../../../features/reduxSlices/sortFilterSlice';
+import {closeModal} from '../../../features/reduxSlices/modalSlice';
 
 const sortTooltipText: {
   [key: string]: string;
@@ -34,11 +35,7 @@ const sortTooltipText: {
     '가격대비 단백질양으로 정렬합니다\n헬창판별버튼이라는 소문이...',
 };
 
-interface ISortModalContent {
-  setSortModalShow: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const SortModalContent = ({setSortModalShow}: ISortModalContent) => {
+const SortModalContent = () => {
   // redux
   const dispatch = useDispatch();
   const {
@@ -110,7 +107,7 @@ const SortModalContent = ({setSortModalShow}: ISortModalContent) => {
           btnStyle={'activated'}
           onPress={() => {
             dispatch(applySortFilter());
-            setSortModalShow(false);
+            dispatch(closeModal({name: 'sortBS'}));
           }}>
           <BottomText>확인</BottomText>
         </BtnCTA>

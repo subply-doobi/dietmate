@@ -12,17 +12,16 @@ import {
 import MenuNumSelect from '../cart/MenuNumSelect';
 import {commaToNum, sumUpPrice} from '../../shared/utils/sumUp';
 import {useListDietTotalObj} from '../../shared/api/queries/diet';
+import {useDispatch} from 'react-redux';
+import {openModal} from '../../features/reduxSlices/modalSlice';
 
 interface IMenuAcContent {
   dietNo: string;
-  setDietNoToNumControl?: React.Dispatch<React.SetStateAction<string>>;
-  setMenuNumSelectShow?: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const MenuAcContent = ({
-  dietNo,
-  setDietNoToNumControl,
-  setMenuNumSelectShow,
-}: IMenuAcContent) => {
+const MenuAcContent = ({dietNo}: IMenuAcContent) => {
+  // redux
+  const dispatch = useDispatch();
+
   // react-query
   const {data: dTOData} = useListDietTotalObj();
   const dDData = dTOData?.[dietNo]?.dietDetail ?? [];
@@ -34,9 +33,8 @@ const MenuAcContent = ({
 
   // fn
   const onMenuNoSelectPress = () => {
-    if (isEmpty || !setDietNoToNumControl || !setMenuNumSelectShow) return;
-    setDietNoToNumControl(dietNo);
-    setMenuNumSelectShow(true);
+    if (isEmpty) return;
+    dispatch(openModal({name: 'menuNumSelectBS', values: {dietNo}}));
   };
 
   return (

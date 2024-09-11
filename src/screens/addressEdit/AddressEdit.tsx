@@ -36,6 +36,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {setAddrBase, setValue} from '../../features/reduxSlices/userInputSlice';
 import {OnCompleteParams} from '@actbase/react-daum-postcode/lib/types';
 import DTextInput from '../../shared/ui/DTextInput';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
 
 const renderDeleteAlertContent = () => (
   <AlertContentContainer>
@@ -51,6 +52,9 @@ const AddressEdit = () => {
   const {addr1, addr2, zipCode} = useSelector(
     (state: RootState) => state.userInput,
   );
+  const addressDeleteAlert = useSelector(
+    (state: RootState) => state.modal.modal.addressDeleteAlert,
+  );
 
   // navigation
   const {navigate, setOptions} = useNavigation();
@@ -64,7 +68,6 @@ const AddressEdit = () => {
 
   // useState
   const [postModalVisible, setPostModalVisible] = useState(false);
-  const [addressDeleteAlertShow, setAddressDeleteAlertShow] = useState(false);
 
   // etc
   const addrNo = route.params?.addrNo ?? route.params?.addrNo;
@@ -145,7 +148,9 @@ const AddressEdit = () => {
                   <PostalCode>우편번호: {zipCode.value}</PostalCode>
                   {isUpdate && (
                     <AddressDeleteBtn
-                      onPress={() => setAddressDeleteAlertShow(true)}>
+                      onPress={() =>
+                        dispatch(openModal({name: 'addressDeleteAlert'}))
+                      }>
                       <AddressDeleteIcon source={icons.cancelRound_24} />
                     </AddressDeleteBtn>
                   )}
@@ -194,9 +199,12 @@ const AddressEdit = () => {
 
             {/* 주소 delete 알럿 */}
             <DAlert
-              alertShow={addressDeleteAlertShow}
-              onCancel={() => setAddressDeleteAlertShow(false)}
+              alertShow={addressDeleteAlert.isOpen}
+              onCancel={() =>
+                dispatch(closeModal({name: 'addressDeleteAlert'}))
+              }
               onConfirm={() => onDeleteAlertConfirm()}
+              NoOfBtn={2}
               renderContent={renderDeleteAlertContent}
               confirmLabel={'삭제'}
             />

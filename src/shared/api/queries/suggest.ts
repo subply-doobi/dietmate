@@ -16,7 +16,6 @@ export const useCreateSuggestUser = () => {
   const mutation = useMutation({
     mutationFn: (suggestCd: string) =>
       mutationFn(`${CREATE_SUGGEST_USER}/${suggestCd}`, 'put'),
-    onError: () => {},
     onSuccess: () => {
       // invalidate
       queryClient.invalidateQueries({queryKey: [USER]});
@@ -53,7 +52,6 @@ export const useUpdateSuggestUser = () => {
   const mutation = useMutation({
     mutationFn: (suggestCd: string) =>
       mutationFn(`${UPDATE_SUGGEST_USER}/${suggestCd}`, 'post'),
-    onError: () => {},
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: [USER]});
     },

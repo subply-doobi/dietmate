@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import styled from 'styled-components/native';
 import Accordion from 'react-native-collapsible/Accordion';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../app/store/reduxStore';
 
 // doobi util, constant etc
@@ -39,10 +39,18 @@ import {
 import MenuNumSelect from '../../cart/MenuNumSelect';
 import {commaToNum, sumUpPrice} from '../../../shared/utils/sumUp';
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
+import {openModal, closeModal} from '../../../features/reduxSlices/modalSlice';
 
 const MenuSection = () => {
   // redux
+  const dispatch = useDispatch();
+  const menuDeleteAlert = useSelector(
+    (state: RootState) => state.modal.modal.menuDeleteAlert,
+  );
   const {currentDietNo} = useSelector((state: RootState) => state.common);
+  const menuNumSelectBS = useSelector(
+    (state: RootState) => state.modal.modal.menuNumSelectBS,
+  );
 
   // react-query
   const {data: baseLineData, isLoading: getBLIsLoading} = useGetBaseLine();
@@ -56,10 +64,7 @@ const MenuSection = () => {
   const dietDetailData = dTOData?.[currentDietNo]?.dietDetail ?? [];
   // state
   const [dietNoToDelete, setDietNoToDelete] = useState<string>();
-  const [deleteAlertShow, setDeleteAlertShow] = useState(false);
   const [activeSection, setActiveSection] = useState<number[]>([]); // accordion
-  const [menuNumSelectShow, setMenuNumSelectShow] = useState(false);
-  const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
   const [isCreating, setIsCreating] = useState(false);
 
   // etc
@@ -75,12 +80,17 @@ const MenuSection = () => {
     if (!dTOData) return;
     dietNoToDelete &&
       deleteDietMutation.mutate({dietNo: dietNoToDelete, currentDietNo});
-    setDeleteAlertShow(false);
+    dispatch(closeModal({name: 'menuDeleteAlert'}));
   };
 
   const onMenuNoSelectPress = () => {
-    setDietNoToNumControl(currentDietNo);
-    setMenuNumSelectShow(true);
+    dispatch(
+      openModal({
+        name: 'menuNumSelectBS',
+        modalId: 'MenuSection',
+        values: {dietNo: currentDietNo},
+      }),
+    );
   };
 
   // accordion
@@ -236,6 +246,7 @@ const MenuSection = () => {
     ];
   }, [dTOData, baseLineData, activeSection, isCreating]);
 
+  // render
   return (
     <Container>
       {/* 끼니 선택 책갈피 */}
@@ -250,7 +261,9 @@ const MenuSection = () => {
           <DeleteBtn
             onPress={() => {
               setDietNoToDelete(currentDietNo);
-              setDeleteAlertShow(true);
+              dispatch(
+                openModal({name: 'menuDeleteAlert', modalId: 'MenuSection'}),
+              );
             }}>
             <DeleteImg source={icons.deleteRound_18} />
           </DeleteBtn>
@@ -260,14 +273,16 @@ const MenuSection = () => {
       {/* 끼니 삭제 알럿 */}
       <DAlert
         NoOfBtn={2}
-        alertShow={deleteAlertShow}
+        alertShow={
+          menuDeleteAlert.isOpen && menuDeleteAlert.modalId === 'MenuSection'
+        }
         renderContent={() => (
           <DeleteAlertContent
             deleteText={dTOData?.[currentDietNo]?.dietSeq ?? ''}
           />
         )}
         onConfirm={() => onDeleteDiet()}
-        onCancel={() => setDeleteAlertShow(false)}
+        onCancel={() => dispatch(closeModal({name: 'menuDeleteAlert'}))}
       />
 
       <Accordion
@@ -283,15 +298,12 @@ const MenuSection = () => {
 
       {/* 끼니 수량 조절용 BottomSheet */}
       <DBottomSheet
-        alertShow={menuNumSelectShow}
-        setAlertShow={setMenuNumSelectShow}
-        renderContent={() => (
-          <MenuNumSelectContent
-            setMenuNumSelectShow={setMenuNumSelectShow}
-            dietNoToNumControl={dietNoToNumControl}
-          />
-        )}
-        onCancel={() => setMenuNumSelectShow(false)}
+        visible={
+          menuNumSelectBS.isOpen && menuNumSelectBS.modalId === 'MenuSection'
+        }
+        closeModal={() => dispatch(closeModal({name: 'menuNumSelectBS'}))}
+        renderContent={() => <MenuNumSelectContent />}
+        onCancel={() => dispatch(closeModal({name: 'menuNumSelectBS'}))}
       />
     </Container>
   );

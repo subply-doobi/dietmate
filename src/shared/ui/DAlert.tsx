@@ -26,7 +26,7 @@ const DAlert = ({
   confirmLabel,
   cancelLabel,
   showTopCancel = false,
-  NoOfBtn,
+  NoOfBtn = 2,
   contentDelay,
   ...props
 }: IDAlert) => {
@@ -66,6 +66,7 @@ const DAlert = ({
                 )}
 
                 <BtnRight
+                  style={{borderBottomLeftRadius: NoOfBtn === 1 ? 10 : 0}}
                   onPress={async () => onConfirm && (await onConfirm())}>
                   <ConfirmBtnText>
                     {confirmLabel ? confirmLabel : '확인'}

@@ -1,9 +1,8 @@
 // RN
-import {useEffect, useState} from 'react';
 import {ScrollView} from 'react-native';
 
 // 3rd
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -17,6 +16,8 @@ import {INQUIRY_URL} from '../../shared/constants';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 import {updateNotShowAgainList} from '../../shared/utils/asyncStorage';
 import {setTutorialStart} from '../../features/reduxSlices/commonSlice';
+import {RootState} from '../../app/store/reduxStore';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
 
 const Mypage = () => {
   // navigation
@@ -24,9 +25,9 @@ const Mypage = () => {
 
   // redux
   const dispatch = useDispatch();
-
-  // useState
-  const [restartTutorial, setRestartTutorial] = useState(false);
+  const tutorialRestartAlert = useSelector(
+    (state: RootState) => state.modal.modal.tutorialRestartAlert,
+  );
 
   // etc
   // btns
@@ -34,7 +35,7 @@ const Mypage = () => {
     {
       title: '이용방법',
       btnId: 'Tutorial',
-      onPress: () => setRestartTutorial(true),
+      onPress: () => dispatch(openModal({name: 'tutorialRestartAlert'})),
     },
     {
       title: '추천코드',
@@ -61,7 +62,7 @@ const Mypage = () => {
   ];
 
   const goTutorial = async () => {
-    setRestartTutorial(false);
+    dispatch(closeModal({name: 'tutorialRestartAlert'}));
     dispatch(setTutorialStart());
     await updateNotShowAgainList({key: 'tutorial', value: false});
     reset({
@@ -92,7 +93,7 @@ const Mypage = () => {
 
       {/* 튜토리얼 진행 알럿 */}
       <DAlert
-        alertShow={restartTutorial}
+        alertShow={tutorialRestartAlert.isOpen}
         renderContent={() => (
           <CommonAlertContent
             text="튜토리얼을 다시 진행할까요?"
@@ -100,7 +101,7 @@ const Mypage = () => {
           />
         )}
         onConfirm={goTutorial}
-        onCancel={() => setRestartTutorial(false)}
+        onCancel={() => dispatch(closeModal({name: 'tutorialRestartAlert'}))}
         confirmLabel="진행"
         NoOfBtn={2}
       />

@@ -3,16 +3,13 @@ import RNRestart from 'react-native-restart';
 import NetInfo from '@react-native-community/netinfo';
 
 // doobi util
-import {
-  closeErrorAlert,
-  openErrorAlert,
-} from '../../features/reduxSlices/errorAlertSlice';
 import {store} from '../../app/store/reduxStore';
 import {isAxiosError} from 'axios';
 import {navigationRef} from '../../app/navigators/navigationRef';
 import {queryClient} from '../../app/store/reactQueryStore';
 import {setTutorialStart} from '../../features/reduxSlices/commonSlice';
 import Config from 'react-native-config';
+import {openModal} from '../../features/reduxSlices/modalSlice';
 
 // 에러 -> 에러코드
 // null -> 네트워크 없음
@@ -95,43 +92,51 @@ const runErrorActionByCode = (code: IErrorCode | undefined | null) => {
   }
   // 정의된 것 없는 경우 ErrorAlert 띄우기
   store.dispatch(
-    openErrorAlert({
-      errorCode: code,
-      msg: getMsgByCode(code),
+    openModal({
+      name: 'requestErrorAlert',
+      values: {code: code, msg: getMsgByCode(code)},
     }),
   );
 };
 
 // 에러 핸들러
 export const handleError = async (error: Error) => {
+  console.log('handleError: ', error);
   const errorCode = await convertErrorToCode(error);
+  console.log('errorCode: ', errorCode);
   runErrorActionByCode(errorCode);
 };
 
 // ErrorAlert 띄우는 경우 확인버튼 눌렀을 때 실행할 함수
+const commonAlertAction = () => {
+  // 기본: 튜토리얼모드초기화 + 로그인화면이동
+  store.getState().common.isTutorialMode && store.dispatch(setTutorialStart());
+  navigationRef.isReady() &&
+    navigationRef.reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    });
+};
+
 const ErrAlertActionByCode: ICodeToErrorAction = {
   500: () => {
+    store.getState().common.isTutorialMode &&
+      store.dispatch(setTutorialStart());
     RNRestart.Restart();
+  },
+  401: () => {
+    commonAlertAction();
   },
 };
 
-export const getErrAlertActionByCode = (
+export const runErrAlertActionByCode = (
   code: IErrorCode | undefined | null,
 ) => {
-  if (!code) return null;
-  if (ErrAlertActionByCode[code]) return ErrAlertActionByCode[code];
-
-  const commonAlertAction = () => {
-    const isTutorialMode = store.getState().common.isTutorialMode;
-    store.dispatch(closeErrorAlert());
-    queryClient.invalidateQueries();
-    isTutorialMode && store.dispatch(setTutorialStart());
-    navigationRef.isReady() &&
-      navigationRef.reset({
-        index: 0,
-        routes: [{name: 'Login'}],
-      });
-  };
-
-  return commonAlertAction;
+  if (!code) return;
+  if (ErrAlertActionByCode[code]) {
+    ErrAlertActionByCode[code]();
+    return;
+  }
+  commonAlertAction();
+  // queryClient.invalidateQueries();
 };

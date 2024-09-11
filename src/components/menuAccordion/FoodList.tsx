@@ -18,6 +18,9 @@ import {
 import {SERVICE_PRICE_PER_PRODUCT} from '../../shared/constants';
 import Config from 'react-native-config';
 import DTooltip from '../../shared/ui/DTooltip';
+import {useDispatch, useSelector} from 'react-redux';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
+import {RootState} from '../../app/store/reduxStore';
 
 interface IFoodList {
   selectedFoods: {[key: string]: string[]};
@@ -26,6 +29,12 @@ interface IFoodList {
 }
 
 const FoodList = ({selectedFoods, setSelectedFoods, dietNo}: IFoodList) => {
+  // redux
+  const dispatch = useDispatch();
+  const productDeleteAlert = useSelector(
+    (state: RootState) => state.modal.modal.productDeleteAlert,
+  );
+
   // navigation
   const {navigate} = useNavigation();
 
@@ -34,18 +43,16 @@ const FoodList = ({selectedFoods, setSelectedFoods, dietNo}: IFoodList) => {
   const dietDetailData = dTOData?.[dietNo]?.dietDetail ?? [];
   const deleteMutation = useDeleteDietDetail();
 
-  // state
-  const [deleteAlertShow, setDeleteAlertShow] = useState(false);
-  const [productNoToDelete, setProductNoToDelete] = useState('');
-
   // etc
   const onDelete = () => {
+    const productNoToDel = productDeleteAlert.values?.productNoToDel;
     dTOData &&
+      productNoToDel &&
       deleteMutation.mutate({
         dietNo: dietNo,
-        productNo: productNoToDelete,
+        productNo: productNoToDel,
       });
-    setDeleteAlertShow(false);
+    dispatch(closeModal({name: 'productDeleteAlert'}));
   };
 
   const addToSelected = (productNo: string) => {
@@ -136,8 +143,13 @@ const FoodList = ({selectedFoods, setSelectedFoods, dietNo}: IFoodList) => {
               <RightBtnBox>
                 <DeleteBtn
                   onPress={() => {
-                    setProductNoToDelete(food.productNo);
-                    setDeleteAlertShow(true);
+                    dispatch(
+                      openModal({
+                        name: 'productDeleteAlert',
+                        values: {productNoToDel: food.productNo},
+                        modalId: `FoodList_${dietNo}`, // 끼니별로 알럿이 있어서 modalId를 파일명_dietNo로 구분
+                      }),
+                    );
                   }}>
                   <Icon source={icons.cancelRound_24} />
                 </DeleteBtn>
@@ -163,12 +175,15 @@ const FoodList = ({selectedFoods, setSelectedFoods, dietNo}: IFoodList) => {
         );
       })}
       <DAlert
-        alertShow={deleteAlertShow}
+        alertShow={
+          // 끼니별로 알럿이 있어서 modalId를 파일명_dietNo로 구분
+          productDeleteAlert.isOpen &&
+          productDeleteAlert.modalId === `FoodList_${dietNo}`
+        }
         confirmLabel="삭제"
         onConfirm={onDelete}
-        onCancel={() => {
-          setDeleteAlertShow(false);
-        }}
+        onCancel={() => dispatch(closeModal({name: 'productDeleteAlert'}))}
+        NoOfBtn={2}
         renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
       />
     </Container>

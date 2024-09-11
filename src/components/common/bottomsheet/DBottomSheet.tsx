@@ -4,30 +4,30 @@ import styled from 'styled-components/native';
 import colors from '../../../shared/colors';
 
 interface IDBottomSheet {
-  alertShow: boolean;
-  setAlertShow: React.Dispatch<React.SetStateAction<boolean>>;
+  visible: boolean;
   renderContent: () => React.ReactElement;
   onCancel?: Function;
+  closeModal?: Function;
   filterHeight?: number;
 }
 const DBottomSheet = ({
-  alertShow,
-  setAlertShow,
+  visible,
   renderContent,
   onCancel,
+  closeModal,
   filterHeight,
 }: IDBottomSheet) => {
   return (
     <Modal
       animationType="slide"
       transparent={true}
-      visible={alertShow}
+      visible={visible}
       onRequestClose={() => {
         onCancel ? onCancel() : null;
       }}>
       <ModalBackGround
         onPress={() => {
-          setAlertShow(false);
+          closeModal && closeModal();
         }}>
         <PopUpContainer filterHeight={filterHeight} activeOpacity={1}>
           <PopupIndicator />
@@ -47,7 +47,7 @@ const ModalBackGround = styled.TouchableOpacity`
 `;
 
 interface IPopUpContainer {
-  filterHeight: number;
+  filterHeight?: number;
   backgroundColor?: string;
 }
 const PopUpContainer = styled.TouchableOpacity<IPopUpContainer>`

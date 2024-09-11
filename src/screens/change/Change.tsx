@@ -24,6 +24,7 @@ import CommonAlertContent from '../../components/common/alert/CommonAlertContent
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../app/store/reduxStore';
 import {setTutorialProgress} from '../../features/reduxSlices/commonSlice';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
 
 const FOOD_ERROR_RANGE = {
   calorie: [-20, 20],
@@ -38,6 +39,9 @@ const Change = () => {
   const {isTutorialMode, tutorialProgress} = useSelector(
     (state: RootState) => state.common,
   );
+  const noProductAlert = useSelector(
+    (state: RootState) => state.modal.modal.noProductAlert,
+  );
 
   // navigation
   const {
@@ -46,7 +50,6 @@ const Change = () => {
   const {goBack, setOptions} = useNavigation();
 
   // useState
-  const [productAlertShow, setProductAlertShow] = useState(false);
   const [flatlistData, setFlatlistData] = useState<IProductData[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<
     IProductData | undefined
@@ -122,7 +125,7 @@ const Change = () => {
       );
       if (!data) return;
       if (data && data.length === 0) {
-        setProductAlertShow(true);
+        dispatch(openModal({name: 'noProductAlert', modalId: 'Change'}));
         return;
       }
       setFlatlistData(data);
@@ -177,7 +180,7 @@ const Change = () => {
   };
 
   const onAlertConfirm = () => {
-    setProductAlertShow(false);
+    dispatch(closeModal({name: 'noProductAlert'}));
     if (isTutorialMode && tutorialProgress === 'ChangeFood') {
       dispatch(setTutorialProgress('AutoMenu'));
       goBack();
@@ -226,9 +229,9 @@ const Change = () => {
       />
       {/* 알럿창 */}
       <DAlert
-        alertShow={productAlertShow}
+        alertShow={noProductAlert.isOpen && noProductAlert.modalId === 'Change'}
         onConfirm={onAlertConfirm}
-        onCancel={() => setProductAlertShow(false)}
+        onCancel={() => dispatch(closeModal({name: 'noProductAlert'}))}
         renderContent={() =>
           isTutorialMode && tutorialProgress === 'ChangeFood' ? (
             <CommonAlertContent

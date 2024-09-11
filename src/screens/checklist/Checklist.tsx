@@ -26,8 +26,17 @@ import {updateTotalCheckList} from '../../shared/utils/asyncStorage';
 import PieChart from 'react-native-pie-chart';
 import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../app/store/reduxStore';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
 
 const Checklist = () => {
+  // redux
+  const dispatch = useDispatch();
+  const changeTargetAlert = useSelector(
+    (state: RootState) => state.modal.modal.changeTargetAlert,
+  );
+
   // navigation
   const {navigate, reset, setOptions} = useNavigation();
   const route = useRoute();
@@ -38,7 +47,6 @@ const Checklist = () => {
   // map 안에서 asyncStorage에 직접 접근할 수 없음. -> state와 동시에 관리해서
   // rendering할 때는 state 값으로.
   const [checklist, setChecklist] = useState<string[]>([]);
-  const [changeTargetAlertShow, setChangeTargetAlertShow] = useState(false);
 
   // etc
   // fn
@@ -83,7 +91,7 @@ const Checklist = () => {
   // 몸무게, 목표 변경 알럿
   useEffect(() => {
     if (percentage !== 100) return;
-    percentage === 100 && setChangeTargetAlertShow(true);
+    percentage === 100 && dispatch(openModal({name: 'changeTargetAlert'}));
   }, [checklist]);
   return (
     <Container style={{backgroundColor: colors.backgroundLight2}}>
@@ -172,7 +180,7 @@ const Checklist = () => {
         </Card>
       </ScrollView>
       <DAlert
-        alertShow={changeTargetAlertShow}
+        alertShow={changeTargetAlert.isOpen}
         confirmLabel="목표변경"
         renderContent={() => (
           <CommonAlertContent
@@ -190,7 +198,7 @@ const Checklist = () => {
           })
         }
         NoOfBtn={2}
-        onCancel={() => setChangeTargetAlertShow(false)}
+        onCancel={() => dispatch(closeModal({name: 'changeTargetAlert'}))}
         style={{width: 280}}
       />
     </Container>

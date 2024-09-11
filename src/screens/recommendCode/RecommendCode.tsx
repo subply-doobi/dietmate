@@ -16,11 +16,16 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../app/store/reduxStore';
 import {setValue} from '../../features/reduxSlices/userInputSlice';
 import {icons} from '../../shared/iconSource';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
+import {removeToken} from '../../shared/utils/asyncStorage';
 
 const RecommendCode = () => {
   // redux
   const dispatch = useDispatch();
-  const {friendCd} = useSelector((state: RootState) => state.userInput);
+  const friendCd = useSelector((state: RootState) => state.userInput.friendCd);
+  const recommendCodeAlert = useSelector(
+    (state: RootState) => state.modal.modal.recommendCodeAlert,
+  );
 
   // navigation
   const {navigate} = useNavigation();
@@ -33,7 +38,6 @@ const RecommendCode = () => {
   const updateSuggestUserMutation = useUpdateSuggestUser();
 
   // useState
-  const [codeAlertShow, setCodeAlertShow] = useState(false);
   const [isCodeError, setIsCodeError] = useState(false);
 
   // etc
@@ -47,7 +51,7 @@ const RecommendCode = () => {
         dispatch(
           setValue({name: 'friendCd', value: userData?.suggestFromCd || ''}),
         );
-        setCodeAlertShow(true);
+        dispatch(openModal({name: 'recommendCodeAlert'}));
       },
     },
     {
@@ -59,35 +63,24 @@ const RecommendCode = () => {
 
   // fn
   const onCodeAlertConfirm = async () => {
+    // TBD | 해당 사용자가 있는지는 아직 확인 안함
     if (friendCd.value === '') {
       setIsCodeError(true);
       return;
     }
 
-    if (isSuggestUserExist) {
-      try {
-        const res = await updateSuggestUserMutation.mutateAsync(friendCd.value);
-        console.log('update: res', res);
-      } catch (e) {
-        console.log('update catch e: ', e);
-      }
-    } else {
-      try {
-        const res = await createSuggestUserMutation.mutateAsync(friendCd.value);
-        console.log('create: res', res);
-      } catch (e) {
-        console.log('create catch e: ', e);
-      }
-    }
+    isSuggestUserExist
+      ? await updateSuggestUserMutation.mutateAsync(friendCd.value)
+      : await createSuggestUserMutation.mutateAsync(friendCd.value);
 
-    setCodeAlertShow(false);
+    dispatch(closeModal({name: 'recommendCodeAlert'}));
   };
 
   const onCodeAlertCancel = () => {
-    setCodeAlertShow(false);
+    dispatch(closeModal({name: 'recommendCodeAlert'}));
     setIsCodeError(false);
   };
-  console.log(friendCd.value);
+
   return (
     <Container>
       <Card
@@ -107,7 +100,7 @@ const RecommendCode = () => {
       <ListBtns btns={btns} />
 
       <DAlert
-        alertShow={codeAlertShow}
+        alertShow={recommendCodeAlert.isOpen}
         onCancel={onCodeAlertCancel}
         onConfirm={onCodeAlertConfirm}
         renderContent={() => <CodeAlertContent isCodeError={isCodeError} />}

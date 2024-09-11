@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import {useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {TextMain, Col} from '../../shared/ui/styledComps';
 import {
@@ -15,6 +15,8 @@ import DAlert from '../../shared/ui/DAlert';
 import {initializeInput} from '../../features/reduxSlices/userInputSlice';
 import ListBtns from '../../shared/ui/ListBtns';
 import {queryClient} from '../../app/store/reactQueryStore';
+import {RootState} from '../../app/store/reduxStore';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
 
 const WithdrawalContent = ({deleteText}: {deleteText: string}) => {
   return (
@@ -29,9 +31,9 @@ const WithdrawalContent = ({deleteText}: {deleteText: string}) => {
 const Account = () => {
   // redux
   const dispatch = useDispatch();
-
-  // useState
-  const [isAlert, setIsAlert] = useState(false);
+  const accountWDAlert = useSelector(
+    (state: RootState) => state.modal.modal.accountWithdrawalAlert,
+  );
 
   // navigation
   const {reset} = useNavigation();
@@ -54,7 +56,7 @@ const Account = () => {
   //회원탈퇴 Fn
   const onWithdrawal = async () => {
     try {
-      setIsAlert(false);
+      dispatch(closeModal({name: 'accountWithdrawalAlert'}));
       deleteUser.mutate();
       queryClient.clear();
       await initializeNotShowAgainList();
@@ -75,7 +77,7 @@ const Account = () => {
     {
       title: '계정삭제',
       btnId: 'withdrawal',
-      onPress: () => setIsAlert(true),
+      onPress: () => dispatch(openModal({name: 'accountWithdrawalAlert'})),
     },
   ];
 
@@ -83,14 +85,12 @@ const Account = () => {
   const WithdrawalAlert = () => {
     return (
       <DAlert
-        alertShow={isAlert}
+        alertShow={accountWDAlert.isOpen}
         renderContent={() => (
           <WithdrawalContent deleteText={'계정을 삭제합니다'} />
         )}
         onConfirm={() => onWithdrawal()}
-        onCancel={() => {
-          setIsAlert(false);
-        }}
+        onCancel={() => dispatch(closeModal({name: 'accountWithdrawalAlert'}))}
         confirmLabel={'삭제'}
         NoOfBtn={2}
       />

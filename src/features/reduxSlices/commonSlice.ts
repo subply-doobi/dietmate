@@ -71,9 +71,6 @@ export const commonSlice = createSlice({
         ...platformDDItems,
       ];
     },
-    setProgressTooltipShow: (state, action: PayloadAction<boolean>) => {
-      state.progressTooltipShow = action.payload;
-    },
     setMenuAcActive: (state, action: PayloadAction<number[]>) => {
       state.menuAcActive = action.payload;
     },
@@ -107,7 +104,6 @@ export const commonSlice = createSlice({
 export const {
   setCurrentDiet,
   setTotalFoodList,
-  setProgressTooltipShow,
   setMenuAcActive,
   setIsTutorialMode,
   setTutorialStart,
