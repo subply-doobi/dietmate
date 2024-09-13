@@ -26,7 +26,7 @@ import {
   setTutorialEnd,
   setTutorialProgress,
 } from '../../features/reduxSlices/commonSlice';
-import {ActivityIndicator, ScrollView, TouchableOpacity} from 'react-native';
+import {ScrollView, TouchableOpacity} from 'react-native';
 import CtaButton from '../../shared/ui/CtaButton';
 import {
   IS_ANDROID,
@@ -47,7 +47,6 @@ import AddMenuBtn from './ui/AddMenuBtn';
 import {renderAlertContent, renderDTPContent} from './util/modalContent';
 import {checkNoStockPAll} from '../../shared/utils/productStatusCheck';
 import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
-import {useTestQuery} from '../../shared/api/queries/test';
 
 const Diet = () => {
   // navigation
@@ -74,7 +73,6 @@ const Diet = () => {
   } = useSelector((state: RootState) => state.modal.modal);
 
   // react-query
-  const {refetch: refetchTest} = useTestQuery();
   const {data: bLData} = useGetBaseLine();
   const {
     data: dTOData,
