@@ -11,6 +11,7 @@ import {IPayParams} from '../../screens/order/util/setPayData';
 import {useGetPaymentStatus} from '../../shared/api/queries/payment';
 import {useDispatch} from 'react-redux';
 import {setPayFailAlertMsg} from '../../features/reduxSlices/orderSlice';
+import {openModal} from '../../features/reduxSlices/modalSlice';
 
 const Payment = () => {
   // navigation
@@ -65,7 +66,7 @@ const Payment = () => {
       orderNo,
     });
     await deleteOrderMutation.mutateAsync({orderNo: orderNo});
-    dispatch(setPayFailAlertMsg(msg));
+    dispatch(openModal({name: 'payFailAlert', values: {payFailMsg: msg}}));
     navigate('Order');
   };
 

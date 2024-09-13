@@ -20,6 +20,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useListCode} from '../../../../shared/api/queries/code';
 import {getRecommendedNutr} from '../../util/targetByUserInfo';
 import SquareInput from '../../../../shared/ui/SquareInput';
+import {RootState} from '../../../../app/store/reduxStore';
+import {
+  openModal,
+  closeModal,
+} from '../../../../features/reduxSlices/modalSlice';
 
 const menuPerDayItem = [1, 2, 3, 4];
 const calorieOptionItem: {
@@ -36,6 +41,9 @@ const calorieOptionItem: {
 const TargetCalorie = ({userInputState}: {userInputState: IUserInputState}) => {
   // redux
   const dispatch = useDispatch();
+  const targetCalGuideAlert = useSelector(
+    (state: RootState) => state.modal.modal.targetCalorieGuideAlert,
+  );
 
   // react-query
   const {data: seqCodeData} = useListCode('SP008'); // SP008 : 운동빈도 (sportsSeqCd)
@@ -47,7 +55,6 @@ const TargetCalorie = ({userInputState}: {userInputState: IUserInputState}) => {
   const [calorieOption, setCalorieOption] = useState<
     'normal' | 'light' | 'heavy' | 'manual'
   >('normal');
-  const [guideAlertShow, setGuideAlertShow] = useState<boolean>(false);
 
   // etc
   const {calorie} = getRecommendedNutr(
@@ -98,7 +105,10 @@ const TargetCalorie = ({userInputState}: {userInputState: IUserInputState}) => {
 
       <Row style={{justifyContent: 'space-between', marginTop: 64}}>
         <OptionTitle>다이어트메이트 한 끼 목표 칼로리</OptionTitle>
-        <QuestionBtn onPress={() => setGuideAlertShow(true)}>
+        <QuestionBtn
+          onPress={() =>
+            dispatch(openModal({name: 'targetCalorieGuideAlert'}))
+          }>
           <Icon source={icons.question_24} />
         </QuestionBtn>
       </Row>
@@ -132,10 +142,12 @@ const TargetCalorie = ({userInputState}: {userInputState: IUserInputState}) => {
       {/* 목표칼로리 가이드 알럿 */}
       <DAlert
         style={{width: SCREENWIDTH - 32}}
-        alertShow={guideAlertShow}
+        alertShow={targetCalGuideAlert.isOpen}
         showTopCancel={true}
-        onConfirm={() => setGuideAlertShow(false)}
-        onCancel={() => setGuideAlertShow(false)}
+        onConfirm={() =>
+          dispatch(closeModal({name: 'targetCalorieGuideAlert'}))
+        }
+        onCancel={() => dispatch(closeModal({name: 'targetCalorieGuideAlert'}))}
         renderContent={() => <CalGuideAlertContent menuPerDay={menuPerDay} />}
         NoOfBtn={0}
         confirmLabel="확인"

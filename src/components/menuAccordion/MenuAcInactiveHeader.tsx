@@ -3,7 +3,7 @@
 // 3rd
 import styled from 'styled-components/native';
 import {RootState} from '../../app/store/reduxStore';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 // doobi
 import {Col, Icon, Row, TextMain, TextSub} from '../../shared/ui/styledComps';
@@ -24,6 +24,7 @@ import DTooltip from '../../shared/ui/DTooltip';
 import {checkNoStockP} from '../../shared/utils/productStatusCheck';
 import {ActivityIndicator} from 'react-native';
 import {IDietTotalObjData} from '../../shared/api/types/diet';
+import {closeModal, openModal} from '../../features/reduxSlices/modalSlice';
 
 interface IMenuAcInactiveHeader {
   controllable?: boolean;
@@ -31,8 +32,6 @@ interface IMenuAcInactiveHeader {
   bLData: IBaseLineData;
   selected?: boolean;
   leftBarInactive?: boolean;
-  setDietNoToNumControl?: React.Dispatch<React.SetStateAction<string>>;
-  setMenuNumSelectShow?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const MenuAcInactiveHeader = ({
   controllable = true,
@@ -40,16 +39,17 @@ const MenuAcInactiveHeader = ({
   bLData,
   selected = false,
   leftBarInactive,
-  setDietNoToNumControl,
-  setMenuNumSelectShow,
 }: IMenuAcInactiveHeader) => {
   // redux
+  const dispatch = useDispatch();
   const {totalFoodList, currentDietNo} = useSelector(
     (state: RootState) => state.common,
   );
+  const menuDeleteAlert = useSelector(
+    (state: RootState) => state.modal.modal.menuDeleteAlert,
+  );
 
   // useState
-  const [deleteAlertShow, setDeleteAlertShow] = useState(false);
   const [prevDTO, setPrevDTO] = useState<IDietTotalObjData>({});
 
   // react-query
@@ -60,14 +60,13 @@ const MenuAcInactiveHeader = ({
 
   // fn
   const onMenuNoSelectPress = () => {
-    if (!setDietNoToNumControl || !setMenuNumSelectShow || !dTOData) return;
-    setDietNoToNumControl(dietNo);
-    setMenuNumSelectShow(true);
+    if (!dTOData) return;
+    dispatch(openModal({name: 'menuNumSelectBS', values: {dietNo}}));
   };
 
   const onDietDelete = () => {
     deleteDietMutation.mutate({dietNo, currentDietNo});
-    setDeleteAlertShow(false);
+    dispatch(closeModal({name: 'menuDeleteAlert'}));
   };
 
   // etc
@@ -195,14 +194,25 @@ const MenuAcInactiveHeader = ({
       </Col>
 
       {controllable && (
-        <DeleteBtn onPress={() => setDeleteAlertShow(true)}>
+        <DeleteBtn
+          onPress={() =>
+            dispatch(
+              openModal({
+                name: 'menuDeleteAlert',
+                modalId: `MenuAcInactiveHeader_${dietNo}`,
+              }),
+            )
+          }>
           <Icon source={icons.cancelRound_24} />
         </DeleteBtn>
       )}
 
       <DAlert
-        alertShow={deleteAlertShow}
-        onCancel={() => setDeleteAlertShow(false)}
+        alertShow={
+          menuDeleteAlert.isOpen &&
+          menuDeleteAlert.modalId === `MenuAcInactiveHeader_${dietNo}`
+        }
+        onCancel={() => dispatch(closeModal({name: 'menuDeleteAlert'}))}
         onConfirm={() => onDietDelete()}
         NoOfBtn={2}
         renderContent={() => (

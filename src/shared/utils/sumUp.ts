@@ -207,6 +207,7 @@ export const sumUpDietFromDTOData = (
 
   const dietNoArr = Object.keys(dTOData);
   for (let dietNo of dietNoArr) {
+    if (dTOData[dietNo].dietDetail.length === 0) continue;
     menuNum += dTOData[dietNo].dietDetail[0]
       ? 1 * parseInt(dTOData[dietNo].dietDetail[0].qty)
       : 1;

@@ -4,7 +4,7 @@ import userInputReducer from '../../features/reduxSlices/userInputSlice';
 import sortFilterReducer from '../../features/reduxSlices/sortFilterSlice';
 import commonReducer from '../../features/reduxSlices/commonSlice';
 import orderReducer from '../../features/reduxSlices/orderSlice';
-import errorAlertReducer from '../../features/reduxSlices/errorAlertSlice';
+import modalReducer from '../../features/reduxSlices/modalSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,7 +12,7 @@ export const store = configureStore({
     sortFilter: sortFilterReducer,
     common: commonReducer,
     order: orderReducer,
-    errorAlert: errorAlertReducer,
+    modal: modalReducer,
   },
 });
 

@@ -19,6 +19,7 @@ import {
 } from '../../../shared/api/queries/diet';
 import {getNutrStatus} from '../../../shared/utils/sumUp';
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
+import {openModal, closeModal} from '../../../features/reduxSlices/modalSlice';
 
 interface IMenuSelectCard {
   isCreating: boolean;
@@ -26,10 +27,13 @@ interface IMenuSelectCard {
 }
 const MenuSelectCard = ({isCreating, setIsCreating}: IMenuSelectCard) => {
   // redux
+  const dispatch = useDispatch();
   const {totalFoodList, currentDietNo} = useSelector(
     (state: RootState) => state.common,
   );
-  const dispatch = useDispatch();
+  const menuCreateNAAlert = useSelector(
+    (state: RootState) => state.modal.modal.menuCreateNAAlert,
+  );
 
   // react-query
   const {data: baseLineData} = useGetBaseLine();
@@ -37,7 +41,6 @@ const MenuSelectCard = ({isCreating, setIsCreating}: IMenuSelectCard) => {
   const createDietMutation = useCreateDiet();
 
   // state
-  const [createErrShow, setCreateErrShow] = useState(false);
 
   // etc
   const {status: dietAddStatus, text: dietErrText} =
@@ -51,7 +54,7 @@ const MenuSelectCard = ({isCreating, setIsCreating}: IMenuSelectCard) => {
       setIsCreating(false);
       return;
     }
-    setCreateErrShow(true);
+    dispatch(openModal({name: 'menuCreateNAAlert'}));
   };
 
   return (
@@ -99,11 +102,9 @@ const MenuSelectCard = ({isCreating, setIsCreating}: IMenuSelectCard) => {
         </Row>
       </Row>
       <DAlert
-        alertShow={createErrShow}
-        onCancel={() => setCreateErrShow(false)}
-        onConfirm={() => {
-          setCreateErrShow(false);
-        }}
+        alertShow={menuCreateNAAlert.isOpen}
+        onCancel={() => dispatch(closeModal({name: 'menuCreateNAAlert'}))}
+        onConfirm={() => dispatch(closeModal({name: 'menuCreateNAAlert'}))}
         NoOfBtn={1}
         renderContent={() => <CommonAlertContent text={dietErrText} />}
       />

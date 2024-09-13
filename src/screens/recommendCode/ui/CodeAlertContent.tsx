@@ -2,8 +2,8 @@ import styled from 'styled-components/native';
 import {HorizontalSpace, TextMain} from '../../../shared/ui/styledComps';
 import SquareInput from '../../../shared/ui/SquareInput';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../../app/store/reduxStore';
 import {setValue} from '../../../features/reduxSlices/userInputSlice';
+import {RootState} from '../../../app/store/reduxStore';
 
 interface ICodeAlertContent {
   isCodeError: boolean;
@@ -11,6 +11,7 @@ interface ICodeAlertContent {
 const CodeAlertContent = ({isCodeError}: ICodeAlertContent) => {
   // redux
   const dispatch = useDispatch();
+  const friendCd = useSelector((state: RootState) => state.userInput.friendCd);
   const title = isCodeError
     ? '해당 코드가\n유효하지 않아요'
     : '앱을 추천해준 \n친구의 코드를 입력해주세요';
@@ -20,6 +21,7 @@ const CodeAlertContent = ({isCodeError}: ICodeAlertContent) => {
       <AlertTitle>{title}</AlertTitle>
       <HorizontalSpace height={28} />
       <SquareInput
+        value={friendCd.value}
         isActive={true}
         label="친구코드"
         maxLength={6}

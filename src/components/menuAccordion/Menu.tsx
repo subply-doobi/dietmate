@@ -19,6 +19,9 @@ import FoodList from './FoodList';
 // react-query
 import {IDietDetailData} from '../../shared/api/types/diet';
 import {useDeleteDietDetail} from '../../shared/api/queries/diet';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../app/store/reduxStore';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
 
 interface IMenu {
   dietNo: string;
@@ -26,12 +29,17 @@ interface IMenu {
 }
 
 const Menu = ({dietNo, dietDetailData}: IMenu) => {
+  // redux
+  const dispatch = useDispatch();
+  const productDeleteAlert = useSelector(
+    (state: RootState) => state.modal.modal.productDeleteAlert,
+  );
+
   // react-query
   const deleteDietDetailMutation = useDeleteDietDetail();
 
   // useState
   const [checkAllClicked, setCheckAllClicked] = useState(false);
-  const [deleteModalShow, setDeleteModalShow] = useState(false);
   const [selectedFoods, setSelectedFoods] = useState<{[key: string]: string[]}>(
     {},
   );
@@ -60,7 +68,8 @@ const Menu = ({dietNo, dietDetailData}: IMenu) => {
 
   const deleteSelected = async () => {
     setCheckAllClicked(false);
-    setDeleteModalShow(false);
+    // setDeleteModalShow(false);
+    dispatch(closeModal({name: 'productDeleteAlert'}));
     const deleteMutations = selectedFoods[dietNo]?.map(productNo =>
       deleteDietDetailMutation.mutateAsync({
         dietNo,
@@ -97,7 +106,14 @@ const Menu = ({dietNo, dietDetailData}: IMenu) => {
           </SelectAllBox>
           <BtnSmall
             onPress={() =>
-              selectedFoods[dietNo]?.length >= 1 ? setDeleteModalShow(true) : {}
+              selectedFoods[dietNo]?.length >= 1
+                ? dispatch(
+                    openModal({
+                      name: 'productDeleteAlert',
+                      modalId: `Menu_${dietNo}`,
+                    }),
+                  )
+                : {}
             }>
             <BtnSmallText isActivated={true}>선택 삭제</BtnSmallText>
           </BtnSmall>
@@ -115,10 +131,14 @@ const Menu = ({dietNo, dietDetailData}: IMenu) => {
 
       {/* 삭제 알럿 */}
       <DAlert
-        alertShow={deleteModalShow}
+        alertShow={
+          productDeleteAlert.isOpen &&
+          productDeleteAlert.modalId === `Menu_${dietNo}`
+        }
+        NoOfBtn={2}
         confirmLabel="삭제"
         onConfirm={deleteSelected}
-        onCancel={() => setDeleteModalShow(false)}
+        onCancel={() => dispatch(closeModal({name: 'productDeleteAlert'}))}
         renderContent={() => <DeleteAlertContent deleteText="선택된 식품을" />}
       />
     </Container>

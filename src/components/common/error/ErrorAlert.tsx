@@ -1,19 +1,16 @@
-import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {closeErrorAlert} from '../../../features/reduxSlices/errorAlertSlice';
 import {RootState} from '../../../app/store/reduxStore';
-import {
-  getErrAlertActionByCode,
-  msgByCode,
-} from '../../../shared/utils/handleError';
+import {runErrAlertActionByCode} from '../../../shared/utils/handleError';
 import DAlert from '../../../shared/ui/DAlert';
-import {queryClient} from '../../../app/store/reactQueryStore';
 import styled from 'styled-components/native';
 import {Col, TextMain} from '../../../shared/ui/styledComps';
-import {setTutorialStart} from '../../../features/reduxSlices/commonSlice';
+import {closeModal} from '../../../features/reduxSlices/modalSlice';
 
 const RequestAlertContent = () => {
-  const {msg} = useSelector((state: RootState) => state.errorAlert);
+  const requestErrorAlert = useSelector(
+    (state: RootState) => state.modal.modal.requestErrorAlert,
+  );
+  const msg = requestErrorAlert?.values?.msg || '';
   return (
     <Container>
       <Col style={{marginTop: 28, alignItems: 'center'}}>
@@ -25,21 +22,23 @@ const RequestAlertContent = () => {
 
 const ErrorAlert = () => {
   // redux
-  const {errorCode} = useSelector((state: RootState) => state.errorAlert);
   const dispatch = useDispatch();
+  const requestErrorAlert = useSelector(
+    (state: RootState) => state.modal.modal.requestErrorAlert,
+  );
+  const errorCode = requestErrorAlert?.values?.code;
 
   const onConfirm = () => {
-    getErrAlertActionByCode(errorCode)?.();
+    runErrAlertActionByCode(errorCode);
+    dispatch(closeModal({name: 'requestErrorAlert'}));
   };
 
   return (
     <>
       <DAlert
-        alertShow={errorCode ? true : false}
+        alertShow={requestErrorAlert?.isOpen}
         onConfirm={onConfirm}
-        onCancel={() => {
-          dispatch(closeErrorAlert());
-        }}
+        onCancel={() => dispatch(closeModal({name: 'requestErrorAlert'}))}
         NoOfBtn={1}
         renderContent={() => <RequestAlertContent />}
       />

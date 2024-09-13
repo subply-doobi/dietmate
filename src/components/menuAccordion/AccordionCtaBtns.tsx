@@ -23,6 +23,8 @@ import {
 } from '../../shared/api/queries/diet';
 import {Col, Row} from '../../shared/ui/styledComps';
 import CtaButton from '../../shared/ui/CtaButton';
+import {useTestQuery} from '../../shared/api/queries/test';
+import {closeModal} from '../../features/reduxSlices/modalSlice';
 
 const SELECTED_CATEGORY_IDX = [0, 1, 2, 3, 4, 5];
 const PRICE_TARGET = [0, 12000];
@@ -129,6 +131,7 @@ const AccordionCtaBtns = ({
   };
 
   const setOneAutoMenu = async () => {
+    dispatch(closeModal({name: 'tutorialTPS'}));
     if (!bLData || totalFoodList?.length === 0) {
       dispatch(setAutoMenuStatus(ERROR_STATUS));
       return;
@@ -180,6 +183,7 @@ const AccordionCtaBtns = ({
             btnText="+"
             style={{width: 48, height: 48, borderWidth: 2}}
             onPress={() => {
+              dispatch(closeModal({name: 'tutorialTPS'}));
               isTutorialMode && dispatch(setTutorialProgress('SelectFood'));
               navigate('ManualAdd');
             }}
@@ -196,7 +200,7 @@ const AccordionCtaBtns = ({
             style={{
               flex: 1,
               height: 48,
-              borderWidth: 2,
+              borderWidth: 1,
             }}
             onPress={() => setOneAutoMenu()}
           />

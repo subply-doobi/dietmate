@@ -1,5 +1,5 @@
 // RN
-import {SetStateAction, useCallback, useEffect} from 'react';
+import {SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {FlatList, ViewProps} from 'react-native';
 
 // 3rd
@@ -28,22 +28,17 @@ import FoodList from './FoodList';
 import BusinessInfo from '../../../components/common/businessInfo/BusinessInfo';
 import CtaButton from '../../../shared/ui/CtaButton';
 import DTooltip from '../../../shared/ui/DTooltip';
+import {closeModal, openModal} from '../../../features/reduxSlices/modalSlice';
 
 interface IHomeFoodListAndBtn extends ViewProps {
   scrollTop: any;
   scrollY: any;
   flatListRef: any;
-  setProductAlertShow: React.Dispatch<SetStateAction<boolean>>;
-  setSortModalShow: React.Dispatch<SetStateAction<boolean>>;
-  setFilterModalShow: React.Dispatch<SetStateAction<boolean>>;
 }
 const HomeFoodListAndBtn = ({
   scrollTop,
   scrollY,
   flatListRef,
-  setProductAlertShow,
-  setSortModalShow,
-  setFilterModalShow,
   ...props
 }: IHomeFoodListAndBtn) => {
   // navigation
@@ -105,9 +100,13 @@ const HomeFoodListAndBtn = ({
   useEffect(() => {
     if (!totalFoodListIsLoaded) return;
     currentDietNo &&
-      refetchProduct().then(
-        res => res?.data?.length === 0 && setProductAlertShow(true),
-      );
+      refetchProduct().then(res => {
+        if (res?.data?.length === 0) {
+          dispatch(
+            openModal({name: 'noProductAlert', modalId: 'HomeFoodListAndBtn'}),
+          );
+        }
+      });
     scrollTop();
   }, [appliedSortFilter]);
 
@@ -120,7 +119,11 @@ const HomeFoodListAndBtn = ({
       dDData?.length === 0
     )
       return;
-    isTutorialMode && dispatch(setTutorialProgress('AutoRemain'));
+
+    if (isTutorialMode && tutorialProgress === 'SelectFood') {
+      dispatch(closeModal({name: 'tutorialTPS'}));
+      dispatch(setTutorialProgress('AutoRemain'));
+    }
     goBack();
     const idx = Object.keys(dTOData ?? []).findIndex(
       dietNo => dietNo === currentDietNo,
@@ -198,7 +201,7 @@ const HomeFoodListAndBtn = ({
             }}
             disabled={isCTABtnDisAbled}
             btnText={currentNumOfFoods === 0 ? '취소' : '완료'}
-            onPress={() => onCTABtnPress()}
+            onPress={onCTABtnPress}
           />
         </>
       )}

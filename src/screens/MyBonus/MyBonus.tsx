@@ -14,13 +14,19 @@ import {INQUIRY_URL} from '../../shared/constants';
 import {useState} from 'react';
 import DAlert from '../../shared/ui/DAlert';
 import {useGetSuggestUser} from '../../shared/api/queries/suggest';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../app/store/reduxStore';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
 
 const MyBonus = () => {
+  // redux
+  const dispatch = useDispatch();
+  const myBonusGuideAlert = useSelector(
+    (state: RootState) => state.modal.modal.myBonusGuideAlert,
+  );
+
   // react-query
   const {data: suggestUserData} = useGetSuggestUser();
-
-  // useState
-  const [questionModalShow, setQuestionModalShow] = useState(false);
 
   const suggestUserCnt = suggestUserData?.suggestUserCnt
     ? parseInt(suggestUserData?.suggestUserCnt)
@@ -32,7 +38,8 @@ const MyBonus = () => {
   return (
     <Container style={{backgroundColor: colors.backgroundLight}}>
       <Card>
-        <QuestionBtn onPress={() => setQuestionModalShow(true)}>
+        <QuestionBtn
+          onPress={() => dispatch(openModal({name: 'myBonusGuideAlert'}))}>
           <Icon source={icons.question_24} />
         </QuestionBtn>
         <Row>
@@ -54,9 +61,9 @@ const MyBonus = () => {
       <DAlert
         showTopCancel={true}
         style={{}}
-        alertShow={questionModalShow}
-        onConfirm={() => setQuestionModalShow(false)}
-        onCancel={() => setQuestionModalShow(false)}
+        alertShow={myBonusGuideAlert.isOpen}
+        onConfirm={() => dispatch(closeModal({name: 'myBonusGuideAlert'}))}
+        onCancel={() => dispatch(closeModal({name: 'myBonusGuideAlert'}))}
         renderContent={() => (
           <AlertContent>
             <Notice>

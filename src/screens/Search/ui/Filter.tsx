@@ -20,13 +20,13 @@ import {
   setFilterByRemainNutr,
 } from '../../../features/reduxSlices/sortFilterSlice';
 import {checkisFiltered} from '../../home/util/filterUtils';
+import {openModal} from '../../../features/reduxSlices/modalSlice';
 
 interface IFilter {
-  setFilterModalShow: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchBarFocus: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Filter = ({setFilterModalShow, setSearchBarFocus}: IFilter) => {
+const Filter = ({setSearchBarFocus}: IFilter) => {
   // redux
   const dispatch = useDispatch();
   const {currentDietNo} = useSelector((state: RootState) => state.common);
@@ -58,7 +58,7 @@ const Filter = ({setFilterModalShow, setSearchBarFocus}: IFilter) => {
                 // filter bottom sheet 열 때 적용되어있는 sort, filter 복사
                 dispatch(copySortFilter());
                 dispatch(changeSelectedFilter(i));
-                setFilterModalShow(true);
+                dispatch(openModal({name: 'filterBS'}));
               }}>
               <FilterBtnText isActivated={isFiltered}>
                 {isFiltered && f.name === 'category'

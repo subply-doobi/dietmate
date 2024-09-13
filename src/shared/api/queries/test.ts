@@ -19,7 +19,7 @@ export const useTestQuery = () => {
   return useQuery<String>({
     queryKey: ['test'],
     queryFn: async () => {
-      throw createAxiosError(500, 'test error');
+      throw createAxiosError(401, 'test error');
     },
     enabled: false,
   });

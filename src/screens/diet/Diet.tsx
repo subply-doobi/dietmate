@@ -46,6 +46,8 @@ import CartSummary from '../../components/cart/CartSummary';
 import AddMenuBtn from './ui/AddMenuBtn';
 import {renderAlertContent, renderDTPContent} from './util/modalContent';
 import {checkNoStockPAll} from '../../shared/utils/productStatusCheck';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
+import {useTestQuery} from '../../shared/api/queries/test';
 
 const Diet = () => {
   // navigation
@@ -63,29 +65,33 @@ const Diet = () => {
     tutorialProgress,
     autoMenuStatus,
   } = useSelector((state: RootState) => state.common);
+  const {
+    menuCreateAlert,
+    menuCreateNAAlert,
+    noStockAlert,
+    tutorialTPS,
+    menuNumSelectBS,
+  } = useSelector((state: RootState) => state.modal.modal);
+
   // react-query
+  const {refetch: refetchTest} = useTestQuery();
   const {data: bLData} = useGetBaseLine();
   const {
     data: dTOData,
-    isLoading: isDTObjLoading,
+    isLoading: isDTOLoading,
     refetch: refetchDTOData,
   } = useListDietTotalObj();
   const createDietCntMutation = useCreateDietCnt();
 
   // useState
-  const [dTPShow, setDTPShow] = useState(false);
   const [forceModalQuit, setForceModalQuit] = useState(false);
-  const [createAlertShow, setCreateAlertShow] = useState(false);
   const [numOfCreateDiet, setNumOfCreateDiet] = useState(5);
   const [isCreating, setIsCreating] = useState(false);
-  const [createNAAlertShow, setCreateNAAlertShow] = useState(false);
-  const [menuNumSelectShow, setMenuNumSelectShow] = useState(false);
-  const [dietNoToNumControl, setDietNoToNumControl] = useState<string>('');
-  const [noStockAlertShow, setNoStockAlertShow] = useState(false);
 
   // useRef
   const scrollRef = useRef<ScrollView>(null);
-  const autoMenuBtnRef = useRef<TouchableOpacity>(null);
+  const autoMenuBtnRef =
+    useRef<React.ElementRef<typeof TouchableOpacity>>(null);
 
   // useMemo
   const {menuNum, accordionContent, totalShippingPrice, priceTotal} =
@@ -98,8 +104,6 @@ const Diet = () => {
       const accordionContent = getMenuAcContent({
         bLData: bLData,
         dTOData,
-        setMenuNumSelectShow,
-        setDietNoToNumControl,
       });
 
       return {
@@ -127,12 +131,13 @@ const Diet = () => {
     if (!dTOData) return;
     // dispatch(setTutorialProgress(''));
     setIsCreating(false);
+    dispatch(closeModal({name: 'tutorialTPS'}));
     if (addDietStatus === 'possible') {
       menuNum < 5 ? setNumOfCreateDiet(5 - menuNum) : setNumOfCreateDiet(1);
-      setCreateAlertShow(true);
+      dispatch(openModal({name: 'menuCreateAlert'}));
       return;
     }
-    setCreateNAAlertShow(true);
+    dispatch(openModal({name: 'menuCreateNAAlert'}));
   };
 
   const onCreateDiet = async () => {
@@ -145,7 +150,7 @@ const Diet = () => {
     isTutorialMode && dispatch(setTutorialProgress('AddFood'));
 
     setIsCreating(false);
-    setCreateAlertShow(false);
+    dispatch(closeModal({name: 'menuCreateAlert'}));
 
     const refetchedDTOData = (await refetchDTOData()).data;
     const firstAddedDietNo = refetchedDTOData
@@ -203,9 +208,9 @@ const Diet = () => {
   // ██      ██  ██████  ██████  ██   ██ ███████
 
   // alert state
-  const alertState = createAlertShow
+  const alertState = menuCreateAlert.isOpen
     ? 'createDiet'
-    : createNAAlertShow
+    : menuCreateNAAlert.isOpen
       ? 'createDietNA'
       : autoMenuStatus.isLoading
         ? 'autoMenuLoading'
@@ -213,30 +218,30 @@ const Diet = () => {
           ? 'autoMenuError'
           : isTutorialMode && tutorialProgress === 'Complete'
             ? 'tutorialComplete'
-            : noStockAlertShow
+            : noStockAlert.isOpen
               ? 'noStock'
               : '';
   const alertShow = !forceModalQuit && alertState !== '';
   // alert confirm fn
   const alertConfirmFn: {[key: string]: Function} = {
     createDiet: async () => await onCreateDiet(),
-    createDietNA: () => setCreateNAAlertShow(false),
+    createDietNA: () => dispatch(closeModal({name: 'menuCreateNAAlert'})),
     autoMenuLoading: () => {},
     autoMenuError: () => dispatch(setAutoMenuStatus({isError: false})),
     tutorialComplete: () => {
       dispatch(setTutorialEnd());
       updateNotShowAgainList({key: 'tutorial', value: true});
     },
-    noStock: () => setNoStockAlertShow(false),
+    noStock: () => dispatch(closeModal({name: 'noStockAlert'})),
   };
   // alert cancel fn
   const alertCancelFn: {[key: string]: Function} = {
-    createDiet: () => setCreateAlertShow(false),
-    createDietNA: () => setCreateNAAlertShow(false),
+    createDiet: () => dispatch(closeModal({name: 'menuCreateAlert'})),
+    createDietNA: () => dispatch(closeModal({name: 'menuCreateNAAlert'})),
     autoMenuLoading: () => {},
     autoMenuError: () => dispatch(setAutoMenuStatus({isError: false})),
     tutorialComplete: () => {},
-    noStock: () => setNoStockAlertShow(false),
+    noStock: () => dispatch(closeModal({name: 'noStockAlert'})),
   };
   const alertNumOfBtn: {[key: string]: 0 | 1 | 2} = {
     createDiet: isCreating
@@ -256,6 +261,10 @@ const Diet = () => {
 
   // DTP state
   useEffect(() => {
+    if (!isFocused) {
+      tutorialTPS.isOpen && dispatch(closeModal({name: 'tutorialTPS'}));
+      return;
+    }
     if (
       !forceModalQuit &&
       !alertShow &&
@@ -267,12 +276,12 @@ const Diet = () => {
         tutorialProgress === 'AutoMenu')
     ) {
       setTimeout(() => {
-        setDTPShow(true);
+        dispatch(openModal({name: 'tutorialTPS', modalId: 'Diet'}));
       }, 100);
       return;
     }
-    setDTPShow(false);
-  }, [tutorialProgress, alertShow, forceModalQuit]);
+    tutorialTPS.isOpen && dispatch(closeModal({name: 'tutorialTPS'}));
+  }, [tutorialProgress, alertShow, forceModalQuit, isFocused]);
 
   const dtpDeley: {[key: string]: number} = {
     AddMenu: 500,
@@ -335,7 +344,7 @@ const Diet = () => {
 
           {/* 여러끼니 자동구성 버튼 */}
           <HorizontalSpace height={24} />
-          {dTOData && menuNum > 1 && (
+          {dTOData && Object.keys(dTOData).length > 1 && (
             <CtaButton
               ref={autoMenuBtnRef}
               btnStyle="active"
@@ -345,22 +354,20 @@ const Diet = () => {
                 height: 48,
               }}
               btnText={`전체 자동구성`}
-              onPress={() =>
+              onPress={() => {
+                dispatch(closeModal({name: 'tutorialTPS'}));
                 navigate('AutoMenu', {
                   isOneMenuAuto: false,
                   selectedOneDietNo: undefined,
                   initialMenu: [],
-                })
-              }
+                });
+              }}
             />
           )}
         </Col>
 
         {/* 끼니 정보 요약 */}
-        <CartSummary
-          setMenuNumSelectShow={setMenuNumSelectShow}
-          setDietNoToNumControl={setDietNoToNumControl}
-        />
+        <CartSummary />
       </ScrollView>
 
       {/* 주문 버튼 */}
@@ -377,7 +384,7 @@ const Diet = () => {
           const refetchedDTOData = (await refetchDTOData()).data;
           const hasNoStock = checkNoStockPAll(refetchedDTOData);
           if (hasNoStock) {
-            setNoStockAlertShow(true);
+            dispatch(openModal({name: 'noStockAlert'}));
             return;
           }
           !!dTOData && dispatch(setFoodToOrder(dTOData));
@@ -387,15 +394,9 @@ const Diet = () => {
 
       {/* 끼니 수량 조절용 BottomSheet */}
       <DBottomSheet
-        alertShow={menuNumSelectShow}
-        setAlertShow={setMenuNumSelectShow}
-        renderContent={() => (
-          <MenuNumSelectContent
-            setMenuNumSelectShow={setMenuNumSelectShow}
-            dietNoToNumControl={dietNoToNumControl}
-          />
-        )}
-        onCancel={() => setMenuNumSelectShow(false)}
+        visible={menuNumSelectBS.isOpen}
+        closeModal={() => dispatch(closeModal({name: 'menuNumSelectBS'}))}
+        renderContent={() => <MenuNumSelectContent />}
       />
 
       {/* 알럿 */}
@@ -422,7 +423,7 @@ const Diet = () => {
       <DTPScreen
         contentDelay={dtpDeley[tutorialProgress] || 0}
         style={{paddingHorizontal: 16}}
-        visible={dTPShow}
+        visible={tutorialTPS.isOpen && tutorialTPS.modalId === 'Diet'}
         renderContent={() =>
           renderDTPContent[tutorialProgress] &&
           renderDTPContent[tutorialProgress]({

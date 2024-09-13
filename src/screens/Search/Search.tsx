@@ -2,7 +2,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {ActivityIndicator, Animated, FlatList} from 'react-native';
 import styled from 'styled-components/native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../app/store/reduxStore';
 
 // doobi util, const
@@ -30,24 +30,30 @@ import DTooltip from '../../shared/ui/DTooltip';
 import {Col} from '../../shared/ui/styledComps';
 import NutrientsProgress from '../../components/common/nutrient/NutrientsProgress';
 import {tutorialSortFilter} from '../../shared/constants';
+import {closeModal, openModal} from '../../features/reduxSlices/modalSlice';
 
 const Search = () => {
   // navigation
   const headerHeight = useHeaderHeight();
 
   // redux
+  const dispatch = useDispatch();
   const {currentDietNo, isTutorialMode, tutorialProgress} = useSelector(
     (state: RootState) => state.common,
   );
+  const noProductAlert = useSelector(
+    (state: RootState) => state.modal.modal.noProductAlert,
+  );
+  const tutorialTPS = useSelector(
+    (state: RootState) => state.modal.modal.tutorialTPS,
+  );
+  const filterBS = useSelector(
+    (state: RootState) => state.modal.modal.filterBS,
+  );
+  const sortBS = useSelector((state: RootState) => state.modal.modal.sortBS);
   const {applied: appliedSortFilter} = useSelector(
     (state: RootState) => state.sortFilter,
   );
-
-  // state
-  const [dtpShow, setDTPShow] = useState(false);
-  const [productAlertShow, setProductAlertShow] = useState(false);
-  const [sortModalShow, setSortModalShow] = useState(false);
-  const [filterModalShow, setFilterModalShow] = useState(false);
 
   // react-query
   const {isLoading: getBaseLineIsLoading} = useGetBaseLine(); // 미리 캐싱
@@ -85,10 +91,10 @@ const Search = () => {
   useEffect(() => {
     if (isTutorialMode && tutorialProgress === 'SelectFood') {
       setTimeout(() => {
-        setDTPShow(true);
-      }, 100);
+        dispatch(openModal({name: 'tutorialTPS', modalId: 'Search'}));
+      }, 200);
     } else {
-      setDTPShow(false);
+      dispatch(closeModal({name: 'tutorialTPS'}));
     }
   }, [isTutorialMode, tutorialProgress]);
 
@@ -100,6 +106,7 @@ const Search = () => {
       </Container>
     );
   }
+
   return (
     <Container>
       {/* 끼니선택, progressBar section */}
@@ -113,8 +120,6 @@ const Search = () => {
           <FlatlistHeaderComponent
             translateY={translateY}
             searchedNum={productData?.length}
-            setFilterModalShow={setFilterModalShow}
-            setSortModalShow={setSortModalShow}
           />
 
           {/* 상품 리스트 */}
@@ -123,9 +128,6 @@ const Search = () => {
               scrollY={scrollY}
               flatListRef={flatListRef}
               scrollTop={scrollTop}
-              setProductAlertShow={setProductAlertShow}
-              setSortModalShow={setSortModalShow}
-              setFilterModalShow={setFilterModalShow}
             />
           )}
         </ContentContainer>
@@ -133,27 +135,26 @@ const Search = () => {
 
       {/* 정렬, 필터 모달 */}
       <DBottomSheet
-        alertShow={filterModalShow}
-        setAlertShow={setFilterModalShow}
-        renderContent={() => (
-          <FilterModalContent setFilterModalShow={setFilterModalShow} />
-        )}
+        visible={filterBS.isOpen}
+        closeModal={() => dispatch(closeModal({name: 'filterBS'}))}
+        renderContent={() => <FilterModalContent />}
         filterHeight={514}
       />
       <DBottomSheet
-        alertShow={sortModalShow}
-        setAlertShow={setSortModalShow}
-        renderContent={() => (
-          <SortModalContent setSortModalShow={setSortModalShow} />
-        )}
+        visible={sortBS.isOpen}
+        closeModal={() => dispatch(closeModal({name: 'sortBS'}))}
+        renderContent={() => <SortModalContent />}
         onCancel={() => {}}
       />
 
       {/* 알럿창 */}
       <DAlert
-        alertShow={productAlertShow}
-        onConfirm={() => setProductAlertShow(false)}
-        onCancel={() => setProductAlertShow(false)}
+        alertShow={
+          noProductAlert.isOpen &&
+          noProductAlert.modalId === 'HomeFoodListAndBtn'
+        }
+        onConfirm={() => dispatch(closeModal({name: 'noProductAlert'}))}
+        onCancel={() => dispatch(closeModal({name: 'noProductAlert'}))}
         renderContent={() => (
           <CommonAlertContent text="해당 필터에 적용되는 상품이 없어요" />
         )}
@@ -163,7 +164,7 @@ const Search = () => {
       {/* 튜토리얼 */}
       <DTPScreen
         contentDelay={500}
-        visible={dtpShow}
+        visible={tutorialTPS.isOpen && tutorialTPS.modalId === 'Search'}
         renderContent={() => (
           <>
             <Col
@@ -191,9 +192,6 @@ const Search = () => {
               scrollY={scrollY}
               flatListRef={flatListRef}
               scrollTop={scrollTop}
-              setProductAlertShow={setProductAlertShow}
-              setSortModalShow={setSortModalShow}
-              setFilterModalShow={setFilterModalShow}
             />
           </>
         )}

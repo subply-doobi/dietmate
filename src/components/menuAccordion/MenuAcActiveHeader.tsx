@@ -1,6 +1,6 @@
 // 3rd
 import styled from 'styled-components/native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useState} from 'react';
 
 // doobi
@@ -16,6 +16,7 @@ import {
 } from '../../shared/api/queries/diet';
 import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../common/alert/CommonAlertContent';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
 
 interface IMenuAcActiveHeader {
   dietNo: string;
@@ -23,12 +24,13 @@ interface IMenuAcActiveHeader {
 }
 const MenuAcActiveHeader = ({bLData, dietNo}: IMenuAcActiveHeader) => {
   // redux
+  const dispatch = useDispatch();
   const {totalFoodList, currentDietNo} = useSelector(
     (state: RootState) => state.common,
   );
-
-  // useState
-  const [deleteAlertShow, setDeleteAlertShow] = useState(false);
+  const menuDeleteAlert = useSelector(
+    (state: RootState) => state.modal.modal.menuDeleteAlert,
+  );
 
   // react-query
   const {data: dTOData} = useListDietTotalObj();
@@ -39,7 +41,7 @@ const MenuAcActiveHeader = ({bLData, dietNo}: IMenuAcActiveHeader) => {
   // fn
   const onDietDelete = () => {
     deleteDietMutation.mutate({dietNo, currentDietNo});
-    setDeleteAlertShow(false);
+    dispatch(closeModal({name: 'menuDeleteAlert'}));
   };
 
   // etc
@@ -59,13 +61,24 @@ const MenuAcActiveHeader = ({bLData, dietNo}: IMenuAcActiveHeader) => {
         )} */}
       </Row>
       <SubTitle>{`${commaToNum(priceSum)}원 (${dDData.length}가지 식품)`}</SubTitle>
-      <DeleteBtn onPress={() => setDeleteAlertShow(true)}>
+      <DeleteBtn
+        onPress={() =>
+          dispatch(
+            openModal({
+              name: 'menuDeleteAlert',
+              modalId: `MenuAcActiveHeader_${dietNo}`,
+            }),
+          )
+        }>
         <Icon source={icons.cancelRound_24} />
       </DeleteBtn>
 
       <DAlert
-        alertShow={deleteAlertShow}
-        onCancel={() => setDeleteAlertShow(false)}
+        alertShow={
+          menuDeleteAlert.isOpen &&
+          menuDeleteAlert.modalId === `MenuAcActiveHeader_${dietNo}`
+        }
+        onCancel={() => dispatch(closeModal({name: 'menuDeleteAlert'}))}
         onConfirm={() => onDietDelete()}
         NoOfBtn={2}
         renderContent={() => (

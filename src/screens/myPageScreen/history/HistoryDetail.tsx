@@ -208,14 +208,14 @@ const HistoryDetail = ({
         renderContent={renderDeleteAlertContent}
         confirmLabel="삭제"
       />
-      <DBottomSheet
-        alertShow={imageAddAlertShow}
+      {/* <DBottomSheet
+        visible={imageAddAlertShow}
         setAlertShow={setImageAddAlertShow}
         onCancel={() => {
           setImageAddAlertShow(false);
         }}
         renderContent={renderAddAlertContent}
-      />
+      /> */}
     </Container>
   );
 };

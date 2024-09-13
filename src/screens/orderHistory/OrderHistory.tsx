@@ -1,5 +1,5 @@
 // react, RN, 3rd
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {ActivityIndicator, ScrollView} from 'react-native';
 import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
@@ -27,12 +27,16 @@ import {commaToNum, sumUpNutrients} from '../../shared/utils/sumUp';
 import {regroupByBuyDateAndDietNo} from '../../shared/utils/dataTransform';
 import {IOrderedProduct} from '../../shared/api/types/order';
 import Config from 'react-native-config';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../../app/store/reduxStore';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
+import {SCREENWIDTH} from '../../shared/constants';
 
 const OrderedMenu = ({order}: {order: IOrderedProduct[][]}) => {
   return (
     <Row>
-      <ArrowImage source={icons.arrowLeft_20} />
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+        <ArrowImage source={icons.arrowLeft_20} />
         {/* 주문 내 끼니 별 반복 */}
         {order.map((menu, menuIdx) => (
           <Col key={menuIdx}>
@@ -57,31 +61,35 @@ const OrderedMenu = ({order}: {order: IOrderedProduct[][]}) => {
                 <VerticalLine
                   style={{
                     backgroundColor: colors.lineLight,
-                    marginRight: 8,
+                    marginLeft: 8,
+                    marginRight: 16,
                   }}
                 />
               )}
             </Row>
           </Col>
         ))}
+        <ArrowImage source={icons.arrowRight_20} />
       </ScrollView>
-      <ArrowImage source={icons.arrowRight_20} />
     </Row>
   );
 };
 
 const OrderHistory = () => {
+  // redux
+  const dispatch = useDispatch();
+  const orderEmptyAlert = useSelector(
+    (state: RootState) => state.modal.modal.orderEmptyAlert,
+  );
+
   // navigation
   const {data: orderData, isLoading} = useListOrder();
-  const {navigate} = useNavigation();
-
-  // useState
-  const [emptyAlertShow, setEmptyAlertShow] = useState(false);
+  const {navigate, goBack} = useNavigation();
 
   // useEffect
   // 주문정보 비어있는지 확인
   useEffect(() => {
-    orderData?.length === 0 && setEmptyAlertShow(true);
+    orderData?.length === 0 && dispatch(openModal({name: 'orderEmptyAlert'}));
   }, [orderData]);
 
   // 구매날짜, dietNo로 식단 묶기
@@ -90,47 +98,55 @@ const OrderHistory = () => {
   return isLoading ? (
     <ActivityIndicator />
   ) : (
-    <Container>
+    <Container style={{paddingLeft: 0, paddingRight: 0}}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* 주문날짜 별로 반복*/}
-        {regroupedData?.map((order, orderIdx) => (
-          <OrderBox key={orderIdx}>
-            <Row style={{justifyContent: 'space-between', marginTop: 16}}>
-              <OrderDate>{order[0][0].buyDate}</OrderDate>
-              <DetailBtn
-                onPress={() =>
-                  navigate('OrderHistoryDetail', {
-                    orderDetailData: order,
-                    totalPrice: order[0][0].orderPrice,
-                  })
-                }>
-                <DetailBtnText>상세보기</DetailBtnText>
-              </DetailBtn>
-            </Row>
-            {/* <HorizontalLine /> */}
+        <Col style={{rowGap: 64, marginTop: 24}}>
+          {regroupedData?.map((order, orderIdx) => (
+            <OrderBox key={orderIdx}>
+              <Row
+                style={{
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 16,
+                }}>
+                <OrderDate>{order[0][0].buyDate}</OrderDate>
+                <DetailBtn
+                  onPress={() =>
+                    navigate('OrderHistoryDetail', {
+                      orderDetailData: order,
+                      totalPrice: order[0][0].orderPrice,
+                    })
+                  }>
+                  <DetailBtnText>상세보기</DetailBtnText>
+                </DetailBtn>
+              </Row>
+              <HorizontalLine
+                width={SCREENWIDTH - 32}
+                style={{alignSelf: 'center'}}
+              />
 
-            {/* 해당 주문에 구매한 끼니들 */}
-            <OrderedMenu order={order} />
+              {/* 해당 주문에 구매한 끼니들 */}
+              <OrderedMenu order={order} />
 
-            {/* 해당 주문 금액 or 스스로구매 */}
-            {order[0][0].orderTypeCd === String(`SP011001`) ? (
-              <SelfOrderTextBox>
-                <SelfOrderText>직접 구매한 식단</SelfOrderText>
-              </SelfOrderTextBox>
-            ) : (
+              {/* 해당 주문 금액 */}
               <TotalPrice>{commaToNum(order[0][0].orderPrice)} 원</TotalPrice>
-            )}
-            <HorizontalLine style={{marginTop: 16}} />
-          </OrderBox>
-        ))}
+            </OrderBox>
+          ))}
+        </Col>
       </ScrollView>
 
       {/* 주문내역 없을 때 알럿 */}
       <DAlert
-        alertShow={emptyAlertShow}
+        alertShow={orderEmptyAlert.isOpen}
         NoOfBtn={1}
-        onConfirm={() => setEmptyAlertShow(false)}
-        onCancel={() => setEmptyAlertShow(false)}
+        onConfirm={() => {
+          dispatch(closeModal({name: 'orderEmptyAlert'}));
+          goBack();
+        }}
+        onCancel={() => {
+          dispatch(closeModal({name: 'orderEmptyAlert'}));
+          goBack();
+        }}
         renderContent={() => (
           <CommonAlertContent text="아직 주문내역이 없어요" />
         )}
@@ -169,35 +185,20 @@ const CaloriesText = styled(TextMain)`
 
 const ThumbnailImage = styled.Image`
   background-color: ${colors.backgroundLight};
-  width: 56px;
-  height: 56px;
+  width: 80px;
+  height: 80px;
   border-radius: 2px;
 `;
 const ArrowImage = styled.Image`
+  align-self: center;
   margin-top: 28px;
   width: 20px;
   height: 20px;
 `;
 const TotalPrice = styled(TextMain)`
   margin-top: 16px;
+  margin-right: 16px;
   font-size: 16px;
   font-weight: bold;
   align-self: flex-end;
-`;
-
-const SelfOrderTextBox = styled.View`
-  height: 24px;
-  width: 100%;
-  background-color: ${colors.backgroundLight2};
-
-  justify-content: center;
-  align-items: flex-end;
-
-  margin-top: 16px;
-  padding: 0px 8px 0px 0px;
-`;
-
-const SelfOrderText = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
 `;

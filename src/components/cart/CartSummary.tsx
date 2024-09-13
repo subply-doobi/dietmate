@@ -21,14 +21,9 @@ import {HorizontalLine, TextMain, TextSub} from '../../shared/ui/styledComps';
 
 // react-query
 import {useListDietTotalObj} from '../../shared/api/queries/diet';
+import {openModal} from '../../features/reduxSlices/modalSlice';
 
-const CartSummary = ({
-  setMenuNumSelectShow,
-  setDietNoToNumControl,
-}: {
-  setMenuNumSelectShow: React.Dispatch<SetStateAction<boolean>>;
-  setDietNoToNumControl: React.Dispatch<SetStateAction<string>>;
-}) => {
+const CartSummary = () => {
   // navigation
   const {navigate} = useNavigation();
 
@@ -129,8 +124,12 @@ const CartSummary = ({
                   <SmallButton
                     key={e.dietNo}
                     onPress={() => {
-                      setDietNoToNumControl(e.dietNo);
-                      setMenuNumSelectShow(true);
+                      dispatch(
+                        openModal({
+                          name: 'menuNumSelectBS',
+                          values: {dietNo: e.dietNo},
+                        }),
+                      );
                     }}>
                     <TextMain>{e.dietSeq}</TextMain>
                   </SmallButton>

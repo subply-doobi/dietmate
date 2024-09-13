@@ -5,7 +5,7 @@ import styled from 'styled-components/native';
 import {useNavigation} from '@react-navigation/native';
 
 // doobi util, redux, etc
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../app/store/reduxStore';
 import {icons} from '../../../shared/iconSource';
 import colors from '../../../shared/colors';
@@ -13,7 +13,6 @@ import {commaToNum, sumUpNutrients} from '../../../shared/utils/sumUp';
 
 // doobi Component
 import {Col, Row, TextMain, TextSub} from '../../../shared/ui/styledComps';
-import DeleteAlertContent from '../../../components/common/alert/DeleteAlertContent';
 import DAlert from '../../../shared/ui/DAlert';
 
 // react-query
@@ -40,9 +39,16 @@ interface IFoodList {
 const FoodList = ({item, screen = 'Search'}: IFoodList) => {
   const {navigate} = useNavigation();
   // redux
+  const dispatch = useDispatch();
   const {currentDietNo, isTutorialMode, tutorialProgress} = useSelector(
     (state: RootState) => state.common,
   );
+
+  // state
+  // 튜토리얼에서 Search의 식품 리스트를 dTPScreen위에 띄우는데
+  // redux modal state를 사용하면 모달 때문에 계속 식품이 리렌더링되는 문제있음
+  // 이 알럿만 useState로 관리
+  const [foodLimitAlertShow, setFoodLimitAlertShow] = useState(false);
 
   // react-query
   const {data: dTOData} = useListDietTotalObj();
@@ -51,9 +57,6 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
   const addMutation = useCreateDietDetail();
   const deleteMutation = useDeleteDietDetail();
   const deleteProductMarkMutation = useDeleteProductMark();
-
-  // state
-  const [foodLimitAlertShow, setFoodLimitAlertShow] = useState(false);
 
   // etc
 
@@ -102,7 +105,6 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
       dietNo: currentDietNo,
       productNo: item.productNo,
     });
-    // setDeleteAlertShow(false);
     aniPValue.setValue(removedP);
   };
 
@@ -244,34 +246,22 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
             source={icons.cartWhite_40}
           />
         </AniAddedMark>
-
-        {/* 식품 삭제알럿. 없어도 무방하기는 할 듯 */}
-        {/* <DAlert
-          alertShow={deleteAlertShow}
-          confirmLabel="삭제"
-          onConfirm={() => removeCartAni.start(onDelete)}
-          onCancel={() => {
-            setDeleteAlertShow(false);
-          }}
-          renderContent={() => <DeleteAlertContent deleteText={'해당식품을'} />}
-        /> */}
-
-        {/* 튜토리얼 */}
-        <DAlert
-          alertShow={foodLimitAlertShow}
-          confirmLabel="확인"
-          onConfirm={() => setFoodLimitAlertShow(false)}
-          onCancel={() => setFoodLimitAlertShow(false)}
-          renderContent={() => (
-            <CommonAlertContent
-              text={'지금은 식품을\n하나만 추가할게요'}
-              subText={'튜토리얼이 끝나면\n자유롭게 식품을 추가할 수 있어요'}
-            />
-          )}
-        />
-
-        {/* currentDietNo 없을 때 (끼니 자체가 없을 때) 식품 추가/삭제 방지 */}
       </Box>
+
+      {/* 튜토리얼 */}
+      <DAlert
+        alertShow={foodLimitAlertShow}
+        NoOfBtn={1}
+        confirmLabel="확인"
+        onConfirm={() => setFoodLimitAlertShow(false)}
+        onCancel={() => setFoodLimitAlertShow(false)}
+        renderContent={() => (
+          <CommonAlertContent
+            text={'지금은 식품을\n하나만 추가할게요'}
+            subText={'튜토리얼이 끝나면\n자유롭게 식품을 추가할 수 있어요'}
+          />
+        )}
+      />
     </Container>
   );
 };
@@ -375,6 +365,6 @@ const AniAddedMark = styled(Animated.createAnimatedComponent(Pressable))`
 `;
 
 const AniCartImage = styled(Animated.createAnimatedComponent(Image))`
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
 `;
