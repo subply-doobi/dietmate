@@ -34,11 +34,8 @@ type ICodeToMsg = {
   [key: number]: string;
 };
 export const msgByCode: ICodeToMsg = {
-  400: `다시 로그인을 해주세요\n(errorCode: 400)`,
-  401: `다시 로그인을 해주세요\n(errorCode: 401)`,
-  404: `다시 로그인을 해주세요\n(errorCode: 404)`,
-  405: `다시 로그인을 해주세요\n(errorCode: 405)`,
-  500: `서버 오류가 발생했어요\n앱을 재시작합니다\n(errorCode: 500)`,
+  401: `다시 로그인을 해주세요\n\n(errorCode: 401)`,
+  500: `서버 오류가 발생했어요\n앱을 재시작합니다\n\n(errorCode: 500)`,
   999: '서버 점점중입니다\n빠른 시일 내에 해결할게요',
 };
 const getMsgByCode = (code: IErrorCode | undefined | null) => {
@@ -46,7 +43,7 @@ const getMsgByCode = (code: IErrorCode | undefined | null) => {
   if (code === null) return `네트워크가 불안정해요\n연결을 확인해주세요`;
   return (
     msgByCode[code] ||
-    `알수없는 오류가 발생했어요\n다시 로그인을 해주세요\n(errorCode: ${code})`
+    `알수없는 오류가 발생했어요\n오류가 계속되면 문의바랍니다\n\n(errorCode: ${code})`
   );
 };
 
@@ -56,6 +53,7 @@ type ICodeToErrorAction = {
 };
 const errorActionByCode: ICodeToErrorAction = {
   999: () => {
+    // 네트워크 연결은 있는데 우리 서버 문제 있는 경우
     navigationRef.isReady() &&
       navigationRef.reset({
         index: 0,
@@ -69,6 +67,10 @@ const errorActionByCode: ICodeToErrorAction = {
 
 // 에러코드 -> 액션
 const runErrorActionByCode = (code: IErrorCode | undefined | null) => {
+  // undefined -> nothing
+  if (code === undefined) return;
+
+  // 네트워크 연결 없음
   if (code === null) {
     navigationRef.isReady() &&
       navigationRef.reset({
@@ -82,8 +84,6 @@ const runErrorActionByCode = (code: IErrorCode | undefined | null) => {
       });
     return;
   }
-  // undefined -> nothing
-  if (code === undefined) return;
 
   // 정의된 것 있는 경우
   if (errorActionByCode[code]) {
@@ -109,13 +109,7 @@ export const handleError = async (error: Error) => {
 
 // ErrorAlert 띄우는 경우 확인버튼 눌렀을 때 실행할 함수
 const commonAlertAction = () => {
-  // 기본: 튜토리얼모드초기화 + 로그인화면이동
-  store.getState().common.isTutorialMode && store.dispatch(setTutorialStart());
-  navigationRef.isReady() &&
-    navigationRef.reset({
-      index: 0,
-      routes: [{name: 'Login'}],
-    });
+  queryClient.invalidateQueries();
 };
 
 const ErrAlertActionByCode: ICodeToErrorAction = {
@@ -125,7 +119,15 @@ const ErrAlertActionByCode: ICodeToErrorAction = {
     RNRestart.Restart();
   },
   401: () => {
-    commonAlertAction();
+    // 튜토리얼모드초기화 + 로그인화면이동 + queryCache clean
+    store.getState().common.isTutorialMode &&
+      store.dispatch(setTutorialStart());
+    navigationRef.isReady() &&
+      navigationRef.reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      });
+    queryClient.clear();
   },
 };
 
@@ -138,5 +140,4 @@ export const runErrAlertActionByCode = (
     return;
   }
   commonAlertAction();
-  // queryClient.invalidateQueries();
 };

@@ -1,11 +1,6 @@
 // RN
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {
-  ActivityIndicator,
-  ScrollView,
-  Touchable,
-  TouchableOpacity,
-} from 'react-native';
+import {ActivityIndicator, ScrollView, TouchableOpacity} from 'react-native';
 
 // 3rd
 import {useIsFocused, useNavigation} from '@react-navigation/native';
@@ -61,7 +56,6 @@ import {
   setShippingPrice,
 } from '../../features/reduxSlices/orderSlice';
 import DTooltip from '../../shared/ui/DTooltip';
-import {useTestQuery} from '../../shared/api/queries/test';
 import DSmallBtn from '../../shared/ui/DSmallBtn';
 import {closeModal, openModal} from '../../features/reduxSlices/modalSlice';
 
