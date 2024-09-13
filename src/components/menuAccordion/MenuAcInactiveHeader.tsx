@@ -117,10 +117,6 @@ const MenuAcInactiveHeader = ({
     };
   }, [dTOData]);
 
-  // useEffect(() => {
-  //   if (dTOData) setPrevDTO(dTOData);
-  // }, []);
-
   return (
     <Box selected={selected}>
       <LeftBar style={{backgroundColor: barColor}} />
@@ -172,13 +168,13 @@ const MenuAcInactiveHeader = ({
                   />
                 ))
               )}
-              {/* {(nutrStatus === 'satisfied' || nutrStatus === 'exceed') && (
+              {nutrStatus === 'exceed' && (
                 <Icon
                   size={20}
                   source={iconSource}
                   style={{position: 'absolute', right: 0, top: 0}}
                 />
-              )} */}
+              )}
             </ThumnailBox>
 
             {controllable && dDData.length !== 0 && (
