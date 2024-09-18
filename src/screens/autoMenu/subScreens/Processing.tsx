@@ -3,7 +3,6 @@ import React, {useEffect, useMemo} from 'react';
 import {Col} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 import {useAsync} from '../../diet/util/cartCustomHooks';
-import {makeAutoMenu2} from '../../../shared/utils/autoMenu2';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../app/store/reduxStore';
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
@@ -20,6 +19,7 @@ import {
   setTutorialProgress,
 } from '../../../features/reduxSlices/commonSlice';
 import {IAutoMenuSubPages} from '../util/contentByPages';
+import {makeAutoMenu3} from '../../../shared/utils/autoMenu3';
 
 interface IProcessing {
   dTOData: IDietTotalObjData;
@@ -45,7 +45,9 @@ const Processing = ({
 
   // redux
   const dispatch = useDispatch();
-  const {totalFoodList} = useSelector((state: RootState) => state.common);
+  const {totalFoodList, foodGroupForAutoMenu, medianCalorie} = useSelector(
+    (state: RootState) => state.common,
+  );
 
   // react-query
   const {data: bLData} = useGetBaseLine();
@@ -81,8 +83,9 @@ const Processing = ({
   }>({
     asyncFunction: async () => {
       if (!bLData || !dTOData) return {recommendedMenu: []};
-      const data = await makeAutoMenu2({
-        totalFoodList,
+      const data = await makeAutoMenu3({
+        medianCalorie,
+        foodGroupForAutoMenu,
         initialMenu: initialMenu,
         baseLine: bLData,
         selectedCategoryIdx,

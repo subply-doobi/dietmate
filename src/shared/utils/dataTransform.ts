@@ -121,3 +121,106 @@ export const tfDTOToDDA = (dTOData: IDietTotalObjData | undefined) => {
 
   return Array.from(productMap.values());
 };
+
+////////////////////////////////////////////////////////////
+// 끼니 자동구성 식품 그룹화 //
+////////////////////////////////////////////////////////////
+
+interface IFoodCategory {
+  [key: string]: IProductData[];
+  lunchBox: IProductData[];
+  chicken: IProductData[];
+  salad: IProductData[];
+  snack: IProductData[];
+  chip: IProductData[];
+  drink: IProductData[];
+}
+export interface IFoodGroupForAutoMenu {
+  [key: string]: IFoodCategory;
+  total: IFoodCategory;
+  normal: IFoodCategory;
+  highCarb: IFoodCategory;
+  highProtein: IFoodCategory;
+  highFat: IFoodCategory;
+}
+
+export const separateFoods = (totalFoodList: IProductData[]) => {
+  const normalFood: IProductData[] = [];
+  const highCarbFood: IProductData[] = [];
+  const highProtFood: IProductData[] = [];
+  const highFatFood: IProductData[] = [];
+
+  totalFoodList.forEach(food => {
+    const carbRatio = ((Number(food.carb) * 4) / Number(food.calorie)) * 100;
+    const proteinRatio =
+      ((Number(food.protein) * 4) / Number(food.calorie)) * 100;
+    const fatRatio = ((Number(food.fat) * 9) / Number(food.calorie)) * 100;
+
+    if (carbRatio > 50) {
+      highCarbFood.push(food);
+    } else if (proteinRatio > 50) {
+      highProtFood.push(food);
+    } else if (fatRatio > 50) {
+      highFatFood.push(food);
+    } else {
+      normalFood.push(food);
+    }
+  });
+
+  return {
+    highCarbFood,
+    highProtFood,
+    highFatFood,
+    normalFood,
+  };
+};
+
+export const categorizeFood = (
+  foods: IProductData[],
+  selectedCategoryIdxArr: number[] = [0, 1, 2, 3, 4, 5],
+) => {
+  // 001: 도시락   | 002: 닭가슴살 | 003: 샐러드
+  // 004: 영양간식 | 005: 과자     | 006: 음료
+  const categorizedFood: IFoodCategory = {
+    lunchBox: [],
+    chicken: [],
+    salad: [],
+    snack: [],
+    chip: [],
+    drink: [],
+  };
+  const isLunchBoxSelected = selectedCategoryIdxArr.includes(1);
+  const isChickenSelected = selectedCategoryIdxArr.includes(2);
+  const isSaladSelected = selectedCategoryIdxArr.includes(3);
+  const isSnackSelected = selectedCategoryIdxArr.includes(4);
+  const isChipSelected = selectedCategoryIdxArr.includes(5);
+  const isDrinkSelected = selectedCategoryIdxArr.includes(6);
+
+  foods.forEach(food => {
+    const categoryCd = food.categoryCd;
+    switch (categoryCd) {
+      case 'CG001':
+        isLunchBoxSelected && categorizedFood.lunchBox.push(food);
+        break;
+      case 'CG002':
+        isChickenSelected && categorizedFood.chicken.push(food);
+        break;
+      case 'CG003':
+        isSaladSelected && categorizedFood.salad.push(food);
+        break;
+      case 'CG004':
+        isSnackSelected && categorizedFood.snack.push(food);
+        break;
+      case 'CG005':
+        isChipSelected && categorizedFood.chip.push(food);
+        break;
+      case 'CG006':
+        isDrinkSelected && categorizedFood.drink.push(food);
+        break;
+      default:
+        break;
+    }
+  });
+
+  return categorizedFood;
+};

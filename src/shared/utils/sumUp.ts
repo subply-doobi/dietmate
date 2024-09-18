@@ -253,4 +253,12 @@ export const sumUpDietFromDTOData = (
   };
 };
 
-export const checkProductStock = () => {};
+export const getMedianCalorie = (totalFoodList: IProductData[]) => {
+  // copy totalFoodList
+  const foodList = [...totalFoodList];
+  const sortedFoodList = foodList.sort(
+    (a, b) => Number(a.calorie) - Number(b.calorie),
+  );
+  const medianIndex = Math.floor(sortedFoodList.length / 2);
+  return Number(sortedFoodList[medianIndex].calorie);
+};

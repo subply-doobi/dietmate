@@ -58,6 +58,7 @@ import {
 import DTooltip from '../../shared/ui/DTooltip';
 import DSmallBtn from '../../shared/ui/DSmallBtn';
 import {closeModal, openModal} from '../../features/reduxSlices/modalSlice';
+import {makeAutoMenu3} from '../../shared/utils/autoMenu3';
 
 const NewHome = () => {
   // navigation
@@ -71,6 +72,8 @@ const NewHome = () => {
     totalFoodListIsLoaded,
     isTutorialMode,
     tutorialProgress,
+    foodGroupForAutoMenu,
+    medianCalorie,
   } = useSelector((state: RootState) => state.common);
   const {applied: appliedSortFilter} = useSelector(
     (state: RootState) => state.sortFilter,
@@ -475,6 +478,27 @@ const NewHome = () => {
               />
             </>
           )}
+        />
+        <CtaButton
+          onPress={() =>
+            baseLineData &&
+            totalFoodListIsLoaded &&
+            makeAutoMenu3({
+              medianCalorie,
+              foodGroupForAutoMenu,
+              initialMenu: [],
+              baseLine: baseLineData,
+              priceTarget: [5000, 10000],
+              wantedPlatform: '',
+              menuNum: 1,
+            })
+          }
+          btnStyle="activeDark"
+          btnText="자동구성 테스트"
+          style={{
+            width: SCREENWIDTH - 32,
+            marginTop: 24,
+          }}
         />
       </ScrollView>
     </Container>
