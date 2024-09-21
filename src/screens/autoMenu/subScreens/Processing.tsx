@@ -20,6 +20,7 @@ import {
 } from '../../../features/reduxSlices/commonSlice';
 import {IAutoMenuSubPages} from '../util/contentByPages';
 import {makeAutoMenu3} from '../../../shared/utils/autoMenu3';
+import {openModal} from '../../../features/reduxSlices/modalSlice';
 
 interface IProcessing {
   dTOData: IDietTotalObjData;
@@ -45,9 +46,8 @@ const Processing = ({
 
   // redux
   const dispatch = useDispatch();
-  const {totalFoodList, foodGroupForAutoMenu, medianCalorie} = useSelector(
-    (state: RootState) => state.common,
-  );
+  const {totalFoodList, foodGroupForAutoMenu, medianCalorie, isTutorialMode} =
+    useSelector((state: RootState) => state.common);
 
   // react-query
   const {data: bLData} = useGetBaseLine();
@@ -80,9 +80,26 @@ const Processing = ({
     execute,
   } = useAsync<{
     recommendedMenu: IProductData[][];
+    resultSummaryObj: {
+      perfect: number;
+      better: number;
+      good: number;
+      etc: number;
+      isBudgetExceeded: boolean;
+    };
   }>({
     asyncFunction: async () => {
-      if (!bLData || !dTOData) return {recommendedMenu: []};
+      if (!bLData || !dTOData)
+        return {
+          recommendedMenu: [],
+          resultSummaryObj: {
+            perfect: 0,
+            better: 0,
+            good: 0,
+            etc: 0,
+            isBudgetExceeded: false,
+          },
+        };
       const data = await makeAutoMenu3({
         medianCalorie,
         foodGroupForAutoMenu,
@@ -165,6 +182,11 @@ const Processing = ({
       dispatch(setMenuAcActive([]));
       dispatch(setTutorialProgress('Complete'));
       goBack();
+      if (!autoMenuResult?.resultSummaryObj) return;
+      const {isBudgetExceeded} = autoMenuResult.resultSummaryObj;
+      !isTutorialMode &&
+        isBudgetExceeded &&
+        dispatch(openModal({name: 'autoMenuOverPriceAlert'}));
     };
 
     overwriteDiet();
@@ -209,6 +231,11 @@ const Processing = ({
       dispatch(setMenuAcActive([]));
       dispatch(setTutorialProgress('Complete'));
       goBack();
+      if (!autoMenuResult?.resultSummaryObj) return;
+      const {isBudgetExceeded} = autoMenuResult.resultSummaryObj;
+      !isTutorialMode &&
+        isBudgetExceeded &&
+        dispatch(openModal({name: 'autoMenuOverPriceAlert'}));
     };
 
     addMenu();

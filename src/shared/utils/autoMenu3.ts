@@ -3,7 +3,8 @@ import {IProductData} from '../api/types/product';
 import {NUTR_ERROR_RANGE, SERVICE_PRICE_PER_PRODUCT} from '../constants';
 import {IFoodGroupForAutoMenu} from './dataTransform';
 
-const TRY_NUM = 50;
+const TRY_NUM = 100;
+const CATEGORY_LIMIT = [1, 1, 2, 2, 1, 1]; // [lunchBox, chicken, salad, snack, chip, drink]
 
 const shuffle = (arr: any) => {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -19,14 +20,18 @@ const removeUnselectedCategory = ({
   foodGroupForAutoMenu: IFoodGroupForAutoMenu;
   selectedCategoryIdxArr: number[];
 }) => {
-  const isLunchBoxSelected = selectedCategoryIdxArr.includes(1);
-  const isChickenSelected = selectedCategoryIdxArr.includes(2);
-  const isSaladSelected = selectedCategoryIdxArr.includes(3);
-  const isSnackSelected = selectedCategoryIdxArr.includes(4);
-  const isChipSelected = selectedCategoryIdxArr.includes(5);
-  const isDrinkSelected = selectedCategoryIdxArr.includes(6);
+  const isLunchBoxSelected = selectedCategoryIdxArr.includes(0);
+  const isChickenSelected = selectedCategoryIdxArr.includes(1);
+  const isSaladSelected = selectedCategoryIdxArr.includes(2);
+  const isSnackSelected = selectedCategoryIdxArr.includes(3);
+  const isChipSelected = selectedCategoryIdxArr.includes(4);
+  const isDrinkSelected = selectedCategoryIdxArr.includes(5);
 
-  const newFoodGroupForAutoMenu = {...foodGroupForAutoMenu};
+  // deep copy
+  const newFoodGroupForAutoMenu = JSON.parse(
+    JSON.stringify(foodGroupForAutoMenu),
+  );
+
   Object.keys(newFoodGroupForAutoMenu).forEach(key => {
     Object.keys(newFoodGroupForAutoMenu[key]).forEach(category => {
       if (
@@ -36,11 +41,11 @@ const removeUnselectedCategory = ({
         (category === 'snack' && !isSnackSelected) ||
         (category === 'chip' && !isChipSelected) ||
         (category === 'drink' && !isDrinkSelected)
-      ) {
+      )
         newFoodGroupForAutoMenu[key][category] = [];
-      }
     });
   });
+
   return newFoodGroupForAutoMenu;
 };
 
@@ -63,7 +68,10 @@ const sumUpNutr = (menu: IProductData[]) => {
 };
 
 const sumUpPrice = (menu: IProductData[]) => {
-  return menu.reduce((acc, food) => acc + Number(food.price), 0);
+  return menu.reduce(
+    (acc, food) => acc + Number(food.price) + SERVICE_PRICE_PER_PRODUCT,
+    0,
+  );
 };
 
 const getRemainNutr = ({
@@ -258,16 +266,29 @@ const getFood = ({
 const logResult = (
   menuWithErrScore: {menu: IProductData[]; errScore: number}[],
 ) => {
-  const totalTryMenu = menuWithErrScore.map(v => ({
-    menu: v.menu.map(food => food.productNm),
-    errScore: v.errScore,
-    nutr: sumUpNutr(v.menu),
-  }));
+  const totalTryMenu = menuWithErrScore.map(v => {
+    let recommendedCategory = [0, 0, 0, 0, 0, 0];
+    v.menu.forEach(food => {
+      if (food.categoryCd === 'CG001') recommendedCategory[0] += 1;
+      if (food.categoryCd === 'CG002') recommendedCategory[1] += 1;
+      if (food.categoryCd === 'CG003') recommendedCategory[2] += 1;
+      if (food.categoryCd === 'CG004') recommendedCategory[3] += 1;
+      if (food.categoryCd === 'CG005') recommendedCategory[4] += 1;
+      if (food.categoryCd === 'CG006') recommendedCategory[5] += 1;
+    });
 
-  console.log(`------- 전체 시도 ${TRY_NUM} 번 -------`);
+    return {
+      menu: v.menu.map(food => food.productNm),
+      errScore: v.errScore,
+      nutr: sumUpNutr(v.menu),
+      price: sumUpPrice(v.menu),
+      recommendedCategory,
+    };
+  });
+
   totalTryMenu.forEach((v, i) => {
     console.log(
-      `menu ${String(i + 1).padEnd(5)} | errScore: ${String(v.errScore).padEnd(8)} | 칼로리: ${String(v.nutr.calorie).padEnd(3)} 탄수화물: ${String(v.nutr.carb).padEnd(3)} 단백질: ${String(v.nutr.protein).padEnd(3)} 지방: ${String(v.nutr.fat).padEnd(0)}`,
+      `menu ${String(i + 1).padEnd(5)} | ES: ${String(v.errScore).padEnd(5)} | 칼: ${String(v.nutr.calorie).padEnd(5)} 탄: ${String(v.nutr.carb).padEnd(5)} 단: ${String(v.nutr.protein).padEnd(5)} 지: ${String(v.nutr.fat).padEnd(5)} | 가격: ${String(v.price).padEnd(3)} | 카테고리: ${v.recommendedCategory}`,
     );
   });
 };
@@ -315,6 +336,48 @@ const excludeInitialMenu = (
   return filteredRecommendedFoods;
 };
 
+const rankMenu = ({
+  menu,
+  errScore,
+  priceTarget,
+}: {
+  menu: IProductData[];
+  errScore: number;
+  priceTarget: number;
+}) => {
+  const categoryNum = [0, 0, 0, 0, 0, 0];
+  let price = 0;
+  menu.forEach(food => {
+    if (food.categoryCd === 'CG001') categoryNum[0] += 1;
+    if (food.categoryCd === 'CG002') categoryNum[1] += 1;
+    if (food.categoryCd === 'CG003') categoryNum[2] += 1;
+    if (food.categoryCd === 'CG004') categoryNum[3] += 1;
+    if (food.categoryCd === 'CG005') categoryNum[4] += 1;
+    if (food.categoryCd === 'CG006') categoryNum[5] += 1;
+    price += parseInt(food.price);
+  });
+
+  const isCategoryLimitValid = categoryNum.every(
+    (num, idx) => num <= CATEGORY_LIMIT[idx],
+  );
+  const isPriceValid = price <= priceTarget;
+  const isNutrValid = errScore === 0;
+
+  // 1순위 : 영양, 가격, 카테고리
+  // 2순위 : 영양, 가격
+  // 3순위 : 영양
+  // 4순위 : 나머지
+  if (isNutrValid && isPriceValid && isCategoryLimitValid) {
+    return 'perfect';
+  } else if (isNutrValid && isPriceValid) {
+    return 'better';
+  } else if (isNutrValid) {
+    return 'good';
+  } else {
+    return 'bad';
+  }
+};
+
 interface IMakeAutoMenu {
   medianCalorie: number;
   foodGroupForAutoMenu: IFoodGroupForAutoMenu;
@@ -334,7 +397,16 @@ export const makeAutoMenu3 = ({
   priceTarget,
   wantedPlatform,
   menuNum,
-}: IMakeAutoMenu): Promise<{recommendedMenu: IProductData[][]}> => {
+}: IMakeAutoMenu): Promise<{
+  recommendedMenu: IProductData[][];
+  resultSummaryObj: {
+    perfect: number;
+    better: number;
+    good: number;
+    etc: number;
+    isBudgetExceeded: boolean;
+  };
+}> => {
   return new Promise((resolve, reject) => {
     try {
       const {foodGroup, initRemainNutr, initRemainPrice, menuWithErrScore} =
@@ -375,7 +447,7 @@ export const makeAutoMenu3 = ({
           remainNutr.carb -= parseInt(food.food.carb);
           remainNutr.protein -= parseInt(food.food.protein);
           remainNutr.fat -= parseInt(food.food.fat);
-          remainPrice -= parseInt(food.food.price);
+          remainPrice -= parseInt(food.food.price) + SERVICE_PRICE_PER_PRODUCT;
           if (isLastFood) {
             menuWithErrScore.push({menu, errScore: food.errScore});
             isLastFood && (oneMenuCompleted = true);
@@ -383,16 +455,92 @@ export const makeAutoMenu3 = ({
           idx += 1;
         }
       }
-      // try_num 반복 중에 errScore 가장 낮은 끼니 menuNum 만큼 선택
+      // try_num 만큼 구성된 끼니들을 errScore 기준으로 정렬
       menuWithErrScore.sort((a, b) => a.errScore - b.errScore);
-      // logResult(menuWithErrScore);
 
-      // initialMenu 제외
-      const recommendedMenu = menuWithErrScore
-        .slice(0, menuNum)
-        .map(v => excludeInitialMenu(initialMenu, v.menu));
+      // 가격범위, 카테고리 제한 수, 영양범위에 부합하는지에 따라 다시 분류
+      // 1순위 : 영양, 가격, 카테고리 모두 부합 | 2순위 : 영양, 가격 부합 | 3순위 : 영양 부합 | 4순위 : 나머지
+      type IMenuWithEs = {menu: IProductData[]; errScore: number}[];
+      const perfectMenuWithES: IMenuWithEs = [];
+      const betterMenuWithES: IMenuWithEs = [];
+      const goodMenuWithES: IMenuWithEs = [];
+      const menuWithES: IMenuWithEs = [];
+      for (const menu of menuWithErrScore) {
+        const rank = rankMenu({
+          menu: menu.menu,
+          errScore: menu.errScore,
+          priceTarget: priceTarget[1],
+        });
+        if (rank === 'perfect') perfectMenuWithES.push(menu);
+        else if (rank === 'better') betterMenuWithES.push(menu);
+        else if (rank === 'good') goodMenuWithES.push(menu);
+        else menuWithES.push(menu);
+      }
 
-      return resolve({recommendedMenu});
+      /////////////////////////////////////// ---- LOG ---- ////////////////////////////////////
+      console.log(
+        `-------------------- perfectMenuWithES : ${perfectMenuWithES.length} --------------------`,
+      );
+      logResult(perfectMenuWithES);
+      console.log(
+        `-------------------- betterMenuWithES : ${betterMenuWithES.length} --------------------`,
+      );
+      logResult(betterMenuWithES);
+      console.log(
+        `-------------------- goodMenuWithES : ${goodMenuWithES.length} --------------------`,
+      );
+      logResult(goodMenuWithES);
+      console.log(
+        `-------------------- menuWithES : ${menuWithES.length} --------------------`,
+      );
+      logResult(menuWithES);
+      //////////////////////////////////////////////////////////////////////////////////////////
+
+      // menuNum 만큼 위 우선순위에 따라 선택
+      let resultSummaryObj = {
+        perfect: 0,
+        better: 0,
+        good: 0,
+        etc: 0,
+        isBudgetExceeded: false,
+      };
+      let selectedMenuWithES: IMenuWithEs = [];
+      for (let i = 0; i < menuNum; i++) {
+        if (perfectMenuWithES.length > 0) {
+          const menu = perfectMenuWithES.shift();
+          resultSummaryObj.perfect += 1;
+          menu && selectedMenuWithES.push(menu);
+        } else if (betterMenuWithES.length > 0) {
+          const menu = betterMenuWithES.shift();
+          resultSummaryObj.better += 1;
+          menu && selectedMenuWithES.push(menu);
+        } else if (goodMenuWithES.length > 0) {
+          const menu = goodMenuWithES.shift();
+          resultSummaryObj.good += 1;
+          menu && selectedMenuWithES.push(menu);
+        } else if (menuWithES.length > 0) {
+          const menu = menuWithES.shift();
+          resultSummaryObj.etc += 1;
+          menu && selectedMenuWithES.push(menu);
+        }
+      }
+
+      const totalPrice = selectedMenuWithES.reduce(
+        (acc, v) => acc + sumUpPrice(v.menu),
+        0,
+      );
+      totalPrice / menuNum > priceTarget[1] &&
+        (resultSummaryObj.isBudgetExceeded = true);
+      console.log(
+        `autoMenu totalPrice: ${totalPrice} | priceTarget: ${priceTarget[1]} | menuNum : ${menuNum} | isBudgetExceeded : ${resultSummaryObj.isBudgetExceeded}`,
+      );
+      console.log('autoMenu result summary : ', resultSummaryObj);
+
+      const recommendedMenu = selectedMenuWithES.map(v =>
+        excludeInitialMenu(initialMenu, v.menu),
+      );
+
+      return resolve({recommendedMenu, resultSummaryObj});
     } catch (error) {
       return reject(error);
     }

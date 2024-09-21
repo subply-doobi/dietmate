@@ -145,18 +145,17 @@ const AccordionCtaBtns = ({
 
     // 자동구성
     try {
-      recommendedMenu = (
-        await makeAutoMenu3({
-          medianCalorie,
-          foodGroupForAutoMenu,
-          initialMenu: autoMenuType === 'add' && dDData ? dDData : [],
-          baseLine: bLData,
-          selectedCategoryIdx: SELECTED_CATEGORY_IDX,
-          priceTarget: PRICE_TARGET,
-          wantedPlatform: '',
-          menuNum: MENU_NUM,
-        })
-      ).recommendedMenu;
+      const {recommendedMenu: tempRM, resultSummaryObj} = await makeAutoMenu3({
+        medianCalorie,
+        foodGroupForAutoMenu,
+        initialMenu: autoMenuType === 'add' && dDData ? dDData : [],
+        baseLine: bLData,
+        selectedCategoryIdx: SELECTED_CATEGORY_IDX,
+        priceTarget: PRICE_TARGET,
+        wantedPlatform: '',
+        menuNum: MENU_NUM,
+      });
+      recommendedMenu = tempRM;
     } catch (e) {
       dispatch(setAutoMenuStatus(ERROR_STATUS));
       console.log('자동구성 중 오류 발생: ', e);

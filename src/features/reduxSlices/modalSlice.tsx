@@ -9,6 +9,7 @@ interface IModal {
 }
 
 interface IModals {
+  // alert
   appUpdateAlert: IModal;
   requestErrorAlert: IModal & {values?: {code?: number | null; msg: string}};
   menuDeleteAlert: IModal & {values?: {menuNo?: string}};
@@ -28,7 +29,10 @@ interface IModals {
   recommendCodeAlert: IModal;
   tutorialFoodLimitAlert: IModal;
   targetCalorieGuideAlert: IModal;
+  autoMenuOverPriceAlert: IModal;
+  // transparentScreen
   tutorialTPS: IModal;
+  // bottomSheet
   filterBS: IModal;
   sortBS: IModal;
   menuNumSelectBS: IModal & {values?: {dietNo?: string}};
@@ -124,6 +128,10 @@ const initialState: IModalState = {
       modalId: undefined,
     },
     targetCalorieGuideAlert: {
+      isOpen: false,
+      modalId: undefined,
+    },
+    autoMenuOverPriceAlert: {
       isOpen: false,
       modalId: undefined,
     },

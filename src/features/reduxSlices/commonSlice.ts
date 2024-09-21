@@ -28,7 +28,7 @@ type ITutorialProgress =
   | 'AutoMenu'
   | 'Complete';
 
-export interface ICartState {
+export interface ICommonState {
   currentDietNo: string;
   totalFoodList: IProductData[];
   totalFoodListIsLoaded: boolean;
@@ -46,7 +46,7 @@ export interface ICartState {
   };
 }
 
-const initialState: ICartState = {
+const initialState: ICommonState = {
   currentDietNo: '',
   totalFoodList: [],
   totalFoodListIsLoaded: false,

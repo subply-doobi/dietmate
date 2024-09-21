@@ -23,6 +23,7 @@ import {
   setAutoMenuStatus,
   setCurrentDiet,
   setMenuAcActive,
+  setTotalFoodList,
   setTutorialEnd,
   setTutorialProgress,
 } from '../../features/reduxSlices/commonSlice';
@@ -47,6 +48,8 @@ import AddMenuBtn from './ui/AddMenuBtn';
 import {renderAlertContent, renderDTPContent} from './util/modalContent';
 import {checkNoStockPAll} from '../../shared/utils/productStatusCheck';
 import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
+import {useListProduct} from '../../shared/api/queries/product';
+import {initialState as initialSortFilterState} from '../../features/reduxSlices/sortFilterSlice';
 
 const Diet = () => {
   // navigation
@@ -68,6 +71,7 @@ const Diet = () => {
     menuCreateAlert,
     menuCreateNAAlert,
     noStockAlert,
+    autoMenuOverPriceAlert,
     tutorialTPS,
     menuNumSelectBS,
   } = useSelector((state: RootState) => state.modal.modal);
@@ -80,6 +84,15 @@ const Diet = () => {
     refetch: refetchDTOData,
   } = useListDietTotalObj();
   const createDietCntMutation = useCreateDietCnt();
+  const {refetch: refetchLPData} = useListProduct(
+    {
+      dietNo: currentDietNo,
+      appliedSortFilter: initialSortFilterState.applied,
+    },
+    {
+      enabled: false,
+    },
+  );
 
   // useState
   const [forceModalQuit, setForceModalQuit] = useState(false);
@@ -216,9 +229,11 @@ const Diet = () => {
           ? 'autoMenuError'
           : isTutorialMode && tutorialProgress === 'Complete'
             ? 'tutorialComplete'
-            : noStockAlert.isOpen
-              ? 'noStock'
-              : '';
+            : autoMenuOverPriceAlert.isOpen
+              ? 'autoMenuOverPrice'
+              : noStockAlert.isOpen
+                ? 'noStock'
+                : '';
   const alertShow = !forceModalQuit && alertState !== '';
   // alert confirm fn
   const alertConfirmFn: {[key: string]: Function} = {
@@ -231,6 +246,8 @@ const Diet = () => {
       updateNotShowAgainList({key: 'tutorial', value: true});
     },
     noStock: () => dispatch(closeModal({name: 'noStockAlert'})),
+    autoMenuOverPrice: () =>
+      dispatch(closeModal({name: 'autoMenuOverPriceAlert'})),
   };
   // alert cancel fn
   const alertCancelFn: {[key: string]: Function} = {
@@ -240,6 +257,8 @@ const Diet = () => {
     autoMenuError: () => dispatch(setAutoMenuStatus({isError: false})),
     tutorialComplete: () => {},
     noStock: () => dispatch(closeModal({name: 'noStockAlert'})),
+    autoMenuOverPrice: () =>
+      dispatch(closeModal({name: 'autoMenuOverPriceAlert'})),
   };
   const alertNumOfBtn: {[key: string]: 0 | 1 | 2} = {
     createDiet: isCreating
@@ -252,6 +271,7 @@ const Diet = () => {
     autoMenuError: 1,
     tutorialComplete: 1,
     noStock: 1,
+    autoMenuOverPrice: 1,
   };
 
   const alertDelay = alertState === 'tutorialComplete' ? 1000 : 0;
@@ -370,7 +390,7 @@ const Diet = () => {
 
       {/* 주문 버튼 */}
       <CtaButton
-        btnStyle={priceTotal === 0 ? 'inactive' : 'activeDark'}
+        btnStyle="activeDark"
         style={{
           width: SCREENWIDTH - 32,
           alignSelf: 'center',
@@ -383,6 +403,9 @@ const Diet = () => {
           const hasNoStock = checkNoStockPAll(refetchedDTOData);
           if (hasNoStock) {
             dispatch(openModal({name: 'noStockAlert'}));
+            // 전체 식품이 바뀐 경우이므로 totalFoodList도 업데이트 필요함
+            const data = (await refetchLPData()).data;
+            !!data && dispatch(setTotalFoodList(data));
             return;
           }
           !!dTOData && dispatch(setFoodToOrder(dTOData));
