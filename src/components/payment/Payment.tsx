@@ -7,7 +7,7 @@ import {usePreventBackBtn} from '../../screens/order/util/backEventHook';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 import Config from 'react-native-config';
-import {IPayParams} from '../../screens/order/util/setPayData';
+import {IIamportPayParams} from '../../screens/order/util/setPayData';
 import {useGetPaymentStatus} from '../../shared/api/queries/payment';
 import {useDispatch} from 'react-redux';
 import {setPayFailAlertMsg} from '../../features/reduxSlices/orderSlice';
@@ -17,8 +17,8 @@ const Payment = () => {
   // navigation
   const route = useRoute();
   const {navigate, reset} = useNavigation();
-  const {payParams, orderNo} = route?.params as {
-    payParams: IPayParams;
+  const {payParams_iamport, orderNo} = route?.params as {
+    payParams_iamport: IIamportPayParams;
     orderNo: string;
   };
 
@@ -28,7 +28,7 @@ const Payment = () => {
   // react-query
   const {refetch: refetchPaymentStatus} = useGetPaymentStatus({
     enabled: false,
-    merchant_uid: payParams.merchant_uid,
+    merchant_uid: payParams_iamport.merchant_uid,
   });
   const updateDietMutation = useUpdateDiet();
   const updateOrderMutation = useUpdateOrder();
@@ -74,7 +74,7 @@ const Payment = () => {
     <Container>
       <IMP.Payment
         userCode={Config.IAMPORT_USER_CODE} // this one you can get in the iamport console.
-        data={payParams}
+        data={payParams_iamport}
         callback={async response => {
           // callback response 자체가 실패한 경우
           if (response.imp_success === 'false') {
