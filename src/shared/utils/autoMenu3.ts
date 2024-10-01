@@ -478,22 +478,22 @@ export const makeAutoMenu3 = ({
       }
 
       /////////////////////////////////////// ---- LOG ---- ////////////////////////////////////
-      console.log(
-        `-------------------- perfectMenuWithES : ${perfectMenuWithES.length} --------------------`,
-      );
-      logResult(perfectMenuWithES);
-      console.log(
-        `-------------------- betterMenuWithES : ${betterMenuWithES.length} --------------------`,
-      );
-      logResult(betterMenuWithES);
-      console.log(
-        `-------------------- goodMenuWithES : ${goodMenuWithES.length} --------------------`,
-      );
-      logResult(goodMenuWithES);
-      console.log(
-        `-------------------- menuWithES : ${menuWithES.length} --------------------`,
-      );
-      logResult(menuWithES);
+      // console.log(
+      //   `-------------------- perfectMenuWithES : ${perfectMenuWithES.length} --------------------`,
+      // );
+      // logResult(perfectMenuWithES);
+      // console.log(
+      //   `-------------------- betterMenuWithES : ${betterMenuWithES.length} --------------------`,
+      // );
+      // logResult(betterMenuWithES);
+      // console.log(
+      //   `-------------------- goodMenuWithES : ${goodMenuWithES.length} --------------------`,
+      // );
+      // logResult(goodMenuWithES);
+      // console.log(
+      //   `-------------------- menuWithES : ${menuWithES.length} --------------------`,
+      // );
+      // logResult(menuWithES);
       //////////////////////////////////////////////////////////////////////////////////////////
 
       // menuNum 만큼 위 우선순위에 따라 선택
@@ -531,10 +531,11 @@ export const makeAutoMenu3 = ({
       );
       totalPrice / menuNum > priceTarget[1] &&
         (resultSummaryObj.isBudgetExceeded = true);
-      console.log(
-        `autoMenu totalPrice: ${totalPrice} | priceTarget: ${priceTarget[1]} | menuNum : ${menuNum} | isBudgetExceeded : ${resultSummaryObj.isBudgetExceeded}`,
-      );
-      console.log('autoMenu result summary : ', resultSummaryObj);
+
+      // console.log(
+      //   `autoMenu totalPrice: ${totalPrice} | priceTarget: ${priceTarget[1]} | menuNum : ${menuNum} | isBudgetExceeded : ${resultSummaryObj.isBudgetExceeded}`,
+      // );
+      // console.log('autoMenu result summary : ', resultSummaryObj);
 
       const recommendedMenu = selectedMenuWithES.map(v =>
         excludeInitialMenu(initialMenu, v.menu),
