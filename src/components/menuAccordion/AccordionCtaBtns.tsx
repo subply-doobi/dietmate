@@ -16,15 +16,14 @@ import {
   setTutorialProgress,
 } from '../../features/reduxSlices/commonSlice';
 import {IProductData} from '../../shared/api/types/product';
-import {makeAutoMenu2} from '../../shared/utils/autoMenu2';
 import {
   useCreateDietDetail,
   useDeleteDietDetail,
 } from '../../shared/api/queries/diet';
 import {Col, Row} from '../../shared/ui/styledComps';
 import CtaButton from '../../shared/ui/CtaButton';
-import {useTestQuery} from '../../shared/api/queries/test';
 import {closeModal} from '../../features/reduxSlices/modalSlice';
+import {makeAutoMenu3} from '../../shared/utils/autoMenu3';
 
 const SELECTED_CATEGORY_IDX = [0, 1, 2, 3, 4, 5];
 const PRICE_TARGET = [0, 12000];
@@ -50,9 +49,13 @@ const AccordionCtaBtns = ({
 
   // redux
   const dispatch = useDispatch();
-  const {totalFoodList, isTutorialMode, tutorialProgress} = useSelector(
-    (state: RootState) => state.common,
-  );
+  const {
+    totalFoodList,
+    isTutorialMode,
+    tutorialProgress,
+    foodGroupForAutoMenu,
+    medianCalorie,
+  } = useSelector((state: RootState) => state.common);
 
   // react-query
   const {data: bLData} = useGetBaseLine();
@@ -142,17 +145,17 @@ const AccordionCtaBtns = ({
 
     // 자동구성
     try {
-      recommendedMenu = (
-        await makeAutoMenu2({
-          totalFoodList,
-          initialMenu: autoMenuType === 'add' && dDData ? dDData : [],
-          baseLine: bLData,
-          selectedCategoryIdx: SELECTED_CATEGORY_IDX,
-          priceTarget: PRICE_TARGET,
-          wantedPlatform: '',
-          menuNum: MENU_NUM,
-        })
-      ).recommendedMenu;
+      const {recommendedMenu: tempRM, resultSummaryObj} = await makeAutoMenu3({
+        medianCalorie,
+        foodGroupForAutoMenu,
+        initialMenu: autoMenuType === 'add' && dDData ? dDData : [],
+        baseLine: bLData,
+        selectedCategoryIdx: SELECTED_CATEGORY_IDX,
+        priceTarget: PRICE_TARGET,
+        wantedPlatform: '',
+        menuNum: MENU_NUM,
+      });
+      recommendedMenu = tempRM;
     } catch (e) {
       dispatch(setAutoMenuStatus(ERROR_STATUS));
       console.log('자동구성 중 오류 발생: ', e);

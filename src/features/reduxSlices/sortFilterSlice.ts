@@ -72,7 +72,7 @@ export interface ISortFilter {
 // 필터 조정 후 확인 누를 때 copied => applied로 복사
 // 필터 bottomsheet 열릴 때 applied => copied로 복사해서 사용
 // (copied로 수정했는데 확인 안누르고 취소된경우 => 다음 bottomSheet 열 때 applied된 것만 불러와야함)
-const initialState: {
+export const initialState: {
   applied: ISortFilter;
   copied: ISortFilter;
 } = {

@@ -58,6 +58,9 @@ import {
 import DTooltip from '../../shared/ui/DTooltip';
 import DSmallBtn from '../../shared/ui/DSmallBtn';
 import {closeModal, openModal} from '../../features/reduxSlices/modalSlice';
+import {queryClient} from '../../app/store/reactQueryStore';
+import {PRODUCTS} from '../../shared/api/keys';
+import {initialState as initialSortFilterState} from '../../features/reduxSlices/sortFilterSlice';
 
 const NewHome = () => {
   // navigation
@@ -71,6 +74,8 @@ const NewHome = () => {
     totalFoodListIsLoaded,
     isTutorialMode,
     tutorialProgress,
+    foodGroupForAutoMenu,
+    medianCalorie,
   } = useSelector((state: RootState) => state.common);
   const {applied: appliedSortFilter} = useSelector(
     (state: RootState) => state.sortFilter,
@@ -88,13 +93,13 @@ const NewHome = () => {
   const {data: dTOData, isLoading: isDTObjLoading} = useListDietTotalObj();
   const {data: orderData} = useListOrder();
   const deleteDietAllMutation = useDeleteDietAll();
-  const {data: listProductData} = useListProduct(
+  const {refetch: refetchLPData} = useListProduct(
     {
       dietNo: currentDietNo,
-      appliedSortFilter,
+      appliedSortFilter: initialSortFilterState.applied,
     },
     {
-      enabled: currentDietNo ? true : false,
+      enabled: false,
     },
   );
 
@@ -178,12 +183,19 @@ const NewHome = () => {
     initializeDiet();
   }, [dTOData]);
 
-  // 처음 앱 켰을 때 totalFoodList를 redux에 저장해놓고 끼니 자동구성에 사용
+  // 처음 앱 켰을 때 전체 식품리스트를 redux에 저장해놓고 끼니 자동구성에 사용
   useEffect(() => {
-    if (!listProductData) return;
-    if (totalFoodListIsLoaded) return;
-    dispatch(setTotalFoodList(listProductData));
-  }, [listProductData]);
+    const loadTotalFoodList = async () => {
+      if (!currentDietNo) return;
+      if (totalFoodListIsLoaded) return;
+      const lPData = (await refetchLPData()).data;
+      if (!lPData) return;
+      dispatch(setTotalFoodList(lPData));
+      queryClient.removeQueries({queryKey: [PRODUCTS, currentDietNo]});
+    };
+
+    loadTotalFoodList();
+  }, [currentDietNo]);
 
   // asyncStorage 체크리스트 데이터 가져오기
   useEffect(() => {

@@ -71,6 +71,12 @@ export const renderAlertContent: IRenderAlertContent = {
       subText={'끼니를 확인하고\n식품을 교체해주세요'}
     />
   ),
+  autoMenuOverPrice: () => (
+    <CommonAlertContent
+      text={'앗! 목표영양을 맞추다보니\n예산을 초과했어요'}
+      subText={'다시 시도해보셔도 됩니다'}
+    />
+  ),
 };
 
 interface IDTP {

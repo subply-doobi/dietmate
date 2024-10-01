@@ -1,6 +1,21 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 import {IProductData} from '../../shared/api/types/product';
+import {
+  categorizeFood,
+  IFoodGroupForAutoMenu,
+  separateFoods,
+} from '../../shared/utils/dataTransform';
+import {getMedianCalorie} from '../../shared/utils/sumUp';
+
+const initialCategory = {
+  lunchBox: [],
+  chicken: [],
+  salad: [],
+  snack: [],
+  chip: [],
+  drink: [],
+};
 
 type ITutorialProgress =
   | ''
@@ -12,10 +27,13 @@ type ITutorialProgress =
   | 'ChangeFood'
   | 'AutoMenu'
   | 'Complete';
-export interface ICartState {
+
+export interface ICommonState {
   currentDietNo: string;
   totalFoodList: IProductData[];
   totalFoodListIsLoaded: boolean;
+  foodGroupForAutoMenu: IFoodGroupForAutoMenu;
+  medianCalorie: number;
   platformDDItems: {value: string; label: string}[];
   progressTooltipShow: boolean;
   menuAcActive: number[];
@@ -28,10 +46,18 @@ export interface ICartState {
   };
 }
 
-const initialState: ICartState = {
+const initialState: ICommonState = {
   currentDietNo: '',
   totalFoodList: [],
   totalFoodListIsLoaded: false,
+  foodGroupForAutoMenu: {
+    total: initialCategory,
+    normal: initialCategory,
+    highCarb: initialCategory,
+    highProtein: initialCategory,
+    highFat: initialCategory,
+  },
+  medianCalorie: 0,
   platformDDItems: [{value: '', label: '선택안함'}],
   progressTooltipShow: true,
   menuAcActive: [],
@@ -55,6 +81,18 @@ export const commonSlice = createSlice({
     },
     setTotalFoodList: (state, action: PayloadAction<IProductData[]>) => {
       state.totalFoodList = action.payload;
+      state.medianCalorie = getMedianCalorie(action.payload);
+      const {highCarbFood, highProtFood, highFatFood, normalFood} =
+        separateFoods(action.payload);
+      const foodGroupForAutoMenu: IFoodGroupForAutoMenu = {
+        // REFACTOR 필요
+        total: categorizeFood(action.payload),
+        normal: categorizeFood(normalFood),
+        highCarb: categorizeFood(highCarbFood),
+        highProtein: categorizeFood(highProtFood),
+        highFat: categorizeFood(highFatFood),
+      };
+      state.foodGroupForAutoMenu = foodGroupForAutoMenu;
       state.totalFoodListIsLoaded = true;
 
       // action.payload 의 platformNm을 기준으로 중복되지 않는 platformNm을 platformDDItems 형태의 배열로 만들기
