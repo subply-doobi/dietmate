@@ -93,4 +93,14 @@ export const icons = {
   menu_24: require(`./assets/icons/24_menu.png`),
   userRound_24: require(`./assets/icons/24_user_round.png`),
   networkError_80: require(`./assets/icons/80_network_error.png`),
+
+  // mypage btns
+  question_mypage_24: require(`./assets/icons/24_mypage_question.png`),
+  target_mypage_24: require(`./assets/icons/24_mypage_target.png`),
+  code_mypage_24: require(`./assets/icons/24_mypage_code.png`),
+  heart_myPage_24: require(`./assets/icons/24_mypage_heart.png`),
+  notice_mypage_24: require(`./assets/icons/24_mypage_notice.png`),
+  account_mypage_24: require(`./assets/icons/24_mypage_account.png`),
+  chat_mypage_24: require(`./assets/icons/24_mypage_chat.png`),
+  card_mypage_24: require(`./assets/icons/24_mypage_card.png`),
 };
