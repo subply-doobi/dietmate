@@ -18,6 +18,7 @@ import {updateNotShowAgainList} from '../../shared/utils/asyncStorage';
 import {setTutorialStart} from '../../features/reduxSlices/commonSlice';
 import {RootState} from '../../app/store/reduxStore';
 import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
+import {icons} from '../../shared/iconSource';
 
 const Mypage = () => {
   // navigation
@@ -36,28 +37,49 @@ const Mypage = () => {
       title: '이용방법',
       btnId: 'Tutorial',
       onPress: () => dispatch(openModal({name: 'tutorialRestartAlert'})),
+      iconSource: icons.question_mypage_24,
+    },
+    {
+      title: '목표변경',
+      btnId: 'TargeChange',
+      onPress: () => navigate('UserInput', {from: 'Mypage'}),
+      iconSource: icons.target_mypage_24,
     },
     {
       title: '추천코드',
       btnId: 'recommendCode',
       onPress: () => navigate('RecommendCode'),
+      iconSource: icons.code_mypage_24,
     },
     {
       title: '찜한상품',
       btnId: 'Likes',
       onPress: () => navigate('Likes'),
+      iconSource: icons.heart_myPage_24,
     },
     {
       title: '주문내역',
       btnId: 'OrderHistory',
       onPress: () => navigate('OrderHistory'),
+      iconSource: icons.card_mypage_24,
     },
-    {title: '공지사항', btnId: 'Notice', onPress: () => navigate('Notice')},
-    {title: '계정설정', btnId: 'Account', onPress: () => navigate('Account')},
+    {
+      title: '공지사항',
+      btnId: 'Notice',
+      onPress: () => navigate('Notice'),
+      iconSource: icons.notice_mypage_24,
+    },
+    {
+      title: '계정설정',
+      btnId: 'Account',
+      onPress: () => navigate('Account'),
+      iconSource: icons.account_mypage_24,
+    },
     {
       title: '문의하기',
       btnId: 'Inquiry',
       onPress: () => link(INQUIRY_URL),
+      iconSource: icons.chat_mypage_24,
     },
   ];
 

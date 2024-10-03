@@ -1,9 +1,15 @@
 import styled from 'styled-components/native';
-import {Col, HorizontalLine, Row, TextMain} from './styledComps';
+import {Col, HorizontalLine, Icon, Row, TextMain} from './styledComps';
 import {icons} from '../iconSource';
+import {ImageSourcePropType} from 'react-native';
 
 interface IPageBtn {
-  btns: {title: string; btnId: string; onPress: Function}[];
+  btns: {
+    title: string;
+    btnId: string;
+    onPress: Function;
+    iconSource: ImageSourcePropType;
+  }[];
 }
 
 const ListBtns = ({btns}: IPageBtn) => {
@@ -13,7 +19,10 @@ const ListBtns = ({btns}: IPageBtn) => {
         <Col key={item.btnId}>
           <Btn onPress={() => item.onPress()}>
             <Row style={{justifyContent: 'space-between'}}>
-              <PageBtnText>{item.title}</PageBtnText>
+              <Row>
+                <Icon size={24} source={item.iconSource} />
+                <PageBtnText>{item.title}</PageBtnText>
+              </Row>
               <RightArrow source={icons.arrowRight_20} />
             </Row>
           </Btn>
@@ -34,6 +43,8 @@ const Btn = styled.TouchableOpacity`
 const PageBtnText = styled(TextMain)`
   font-size: 16px;
   font-weight: bold;
+  line-height: 20px;
+  margin-left: 12px;
 `;
 
 const RightArrow = styled.Image`
