@@ -7,7 +7,6 @@ import styled from 'styled-components/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
 // doobi
-import FoodList from './ui/FoodList';
 import {ShadowView} from '../../shared/ui/styledComps';
 import {
   Col,
@@ -22,13 +21,13 @@ import colors from '../../shared/colors';
 import {icons} from '../../shared/iconSource';
 import {parseDate} from '../../shared/utils/dateParsing';
 import {IFlattedOrderedProduct} from './util/menuFlat';
-import {updateTotalCheckList} from '../../shared/utils/asyncStorage';
 import PieChart from 'react-native-pie-chart';
 import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../app/store/reduxStore';
 import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
+import MenuBox from './ui/MenuBox';
 
 const Checklist = () => {
   // redux
@@ -56,21 +55,7 @@ const Checklist = () => {
       totalPrice: order[0][0].orderPrice,
     });
   };
-  const onListBoxPressed = async ({
-    orderNo,
-    menuNoAndQtyIdx,
-  }: {
-    orderNo: string;
-    menuNoAndQtyIdx: string;
-  }) => {
-    setChecklist(prev => {
-      const newCheckList = prev.includes(menuNoAndQtyIdx)
-        ? prev.filter(v => v !== menuNoAndQtyIdx)
-        : [...prev, menuNoAndQtyIdx];
-      updateTotalCheckList({orderNo, menuNoAndQtyIdx}); // asyncStorage update
-      return newCheckList;
-    });
-  };
+
   // percentage
   const numerator = checklist.length || 0;
   const denominator = order.length;
@@ -83,6 +68,7 @@ const Checklist = () => {
       headerTitle: `${parseDate(order[0][0].buyDate)} 주문`,
     });
   }, []);
+
   // asyncStorage checklist data
   useEffect(() => {
     initialChecklist && setChecklist(initialChecklist);
@@ -98,12 +84,12 @@ const Checklist = () => {
       <ScrollView
         contentContainerStyle={{paddingBottom: 64}}
         showsVerticalScrollIndicator={false}>
+        {/* 제목, 파이그래프 */}
         <Card>
           <Row style={{alignSelf: 'center'}}>
             <CardTitle>
               끼니 ({numerator}/{denominator})
             </CardTitle>
-            {/* 파이그래프 */}
             {percentage === 100 ? (
               <Icon
                 style={{marginLeft: 8, zIndex: 2}}
@@ -135,50 +121,15 @@ const Checklist = () => {
           <HorizontalSpace height={16} />
 
           {/* 끼니 체크리스트 */}
-          {order?.map((menu, idx) => {
-            const orderNo = menu[0].orderNo;
-            const menuNoAndQtyIdx = `${menu[0].dietNo}/${menu[0].qtyIdx}`;
-            return (
-              <Col key={idx}>
-                <ShadowView style={{borderRadius: 5}}>
-                  <CheckListBox
-                    onPress={async () =>
-                      onListBoxPressed({
-                        orderNo,
-                        menuNoAndQtyIdx,
-                      })
-                    }>
-                    <LeftBar />
-                    <CheckListTitle>
-                      {menu[0].dietSeq}{' '}
-                      {menu[0].qtyIdx > 0 && `(${menu[0].qtyIdx + 1})`}
-                    </CheckListTitle>
-                    <Icon
-                      style={{
-                        position: 'absolute',
-                        right: 16,
-                        top: 24,
-                        zIndex: 2,
-                      }}
-                      source={
-                        checklist.includes(menuNoAndQtyIdx)
-                          ? icons.checkRoundCheckedGreen_24
-                          : icons.checkRoundEmpty_24
-                      }
-                    />
-                    <HorizontalSpace height={16} />
-                    <FoodList menu={menu} />
-                    {checklist.includes(menuNoAndQtyIdx) && <OpacityView />}
-                  </CheckListBox>
-                </ShadowView>
-                {order.length - 1 !== idx && (
-                  <HorizontalSpace style={{height: 24}} />
-                )}
-              </Col>
-            );
-          })}
+          <MenuBox
+            order={order}
+            checklist={checklist}
+            setChecklist={setChecklist}
+          />
         </Card>
       </ScrollView>
+
+      {/* 목표변경 알럿 */}
       <DAlert
         alertShow={changeTargetAlert.isOpen}
         confirmLabel="목표변경"
@@ -229,38 +180,4 @@ const GoHistoryDetailBtn = styled.TouchableOpacity`
   align-items: center;
   align-self: flex-end;
   margin-top: 24px;
-`;
-
-const CheckListBox = styled.TouchableOpacity`
-  background-color: ${colors.white};
-  width: 100%;
-  border-radius: 5px;
-  padding: 24px 16px 32px 16px;
-`;
-
-const LeftBar = styled.View<{screen?: 'Home' | 'Diet' | string}>`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 4px;
-  background-color: ${colors.inactivated};
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-`;
-
-const CheckListTitle = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 24px;
-`;
-
-const OpacityView = styled.View`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background-color: ${colors.whiteOpacity70};
-  z-index: 1;
 `;
