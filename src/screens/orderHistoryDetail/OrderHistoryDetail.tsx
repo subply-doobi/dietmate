@@ -1,114 +1,30 @@
+// RN
 import {useEffect} from 'react';
 import {ScrollView} from 'react-native';
-import styled from 'styled-components/native';
-import {useSelector} from 'react-redux';
 
-import {RootState} from '../../app/store/reduxStore';
+// 3rd
+import styled from 'styled-components/native';
+
+// doobi
+import {INQUIRY_URL} from '../../shared/constants';
 import colors from '../../shared/colors';
-import {commaToNum, sumUpNutrients, sumUpPrice} from '../../shared/utils/sumUp';
+import {commaToNum, sumUpPrice} from '../../shared/utils/sumUp';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {IOrderedProduct} from '../../shared/api/types/order';
+import {link} from '../../shared/utils/linking';
+import {reGroupOrderBySeller} from '../../shared/utils/dataTransform';
+import MenuSection from '../../components/common/menuSection/MenuSection';
+import MenuList from './ui/MenuList';
 import {
   TextMain,
   VerticalLine,
   Col,
-  HorizontalLine,
   Row,
   TextSub,
   HorizontalSpace,
   BtnSmall,
   BtnSmallText,
 } from '../../shared/ui/styledComps';
-import MenuSection from '../../components/common/menuSection/MenuSection';
-import {icons} from '../../shared/iconSource';
-import {
-  useCreateDietDetail,
-  useDeleteDietDetail,
-  useListDietTotalObj,
-} from '../../shared/api/queries/diet';
-import {IProductData} from '../../shared/api/types/product';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {IOrderedProduct} from '../../shared/api/types/order';
-import {INQUIRY_URL, SERVICE_PRICE_PER_PRODUCT} from '../../shared/constants';
-import {link} from '../../shared/utils/linking';
-import {reGroupOrderBySeller} from '../../shared/utils/dataTransform';
-import Config from 'react-native-config';
-
-const NUTRIENT_TYPE = [
-  {id: 'calorie', label: '칼로리'},
-  {id: 'carb', label: '탄수화물'},
-  {id: 'protein', label: '단백질'},
-  {id: 'fat', label: '지방'},
-];
-
-const OrderedMenu = ({menu}: {menu: IOrderedProduct[]}) => {
-  // redux
-  const {currentDietNo} = useSelector((state: RootState) => state.common);
-
-  // react-query
-  const {data: dTOData} = useListDietTotalObj();
-  const dDData = dTOData?.[currentDietNo]?.dietDetail ?? [];
-  const addMutation = useCreateDietDetail();
-  const deleteMutation = useDeleteDietDetail();
-
-  // etc
-  const onAdd = (item: IProductData) => {
-    addMutation.mutate({dietNo: currentDietNo, food: item});
-  };
-  const onDelete = (item: IProductData) => {
-    deleteMutation.mutate({
-      dietNo: currentDietNo,
-      productNo: item?.productNo,
-    });
-  };
-
-  return menu.map((item, thumbnailIndex: number) => (
-    <Col key={thumbnailIndex} style={{marginTop: 24}}>
-      <Row style={{alignItems: 'flex-start'}}>
-        <ThumbnailImage
-          source={{uri: `${Config.BASE_URL}${item?.mainAttUrl}`}}
-        />
-        <Col
-          style={{
-            marginLeft: 8,
-            flex: 1,
-          }}>
-          <MakeVertical>
-            <SellerText>{item.platformNm}</SellerText>
-            <ProductNmText numberOfLines={1} ellipsizeMode="tail">
-              {item.productNm}
-            </ProductNmText>
-            <NutrientText numberOfLines={1} ellipsizeMode="tail">
-              칼 <NutrientValue>{parseInt(item.calorie)}kcal</NutrientValue>
-              {'    '}탄 <NutrientValue>{parseInt(item.carb)}g</NutrientValue>
-              {'    '}단{' '}
-              <NutrientValue>{parseInt(item.protein)}g</NutrientValue>
-              {'    '}지 <NutrientValue>{parseInt(item.fat)}g</NutrientValue>
-            </NutrientText>
-          </MakeVertical>
-          {dDData?.find(({productNo}) => productNo === item.productNo) ? (
-            <DeleteBtn
-              onPress={() => {
-                onDelete(item);
-              }}>
-              <DeleteImage source={icons.cancelRound_24} />
-            </DeleteBtn>
-          ) : (
-            <PlusBtn
-              onPress={() => {
-                onAdd(item);
-              }}>
-              <PlusImage source={icons.plusRoundSmall_24} />
-            </PlusBtn>
-          )}
-        </Col>
-      </Row>
-      <ProductPrice>
-        {commaToNum(parseInt(item.price) + SERVICE_PRICE_PER_PRODUCT)}원
-      </ProductPrice>
-
-      <HorizontalLine />
-    </Col>
-  ));
-};
 
 // main component
 const OrderHistoryDetail = () => {
@@ -151,50 +67,7 @@ const OrderHistoryDetail = () => {
         </InquireBtn>
 
         {/* 각 끼니 카드 */}
-        <ContentContainer>
-          {orderDetailData.map((menu: IOrderedProduct[], menuIdx: number) => {
-            const {cal, carb, protein, fat} = sumUpNutrients(menu);
-            return (
-              <Card key={menuIdx}>
-                <CardTitle>
-                  끼니 {menuIdx + 1}{' '}
-                  <CardTitle style={{color: colors.textSub}}>
-                    (x{menu[0]?.qty}개)
-                  </CardTitle>
-                </CardTitle>
-
-                {/* 해당 끼니 영양성분 */}
-                <MenuNutrContainer>
-                  {NUTRIENT_TYPE.map((nutrient, index) => (
-                    <Row key={index} style={{flex: 1, height: '100%'}}>
-                      <Col style={{flex: 1, alignItems: 'center'}}>
-                        <MenuNutr>{nutrient.label}</MenuNutr>
-                        <MenuNutrValue>
-                          {[cal, carb, protein, fat][index]}
-                          {nutrient.id === 'calorie' ? ' kcal' : ' g'}
-                        </MenuNutrValue>
-                      </Col>
-                      {NUTRIENT_TYPE.length - 1 !== index && <VerticalLine />}
-                    </Row>
-                  ))}
-                </MenuNutrContainer>
-
-                {/* 해당 끼니 식품 */}
-                <OrderedMenu menu={menu} />
-
-                {isSelfOrder ? (
-                  <SelfOrderTextBox>
-                    <SelfOrderText>직접 구매한 식단</SelfOrderText>
-                  </SelfOrderTextBox>
-                ) : (
-                  <TotalPrice>
-                    {commaToNum(sumUpPrice(menu, true))}원
-                  </TotalPrice>
-                )}
-              </Card>
-            );
-          })}
-        </ContentContainer>
+        <MenuList orderDetailData={orderDetailData} />
 
         {/* 전체주문요약 */}
         {isSelfOrder || (
@@ -265,132 +138,6 @@ const InquireBtn = styled(BtnSmall)`
   align-self: flex-end;
   margin-right: 10px;
   margin-bottom: -8px;
-`;
-
-const ContentContainer = styled.View`
-  flex: 1;
-  padding: 0px 8px 24px 8px;
-`;
-
-const Card = styled.View`
-  width: 100%;
-  padding: 8px 8px 32px 8px;
-  margin-top: 16px;
-  background-color: ${colors.white};
-  border-radius: 10px;
-`;
-
-const CardTitle = styled(TextMain)`
-  margin-top: 16px;
-  font-size: 18px;
-  font-weight: bold;
-  align-self: center;
-`;
-
-const MenuNutrContainer = styled(Row)`
-  height: 40px;
-  flex: 1;
-  margin-top: 24px;
-`;
-
-const MenuNutr = styled(TextMain)`
-  font-size: 12px;
-`;
-
-const MenuNutrValue = styled(TextMain)`
-  font-size: 14px;
-`;
-
-const MakeVertical = styled.View`
-  flex-direction: column;
-`;
-
-const PlusBtn = styled.TouchableOpacity`
-  position: absolute;
-  right: 0px;
-`;
-const PlusImage = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
-const ThumbnailImage = styled.Image`
-  width: 72px;
-  height: 72px;
-  background-color: ${colors.highlight};
-  border-radius: 3px;
-`;
-
-const SellerText = styled(TextMain)`
-  font-size: 14px;
-  font-weight: bold;
-`;
-
-const DeleteBtn = styled.TouchableOpacity`
-  position: absolute;
-  right: 0px;
-  top: 0px;
-`;
-
-const DeleteImage = styled.Image`
-  width: 24px;
-  height: 24px;
-  background-color: ${colors.white};
-`;
-
-const ProductNmText = styled(TextMain)`
-  font-size: 14px;
-`;
-
-const NutrientText = styled(TextSub)`
-  margin-top: 4px;
-  font-size: 12px;
-`;
-const NutrientValue = styled(TextMain)`
-  font-size: 12px;
-  font-weight: bold;
-`;
-
-const TotalPrice = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-  align-self: flex-end;
-  margin-top: 16px;
-`;
-
-const OrderLinkBtn = styled.TouchableOpacity`
-  height: 24px;
-  align-self: flex-end;
-  margin-top: 12px;
-  padding-right: 4px;
-`;
-const OrderLinkText = styled(TextMain)`
-  font-size: 12px;
-  color: ${colors.main};
-`;
-
-const ProductPrice = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
-  margin-left: 80px;
-  margin-bottom: 16px;
-`;
-
-const SelfOrderTextBox = styled.View`
-  height: 24px;
-  width: 100%;
-  background-color: ${colors.backgroundLight2};
-
-  justify-content: center;
-  align-items: flex-end;
-
-  margin-top: 8px;
-  padding: 0px 8px 0px 0px;
-`;
-
-const SelfOrderText = styled(TextMain)`
-  font-size: 16px;
-  font-weight: bold;
 `;
 
 const SummaryContainer = styled.View`

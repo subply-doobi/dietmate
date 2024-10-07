@@ -1,34 +1,32 @@
-// react, RN, 3rd
-import {useEffect, useRef, useState} from 'react';
+// RN
+import {useEffect, useRef} from 'react';
 import {ActivityIndicator, Animated, FlatList} from 'react-native';
+
+// 3rd
 import styled from 'styled-components/native';
-import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../app/store/reduxStore';
+import {useDispatch, useSelector} from 'react-redux';
 
-// doobi util, const
-import colors from '../../shared/colors';
-
-// doobi Component
+// doobi
 import FilterModalContent from './ui/FilterModalContent';
 import MenuSection from '../../components/common/menuSection/MenuSection';
-import {useHeaderHeight} from '@react-navigation/elements';
-
-// react-query
-import {useListDietTotalObj} from '../../shared/api/queries/diet';
-import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
-
 import SortModalContent from './ui/SortModalContent';
 import DTPScreen from '../../shared/ui/DTPScreen';
 import DBottomSheet from '../../components/common/bottomsheet/DBottomSheet';
 import FlatlistHeaderComponent from './ui/FlatlistHeaderComponent';
-import {useListProduct} from '../../shared/api/queries/product';
 import HomeFoodListAndBtn from './ui/HomeFoodListAndBtn';
-import {IProductData} from '../../shared/api/types/product';
 import DTooltip from '../../shared/ui/DTooltip';
-import {Col} from '../../shared/ui/styledComps';
 import NutrientsProgress from '../../components/common/nutrient/NutrientsProgress';
+import {Col} from '../../shared/ui/styledComps';
+
+import colors from '../../shared/colors';
+import {useHeaderHeight} from '@react-navigation/elements';
+import {useListDietTotalObj} from '../../shared/api/queries/diet';
+import {useGetBaseLine} from '../../shared/api/queries/baseLine';
+import {useListProduct} from '../../shared/api/queries/product';
+import {IProductData} from '../../shared/api/types/product';
 import {tutorialSortFilter} from '../../shared/constants';
 import {closeModal, openModal} from '../../features/reduxSlices/modalSlice';
 

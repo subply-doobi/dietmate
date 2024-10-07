@@ -1,7 +1,5 @@
 import styled from 'styled-components/native';
-import {Col, Row, TextMain, VerticalLine} from '../../../shared/ui/styledComps';
-import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
-import {useMemo} from 'react';
+import {Col, TextMain, VerticalLine} from '../../../shared/ui/styledComps';
 import colors from '../../../shared/colors';
 import {IBaseLineData} from '../../../shared/api/types/baseLine';
 import {FlatList} from 'react-native';
