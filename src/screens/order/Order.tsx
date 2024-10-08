@@ -142,8 +142,6 @@ const Order = () => {
     });
   };
 
-  console.log('Order: payFailAlert: ', payFailAlert);
-
   return listAddressDataLoading ? (
     <Container style={{justifyContent: 'center', alignItems: 'center'}}>
       <ActivityIndicator size="small" color={colors.main} />
