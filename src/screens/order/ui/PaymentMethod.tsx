@@ -1,7 +1,13 @@
-import styled from 'styled-components/native';
+// RN
 
-import {icons} from '../../../shared/iconSource';
+// 3rd
+import styled from 'styled-components/native';
+import {useDispatch, useSelector} from 'react-redux';
+
+// doobi
+import {PAY_METHOD} from '../util/payConsts';
 import colors from '../../../shared/colors';
+import {RootState} from '../../../app/store/reduxStore';
 import {
   AccordionContentContainer,
   BtnCTA,
@@ -10,10 +16,7 @@ import {
   Row,
   TextMain,
 } from '../../../shared/ui/styledComps';
-import {useDispatch, useSelector} from 'react-redux';
 import {setValue} from '../../../features/reduxSlices/userInputSlice';
-import {RootState} from '../../../app/store/reduxStore';
-import {PAY_METHOD} from '../util/payConsts';
 
 const PaymentMethod = () => {
   // redux

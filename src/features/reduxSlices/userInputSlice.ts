@@ -332,7 +332,7 @@ export const initialState: IUserInputState = {
     errMsg: '',
   },
   paymentMethod: {
-    value: 'simple',
+    value: 'EASY_PAY',
     isValid: true,
     errMsg: '',
   },

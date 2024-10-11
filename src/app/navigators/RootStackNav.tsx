@@ -12,12 +12,8 @@ import Account from '../../screens/account/Account';
 import AddressEdit from '../../screens/addressEdit/AddressEdit';
 import OrderComplete from '../../screens/orderComplete/OrderComplete';
 import BackArrow from '../../shared/ui/BackArrow';
-import Payment from '../../components/payment/Payment';
 import Notice from '../../screens/notice/Notice';
 import Order from '../../screens/order/Order';
-
-// doobi shared
-import colors from '../../shared/colors';
 import UserInput from '../../screens/userInput/UserInput';
 import Search from '../../screens/search/Search';
 import AutoMenu from '../../screens/autoMenu/AutoMenu';
@@ -29,6 +25,10 @@ import OrderHistoryDetail from '../../screens/orderHistoryDetail/OrderHistoryDet
 import MyBonus from '../../screens/MyBonus/MyBonus';
 import RecommendCode from '../../screens/recommendCode/RecommendCode';
 import ErrorPage from '../../screens/error/ErrorPage';
+
+// doobi shared
+import colors from '../../shared/colors';
+import Payment from '../../screens/payment/Payment';
 
 const Stack = createNativeStackNavigator();
 
@@ -123,7 +123,7 @@ const RootStackNav = () => {
         }}
       />
 
-      {/* 카카오페이 */}
+      {/* 결제페이지 */}
       <Stack.Screen name="Payment" component={Payment} />
 
       {/* history는 추후 추가 */}

@@ -27,6 +27,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>dietmate</string>
 				<string>kakao5065665acbfa07f0dd876a374e66e618</string>
 			</array>
 		</dict>

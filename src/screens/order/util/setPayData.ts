@@ -2,8 +2,53 @@ import Config from 'react-native-config';
 import {IAddressData} from '../../../shared/api/types/address';
 import {IDietDetailAllData} from '../../../shared/api/types/diet';
 import {IUserData} from '../../../shared/api/types/user';
-import {IPG, PGString} from './payConsts';
+import {channelKey, IPG} from './payConsts';
 
+type IPayMethod =
+  | 'CARD'
+  | 'VIRTUAL_ACCOUNT'
+  | 'TRANSFER'
+  | 'MOBILE'
+  | 'GIFT_CERTIFICATE'
+  | 'EASY_PAY';
+
+interface IAddress {
+  country?: string;
+  addressLine1: string;
+  addressLine2: string;
+  city?: string;
+  province?: string;
+  zipcode?: string;
+}
+
+interface ICustomer {
+  customerId: string;
+  fullName: string;
+  // firstName?: string; // fullName or first+lastName
+  // lastName?: string;
+  phoneNumber?: string;
+  email?: string;
+  address?: IAddress;
+  gender?: 'MALE' | 'FEMALE' | 'OTHER';
+  birthYear?: string;
+  birthMonth?: string;
+  birthDay?: string;
+}
+
+interface IWindowType {
+  pc?: 'IFRAME' | 'REDIRECTION' | 'POPUP';
+  mobile?: 'IFRAME' | 'REDIRECTION' | 'POPUP';
+}
+
+interface IProduct {
+  id: string;
+  name: string;
+  code?: string;
+  amount: number;
+  quantity: number;
+  tag?: string;
+  isCulturalExpense?: boolean;
+}
 interface ICustomData {
   amount: string;
   buyerName: string;
@@ -20,22 +65,29 @@ interface ICustomData {
     link: string;
   }[];
 }
-
 export interface IIamportPayParams {
-  pg: string; //kakaopay, html5_inicis 등등
-  pay_method: string; //결제수단: kakaopay의 경우 'card'하나만 존재
-  name: string; //결제명
-  amount: string; //총 결제금액
-  buyer_name: string; //주문자 이름
-  buyer_tel: string; //주문자 전화번호
-  buyer_email: string; //주문자 이메일
-  buyer_addr: string; //받는분 주소
-  buyer_postcode: string; //받는분 우편번호
-  merchant_uid: string; //주문번호
-  custom_data: ICustomData; //custom_data: doobi자체에서 사용하는 데이터
-  app_scheme: string; //앱 URL scheme
-  escrow: boolean; //에스크로 사용 여부
-  customer_uid: string; //고객 고유번호
+  storeId: string;
+  paymentId: string;
+  orderName: string;
+  totalAmount: number;
+  currency: string;
+  payMethod: IPayMethod;
+  channelKey: string;
+  // pgProvider?: string; // deprecated
+  // isTestChannel?: boolean; // deprecated
+  taxFreeAmount?: number; // 면세금액
+  vatAmount?: number; // 부가세 미입력시 자동 1/11
+  customer: ICustomer;
+  windowType?: IWindowType;
+  redirectUrl: string;
+  noticeUrls?: string[];
+  confirmUrl?: string;
+  appScheme: string;
+  isEscrow?: boolean; // 미입력시 기본값 false
+  products: IProduct[];
+  locale?: string;
+  customData?: ICustomData;
+  bypass?: object;
 }
 
 export interface IDoobiPayParams {
@@ -112,7 +164,7 @@ export const setCustomData = ({
 
 interface ISetPayParams {
   userData: IUserData;
-  paymentMethod: string;
+  paymentMethod: IPayMethod;
   pg: IPG;
   menuNum: number;
   productNum: number;
@@ -141,65 +193,79 @@ export const setPayParams = ({
   payParams_iamport: IIamportPayParams;
   payParams_doobi: IDoobiPayParams;
 } => {
-  // 주문번호 생성
-  const pgString = PGString[pg];
-  const merchant_uid = `mid_${userData.userId}_${new Date().getTime()}`;
-  const escrow = false;
-  const pay_method = paymentMethod === 'simple' ? 'card' : paymentMethod;
-  const name = `${menuNum}개 끼니 (식품 ${productNum}개)`;
-  const amount = String(priceTotal + shippingPrice);
-  const buyer_email = userData?.email ? userData.email : '';
-  const buyer_addr = listAddressData
-    ? listAddressData[selectedAddrIdx]?.addr1 +
-      ' | ' +
-      listAddressData[selectedAddrIdx]?.addr2
-    : '';
-  const buyer_postcode = listAddressData
-    ? listAddressData[selectedAddrIdx]?.zipCode
-    : '';
-  const app_scheme = 'example';
-  const customer_uid = 'customer_' + new Date().getTime();
-  const doobiCustomData = `${customData.entranceType} | ${customData.entranceNote} | ${shippingPrice}`;
+  const payParams_iamport: IIamportPayParams = {
+    storeId: Config.STORE_ID_IAMPORT,
+    paymentId: `paymentU${userData.userId}D${Date.now()}`,
+    orderName: `${menuNum}개 끼니 (식품 ${productNum}개)`,
+    totalAmount: priceTotal + shippingPrice,
+    currency: 'KRW',
+    payMethod: paymentMethod,
+    channelKey: channelKey[pg],
+    // taxFreeAmount : '',
+    // vatAmount : '',
+    customer: {
+      customerId: userData.userId,
+      fullName: buyerName,
+      phoneNumber: buyerTel,
+      email: userData.email || undefined,
+      address: {
+        addressLine1: listAddressData?.[selectedAddrIdx]?.addr1 || '',
+        addressLine2: listAddressData?.[selectedAddrIdx]?.addr2 || '',
+        city: '',
+        province: '',
+        zipcode: listAddressData?.[selectedAddrIdx]?.zipCode,
+      },
+    },
+    windowType: {
+      pc: 'REDIRECTION',
+      mobile: 'REDIRECTION',
+    },
+    redirectUrl: Config.REDIRECT_URL_IAMPORT,
+    // noticeUrls : '',
+    // confirmUrl : '',
+    appScheme: Config.APP_SCHEME_IAMPORT,
+    isEscrow: undefined,
+    products: [
+      {
+        id: `productU${userData.userId}D${Date.now()}`,
+        name: `${menuNum}개 끼니 (식품 ${productNum}개)`,
+        amount: priceTotal + shippingPrice,
+        quantity: 1,
+      },
+    ],
+    // locale : undefined,
+    // bypass : undefined,
+    customData,
+  };
+
+  // doobi
+  const payParams_doobi: IDoobiPayParams = {
+    // 두비서버 자체정보
+    orderTypeCd: 'SP011002',
+    shippingPrice: String(shippingPrice),
+    orderPrice: String(payParams_iamport.totalAmount),
+    // 아임포트 결제 정보 ,
+    pg,
+    escrow: String(false),
+    payMethod: payParams_iamport.payMethod,
+    payName: payParams_iamport.orderName,
+    payAmount: String(payParams_iamport.totalAmount),
+    merchantUid: payParams_iamport.paymentId,
+    buyerName,
+    buyerTel,
+    buyerEmail: payParams_iamport.customer.email || '',
+    buyerAddr:
+      (listAddressData?.[selectedAddrIdx]?.addr1 || '') +
+        ' | ' +
+        listAddressData?.[selectedAddrIdx]?.addr2 || '',
+    buyerZipCode: listAddressData?.[selectedAddrIdx]?.zipCode || '',
+    appScheme: payParams_iamport.appScheme,
+    customerUid: 'customer_' + Date.now(),
+    customData: `${customData.entranceType} | ${customData.entranceNote} | ${shippingPrice}`,
+  };
 
   return {
-    payParams_iamport: {
-      pg: pgString,
-      escrow,
-      pay_method,
-      name,
-      merchant_uid,
-      amount,
-      buyer_name: buyerName,
-      buyer_tel: buyerTel,
-      buyer_email,
-      buyer_addr,
-      buyer_postcode,
-      app_scheme,
-      customer_uid,
-      // receiver, receiverContact, entranceType, entranceNote 추가
-      custom_data: customData,
-    },
-    payParams_doobi: {
-      // 두비서버 자체정보
-      orderTypeCd: 'SP011002',
-      shippingPrice: String(shippingPrice),
-      orderPrice: amount,
-
-      // 아임포트 결제 정보 ,
-      pg: pgString,
-      escrow: String(escrow),
-      payMethod: pay_method,
-      payName: name,
-      payAmount: amount,
-      merchantUid: merchant_uid,
-      buyerName: buyerName,
-      buyerTel: buyerTel,
-      buyerEmail: buyer_email,
-      buyerAddr: buyer_addr,
-      buyerZipCode: buyer_postcode,
-      appScheme: app_scheme,
-      customerUid: customer_uid,
-      customData: doobiCustomData,
-    },
+    payParams_iamport,
+    payParams_doobi,
   };
 };

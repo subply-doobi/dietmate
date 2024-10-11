@@ -2921,6 +2921,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@portone/browser-sdk@npm:^0.0.10":
+  version: 0.0.10
+  resolution: "@portone/browser-sdk@npm:0.0.10"
+  checksum: 10c0/999e5bb8f8ea3b0f746cb1a16446456b6b6c6151de3471b44a051de1365094751dfef026251354a2d9220ef59dae5728244d12bd0a472766063e96036fc2a875
+  languageName: node
+  linkType: hard
+
 "@react-native-async-storage/async-storage@npm:^2.0.0":
   version: 2.0.0
   resolution: "@react-native-async-storage/async-storage@npm:2.0.0"
@@ -5546,6 +5553,7 @@ __metadata:
     "@babel/runtime": "npm:^7.23.9"
     "@invertase/react-native-apple-authentication": "npm:^2.4.0"
     "@miblanchard/react-native-slider": "npm:^2.6.0"
+    "@portone/browser-sdk": "npm:^0.0.10"
     "@react-native-async-storage/async-storage": "npm:^2.0.0"
     "@react-native-community/netinfo": "npm:^11.4.1"
     "@react-native-seoul/kakao-login": "npm:^5.4.1"
@@ -5590,6 +5598,7 @@ __metadata:
     react-native-restart: "npm:^0.0.27"
     react-native-safe-area-context: "npm:^4.10.5"
     react-native-screens: "npm:^3.34.0"
+    react-native-send-intent: "npm:^1.3.0"
     react-native-svg: "npm:^15.7.1"
     react-native-web: "npm:~0.19.10"
     react-native-webview: "npm:^13.12.3"
@@ -10315,6 +10324,15 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/568af49a1d79797ebecf5b8c815d44b651b0affdd82d7a8024b9e5e71250a23e108d73562200ef571b806c6a9ebba0484510e710246165dbdc50ad18e4d77619
+  languageName: node
+  linkType: hard
+
+"react-native-send-intent@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "react-native-send-intent@npm:1.3.0"
+  peerDependencies:
+    react-native: "*"
+  checksum: 10c0/a9ca83176b826f8725b35b3edaa8d44a027313930c72a34f6ce5017bfb6dee1987ec394ef9a84d695fa681eb7daeba4a8f8fd065710e593d333615d4b1927d6a
   languageName: node
   linkType: hard
 
