@@ -45,6 +45,8 @@
 		<string>kakaolink</string>
 		<string>kakaotalk</string>
 		<string>itms-apps</string>
+		<string>itms-appss</string>
+		<string>ispmobile</string>
 	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>

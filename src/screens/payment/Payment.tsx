@@ -1,9 +1,9 @@
 // RN
-import {useState} from 'react';
+import {useRef, useState} from 'react';
 import {View, ActivityIndicator, Alert, Linking, Platform} from 'react-native';
 
 // 3rd
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import WebView, {
   WebViewMessageEvent,
@@ -15,14 +15,25 @@ import SendIntentAndroid from 'react-native-send-intent';
 import colors from '../../shared/colors';
 import {IIamportPayParams} from '../order/util/setPayData';
 import {getPaymentHtmlContent} from './util/htmlContent';
-import {getPaymentResult} from './util/payUtil';
+import {
+  getPaymentResult,
+  handlingPayDeepLink,
+  openDeepLink,
+} from './util/payUtil';
 import {useUpdateDiet} from '../../shared/api/queries/diet';
 import {useDeleteOrder, useUpdateOrder} from '../../shared/api/queries/order';
-import {openModal} from '../../features/reduxSlices/modalSlice';
+import {closeModal, openModal} from '../../features/reduxSlices/modalSlice';
+import {Container} from '../../shared/ui/styledComps';
+import DAlert from '../../shared/ui/DAlert';
+import {RootState} from '../../app/store/reduxStore';
+import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
 
 const Payment = () => {
   // redux
   const dispatch = useDispatch();
+  const payUrlAlert = useSelector(
+    (state: RootState) => state.modal.modal.payUrlAlert,
+  );
 
   // navigation
   const {goBack, reset} = useNavigation();
@@ -34,6 +45,9 @@ const Payment = () => {
 
   // useState
   const [loading, setLoading] = useState(true);
+
+  // useRef
+  const lastUrl = useRef('');
 
   // react-query
   const updateDietMutation = useUpdateDiet();
@@ -89,41 +103,30 @@ const Payment = () => {
   // };
 
   const onShouldStartLoadWithRequest = (navState: WebViewNavigation) => {
-    console.log('onShouldStartLoadWithRequest: ', navState);
     const url = navState.url;
+    console.log('onShouldStartLoadWithRequest: ', navState);
 
-    // intent url 처리 ios
-    if (url.startsWith('intent://') && Platform.OS === 'ios') {
-      Linking.openURL(url).catch(err =>
-        console.log('ios openURL error: ', err),
-      );
-      return false;
-    }
-    // intent url 처리 android
-    if (url.startsWith('intent:') && Platform.OS === 'android') {
-      SendIntentAndroid.openAppWithUri(url)
-        .then(isOpened => {
-          if (!isOpened)
-            console.log('sendIntentAndroid openAppWithUri isOpened', isOpened);
-        })
-        .catch(err => {
-          console.log('SendIntentAndroid.openAppWithUri error: ', err);
-        });
-      return false;
-    }
+    if (url === 'about:blank') return true;
 
     // 결제완료, 실패 로직 (외부 url -> dietmate:// 로 돌아올 때)
     if (
       url.startsWith('dietmate://payV2') ||
       url.startsWith('https://checkout-service')
     ) {
-      const {txId, paymentId, code, pgCode, message, pgMessage} =
+      const {txId, paymentId, code, pgCode, message, pgMessage, completeType} =
         getPaymentResult(navState.url);
 
       // 결제 실패, 완료시 로직 (code !== null && code !== undefined 일 때 실패)
-      code != null ? onPaymentFail(message) : onPaymentSuccess();
+      code != null || completeType === 'fail'
+        ? onPaymentFail(message)
+        : onPaymentSuccess();
 
-      // Prevent WebView from loading the custom URL scheme
+      return false;
+    }
+
+    // 외부 앱 실행 로직
+    if (!url.startsWith('https://') && !url.startsWith('http://')) {
+      openDeepLink(url);
       return false;
     }
 
@@ -131,7 +134,7 @@ const Payment = () => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <Container style={{paddingLeft: 0, paddingRight: 0}}>
       <WebView
         style={{flex: 1}}
         originWhitelist={['*']}
@@ -156,7 +159,19 @@ const Payment = () => {
           <ActivityIndicator size="small" color={colors.main} />
         </View>
       )}
-    </View>
+      <DAlert
+        alertShow={payUrlAlert.isOpen}
+        onCancel={() => dispatch(closeModal({name: 'payUrlAlert'}))}
+        onConfirm={() => dispatch(closeModal({name: 'payUrlAlert'}))}
+        renderContent={() => (
+          <CommonAlertContent
+            text={'앱이 설치되어있는지 확인해주세요'}
+            subText="문제가 계속되면 문의 바랍니다"
+          />
+        )}
+        NoOfBtn={1}
+      />
+    </Container>
   );
 };
 
