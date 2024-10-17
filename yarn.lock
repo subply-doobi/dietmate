@@ -2921,6 +2921,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@portone/browser-sdk@npm:^0.0.10":
+  version: 0.0.10
+  resolution: "@portone/browser-sdk@npm:0.0.10"
+  checksum: 10c0/999e5bb8f8ea3b0f746cb1a16446456b6b6c6151de3471b44a051de1365094751dfef026251354a2d9220ef59dae5728244d12bd0a472766063e96036fc2a875
+  languageName: node
+  linkType: hard
+
 "@react-native-async-storage/async-storage@npm:^2.0.0":
   version: 2.0.0
   resolution: "@react-native-async-storage/async-storage@npm:2.0.0"
@@ -5546,6 +5553,7 @@ __metadata:
     "@babel/runtime": "npm:^7.23.9"
     "@invertase/react-native-apple-authentication": "npm:^2.4.0"
     "@miblanchard/react-native-slider": "npm:^2.6.0"
+    "@portone/browser-sdk": "npm:^0.0.10"
     "@react-native-async-storage/async-storage": "npm:^2.0.0"
     "@react-native-community/netinfo": "npm:^11.4.1"
     "@react-native-seoul/kakao-login": "npm:^5.4.1"
@@ -5590,6 +5598,7 @@ __metadata:
     react-native-restart: "npm:^0.0.27"
     react-native-safe-area-context: "npm:^4.10.5"
     react-native-screens: "npm:^3.34.0"
+    react-native-send-intent: "npm:^1.3.0"
     react-native-svg: "npm:^15.7.1"
     react-native-web: "npm:~0.19.10"
     react-native-webview: "npm:^13.12.3"
@@ -10318,6 +10327,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-send-intent@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "react-native-send-intent@npm:1.3.0"
+  peerDependencies:
+    react-native: "*"
+  checksum: 10c0/a9ca83176b826f8725b35b3edaa8d44a027313930c72a34f6ce5017bfb6dee1987ec394ef9a84d695fa681eb7daeba4a8f8fd065710e593d333615d4b1927d6a
+  languageName: node
+  linkType: hard
+
 "react-native-svg@npm:^15.7.1":
   version: 15.7.1
   resolution: "react-native-svg@npm:15.7.1"
@@ -11982,11 +12000,11 @@ __metadata:
 
 "typescript@patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>":
   version: 5.6.2
-  resolution: "typescript@patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>::version=5.6.2&hash=b45daf"
+  resolution: "typescript@patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>::version=5.6.2&hash=8c6c40"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/e6c1662e4852e22fe4bbdca471dca3e3edc74f6f1df043135c44a18a7902037023ccb0abdfb754595ca9028df8920f2f8492c00fc3cbb4309079aae8b7de71cd
+  checksum: 10c0/94eb47e130d3edd964b76da85975601dcb3604b0c848a36f63ac448d0104e93819d94c8bdf6b07c00120f2ce9c05256b8b6092d23cf5cf1c6fa911159e4d572f
   languageName: node
   linkType: hard
 

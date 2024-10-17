@@ -3,19 +3,25 @@ import colors from '../../../shared/colors';
 import {icons} from '../../../shared/iconSource';
 
 // Define the PAY_METHOD object with inferred types
-export type IPG = 'kakaopay' | 'smartro' | 'smartro_v2';
-export type IPayMethod = 'simple' | 'card' | 'trans' | 'vbank';
+export type IPG = 'kakaopay' | 'smartro_v2';
+export type IPayMethod =
+  | 'CARD'
+  | 'VIRTUAL_ACCOUNT'
+  | 'TRANSFER'
+  | 'MOBILE'
+  | 'GIFT_CERTIFICATE'
+  | 'EASY_PAY';
 
-export const PGString: {[pg in IPG]: string} = {
-  kakaopay: `kakaopay.${Config.KAKAOPAY_CID}`,
-  smartro: `smartro.${Config.SMARTRO_MID}`,
-  smartro_v2: `smartro_v2.${Config.SMARTRO_MID}`,
+export const channelKey: {
+  [key in IPG]: string;
+} = {
+  kakaopay: Config.CHANNEL_KEY_KAKAOPAY_TEST,
+  smartro_v2: Config.CHANNEL_KEY_SMARTRO_V2_TEST,
 };
 
-const commonPG = 'smartro';
 export const PAY_METHOD = [
   {
-    value: 'simple',
+    value: 'EASY_PAY',
     label: '간편결제',
     subBtn: true,
     pg: [
@@ -38,12 +44,12 @@ export const PAY_METHOD = [
     ],
   },
   {
-    value: 'card',
+    value: 'CARD',
     label: '카드결제',
     subBtn: false,
     pg: [
       {
-        value: commonPG,
+        value: 'smartro_v2',
         label: '스마트로',
         iconSource: null,
         iconSize: 24,
@@ -53,12 +59,12 @@ export const PAY_METHOD = [
     ],
   },
   {
-    value: 'trans',
+    value: 'TRANSFER',
     label: '계좌이체',
     subBtn: false,
     pg: [
       {
-        value: commonPG,
+        value: 'smartro_v2',
         label: '스마트로',
         iconSource: null,
         iconSize: 24,
@@ -68,12 +74,12 @@ export const PAY_METHOD = [
     ],
   },
   {
-    value: 'vbank',
+    value: 'VIRTUAL_ACCOUNT',
     label: '가상계좌',
     subBtn: false,
     pg: [
       {
-        value: commonPG,
+        value: 'smartro_v2',
         label: '스마트로',
         iconSource: null,
         iconSize: 24,

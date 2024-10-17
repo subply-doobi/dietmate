@@ -30,6 +30,7 @@ interface IModals {
   tutorialFoodLimitAlert: IModal;
   targetCalorieGuideAlert: IModal;
   autoMenuOverPriceAlert: IModal;
+  payUrlAlert: IModal;
   // transparentScreen
   tutorialTPS: IModal;
   // bottomSheet
@@ -132,6 +133,10 @@ const initialState: IModalState = {
       modalId: undefined,
     },
     autoMenuOverPriceAlert: {
+      isOpen: false,
+      modalId: undefined,
+    },
+    payUrlAlert: {
       isOpen: false,
       modalId: undefined,
     },

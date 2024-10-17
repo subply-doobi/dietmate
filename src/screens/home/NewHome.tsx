@@ -216,6 +216,8 @@ const NewHome = () => {
           orderGroupedDataFlatten={orderGroupedDataFlatten}
         />
 
+        <HorizontalSpace height={40} />
+
         {/* 튜토리얼 */}
         <DTPScreen
           contentDelay={500}

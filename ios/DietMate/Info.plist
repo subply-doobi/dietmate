@@ -27,6 +27,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>dietmate</string>
 				<string>kakao5065665acbfa07f0dd876a374e66e618</string>
 			</array>
 		</dict>
@@ -44,6 +45,8 @@
 		<string>kakaolink</string>
 		<string>kakaotalk</string>
 		<string>itms-apps</string>
+		<string>itms-appss</string>
+		<string>ispmobile</string>
 	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
