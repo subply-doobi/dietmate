@@ -11,11 +11,11 @@ interface IShippingPart {
   platformNm: string;
 }
 const ShippingPart = ({platformUrl, platformNm}: IShippingPart) => {
-  const isDietmate = platformNm === '다이어트메이트';
+  const isDietmate = platformNm === '근의공식';
   return (
     <SafeAreaView>
       <Desc>
-        다이어트메이트는 여러 업체들의 식품들로 {`\n`}
+        근의공식은 여러 업체들의 식품들로 {`\n`}
         고객님이 구성한 식단을 {`\n`}한 번에 결제할 수 있도록 도와드립니다.
         {`\n`}
         {`\n`}
@@ -42,7 +42,7 @@ const ShippingPart = ({platformUrl, platformNm}: IShippingPart) => {
       )}
       {isDietmate && (
         <Desc>
-          다이어트메이트가 직접 배송을 보내드리는 상품의 경우 {`\n`}
+          근의공식에서 직접 배송을 보내드리는 상품의 경우 {`\n`}
           문의사항이 있다면 고객센터로 문의해주세요.
         </Desc>
       )}

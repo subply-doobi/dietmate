@@ -12,6 +12,7 @@ import {navigateByUserInfo} from '../../../shared/utils/navigateByUserInfo';
 import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
 import {useNavigation} from '@react-navigation/native';
 import {useLoginByType} from '../../../shared/api/queries/login';
+import colors from '../../../shared/colors';
 
 function AppleLogin() {
   // react-query
@@ -55,6 +56,7 @@ function AppleLogin() {
           width: '100%', // You must specify a width
           height: 50, // You must specify a height
           marginTop: 20,
+          backgroundColor: colors.backgroundLight2,
         }}
         onPress={() => {
           onAppleButtonPress();

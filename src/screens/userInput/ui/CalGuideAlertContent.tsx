@@ -82,9 +82,7 @@ const CalGuideAlertContent = ({menuPerDay}: ICalGuideAlertContent) => {
       <BaseText>
         평소 하루 <BoldText>{menuPerDay}끼를</BoldText> 드신다면
       </BaseText>
-      <BaseText>
-        다이어트메이트로 실천할 끼니 수와 평소 식사를 고려하여
-      </BaseText>
+      <BaseText>근의공식으로 실천할 끼니 수와 평소 식사를 고려하여</BaseText>
 
       <BaseText>
         한 끼에{' '}

@@ -12,7 +12,7 @@ import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import colors from '../../shared/colors';
 import {validateToken} from '../../shared/api/queries/token';
 import {ILoginType, useLoginByType} from '../../shared/api/queries/login';
-import {IS_IOS} from '../../shared/constants';
+import {IS_IOS, SCREENWIDTH} from '../../shared/constants';
 import AppleLogin from './ui/AppleLogin';
 import {BtnCTA, BtnText, TextMain} from '../../shared/ui/styledComps';
 
@@ -53,14 +53,8 @@ const Login = () => {
 
   return (
     <Container>
-      <Box>
-        <LogoBox>
-          <Logo
-            resizeMode="contain"
-            source={require('../../shared/assets/appIcon/appIcon_black.png')}
-          />
-        </LogoBox>
-        <TitleText>다이어트메이트</TitleText>
+      <BtnBox>
+        {/* <TitleText>근의공식</TitleText> */}
         <BtnKakaoLogin btnStyle="kakao" onPress={() => signIn('kakao')}>
           <BtnTextKakao>카카오 로그인</BtnTextKakao>
         </BtnKakaoLogin>
@@ -68,14 +62,20 @@ const Login = () => {
         {/* 앱심사용 게스트로그인 사용유무 */}
         {guestYnData && guestYnData.enableYn === 'Y' && (
           <BtnGuestLogin onPress={() => signIn('guest')}>
-            <BtnTextGuest>GUEST LOGIN</BtnTextGuest>
+            <BtnTextGuest>Guest Login </BtnTextGuest>
           </BtnGuestLogin>
         )}
 
         {IS_IOS && guestYnData && guestYnData.enableYn === 'Y' && (
           <AppleLogin />
         )}
-      </Box>
+      </BtnBox>
+      <LogoBox>
+        <Logo
+          resizeMode="contain"
+          source={require('../../shared/assets/appIcon/appIcon_withT.png')}
+        />
+      </LogoBox>
     </Container>
   );
 };
@@ -85,9 +85,10 @@ export default Login;
 const Container = styled.View`
   flex: 1;
   padding: 0px 16px 0px 16px;
+  background-color: ${colors.white};
 `;
 
-const Box = styled.View`
+const BtnBox = styled.View`
   width: 100%;
   position: absolute;
   bottom: 70px;
@@ -95,7 +96,7 @@ const Box = styled.View`
 `;
 
 const TitleText = styled(TextMain)`
-  margin-top: 24px;
+  margin-top: 16px;
   margin-bottom: 80px;
   font-size: 32px;
   text-align: center;
@@ -105,18 +106,20 @@ const TitleText = styled(TextMain)`
 `;
 
 const LogoBox = styled.View`
-  width: 80px;
-  height: 80px;
+  position: absolute;
+  top: 40%;
+  width: ${SCREENWIDTH * 0.3}px;
+  height: ${SCREENWIDTH * 0.3}px;
   align-self: center;
   justify-content: center;
   align-items: center;
-  background-color: ${colors.inactivated};
+  background-color: ${colors.white};
   border-radius: 30px;
 `;
 
 const Logo = styled.Image`
-  width: 60px;
-  height: 60px;
+  width: 100%;
+  height: 100%;
 `;
 
 const BtnKakaoLogin = styled(BtnCTA)`
@@ -130,6 +133,7 @@ const BtnTextKakao = styled(BtnText)`
 const BtnGuestLogin = styled(BtnCTA)`
   align-self: center;
   margin-top: 20px;
+  background-color: ${colors.backgroundLight2};
 `;
 
 const BtnTextGuest = styled(BtnText)`

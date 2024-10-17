@@ -22,6 +22,7 @@
 		E00F8DB72BC976FB002CA50A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E00F8DB62BC976FB002CA50A /* PrivacyInfo.xcprivacy */; };
 		E00F8DB82BC976FB002CA50A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E00F8DB62BC976FB002CA50A /* PrivacyInfo.xcprivacy */; };
 		E07A41412B8DC5020025A68F /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = E07A41402B8DC5020025A68F /* Fonts */; };
+		4A391B57F8BD48BF89443D7F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B510B219194D4A339F2BE6FB /* Colors.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		E07D88F32B9026FC003C94BB /* dietmate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = dietmate.entitlements; path = dietmate/dietmate.entitlements; sourceTree = "<group>"; };
 		E7AE1421CE714923A0AD2724 /* BootSplash.storyboard */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = BootSplash.storyboard; path = dietmate/BootSplash.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		B510B219194D4A339F2BE6FB /* Colors.xcassets */ = {isa = PBXFileReference; name = "Colors.xcassets"; path = "dietmate/Colors.xcassets"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = folder.assetcatalog; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 				E7AE1421CE714923A0AD2724 /* BootSplash.storyboard */,
+				B510B219194D4A339F2BE6FB /* Colors.xcassets */,
 			);
 			name = dietmate;
 			sourceTree = "<group>";
@@ -280,6 +283,7 @@
 				9353FC472BEE1051009DB862 /* main.jsbundle in Resources */,
 				D52EE1BC5E034B98AE146675 /* BootSplash.storyboard in Resources */,
 				84987EB786EF48C68575DEC6 /* Colors.xcassets in Resources */,
+				4A391B57F8BD48BF89443D7F /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

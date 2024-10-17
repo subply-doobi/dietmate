@@ -12,8 +12,8 @@ const fetchPaymentStatus = async (merchant_uid: string) => {
   }>(
     'https://api.iamport.kr/users/getToken',
     {
-      imp_key: Config.IAMPORT_API_KEY,
-      imp_secret: Config.IAMPORT_API_SECRET,
+      imp_key: Config.API_KEY_IAMPORT,
+      imp_secret: Config.API_SECRET_IAMPORT,
     },
     {
       headers: {

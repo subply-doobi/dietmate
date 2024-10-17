@@ -104,7 +104,7 @@ const TargetCalorie = ({userInputState}: {userInputState: IUserInputState}) => {
       </Row>
 
       <Row style={{justifyContent: 'space-between', marginTop: 64}}>
-        <OptionTitle>다이어트메이트 한 끼 목표 칼로리</OptionTitle>
+        <OptionTitle>근의공식 한 끼 목표 칼로리</OptionTitle>
         <QuestionBtn
           onPress={() =>
             dispatch(openModal({name: 'targetCalorieGuideAlert'}))

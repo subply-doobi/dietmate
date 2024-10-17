@@ -21,4 +21,4 @@ tags
 git push -d origin v1.0.18
 
 bootsplash asset 생성
-yarn react-native generate-bootsplash src\shared\assets\appIcon\appIcon.png --platforms=android,ios background=FFFFFF --logo-width=60 --assets-output=assets/bootsplash
+yarn react-native generate-bootsplash src\shared\assets\appIcon\appIcon.png --platforms=android,ios background=FFFFFF --logo-width=80 --assets-output=assets/bootsplash
