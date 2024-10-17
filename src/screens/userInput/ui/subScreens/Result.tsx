@@ -176,7 +176,7 @@ const Result = ({userInputState}: {userInputState: IUserInputState}) => {
       <AdditionalGuide
         style={{marginTop: 40}}
         iconSource={icons.warning_24}
-        text={`다이어트메이트에서 구성한 끼니 외 식사량이나,
+        text={`근의공식에서 구성한 끼니 외 식사량이나,
 몸무게 변화에 따라 목표섭취량은 달라집니다.
 
 결정한 목표섭취량으로 식단 실천을 해보시고

@@ -26,7 +26,7 @@ const Profile = () => {
         <Nickname style={{fontWeight: 'normal'}}>님</Nickname>
       </Row>
       <SubText style={{paddingHorizontal: 16, marginTop: 2}}>
-        다이어트메이트가 즐거운 식단실천을 응원합니다
+        근의공식이 즐거운 식단실천을 응원합니다
       </SubText>
       <HighlightBox>
         <MainText>한 끼 목표 영양</MainText>

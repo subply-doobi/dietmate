@@ -55,7 +55,7 @@ const OrderComplete = () => {
     <Container>
       <CompleteText>구매 완료!</CompleteText>
       <Desc style={{marginTop: 80}}>
-        [다이어트메이트]{'\n'}
+        [근의공식]{'\n'}
         1차 테스트에 참여해주셔서 감사합니다
       </Desc>
       <Desc>
