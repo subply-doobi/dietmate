@@ -2,7 +2,6 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.subply.dietmate">
   <uses-permission android:name="android.permission.INTERNET" />
-
   <application
     android:name=".MainApplication"
     android:label="@string/app_name"
@@ -11,6 +10,8 @@
     android:theme="@style/AppTheme"
     android:supportsRtl="true"
     android:usesCleartextTraffic="true">
+
+    <!-- Main Activity -->
     <activity
       android:name=".MainActivity"
       android:label="@string/app_name"
@@ -22,11 +23,18 @@
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
         <data
           android:scheme="dietmate"
           android:host="payV2" />
       </intent-filter>
     </activity>
+
+    <!-- Kakao SDK Auth Activity -->
     <activity
       android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
       android:exported="true">
@@ -34,7 +42,6 @@
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-
         <data
           android:host="oauth"
           android:scheme="kakao5065665acbfa07f0dd876a374e66e618" />

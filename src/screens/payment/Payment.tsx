@@ -15,11 +15,7 @@ import SendIntentAndroid from 'react-native-send-intent';
 import colors from '../../shared/colors';
 import {IIamportPayParams} from '../order/util/setPayData';
 import {getPaymentHtmlContent} from './util/htmlContent';
-import {
-  getPaymentResult,
-  handlingPayDeepLink,
-  openDeepLink,
-} from './util/payUtil';
+import {getPaymentResult, openOtherApp} from './util/payUtil';
 import {useUpdateDiet} from '../../shared/api/queries/diet';
 import {useDeleteOrder, useUpdateOrder} from '../../shared/api/queries/order';
 import {closeModal, openModal} from '../../features/reduxSlices/modalSlice';
@@ -45,9 +41,6 @@ const Payment = () => {
 
   // useState
   const [loading, setLoading] = useState(true);
-
-  // useRef
-  const lastUrl = useRef('');
 
   // react-query
   const updateDietMutation = useUpdateDiet();
@@ -103,9 +96,8 @@ const Payment = () => {
   // };
 
   const onShouldStartLoadWithRequest = (navState: WebViewNavigation) => {
-    const url = navState.url;
-    console.log('onShouldStartLoadWithRequest: ', navState);
-
+    const {url} = navState;
+    // console.log('onShouldStartLoadWithRequest: ', navState);
     if (url === 'about:blank') return true;
 
     // 결제완료, 실패 로직 (외부 url -> dietmate:// 로 돌아올 때)
@@ -126,7 +118,7 @@ const Payment = () => {
 
     // 외부 앱 실행 로직
     if (!url.startsWith('https://') && !url.startsWith('http://')) {
-      openDeepLink(url);
+      openOtherApp(url);
       return false;
     }
 
