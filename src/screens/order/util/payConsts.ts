@@ -15,8 +15,8 @@ export type IPayMethod =
 export const channelKey: {
   [key in IPG]: string;
 } = {
-  kakaopay: Config.CHANNEL_KEY_KAKAOPAY_TEST,
-  smartro_v2: Config.CHANNEL_KEY_SMARTRO_V2_TEST,
+  kakaopay: Config.CHANNEL_KEY_KAKAOPAY,
+  smartro_v2: Config.CHANNEL_KEY_SMARTRO_V2,
 };
 
 export const PAY_METHOD = [
@@ -58,34 +58,34 @@ export const PAY_METHOD = [
       },
     ],
   },
-  {
-    value: 'TRANSFER',
-    label: '계좌이체',
-    subBtn: false,
-    pg: [
-      {
-        value: 'smartro_v2',
-        label: '스마트로',
-        iconSource: null,
-        iconSize: 24,
-        btnActiveBg: colors.white,
-        textColor: colors.dark,
-      },
-    ],
-  },
-  {
-    value: 'VIRTUAL_ACCOUNT',
-    label: '가상계좌',
-    subBtn: false,
-    pg: [
-      {
-        value: 'smartro_v2',
-        label: '스마트로',
-        iconSource: null,
-        iconSize: 24,
-        btnActiveBg: colors.white,
-        textColor: colors.dark,
-      },
-    ],
-  },
+  // {
+  //   value: 'TRANSFER',
+  //   label: '계좌이체',
+  //   subBtn: false,
+  //   pg: [
+  //     {
+  //       value: 'smartro_v2',
+  //       label: '스마트로',
+  //       iconSource: null,
+  //       iconSize: 24,
+  //       btnActiveBg: colors.white,
+  //       textColor: colors.dark,
+  //     },
+  //   ],
+  // },
+  // {
+  //   value: 'VIRTUAL_ACCOUNT',
+  //   label: '가상계좌',
+  //   subBtn: false,
+  //   pg: [
+  //     {
+  //       value: 'smartro_v2',
+  //       label: '스마트로',
+  //       iconSource: null,
+  //       iconSize: 24,
+  //       btnActiveBg: colors.white,
+  //       textColor: colors.dark,
+  //     },
+  //   ],
+  // },
 ] as const;
