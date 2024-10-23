@@ -224,7 +224,7 @@ const Change = () => {
       <CtaButton
         btnStyle="active"
         btnText={!selectedProduct ? '취소' : '바꾸기'}
-        style={{backgroundColor: colors.dark, position: 'absolute', bottom: 8}}
+        style={{backgroundColor: colors.main, position: 'absolute', bottom: 8}}
         onPress={onCTABtnPressed}
       />
       {/* 알럿창 */}

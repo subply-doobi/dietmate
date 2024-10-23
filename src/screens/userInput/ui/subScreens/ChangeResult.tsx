@@ -49,7 +49,7 @@ const ChangeResult = ({userInputState}: {userInputState: IUserInputState}) => {
             : weightDiff > 0
               ? `(+${weightDiff})`
               : '',
-        color: colors.black,
+        color: colors.dark,
       },
       {
         title: '칼로리',
@@ -61,7 +61,7 @@ const ChangeResult = ({userInputState}: {userInputState: IUserInputState}) => {
             : calorieDiff > 0
               ? `(+${calorieDiff})`
               : '',
-        color: colors.main,
+        color: colors.calorie,
       },
       {
         title: '탄수화물',
@@ -69,7 +69,7 @@ const ChangeResult = ({userInputState}: {userInputState: IUserInputState}) => {
         curr: `${parseInt(carb.value)}g`,
         diff:
           carbDiff < 0 ? `(${carbDiff})` : carbDiff > 0 ? `(+${carbDiff})` : '',
-        color: colors.blue,
+        color: colors.carb,
       },
       {
         title: '단백질',
@@ -81,14 +81,14 @@ const ChangeResult = ({userInputState}: {userInputState: IUserInputState}) => {
             : proteinDiff > 0
               ? `(+${proteinDiff})`
               : '',
-        color: colors.green,
+        color: colors.protein,
       },
       {
         title: '지방',
         prev: `${parseInt(baseLineData.fat)}g`,
         curr: `${parseInt(fat.value)}g`,
         diff: fatDiff < 0 ? `(${fatDiff})` : fatDiff > 0 ? `(+${fatDiff})` : '',
-        color: colors.orange,
+        color: colors.fat,
       },
     ];
   }, [baseLineData, userInputState]);

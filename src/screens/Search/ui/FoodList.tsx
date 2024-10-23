@@ -339,7 +339,7 @@ const DeleteLikeFoodBtn = styled.TouchableOpacity`
   align-items: center;
   border-width: 1px;
   border-radius: 5px;
-  border-color: ${colors.inactivated};
+  border-color: ${colors.inactive};
 `;
 
 const LikeImg = styled.Image`
@@ -359,7 +359,7 @@ const AniAddedMark = styled(Animated.createAnimatedComponent(Pressable))`
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   position: absolute;
-  background-color: ${colors.cartMark};
+  background-color: ${colors.blackOpacity70};
   justify-content: center;
   align-items: center;
 `;

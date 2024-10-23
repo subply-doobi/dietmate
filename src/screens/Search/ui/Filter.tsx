@@ -1,26 +1,27 @@
+// RN
 import React, {useEffect} from 'react';
-import styled from 'styled-components/native';
 
-import {Row, TextMain} from '../../../shared/ui/styledComps';
-import colors from '../../../shared/colors';
-import {RootState} from '../../../app/store/reduxStore';
-import {useListDietTotalObj} from '../../../shared/api/queries/diet';
+// 3rd
+import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
-import {icons} from '../../../shared/iconSource';
-import {
-  FILTER_LIST,
-  NUTR_ERROR_RANGE,
-  categoryCodeToName,
-} from '../../../shared/constants';
+
+// doobi
+import {RootState} from '../../../app/store/reduxStore';
 import {
   changeSelectedFilter,
   copySortFilter,
   initializeSortFilter,
   setFilterByRemainNutr,
 } from '../../../features/reduxSlices/sortFilterSlice';
-import {checkisFiltered} from '../../home/util/filterUtils';
 import {openModal} from '../../../features/reduxSlices/modalSlice';
+import {FILTER_LIST, categoryCodeToName} from '../../../shared/constants';
+import colors from '../../../shared/colors';
+import {useListDietTotalObj} from '../../../shared/api/queries/diet';
+import {useGetBaseLine} from '../../../shared/api/queries/baseLine';
+import {icons} from '../../../shared/iconSource';
+import {checkisFiltered} from '../../home/util/filterUtils';
+
+import {Row, TextMain} from '../../../shared/ui/styledComps';
 
 interface IFilter {
   setSearchBarFocus: React.Dispatch<React.SetStateAction<boolean>>;
@@ -87,7 +88,7 @@ const FilterBtn = styled.TouchableOpacity<{isActivated: boolean}>`
   border-radius: 16px;
   border-width: 1px;
   border-color: ${({isActivated}) =>
-    isActivated ? colors.dark : colors.inactivated};
+    isActivated ? colors.main : colors.inactive};
   background-color: ${colors.white};
 `;
 
@@ -95,7 +96,7 @@ const RemainNutrFilterBtn = styled.TouchableOpacity`
   height: 32px;
   padding: 6px 8px 6px 8px;
   border-radius: 5px;
-  background-color: ${colors.dark};
+  background-color: ${colors.black};
 `;
 
 const FilterBtnText = styled(TextMain)<{isActivated?: boolean}>`

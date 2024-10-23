@@ -160,7 +160,8 @@ export const FILTER_LIST = [
 export const FILTER_BTN_RANGE = [
   {
     name: 'calorie',
-    label: '칼로리 (kcal)',
+    label: '칼로리',
+    unit: 'kcal',
     value: [
       [0, 100],
       [100, 200],
@@ -170,7 +171,8 @@ export const FILTER_BTN_RANGE = [
   },
   {
     name: 'carb',
-    label: '탄수화물 (g)',
+    label: '탄수화물',
+    unit: 'g',
     value: [
       [0, 20],
       [20, 40],
@@ -180,7 +182,8 @@ export const FILTER_BTN_RANGE = [
   },
   {
     name: 'protein',
-    label: '단백질 (g)',
+    label: '단백질',
+    unit: 'g',
     value: [
       [0, 10],
       [10, 20],
@@ -190,7 +193,8 @@ export const FILTER_BTN_RANGE = [
   },
   {
     name: 'fat',
-    label: '지방 (g)',
+    label: '지방',
+    unit: 'g',
     value: [
       [0, 5],
       [5, 10],
@@ -200,7 +204,8 @@ export const FILTER_BTN_RANGE = [
   },
   {
     name: 'price',
-    label: '가격 (원)',
+    label: '가격',
+    unit: '원',
     value: [
       [0, 1000],
       [1000, 2000],

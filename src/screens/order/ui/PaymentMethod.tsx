@@ -35,7 +35,7 @@ const PaymentMethod = () => {
           const isActive = paymentMethod.value === method.value;
           const backgroundColor = isActive ? colors.dark : colors.white;
           const borderWidth = isActive ? 0 : 1;
-          const borderColor = isActive ? colors.dark : colors.inactivated;
+          const borderColor = isActive ? colors.dark : colors.inactive;
           const textColor = isActive ? colors.white : colors.textSub;
           return (
             <MethodBtn

@@ -105,25 +105,41 @@ const Diet = () => {
     useRef<React.ElementRef<typeof TouchableOpacity>>(null);
 
   // useMemo
-  const {menuNum, accordionContent, totalShippingPrice, priceTotal} =
-    useMemo(() => {
-      // 비어있는 끼니 확인
-      const {menuNum, priceTotal, totalShippingPrice} =
-        sumUpDietFromDTOData(dTOData);
+  const {
+    menuNum,
+    accordionContent,
+    totalShippingPrice,
+    priceTotal,
+    isDietEmpty,
+    orderBtnText,
+    orderBtnStyle,
+  } = useMemo(() => {
+    // 비어있는 끼니 확인
+    const {menuNum, priceTotal, totalShippingPrice} =
+      sumUpDietFromDTOData(dTOData);
 
-      // accordion
-      const accordionContent = getMenuAcContent({
-        bLData: bLData,
-        dTOData,
-      });
+    const isDietEmpty = menuNum === 0 || priceTotal === 0;
+    const orderBtnText = isDietEmpty
+      ? `식단을 먼저 구성해봐요`
+      : `주문하기 (${commaToNum(priceTotal + totalShippingPrice)}원)`;
+    const orderBtnStyle = isDietEmpty ? 'inactive' : 'activeDark';
 
-      return {
-        menuNum,
-        accordionContent,
-        totalShippingPrice,
-        priceTotal,
-      };
-    }, [dTOData]);
+    // accordion
+    const accordionContent = getMenuAcContent({
+      bLData: bLData,
+      dTOData,
+    });
+
+    return {
+      menuNum,
+      accordionContent,
+      totalShippingPrice,
+      priceTotal,
+      isDietEmpty,
+      orderBtnText,
+      orderBtnStyle,
+    };
+  }, [dTOData]);
 
   // etc
   const {status: addDietStatus, text: addDietNAText} =
@@ -366,6 +382,7 @@ const Diet = () => {
             <CtaButton
               ref={autoMenuBtnRef}
               btnStyle="active"
+              shadow={true}
               style={{
                 width: SCREENWIDTH - 32,
                 alignSelf: 'center',
@@ -390,14 +407,15 @@ const Diet = () => {
 
       {/* 주문 버튼 */}
       <CtaButton
-        btnStyle="activeDark"
+        disabled={isDietEmpty}
+        btnStyle={orderBtnStyle}
         style={{
           width: SCREENWIDTH - 32,
           alignSelf: 'center',
           position: 'absolute',
           bottom: 8,
         }}
-        btnText={`주문하기 (${commaToNum(priceTotal + totalShippingPrice)}원)`}
+        btnText={orderBtnText}
         onPress={async () => {
           const refetchedDTOData = (await refetchDTOData()).data;
           const hasNoStock = checkNoStockPAll(refetchedDTOData);

@@ -64,7 +64,7 @@ const MenuBox = ({order, checklist, setChecklist}: IMenuBox) => {
                   }}
                   source={
                     checklist.includes(menuNoAndQtyIdx)
-                      ? icons.checkRoundCheckedGreen_24
+                      ? icons.checkRoundCheckedMain_24
                       : icons.checkRoundEmpty_24
                   }
                 />
@@ -98,7 +98,7 @@ const LeftBar = styled.View<{screen?: 'Home' | 'Diet' | string}>`
   bottom: 0;
   left: 0;
   width: 4px;
-  background-color: ${colors.inactivated};
+  background-color: ${colors.inactive};
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 `;

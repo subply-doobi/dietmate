@@ -181,6 +181,7 @@ const NewHome = () => {
     <Container
       style={{
         backgroundColor: colors.backgroundLight2,
+        // backgroundColor: colors.backgroundLight2,
         paddingLeft: 0,
         paddingRight: 0,
       }}>

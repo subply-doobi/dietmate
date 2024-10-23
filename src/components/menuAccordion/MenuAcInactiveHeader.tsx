@@ -80,15 +80,15 @@ const MenuAcInactiveHeader = ({
   const barColor = selected
     ? colors.main
     : leftBarInactive
-      ? colors.inactivated
+      ? colors.inactive
       : currentDietNo === dietNo
         ? colors.dark
-        : colors.inactivated;
+        : colors.inactive;
   const thumbnailBorderColor =
     nutrStatus === 'satisfied'
-      ? colors.green2Opacity30
+      ? colors.success
       : nutrStatus === 'exceed'
-        ? colors.warningOpacity30
+        ? colors.warning
         : colors.lineLight;
   const currentQty = dDData.length > 0 ? parseInt(dDData[0].qty, 10) : 1;
 
@@ -231,8 +231,7 @@ const Box = styled.View<{
   justify-content: space-between;
   border-radius: 5px;
   border-width: 1px;
-  border-color: ${({selected}) =>
-    selected ? colors.highlight : colors.inactivated};
+  border-color: ${({selected}) => colors.inactive};
   border-width: ${({selected}) => (selected ? '1px' : '1px')};
 `;
 
@@ -252,7 +251,7 @@ const LeftBar = styled.View`
   left: 0;
   width: 4px;
   height: 100%;
-  background-color: ${colors.inactivated};
+  background-color: ${colors.inactive};
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 `;
@@ -284,7 +283,7 @@ const ThumnailBox = styled.View`
   flex: 1;
   height: 56px;
   background-color: ${colors.backgroundLight};
-  border-width: 2px;
+  border-width: 1px;
   border-color: ${colors.lineLight};
   border-radius: 5px;
 

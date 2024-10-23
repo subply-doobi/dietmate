@@ -54,22 +54,22 @@ const HistoryDetail = ({
     {
       nutrient: '칼로리',
       value: userTarget.calorie,
-      color: colors.main,
+      color: colors.calorie,
     },
     {
       nutrient: '탄수화물',
       value: userTarget.carb,
-      color: colors.blue,
+      color: colors.carb,
     },
     {
       nutrient: '단백질',
       value: userTarget.protein,
-      color: colors.green,
+      color: colors.protein,
     },
     {
       nutrient: '지방',
       value: userTarget.fat,
-      color: colors.orange,
+      color: colors.fat,
     },
   ];
 
@@ -247,7 +247,7 @@ const WeightBox = styled.View`
   width: 210px;
   border-left-width: 1px;
   border-right-width: 1px;
-  border-color: ${colors.inactivated};
+  border-color: ${colors.inactive};
   align-items: center;
   align-self: center;
 `;
@@ -298,7 +298,7 @@ const ImageAddBtn = styled.TouchableOpacity`
   margin-left: 8px;
   border-radius: 10px;
   border-width: 1px;
-  border-color: ${colors.inactivated};
+  border-color: ${colors.inactive};
   justify-content: center;
   align-items: center;
 `;

@@ -172,7 +172,7 @@ export const BtnCTA = styled.TouchableOpacity<IBtnCTA>`
       : btnStyle === 'activated'
         ? `${colors.main}`
         : btnStyle === 'inactivated'
-          ? `${colors.inactivated}`
+          ? `${colors.inactive}`
           : btnStyle === 'border'
             ? `${colors.white}`
             : btnStyle === 'kakao'
@@ -185,7 +185,7 @@ export const BtnCTA = styled.TouchableOpacity<IBtnCTA>`
     btnStyle === 'border' || btnStyle === 'borderActive' ? '1px' : '0px'};
   border-color: ${({btnStyle}) =>
     btnStyle === 'border'
-      ? colors.inactivated
+      ? colors.inactive
       : btnStyle === 'borderActive'
         ? colors.main
         : colors.white};
@@ -219,9 +219,9 @@ export const BtnSmall = styled.TouchableOpacity<IBtnSmall>`
   align-items: center;
   border-radius: 5px;
   background-color: ${({isActivated}) =>
-    isActivated ? colors.inactivated : colors.white};
+    isActivated ? colors.inactive : colors.white};
   border-width: 1px;
-  border-color: ${colors.inactivated};
+  border-color: ${colors.inactive};
 `;
 
 export const BtnText = styled.Text`
@@ -245,7 +245,7 @@ interface IVerticalLine {
 export const VerticalLine = styled.View<IVerticalLine>`
   height: ${({height}) => (height ? `${height}px` : '100%')};
   width: ${({width}) => (width ? `${width}px` : `1px`)};
-  background-color: ${colors.inactivated};
+  background-color: ${colors.inactive};
 `;
 
 interface IHorizontalLine {

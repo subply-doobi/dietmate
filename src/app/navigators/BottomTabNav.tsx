@@ -45,7 +45,7 @@ const BottomTabNav = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <Icon
-              source={focused ? icons.mainActivated_36 : icons.main_36}
+              source={focused ? icons.mainActive_36 : icons.main_36}
               size={36}
             />
           ),
@@ -58,7 +58,7 @@ const BottomTabNav = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <Icon
-              source={focused ? icons.searchActivated_36 : icons.search_36}
+              source={focused ? icons.searchActive_36 : icons.search_36}
               size={36}
             />
           ),
@@ -78,7 +78,7 @@ const BottomTabNav = () => {
           },
           tabBarIcon: ({focused}) => (
             <Icon
-              source={focused ? icons.mypageActivated_36 : icons.mypage_36}
+              source={focused ? icons.mypageActive_36 : icons.mypage_36}
               size={36}
             />
           ),
@@ -92,7 +92,7 @@ const BottomTabNav = () => {
           tabBarIcon: ({focused}) => (
             <CartIcon>
               <Icon
-                source={focused ? icons.cartActivated_36 : icons.cart_36}
+                source={focused ? icons.cartActive_36 : icons.cart_36}
                 size={36}
               />
               {dietDetailAllData.length !== 0 && (

@@ -38,7 +38,7 @@ const DSlider = ({
           maximumValue={maximumValue}
           step={step}
           minimumTrackTintColor={colors.main}
-          maximumTrackTintColor={colors.inactivated}
+          maximumTrackTintColor={colors.inactive}
           trackStyle={{height: 2}}
           renderThumbComponent={() => <Thumb />}
           renderAboveThumbComponent={index => (

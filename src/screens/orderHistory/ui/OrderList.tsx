@@ -26,7 +26,7 @@ const OrderList = () => {
   // redux
   const dispatch = useDispatch();
   const {navigate} = useNavigation();
-  const {data: orderData, isLoading} = useListOrder();
+  const {data: orderData} = useListOrder();
 
   // 구매날짜, dietNo로 식단 묶기
   const regroupedData = regroupByBuyDateAndDietNo(orderData);

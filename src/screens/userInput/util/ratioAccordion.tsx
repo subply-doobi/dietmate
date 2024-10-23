@@ -30,18 +30,16 @@ const AcHeader = ({isActive, title}: {isActive: boolean; title: string}) => {
   return (
     <AccordionHeader isActive={isActive}>
       <Row>
-        {isActive ? (
-          <Icon source={icons.checkboxCheckedPurple_24} />
-        ) : (
-          <Icon source={icons.checkboxCheckedGrey_24} />
-        )}
+        <Icon
+          source={
+            isActive
+              ? icons.checkboxCheckedMain_24
+              : icons.checkboxCheckedGrey_24
+          }
+        />
         <AccordionHeaderTitle isActive={isActive}>{title}</AccordionHeaderTitle>
       </Row>
-      {isActive ? (
-        <Icon source={icons.arrowUpPurple_20} />
-      ) : (
-        <Icon source={icons.arrowDown_20} />
-      )}
+      <Icon source={isActive ? icons.arrowUpMain_20 : icons.arrowDown_20} />
     </AccordionHeader>
   );
 };
@@ -207,9 +205,9 @@ const AccordionHeader = styled.View<{isActive: boolean}>`
   flex-direction: row;
   height: 52px;
   background-color: ${({isActive}) =>
-    isActive ? colors.highlight2 : colors.white};
+    isActive ? colors.highlight : colors.white};
   border-width: ${({isActive}) => (isActive ? 0 : 1)}px;
-  border-color: ${colors.inactivated};
+  border-color: ${colors.inactive};
   border-radius: 4px;
   align-items: center;
   justify-content: space-between;

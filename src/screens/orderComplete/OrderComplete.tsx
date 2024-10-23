@@ -10,28 +10,6 @@ import {
 } from '../../shared/ui/styledComps';
 import colors from '../../shared/colors';
 
-const getDeliveryDate = () => {
-  // 현재 시간 가져오기
-  const now = new Date();
-  const day = now.getDay();
-  const dayList = ['일', '월', '화', '수', '목', '금', '토'];
-  // 목금토일 => 다음주 목요일배송 | 월화수 => 토요일 배송
-  // 일 -> +4 월 -> +5 | 화 -> +4 | 수 -> +3 목 -> +7 | 금 -> +6 | 토 -> +5 |
-  const targetDayNum = [4, 5, 4, 3, 7, 6, 5];
-
-  const targetDate = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate() + targetDayNum[day],
-  );
-
-  const targetMonth = targetDate.getMonth() + 1;
-  const targetDay = targetDate.getDate();
-  const targetDayName = dayList[targetDate.getDay()];
-
-  return `${targetMonth}/${targetDay} (${targetDayName})`;
-};
-
 // 결제 완료, 구매완료 페이지
 const OrderComplete = () => {
   const navigation = useNavigation();
@@ -66,10 +44,7 @@ const OrderComplete = () => {
         이 진행됩니다
       </Desc>
       
-      {/* <Box>
-        <BoxTitle>식단 예상 도착일</BoxTitle>
-        <DateText>{getDeliveryDate()}</DateText>
-      </Box> */}
+
       <Desc>
         배송 문의는 <Desc style={{fontWeight: 'bold', color: colors.textMain}}>
         카톡 1:1 채팅
@@ -108,32 +83,6 @@ const Desc = styled(TextSub)`
   font-weight: normal;
 
   margin-top: 24px;
-`;
-
-const Box = styled.View`
-  width: 100%;
-  height: 128px;
-
-  border-width: 2px;
-  border-color: ${colors.highlight};
-
-  justify-content: center;
-  align-items: center;
-
-  margin-top: 48px;
-`;
-const BoxTitle = styled(TextSub)`
-  position: absolute;
-  font-size: 14px;
-
-  top: 8px;
-  left: 8px;
-`;
-const DateText = styled(TextMain)`
-  align-self: center;
-
-  font-size: 24px;
-  font-weight: bold;
 `;
 
 const BtnBox = styled.View`

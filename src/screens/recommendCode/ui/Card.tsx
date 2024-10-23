@@ -44,7 +44,7 @@ const Label = styled(TextMain)`
 `;
 
 const Highlight = styled.View`
-  background-color: ${colors.highlight2};
+  background-color: ${colors.highlight};
   align-items: center;
   justify-content: center;
   padding: 8px;

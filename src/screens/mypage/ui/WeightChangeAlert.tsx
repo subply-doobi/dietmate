@@ -50,7 +50,7 @@ const WeightChangeAlert = ({
       <Row style={{marginTop: 24, alignItems: 'flex-start'}}>
         <CheckboxContainer onPress={() => setAutoCalculate(check => !check)}>
           {autoCalculate ? (
-            <Checkbox source={icons.checkboxCheckedPurple_24} />
+            <Checkbox source={icons.checkboxCheckedMain_24} />
           ) : (
             <Checkbox source={icons.checkbox_24} />
           )}

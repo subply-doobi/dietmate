@@ -107,22 +107,23 @@ const UserInput = () => {
   // useEffect
   // headerTitle 설정
   useEffect(() => {
-    if (currentPage === 'Start' || currentPage === 'CalculationOptions') {
-      setOptions({
-        headerTitle: '',
-        headerLeft: () => <BackArrow goBackFn={goBack} />,
-        headerRight: () => null,
-      });
-      return;
-    }
     setOptions({
-      headerTitle: `${getPageItem(currentPage).header}`,
-      headerLeft: () => <BackArrow goBackFn={goPrev} />,
-      headerRight: () => (
-        <GoStartBtn onPress={() => goStart()}>
-          <GoStartBtnText>처음으로</GoStartBtnText>
-        </GoStartBtn>
+      headerTitle:
+        currentPage === 'Start' || currentPage === 'CalculationOptions'
+          ? ''
+          : `${getPageItem(currentPage).header}`,
+      headerLeft: () => (
+        <BackArrow
+          goBackFn={() => (currentPage === 'Start' ? goBack() : goPrev())}
+        />
       ),
+      headerRight: () =>
+        currentPage === 'Start' ||
+        currentPage === 'CalculationOptions' ? null : (
+          <GoStartBtn onPress={() => goStart()}>
+            <GoStartBtnText>처음으로</GoStartBtnText>
+          </GoStartBtn>
+        ),
     });
   }, [progress]);
 
@@ -158,7 +159,7 @@ const UserInput = () => {
           width={null}
           height={4}
           color={colors.main}
-          unfilledColor={colors.highlight2}
+          unfilledColor={colors.backgroundLight2}
           borderWidth={0}
         />
       </ProgressBox>

@@ -22,6 +22,7 @@ import {
   TextSub,
   StickyFooter,
   Dot,
+  Icon,
 } from '../../shared/ui/styledComps';
 import colors from '../../shared/colors';
 import {IProductData} from '../../shared/api/types/product';
@@ -293,17 +294,17 @@ const FoodDetail = () => {
         {/* 하단 CTA버튼, like 버튼 */}
         <BtnBox>
           <LikeBtn onPress={handlePressLikeBtn}>
-            <Image
-              // 조건에 따라서 서로 다른 좋아요 버튼 갖게 할 것
-              style={{width: 52, height: 52}}
-              source={isIncludedInLike ? icons.likeActivated_48 : icons.like_48}
+            <Icon
+              size={52}
+              style={{backgroundColor: colors.whiteOpacity70, borderRadius: 4}}
+              source={isIncludedInLike ? icons.likeActive_48 : icons.like_48}
             />
           </LikeBtn>
           <CtaButton
             btnStyle="active"
             style={{
               width: SCREENWIDTH - 32 - 16 - 52 - 6,
-              backgroundColor: colors.dark,
+              backgroundColor: colors.main,
             }}
             onPress={handlePressAddCartBtn}
             btnText={
@@ -334,7 +335,7 @@ const InnerContainer = styled.View`
 const FoodImageContainer = styled.Image`
   width: ${SCREENWIDTH}px;
   height: ${SCREENWIDTH}px;
-  background-color: ${colors.inactivated};
+  background-color: ${colors.inactive};
 `;
 const SellerText = styled(TextSub)`
   margin-top: 10px;
@@ -366,9 +367,8 @@ const DetailMenu = styled.TouchableOpacity<DetailMenuProps>`
   margin-bottom: 24px;
   border: 1px;
   border-radius: 5px;
-  border-color: ${colors.inactivated};
-  background-color: ${({selected}) =>
-    selected ? colors.inactivated : 'white'};
+  border-color: ${colors.inactive};
+  background-color: ${({selected}) => (selected ? colors.inactive : 'white')};
   align-items: center;
   justify-content: center;
 `;
