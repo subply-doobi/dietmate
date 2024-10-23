@@ -4,7 +4,7 @@ export const icons = {
   arrowLeft_20: require(`./assets/icons/20_arrow_left.png`),
   arrowRight_20: require(`./assets/icons/20_arrow_right.png`),
   arrowUp_20: require(`./assets/icons/20_arrow_up.png`),
-  arrowUpPurple_20: require(`./assets/icons/20_arrow_up_purple.png`),
+  arrowUpMain_20: require(`./assets/icons/20_arrow_up_main.png`),
   back_24: require(`./assets/icons/24_back.png`),
 
   // +/-
@@ -21,9 +21,7 @@ export const icons = {
   plusRound_24: require(`./assets/icons/24_plus_round.png`),
   plusRoundSmall_24: require(`./assets/icons/24_plus_round_small.png`),
   plusSquare_24: require(`./assets/icons/24_plus_square.png`),
-  plusSquareActivated_24: require(
-    `./assets/icons/24_plus_square_activated.png`,
-  ),
+  plusSquareActive_24: require(`./assets/icons/24_plus_square_active.png`),
   down_8: require(`./assets/icons/8_down.png`),
   up_8: require(`./assets/icons/8_up.png`),
   round_8: require(`./assets/icons/8_round.png`),
@@ -37,8 +35,8 @@ export const icons = {
   checkboxCheckedGreen_24: require(
     `./assets/icons/24_checkbox_checked_green.png`,
   ),
-  checkboxCheckedPurple_24: require(
-    `./assets/icons/24_checkbox_checked_purple.png`,
+  checkboxCheckedMain_24: require(
+    `./assets/icons/24_checkbox_checked_main.png`,
   ),
   checkboxCheckedWhite_24: require(
     `./assets/icons/24_checkbox_checked_white.png`,
@@ -53,8 +51,8 @@ export const icons = {
   checkRoundCheckedGreen_24: require(
     `./assets/icons/24_check_round_checked_green.png`,
   ),
-  checkRoundCheckedPurple_24: require(
-    `./assets/icons/24_check_round_checked_purple.png`,
+  checkRoundCheckedMain_24: require(
+    `./assets/icons/24_check_round_checked_main.png`,
   ),
 
   // sort
@@ -64,25 +62,20 @@ export const icons = {
 
   // bottomTabIcon
   cart_36: require(`./assets/icons/36_cart.png`),
-  cartActivated_36: require(`./assets/icons/36_cart_activated.png`),
-  cartWhiteFilled_36: require(`./assets/icons/36_cart_white_filled.png`),
-  cartFilled_36: require(`./assets/icons/36_cart_filled.png`),
+  cartActive_36: require(`./assets/icons/36_cart_active.png`),
   search_36: require(`./assets/icons/36_search.png`),
-  searchActivated_36: require(`./assets/icons/36_search_activated.png`),
+  searchActive_36: require(`./assets/icons/36_search_active.png`),
   main_36: require(`./assets/icons/36_main.png`),
-  mainActivated_36: require(`./assets/icons/36_main_activated.png`),
-  mypageActivated_36: require(`./assets/icons/36_mypage_activated.png`),
+  mainActive_36: require(`./assets/icons/36_main_active.png`),
+  mypageActive_36: require(`./assets/icons/36_mypage_active.png`),
   mypage_36: require(`./assets/icons/36_mypage.png`),
 
   // etc
-  round_20: require(`./assets/icons/20_round.png`),
-  roundActivated_20: require(`./assets/icons/20_round_activated.png`),
   edit_24: require(`./assets/icons/24_edit.png`),
   initialize_24: require(`./assets/icons/24_initialize.png`),
   question_24: require(`./assets/icons/24_question.png`),
-  mainPurpleLine_20: require(`./assets/icons/20_main_purpleLine.png`),
   like_48: require(`./assets/icons/48_like.png`),
-  likeActivated_48: require(`./assets/icons/48_like_activated.png`),
+  likeActive_48: require(`./assets/icons/48_like_active.png`),
   kakaoPay: require(`./assets/icons/kakao_pay.png`),
   naverPay: require(`./assets/icons/naver_pay.png`),
   cartWhite_40: require(`./assets/icons/40_cart_white.png`),

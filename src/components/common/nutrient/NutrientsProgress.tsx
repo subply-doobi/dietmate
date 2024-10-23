@@ -21,6 +21,13 @@ const indicatorColorsByTitle2: {[key: string]: string} = {
   '지방(g)': colors.main,
 };
 
+const nutrLowerBoundByTitle: {[key: string]: number} = {
+  '칼로리(kcal)': NUTR_ERROR_RANGE['calorie'][0],
+  '탄수화물(g)': NUTR_ERROR_RANGE['carb'][0],
+  '단백질(g)': NUTR_ERROR_RANGE['protein'][0],
+  '지방(g)': NUTR_ERROR_RANGE['fat'][0],
+};
+
 const nutrUpperBoundByTitle: {[key: string]: number} = {
   '칼로리(kcal)': NUTR_ERROR_RANGE['calorie'][1],
   '탄수화물(g)': NUTR_ERROR_RANGE['carb'][1],
@@ -41,7 +48,10 @@ const ProgressBar = ({title, numerator, denominator}: INutrientProgress) => {
   const indicatorColor =
     numerator > denominator + nutrUpperBoundByTitle[title]
       ? colors.warning
-      : indicatorColorsByTitle2[title];
+      : numerator < denominator + nutrLowerBoundByTitle[title]
+        ? indicatorColorsByTitle2[title]
+        : colors.success;
+
   return (
     <ProgressBarContainer>
       <ProgressBarTitle>{title}</ProgressBarTitle>

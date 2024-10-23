@@ -93,7 +93,7 @@ const Checklist = () => {
             {percentage === 100 ? (
               <Icon
                 style={{marginLeft: 8, zIndex: 2}}
-                source={icons.checkRoundCheckedPurple_24}
+                source={icons.checkRoundCheckedMain_24}
               />
             ) : (
               <Col

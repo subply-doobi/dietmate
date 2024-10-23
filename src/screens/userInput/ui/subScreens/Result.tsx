@@ -74,25 +74,25 @@ const Result = ({userInputState}: {userInputState: IUserInputState}) => {
       name: '칼로리',
       value: targetOption === 'ratio' ? calorie.value : totalCalorie,
       unit: 'kcal',
-      color: colors.main,
+      color: colors.calorie,
     },
     {
       name: '탄수화물',
       value: carb.value,
       unit: 'g',
-      color: colors.blue,
+      color: colors.carb,
     },
     {
       name: '단백질',
       value: protein.value,
       unit: 'g',
-      color: colors.green,
+      color: colors.protein,
     },
     {
       name: '지방',
       value: fat.value,
       unit: 'g',
-      color: colors.orange,
+      color: colors.fat,
     },
   ];
 
@@ -226,6 +226,6 @@ const BoldText = styled(TextMain)`
 const LinkText = styled.Text`
   font-size: 12px;
   font-style: italic;
-  color: ${colors.blue};
+  color: ${colors.textLink};
   text-decoration-line: underline;
 `;

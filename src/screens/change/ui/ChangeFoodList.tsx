@@ -84,7 +84,7 @@ const ChangeFoodList = ({
         <RightBtnBox>
           {isActive && (
             <Icon
-              source={icons.checkRoundCheckedGreen_24}
+              source={icons.checkRoundCheckedMain_24}
               style={{position: 'absolute', right: 0, top: 0}}
             />
           )}
@@ -106,7 +106,7 @@ const FoodBox = styled.View<IFoodBox>`
   padding: 8px;
 
   border-radius: 5px;
-  border-color: ${({isActive}) => (isActive ? colors.dark : colors.lineLight)};
+  border-color: ${({isActive}) => (isActive ? colors.main : colors.lineLight)};
   border-width: ${({isActive}) => (isActive ? '2px' : '1px')};
 `;
 

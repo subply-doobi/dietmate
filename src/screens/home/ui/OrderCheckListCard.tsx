@@ -104,7 +104,7 @@ const OrderChecklistCard = ({
                     {percentage === 100 ? (
                       <Icon
                         style={{marginLeft: 8, zIndex: 2}}
-                        source={icons.checkRoundCheckedPurple_24}
+                        source={icons.checkRoundCheckedMain_24}
                       />
                     ) : (
                       <Col
@@ -175,7 +175,7 @@ const LeftBar = styled.View<{screen?: 'Home' | 'Diet' | string}>`
   left: 0;
   width: 4px;
   height: 100%;
-  background-color: ${colors.inactivated};
+  background-color: ${colors.inactive};
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 `;

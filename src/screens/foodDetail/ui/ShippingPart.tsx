@@ -59,7 +59,7 @@ const Desc = styled(TextMain)``;
 const LinkText = styled.Text`
   font-size: 14px;
   font-style: italic;
-  color: ${colors.blue};
+  color: ${colors.textLink};
   text-decoration-line: underline;
 
   margin-top: 24px;

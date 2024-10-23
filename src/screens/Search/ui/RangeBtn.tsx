@@ -17,14 +17,14 @@ const RangeBtn = ({
   btn,
   btnIdx,
 }: {
-  btn: {name: string; label: string; value: number[][]};
+  btn: {name: string; unit: string; label: string; value: number[][]};
   btnIdx: number;
 }) => {
   // redux
   const dispatch = useDispatch();
   const {
     copied: {
-      filter: {selectedBtn},
+      filter: {selectedBtn, nutrition, price},
     },
   } = useSelector((state: RootState) => state.sortFilter);
 
@@ -34,18 +34,29 @@ const RangeBtn = ({
     dispatch(updateSelectedBtn({[name]: btnIdx}));
   };
 
+  // nutr or price
+  const isNutr = btn.name !== 'price';
+  const isFiltered = isNutr
+    ? nutrition[btn.name]?.length === 2
+    : price.length === 2;
+  const nutrLB = isNutr && isFiltered ? `${nutrition[btn.name]?.[0]} ~ ` : '';
+  const nutrUB = isNutr && isFiltered ? `${nutrition[btn.name]?.[1]}` : '';
+  const priceLB = !isNutr && isFiltered ? `${price[0]} ~ ` : '';
+  const priceUB = !isNutr && isFiltered ? `${price[1]}` : '';
+  const lowerBound = isNutr ? nutrLB : priceLB;
+  const upperBound = isNutr ? nutrUB : priceUB;
   return (
     <Col>
-      <Label>{btn.label}</Label>
+      <Label>{`${btn.label} (${lowerBound}${upperBound}${btn.unit})`}</Label>
       <BtnContainer>
         {btn.value.map((b, i) => {
           const isPressed = checkIsPressed(selectedBtn[btn.name], i);
           return (
             <Btn
               key={i}
-              isActivated={isPressed}
+              isActive={isPressed}
               onPress={() => handleBtnOnPress(btn.name, i)}>
-              <BtnText isActivated={isPressed}>{`${commaToNum(
+              <BtnText isActive={isPressed}>{`${commaToNum(
                 b[0],
               )}~${commaToNum(b[1])}`}</BtnText>
             </Btn>
@@ -70,20 +81,20 @@ const BtnContainer = styled.View`
   gap: 8px;
 `;
 
-const Btn = styled.TouchableOpacity`
+const Btn = styled.TouchableOpacity<{isActive: boolean}>`
   width: 72px;
   height: 40px;
   align-items: center;
   justify-content: center;
   border-radius: 5px;
   border-width: 1px;
-  border-color: ${({isActivated}: {isActivated: boolean}) =>
-    isActivated ? colors.main : colors.inactivated};
+  border-color: ${({isActive}: {isActive: boolean}) =>
+    isActive ? colors.main : colors.inactive};
   background-color: ${colors.white};
 `;
 
-const BtnText = styled(TextMain)`
+const BtnText = styled(TextMain)<{isActive: boolean}>`
   font-size: 11px;
-  color: ${({isActivated}: {isActivated: boolean}) =>
-    isActivated ? colors.textMain : colors.textSub};
+  color: ${({isActive}: {isActive: boolean}) =>
+    isActive ? colors.textMain : colors.textSub};
 `;

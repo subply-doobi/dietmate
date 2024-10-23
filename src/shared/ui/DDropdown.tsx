@@ -23,12 +23,12 @@ const DDropdown = (props: IDDropdown) => {
 
   return (
     <Col style={{width: '100%'}}>
-      <DropdownHeader isActivated={true}>{placeholder}</DropdownHeader>
+      <DropdownHeader isActive={true}>{placeholder}</DropdownHeader>
       <DropDownPicker
         style={{
           borderWidth: 0,
           borderBottomWidth: 1,
-          borderColor: colors.inactivated,
+          borderColor: colors.inactive,
           // backgroundColor: 'red',
           borderRadius: 0,
         }}
@@ -42,7 +42,7 @@ const DDropdown = (props: IDDropdown) => {
           borderTopWidth: 0,
           borderBottomWidth: 1,
           elevation: 3,
-          borderColor: colors.inactivated,
+          borderColor: colors.inactive,
           zIndex: 6000,
         }}
         selectedItemContainerStyle={{

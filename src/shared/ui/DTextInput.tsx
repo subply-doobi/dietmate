@@ -47,7 +47,6 @@ const Input = styled.TextInput<{
   line-height: 24px;
 
   border-bottom-width: 1px;
-  border-color: ${({isActive}) =>
-    isActive ? colors.main : colors.inactivated};
+  border-color: ${({isActive}) => (isActive ? colors.main : colors.inactive)};
   padding-bottom: 8px;
 `;

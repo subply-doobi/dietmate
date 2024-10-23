@@ -127,7 +127,7 @@ const CardBtn = styled.TouchableOpacity<{isActivated?: boolean}>`
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   background-color: ${({isActivated}) =>
-    isActivated ? colors.white : colors.inactivated};
+    isActivated ? colors.white : colors.inactive};
   border-color: ${colors.white};
 `;
 
@@ -141,7 +141,7 @@ const GuideCircle = styled.View<{
     nutrStatus === 'exceed'
       ? colors.warning
       : nutrStatus === 'satisfied'
-        ? colors.green
+        ? colors.success
         : colors.white};
   width: 4px;
   height: 4px;

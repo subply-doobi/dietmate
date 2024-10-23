@@ -1,22 +1,17 @@
-// react, RN, 3rd
-import {useEffect} from 'react';
+// RN
 import {ActivityIndicator, ScrollView} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 
-// Components
+// 3rd
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {RootState} from '../../app/store/reduxStore';
+
+// doobi
+import {useListOrder} from '../../shared/api/queries/order';
+import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
 import {Container} from '../../shared/ui/styledComps';
 import DAlert from '../../shared/ui/DAlert';
 import CommonAlertContent from '../../components/common/alert/CommonAlertContent';
-
-// util
-
-// react-query
-import {useListOrder} from '../../shared/api/queries/order';
-import {regroupByBuyDateAndDietNo} from '../../shared/utils/dataTransform';
-
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../app/store/reduxStore';
-import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
 import OrderList from './ui/OrderList';
 
 const OrderHistory = () => {
@@ -27,7 +22,7 @@ const OrderHistory = () => {
   );
 
   // navigation
-  const {data: orderData, isLoading} = useListOrder();
+  const {isLoading} = useListOrder();
   const {goBack} = useNavigation();
 
   return isLoading ? (

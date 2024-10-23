@@ -24,7 +24,6 @@ export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
       console.log('error', error);
-      console.log('queryCache onError: ', error.response);
       handleError(error);
     },
   }),

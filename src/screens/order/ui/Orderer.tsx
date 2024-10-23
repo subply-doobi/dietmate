@@ -1,58 +1,50 @@
-import styled from 'styled-components/native';
-
 import {
   AccordionContentContainer,
-  ErrorBox,
-  ErrorText,
   HorizontalSpace,
-  InputHeaderText,
 } from '../../../shared/ui/styledComps';
 import {useDispatch, useSelector} from 'react-redux';
 import {setValue} from '../../../features/reduxSlices/userInputSlice';
 import {RootState} from '../../../app/store/reduxStore';
-import DTextInput from '../../../shared/ui/DTextInput';
+import SquareInput from '../../../shared/ui/SquareInput';
+import {useRef} from 'react';
 
 const Orderer = () => {
   const dispatch = useDispatch();
   const {buyerName, buyerTel} = useSelector(
     (state: RootState) => state.userInput,
   );
+
+  type SquareInputRef = React.ElementRef<typeof SquareInput>;
+  const inputRefArr = useRef<Array<SquareInputRef | null>>([]);
   return (
     <AccordionContentContainer style={{paddingBottom: 48}}>
       {/* orderer */}
-      <DTextInput
-        placeholder={'주문자'}
-        headerText="주문자"
+      <SquareInput
+        // boxStyle={{backgroundColor: 'red'}}
+        label="주문자"
+        isActive={!!buyerName.value}
         value={buyerName.value}
         onChangeText={v => dispatch(setValue({name: 'buyerName', value: v}))}
-        isActive={!!buyerName.value}
-        isValid={buyerName.isValid}
+        errMsg={buyerName.errMsg}
         keyboardType="default"
+        placeholder="이름"
+        ref={el => (inputRefArr.current[0] = el)}
+        onSubmitEditing={() => inputRefArr.current[1]?.focus()}
       />
-      {buyerName.errMsg && (
-        <ErrorBox>
-          <ErrorText>{buyerName.errMsg}</ErrorText>
-        </ErrorBox>
-      )}
-
-      <HorizontalSpace height={24} />
+      <HorizontalSpace height={8} />
 
       {/* ordererContact */}
-      <DTextInput
-        placeholder={'휴대전화'}
-        headerText="휴대전화"
+      <SquareInput
+        label="휴대전화"
+        isActive={!!buyerTel.value}
         value={buyerTel.value}
         onChangeText={v => dispatch(setValue({name: 'buyerTel', value: v}))}
-        isActive={!!buyerTel.value}
-        isValid={buyerTel.isValid}
-        maxLength={13}
+        errMsg={buyerTel.errMsg}
         keyboardType="number-pad"
+        maxLength={13}
+        placeholder="휴대전화"
+        ref={el => (inputRefArr.current[1] = el)}
       />
-      {buyerTel.errMsg && (
-        <ErrorBox>
-          <ErrorText>{buyerTel.errMsg}</ErrorText>
-        </ErrorBox>
-      )}
     </AccordionContentContainer>
   );
 };

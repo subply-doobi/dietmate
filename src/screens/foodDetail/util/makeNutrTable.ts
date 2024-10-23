@@ -31,7 +31,7 @@ export const makeTableData = (
             (Number(food.calorie) / (Number(baseLineData.calorie) * 3)) * 100,
           )}%`
         : '',
-      color: colors.main,
+      color: colors.calorie,
     },
     {
       name: 'sodium',
@@ -50,7 +50,7 @@ export const makeTableData = (
             (Number(food.carb) / (Number(baseLineData.carb) * 3)) * 100,
           )}%`
         : '',
-      color: colors.blue,
+      color: colors.carb,
     },
     {
       name: 'sugar',
@@ -73,7 +73,7 @@ export const makeTableData = (
             (Number(food.protein) / (Number(baseLineData.protein) * 3)) * 100,
           )}%`
         : '',
-      color: colors.green,
+      color: colors.protein,
     },
     {
       name: 'fat',
@@ -84,7 +84,7 @@ export const makeTableData = (
             (Number(food.fat) / (Number(baseLineData.fat) * 3)) * 100,
           )}%`
         : '',
-      color: colors.orange,
+      color: colors.fat,
     },
 
     {

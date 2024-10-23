@@ -12,7 +12,8 @@ type IBtnStyle =
   | 'border'
   | 'borderActive'
   | 'borderActiveDark'
-  | 'kakao';
+  | 'kakao'
+  | string;
 interface ICtaButton extends TouchableOpacityProps {
   shadow?: boolean;
   btnStyle: IBtnStyle;
@@ -82,7 +83,7 @@ const BtnCTA = styled.TouchableOpacity<IBtnCTA>`
       : btnStyle === 'activeDark'
         ? `${colors.dark}`
         : btnStyle === 'inactive'
-          ? `${colors.inactivated}`
+          ? `${colors.inactive}`
           : btnStyle === 'border'
             ? `${colors.white}`
             : btnStyle === 'kakao'
@@ -99,7 +100,7 @@ const BtnCTA = styled.TouchableOpacity<IBtnCTA>`
       : '0px'};
   border-color: ${({btnStyle}) =>
     btnStyle === 'border'
-      ? colors.inactivated
+      ? colors.inactive
       : btnStyle === 'borderActive'
         ? colors.main
         : btnStyle === 'borderActiveDark'

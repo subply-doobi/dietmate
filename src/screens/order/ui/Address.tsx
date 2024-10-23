@@ -27,6 +27,7 @@ import {
 import {setselectedAddrIdx} from '../../../features/reduxSlices/orderSlice';
 import {IAddressData} from '../../../shared/api/types/address';
 import DTextInput from '../../../shared/ui/DTextInput';
+import SquareInput from '../../../shared/ui/SquareInput';
 
 const EntranceMethodContainer = () => {
   // redux
@@ -49,7 +50,7 @@ const EntranceMethodContainer = () => {
               <CheckIcon
                 source={
                   entranceType.value === e
-                    ? icons.checkboxCheckedPurple_24
+                    ? icons.checkboxCheckedMain_24
                     : icons.checkbox_24
                 }
                 style={{marginRight: 10}}
@@ -60,14 +61,14 @@ const EntranceMethodContainer = () => {
         );
       })}
 
-      <DTextInput
-        placeholder={'예) 3847*'}
-        headerText={'배송 참고사항'}
+      <SquareInput
+        label="배송 참고사항"
+        placeholder={'참고사항 예 3847*'}
         value={entranceNote.value}
         onChangeText={v => dispatch(setValue({name: 'entranceNote', value: v}))}
         isActive={!!entranceNote.value}
-        isValid={entranceNote.isValid}
         keyboardType="default"
+        errMsg={entranceNote.errMsg}
       />
     </>
   );
@@ -130,7 +131,7 @@ const Address = () => {
               <CheckIcon
                 source={
                   selectedAddrIdx === index
-                    ? icons.checkboxCheckedPurple_24
+                    ? icons.checkboxCheckedMain_24
                     : icons.checkbox_24
                 }
               />
@@ -157,7 +158,7 @@ const Address = () => {
           <PlusSquareIcon
             source={
               listAddressData?.length === 0
-                ? icons.plusSquareActivated_24
+                ? icons.plusSquareActive_24
                 : icons.plusSquare_24
             }
           />

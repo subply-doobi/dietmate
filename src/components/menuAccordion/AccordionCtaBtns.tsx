@@ -76,7 +76,7 @@ const AccordionCtaBtns = ({
     nutrStatus === 'empty'
       ? 'border'
       : nutrStatus === 'notEnough'
-        ? 'borderActiveDark'
+        ? 'borderActive'
         : 'border';
   const addBtnStyle = nutrStatus === 'empty' ? 'borderActive' : 'border';
 
@@ -184,7 +184,7 @@ const AccordionCtaBtns = ({
             btnStyle={addBtnStyle}
             // btnContent={() => <Icon source={icons.plus_24} />}
             btnText="+"
-            style={{width: 48, height: 48, borderWidth: 2}}
+            style={{width: 48, height: 48, borderWidth: 1}}
             onPress={() => {
               dispatch(closeModal({name: 'tutorialTPS'}));
               isTutorialMode && dispatch(setTutorialProgress('SelectFood'));

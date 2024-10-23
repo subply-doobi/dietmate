@@ -1,5 +1,12 @@
 // RN
-import {SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
+import {
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {FlatList, ViewProps} from 'react-native';
 
 // 3rd
@@ -57,6 +64,9 @@ const HomeFoodListAndBtn = ({
     (state: RootState) => state.sortFilter,
   );
 
+  // useRef
+  const isInitialMount = useRef(true);
+
   // react-query
   const {data: dTOData} = useListDietTotalObj();
   const dDData = dTOData?.[currentDietNo]?.dietDetail ?? [];
@@ -98,7 +108,14 @@ const HomeFoodListAndBtn = ({
   // useEffect
   // 정렬, 필터 바뀔 때마다 refetch / 스크롤 맨 위로
   useEffect(() => {
+    // 화면 첫 진입때마다 refetch 되는 것 막기
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     if (!totalFoodListIsLoaded) return;
+
     currentDietNo &&
       refetchProduct().then(res => {
         if (res?.data?.length === 0) {
@@ -195,9 +212,7 @@ const HomeFoodListAndBtn = ({
               width: SCREENWIDTH - 32,
               position: 'absolute',
               bottom: 8,
-              backgroundColor: isCTABtnDisAbled
-                ? colors.inactivated
-                : colors.dark,
+              backgroundColor: isCTABtnDisAbled ? colors.inactive : colors.main,
             }}
             disabled={isCTABtnDisAbled}
             btnText={currentNumOfFoods === 0 ? '취소' : '완료'}

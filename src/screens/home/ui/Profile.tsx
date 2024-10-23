@@ -72,7 +72,7 @@ const HighlightBox = styled.View`
   flex-direction: row;
   width: 100%;
   height: 32px;
-  background-color: ${colors.highlight2};
+  background-color: ${colors.highlight};
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;

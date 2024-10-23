@@ -47,7 +47,7 @@ export type IUserInputPageNm =
 export const PAGES = [
   // 자세히 계산하기
   {
-    header: '0/13',
+    header: '0/12',
     name: 'Start',
     title: '목적에 따라 목표로 할\n영양성분 양을 정해드릴게요',
     subTitle: '입력된 정보로 목표 칼로리를 계산해드려요',
@@ -58,7 +58,7 @@ export const PAGES = [
     ),
   },
   {
-    header: '1/13',
+    header: '0/12',
     name: 'CalculationOptions',
     title: '한 끼 영양성분 목표를 위해\n계산 방식을 선택해주세요',
     subTitle:
@@ -68,7 +68,7 @@ export const PAGES = [
     render: (u: IUserInputState, scrollRef: RefObject<ScrollView>) => null,
   },
   {
-    header: '2/13',
+    header: '1/12',
     name: 'Gender',
     title: '성별을 알려주세요',
     subTitle: '성별에 따라\n열량소모가 달라져요',
@@ -79,7 +79,7 @@ export const PAGES = [
     ),
   },
   {
-    header: '3/13',
+    header: '2/12',
     name: 'Age',
     title: '만 나이를 알려주세요',
     subTitle: '한 두 살 차이가\n크게 영향을 미치지는 않아요',
@@ -90,7 +90,7 @@ export const PAGES = [
     ),
   },
   {
-    header: '4/13',
+    header: '3/12',
     name: 'Height',
     title: '신장을 알려주세요',
     subTitle: '키가 크면 열량 소모가 커집니다\n몸을 크게 만드는데는 불리하겠죠',
@@ -101,7 +101,7 @@ export const PAGES = [
     ),
   },
   {
-    header: '5/13',
+    header: '4/12',
     name: 'Weight',
     title: '체중을 알려주세요',
     subTitle:
@@ -113,7 +113,7 @@ export const PAGES = [
     ),
   },
   {
-    header: '6/13',
+    header: '5/12',
     name: 'Purpose',
     title: '어떤 목적을 위해\n식단을 하나요',
     subTitle: '어렵지 않아요\n체중감소는 덜먹고, 체중증가는 더 먹고!',
@@ -124,7 +124,7 @@ export const PAGES = [
     ),
   },
   {
-    header: '7/13',
+    header: '6/12',
     name: 'WOFrequency',
     title: '일주일에 운동을\n몇 번이나 하는지 알려주세요',
     subTitle: '운동을 많이, 오래 할수록\n먹을 수 있는 양이 많아지겠죠?',
@@ -136,7 +136,7 @@ export const PAGES = [
     ),
   },
   {
-    header: '8/13',
+    header: '7/12',
     name: 'Amr',
     title: '기초대사량과 운동으로 소모하는\n열량을 알고 계신가요',
     subTitle: '모르신다면\n입력 없이 다음으로 넘어가주세요',
@@ -151,7 +151,7 @@ export const PAGES = [
     ),
   },
   {
-    header: '9/13',
+    header: '8/12',
     name: 'WODuration',
     title: '운동은 평균적으로\n몇 분 동안 하나요',
     subTitle: '운동을 많이, 오래 할수록\n먹을 수 있는 양이 많아지겠죠?',
@@ -162,7 +162,7 @@ export const PAGES = [
     ),
   },
   {
-    header: '10/13',
+    header: '9/12',
     name: 'WOIntensity',
     title: '어떤 강도로\n운동을 하는지 알려주세요',
     subTitle: '운동을 많이, 오래 할수록\n먹을 수 있는 양이 많아지겠죠?',
@@ -173,7 +173,7 @@ export const PAGES = [
     ),
   },
   {
-    header: '11/13',
+    header: '10/12',
     name: 'TargetCalorie',
     title: '한 끼니 기준\n목표 칼로리를 정해봐요',
     subTitle: '평소 섭취하는 끼니에 따라\n목표섭취량을 계산해드릴게요',
@@ -184,7 +184,7 @@ export const PAGES = [
     ),
   },
   {
-    header: '12/13',
+    header: '11/12',
     name: 'TargetRatio',
     title: '거의 다 왔어요!\n영양성분 비율을 선택해주세요',
     subTitle: '잘 모르겠다면 첫번째로\n선택해주시면 됩니다',
@@ -204,7 +204,7 @@ export const PAGES = [
     ),
   },
   {
-    header: '13/13',
+    header: '12/12',
     name: 'Result',
     title: '목표섭취량 계산이\n완료되었어요',
     subTitle: '목표섭취량은 홈화면 목표변경에서\n언제든지 변경이 가능합니다',

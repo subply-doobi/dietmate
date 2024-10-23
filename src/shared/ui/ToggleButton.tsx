@@ -29,9 +29,9 @@ const BtnToggle = styled.TouchableOpacity<{isActive: boolean}>`
   align-items: center;
   border-width: ${({isActive}) => (isActive ? '0px' : '1px')};
   border-radius: 4px;
-  border-color: ${colors.inactivated};
+  border-color: ${colors.inactive};
   background-color: ${({isActive}) =>
-    isActive ? colors.highlight2 : colors.white};
+    isActive ? colors.highlight : colors.white};
 `;
 const ToggleText = styled(TextMain)<{isActive: boolean}>`
   font-size: 16px;

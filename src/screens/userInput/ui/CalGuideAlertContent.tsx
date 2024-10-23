@@ -58,10 +58,15 @@ const CalGuideAlertContent = ({menuPerDay}: ICalGuideAlertContent) => {
   const fatPerMenu = Math.round(Number(fat) / menuPerDay);
 
   const nutrItem = [
-    {name: '칼로리', value: caloriePerMenu, unit: 'kcal', color: colors.main},
-    {name: '탄수화물', value: carbPerMenu, unit: 'g', color: colors.blue},
-    {name: '단백질', value: proteinPerMenu, unit: 'g', color: colors.green},
-    {name: '지방', value: fatPerMenu, unit: 'g', color: colors.orange},
+    {
+      name: '칼로리',
+      value: caloriePerMenu,
+      unit: 'kcal',
+      color: colors.calorie,
+    },
+    {name: '탄수화물', value: carbPerMenu, unit: 'g', color: colors.carb},
+    {name: '단백질', value: proteinPerMenu, unit: 'g', color: colors.protein},
+    {name: '지방', value: fatPerMenu, unit: 'g', color: colors.fat},
   ];
 
   return (

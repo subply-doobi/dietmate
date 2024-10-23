@@ -37,7 +37,7 @@ const BtnBar = styled.View<{isActive: boolean}>`
   position: absolute;
   left: 0px;
   background-color: ${({isActive}) =>
-    isActive ? colors.main : colors.inactivated};
+    isActive ? colors.main : colors.inactive};
 
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
