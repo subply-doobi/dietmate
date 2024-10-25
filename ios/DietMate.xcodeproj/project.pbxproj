@@ -14,8 +14,8 @@
 		21FA27E37FC6AA9D95470B86 /* Pods_dietmate_dietmateTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB686EC0E5A80264B0092B69 /* Pods_dietmate_dietmateTests.framework */; };
 		4A391B57F8BD48BF89443D7F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B510B219194D4A339F2BE6FB /* Colors.xcassets */; };
 		84987EB786EF48C68575DEC6 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B13D4D6AB804EF58FA21A25 /* Colors.xcassets */; };
-		9353FC472BEE1051009DB862 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 9353FC462BEE1051009DB862 /* main.jsbundle */; };
 		937142DE2C676E850006A96C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 937142DC2C676E850006A96C /* InfoPlist.strings */; };
+		9390531A2CCBB5910054988B /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 939053192CCBB5910054988B /* main.jsbundle */; };
 		93C391BA2BBAB1F300683BBF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 93C391B92BBAB1F300683BBF /* GoogleService-Info.plist */; };
 		B17BEFCC614874E6EB7BB519 /* Pods_dietmate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30A7E8BFB3FDA1080D8CEA85 /* Pods_dietmate.framework */; };
 		D52EE1BC5E034B98AE146675 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E7AE1421CE714923A0AD2724 /* BootSplash.storyboard */; };
@@ -52,8 +52,8 @@
 		5B13D4D6AB804EF58FA21A25 /* Colors.xcassets */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = DietMate/Colors.xcassets; sourceTree = "<group>"; };
 		6C121146D912470E4046C016 /* Pods-dietmate-dietmateTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dietmate-dietmateTests.release.xcconfig"; path = "Target Support Files/Pods-dietmate-dietmateTests/Pods-dietmate-dietmateTests.release.xcconfig"; sourceTree = "<group>"; };
 		8784A77E278579F149CC4438 /* Pods-dietmate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dietmate.release.xcconfig"; path = "Target Support Files/Pods-dietmate/Pods-dietmate.release.xcconfig"; sourceTree = "<group>"; };
-		9353FC462BEE1051009DB862 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		937142DF2C676E9E0006A96C /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		939053192CCBB5910054988B /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		93C391B92BBAB1F300683BBF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AB686EC0E5A80264B0092B69 /* Pods_dietmate_dietmateTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_dietmate_dietmateTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B510B219194D4A339F2BE6FB /* Colors.xcassets */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = dietmate/Colors.xcassets; sourceTree = "<group>"; };
@@ -104,7 +104,7 @@
 		13B07FAE1A68108700A75B9A /* dietmate */ = {
 			isa = PBXGroup;
 			children = (
-				9353FC462BEE1051009DB862 /* main.jsbundle */,
+				939053192CCBB5910054988B /* main.jsbundle */,
 				E07D88F32B9026FC003C94BB /* dietmate.entitlements */,
 				93C391B92BBAB1F300683BBF /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -274,9 +274,9 @@
 				E00F8DB72BC976FB002CA50A /* PrivacyInfo.xcprivacy in Resources */,
 				937142DE2C676E850006A96C /* InfoPlist.strings in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				9390531A2CCBB5910054988B /* main.jsbundle in Resources */,
 				93C391BA2BBAB1F300683BBF /* GoogleService-Info.plist in Resources */,
 				E07A41412B8DC5020025A68F /* Fonts in Resources */,
-				9353FC472BEE1051009DB862 /* main.jsbundle in Resources */,
 				D52EE1BC5E034B98AE146675 /* BootSplash.storyboard in Resources */,
 				84987EB786EF48C68575DEC6 /* Colors.xcassets in Resources */,
 				4A391B57F8BD48BF89443D7F /* Colors.xcassets in Resources */,

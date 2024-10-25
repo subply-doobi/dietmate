@@ -15,6 +15,8 @@ import {ILoginType, useLoginByType} from '../../shared/api/queries/login';
 import {IS_IOS, SCREENWIDTH} from '../../shared/constants';
 import AppleLogin from './ui/AppleLogin';
 import {BtnCTA, BtnText, TextMain} from '../../shared/ui/styledComps';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../app/store/reduxStore';
 
 const Login = () => {
   // navigation
@@ -38,18 +40,6 @@ const Login = () => {
     const newBLData = await refetchBaseLine().then(res => res.data);
     navigateByUserInfo(newBLData, navigation);
   };
-
-  // useEffect
-  // 자동로그인
-  useEffect(() => {
-    const checkUser = async () => {
-      const {isValidated} = await validateToken();
-      if (!isValidated) return;
-      const baseLineData = await refetchBaseLine().then(res => res.data);
-      baseLineData && navigateByUserInfo(baseLineData, navigation);
-    };
-    checkUser();
-  }, []);
 
   return (
     <Container>

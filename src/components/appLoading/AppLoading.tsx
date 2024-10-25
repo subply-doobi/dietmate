@@ -22,6 +22,9 @@ import {useGetBaseLine} from '../../shared/api/queries/baseLine';
 import {validateToken} from '../../shared/api/queries/token';
 import {useDispatch, useSelector} from 'react-redux';
 import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
+import {navigateByUserInfo} from '../../shared/utils/navigateByUserInfo';
+import {useNavigation} from '@react-navigation/native';
+import {checkIsUpToDate} from '../../shared/utils/versionCheck';
 
 const loadSplash = new Promise(resolve =>
   setTimeout(() => {
@@ -36,37 +39,48 @@ const AppLoading = () => {
     (state: RootState) => state.modal.modal.appUpdateAlert,
   );
 
+  const navigation = useNavigation();
+
   // react-query
   const {refetch: refetchBaseLine} = useGetBaseLine({enabled: false});
   const {data: latestAppVersion, refetch: refetchLatestVersion} =
     useGetLatestVersion({enabled: false});
 
-  // useState
-  // const [isUpdateNeeded, setIsUpdateNeeded] = useState(false);
-
   // useEffect 앱 로딩
+  // 1. 스플래시 노출 2.앱 버전 확인 3. 자동로그인 4. 튜토리얼 모드 확인 5. 스플래시 숨김
   useEffect(() => {
     const checkVersion = async () => {
       const latestVersion = (await refetchLatestVersion()).data;
-      if (!latestVersion) return;
-      appVersion !== latestVersion &&
-        dispatch(openModal({name: 'appUpdateAlert'}));
+      if (!latestVersion) return false;
+
+      const {isUpToDate, message} = checkIsUpToDate({
+        appVersion: appVersion,
+        latestVersion: latestVersion,
+      });
+      console.log('checkVersion: ', message);
+      if (isUpToDate) return true;
+      dispatch(openModal({name: 'appUpdateAlert'}));
+      return false;
     };
 
-    const checkUser = async () => {
+    const autoLogin = async (isAppUpToDate: boolean) => {
       const {isValidated} = await validateToken();
       if (!isValidated) return;
-      await refetchBaseLine();
+      const baseLineData = await refetchBaseLine().then(res => res.data);
+      baseLineData &&
+        isAppUpToDate &&
+        navigateByUserInfo(baseLineData, navigation);
     };
 
     const init = async () => {
       await loadSplash;
 
       // 앱 업데이트 확인
-      await checkVersion();
+      const isUpToDate = await checkVersion();
 
-      // 자동로그인 (토큰 유효성 검사)
-      await checkUser();
+      // 자동로그인 (토큰 유효성 검사 및 )
+      console.log('init: isAppUpToDate', isUpToDate);
+      await autoLogin(isUpToDate);
 
       // 튜토리얼 모드 확인
       const isTutorialMode = !(await getNotShowAgainList()).tutorial;
@@ -94,7 +108,7 @@ const AppLoading = () => {
       renderContent={() => (
         <CommonAlertContent
           text="앱 업데이트가 필요합니다"
-          subText={`${appVersion} -> ${latestAppVersion}`}
+          subText={`현재버전: ${appVersion}\n최신버전: ${latestAppVersion}`}
         />
       )}
     />
