@@ -1,3 +1,4 @@
+import colors from '../../../shared/colors';
 import {IIamportPayParams} from '../../order/util/setPayData';
 
 export const getPaymentHtmlContent = (iamportPayParams: IIamportPayParams) => {
@@ -26,7 +27,7 @@ export const getPaymentHtmlContent = (iamportPayParams: IIamportPayParams) => {
           width: 16px;
           height: 16px;
           border-radius: 50%;
-          border-left-color: #590DE1;
+          border-left-color: ${colors.main};
           animation: spin 1s linear infinite;
         }
         @keyframes spin {
