@@ -1,6 +1,5 @@
 import {Dimensions, Platform} from 'react-native';
 import {ISortFilter} from '../features/reduxSlices/sortFilterSlice';
-import CodePush from 'react-native-code-push';
 
 // RN constants
 export const {width, height} = Dimensions.get('screen');
@@ -25,17 +24,6 @@ export const KOREAN_NUTRITION_REFERENCE_URL =
 export const PLAY_STORE_URL = 'market://details?id=com.subply.dietmate';
 export const APP_STORE_URL =
   'itms-apps://itunes.apple.com/us/app//id6472628268';
-
-export const codePushOptions = {
-  checkFrequency: CodePush.CheckFrequency.ON_APP_START,
-  updateDialog: {
-    title: '새로운 업데이트가 있어요',
-    optionalUpdateMessage: '업데이트를 진행합니다',
-    optionalInstallButtonLabel: '예',
-    optionalIgnoreButtonLabel: '아니요.',
-  },
-  installMode: CodePush.InstallMode.IMMEDIATE,
-};
 
 // tutorial sortFilter
 export const tutorialSortFilter: ISortFilter = {

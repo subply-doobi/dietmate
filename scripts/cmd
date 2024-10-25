@@ -13,12 +13,11 @@ yarn android --mode release
 git crlf
 git config --global core.autocrlf true
 
-code-push
-appcenter codepush release-react -a subply/dietmate -d Production -m
-appcenter codepush release-react -a subply/dietmateIos -d Production -m
-
 tags
 git push -d origin v1.0.18
 
 bootsplash asset 생성
 yarn react-native generate-bootsplash src\shared\assets\appIcon\appIcon.png --platforms=android,ios background=FFFFFF --logo-width=80 --assets-output=assets/bootsplash
+
+remove derived data
+rm -rf ~/Library/Developer/Xcode/DerivedData

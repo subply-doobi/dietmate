@@ -31,6 +31,7 @@ const Box = styled.View`
 const Title = styled(TextMain)<{titleAlign?: 'center' | 'left' | 'right'}>`
   width: 100%;
   font-size: 24px;
+  line-height: 32px;
   font-weight: bold;
   text-align: ${({titleAlign}) => titleAlign};
 `;
@@ -38,6 +39,7 @@ const Title = styled(TextMain)<{titleAlign?: 'center' | 'left' | 'right'}>`
 const SubTitle = styled(TextSub)<{titleAlign?: 'center' | 'left' | 'right'}>`
   width: 100%;
   font-size: 16px;
+  line-height: 24px;
   margin-top: 16px;
   text-align: ${({titleAlign}) => titleAlign};
 `;
