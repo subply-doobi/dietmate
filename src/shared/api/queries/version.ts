@@ -17,7 +17,7 @@ const queryFn = async () => {
 
 export const useGetLatestVersion = (options?: IQueryOptions) => {
   const enabled = options?.enabled ?? true;
-  return useQuery<String>({
+  return useQuery<string>({
     queryKey: [VERSION],
     queryFn,
     enabled,
