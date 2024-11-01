@@ -1,5 +1,6 @@
 // RN
 import {useCallback, useEffect, useRef, useState} from 'react';
+import {BackHandler, ScrollView} from 'react-native';
 
 // 3rd
 import {
@@ -13,13 +14,12 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../app/store/reduxStore';
 
 // doobi
-import {SCREENWIDTH} from '../../shared/constants';
+import {IS_IOS, SCREENWIDTH} from '../../shared/constants';
 import colors from '../../shared/colors';
 import {Col, Container, Row} from '../../shared/ui/styledComps';
 import GuideTitle from '../../shared/ui/GuideTitle';
 import BackArrow from '../../shared/ui/BackArrow';
 import {getPageItem} from './util/pageIdx';
-import {BackHandler, ScrollView} from 'react-native';
 import CtaButton from '../../shared/ui/CtaButton';
 import {setSubmitData} from './util/userInfoSubmit';
 import {
@@ -165,7 +165,9 @@ const UserInput = () => {
       </ProgressBox>
       <ScrollView
         ref={scrollRef}
-        contentContainerStyle={{paddingBottom: 200}}
+        contentContainerStyle={{
+          paddingBottom: 200,
+        }}
         scrollEnabled={currentPage === 'Start' ? false : true}
         showsVerticalScrollIndicator={false}>
         <GuideTitle
@@ -182,42 +184,46 @@ const UserInput = () => {
       </ScrollView>
 
       {/* CTA버튼 */}
-      {currentPage !== 'CalculationOptions' ? (
-        <Col style={{marginTop: -120}}>
-          {currentPage === 'Start' &&
-            baseLineData &&
-            Object.keys(baseLineData).length !== 0 && (
-              <>
-                <CtaButton
-                  btnStyle="border"
-                  btnText="몸무게, 목표영양만 변경하기"
-                  onPress={() => goNext('ChangeWeight')}
-                />
-              </>
-            )}
-          <CtaButton
-            btnStyle={btnStyle}
-            btnText={btnText}
-            style={{marginTop: 8, marginBottom: 16}}
-            onPress={() => onCtaPress()}
-          />
-        </Col>
-      ) : (
-        <Row style={{columnGap: 8, marginBottom: 16}}>
-          <CtaButton
-            btnStyle="border"
-            btnText="자세하게"
-            onPress={() => goNext('Gender')}
-            style={{flex: 1}}
-          />
-          <CtaButton
-            btnStyle="active"
-            btnText="간단하게"
-            onPress={() => goNext('GenderSimple')}
-            style={{flex: 1}}
-          />
-        </Row>
-      )}
+      <KeyboardAvoidingView
+        behavior={IS_IOS ? 'padding' : 'height'}
+        // enabled={IS_IOS}
+        keyboardVerticalOffset={96}>
+        {currentPage !== 'CalculationOptions' ? (
+          <Col style={{rowGap: 12}}>
+            {currentPage === 'Start' &&
+              baseLineData &&
+              Object.keys(baseLineData).length !== 0 && (
+                <>
+                  <CtaButton
+                    btnStyle="border"
+                    btnText="몸무게, 목표영양만 변경하기"
+                    onPress={() => goNext('ChangeWeight')}
+                  />
+                </>
+              )}
+            <CtaButton
+              btnStyle={btnStyle}
+              btnText={btnText}
+              onPress={() => onCtaPress()}
+            />
+          </Col>
+        ) : (
+          <Row style={{columnGap: 8}}>
+            <CtaButton
+              btnStyle="border"
+              btnText="자세하게"
+              onPress={() => goNext('Gender')}
+              style={{flex: 1}}
+            />
+            <CtaButton
+              btnStyle="active"
+              btnText="간단하게"
+              onPress={() => goNext('GenderSimple')}
+              style={{flex: 1}}
+            />
+          </Row>
+        )}
+      </KeyboardAvoidingView>
     </Container>
   );
 };
@@ -237,4 +243,9 @@ const GoStartBtn = styled.TouchableOpacity`
 const GoStartBtnText = styled.Text`
   font-size: 12px;
   color: ${colors.textMain};
+`;
+
+const KeyboardAvoidingView = styled.KeyboardAvoidingView`
+  margin-top: -120px;
+  bottom: 24px;
 `;
