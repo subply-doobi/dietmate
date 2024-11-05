@@ -24,7 +24,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
 import {navigateByUserInfo} from '../../shared/utils/navigateByUserInfo';
 import {useNavigation} from '@react-navigation/native';
-import {checkIsUpToDate} from '../../shared/utils/versionCheck';
+import {checkIsUpdateNeeded} from '../../shared/utils/versionCheck';
 
 const loadSplash = new Promise(resolve =>
   setTimeout(() => {
@@ -49,16 +49,18 @@ const AppLoading = () => {
   // useEffect 앱 로딩
   // 1. 스플래시 노출 2.앱 버전 확인 3. 자동로그인 4. 튜토리얼 모드 확인 5. 스플래시 숨김
   useEffect(() => {
-    const checkVersion = async () => {
+    const checkIsUpToDate = async () => {
       const latestVersion = (await refetchLatestVersion()).data;
       if (!latestVersion) return false;
 
-      const {isUpToDate, message} = checkIsUpToDate({
+      const {isUpdateNeeded, message} = checkIsUpdateNeeded({
         appVersion: appVersion,
         latestVersion: latestVersion,
       });
-      console.log('checkVersion: ', message);
-      if (isUpToDate) return true;
+      console.log('appVersion:', appVersion, 'latestVersion:', latestVersion);
+      console.log('message:', message);
+
+      if (!isUpdateNeeded) return true;
       dispatch(openModal({name: 'appUpdateAlert'}));
       return false;
     };
@@ -76,10 +78,9 @@ const AppLoading = () => {
       await loadSplash;
 
       // 앱 업데이트 확인
-      const isUpToDate = await checkVersion();
+      const isUpToDate = await checkIsUpToDate();
 
       // 자동로그인 (토큰 유효성 검사 및 )
-      console.log('init: isAppUpToDate', isUpToDate);
       await autoLogin(isUpToDate);
 
       // 튜토리얼 모드 확인
