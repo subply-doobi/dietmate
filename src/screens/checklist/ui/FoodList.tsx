@@ -1,7 +1,6 @@
 import styled from 'styled-components/native';
 import {IOrderedProduct} from '../../../shared/api/types/order';
 import {Col, Row, TextMain, TextSub} from '../../../shared/ui/styledComps';
-import Config from 'react-native-config';
 
 interface IFoodList {
   menu: IOrderedProduct[];
@@ -12,7 +11,9 @@ const FoodList = ({menu}: IFoodList) => {
       {menu.map(food => (
         <Row key={food.productNo}>
           <ThumbnailImage
-            source={{uri: `${Config.BASE_URL}${food.mainAttUrl}`}}
+            source={{
+              uri: `${process.env.BASE_URL}${food.mainAttUrl}`,
+            }}
           />
           <Col style={{marginLeft: 8}}>
             <SellerText numberOfLines={1} ellipsizeMode="tail">

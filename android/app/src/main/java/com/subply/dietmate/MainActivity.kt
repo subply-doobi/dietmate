@@ -1,3 +1,4 @@
+import expo.modules.ReactActivityDelegateWrapper
 package com.subply.dietmate
 
 import android.os.Bundle
@@ -21,7 +22,7 @@ class MainActivity : ReactActivity() {
    */
 
   override fun createReactActivityDelegate(): ReactActivityDelegate =
-    DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+    ReactActivityDelegateWrapper(this, BuildConfig.IS_NEW_ARCHITECTURE_ENABLED, DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled))
 
   override fun onCreate(savedInstanceState: Bundle?) {
     RNBootSplash.init(this, R.style.BootTheme) // ⬅️ initialize the splash screen

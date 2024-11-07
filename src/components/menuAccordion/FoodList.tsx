@@ -16,7 +16,6 @@ import {
   useListDietTotalObj,
 } from '../../shared/api/queries/diet';
 import {SERVICE_PRICE_PER_PRODUCT} from '../../shared/constants';
-import Config from 'react-native-config';
 import DTooltip from '../../shared/ui/DTooltip';
 import {useDispatch, useSelector} from 'react-redux';
 import {openModal, closeModal} from '../../features/reduxSlices/modalSlice';
@@ -93,7 +92,9 @@ const FoodList = ({selectedFoods, setSelectedFoods, dietNo}: IFoodList) => {
                   });
                 }}>
                 <ThumbnailImage
-                  source={{uri: `${Config.BASE_URL}${food.mainAttUrl}`}}
+                  source={{
+                    uri: `${process.env.BASE_URL}${food.mainAttUrl}`,
+                  }}
                   resizeMode="center"
                 />
               </FoodDetailBtn>

@@ -1,4 +1,10 @@
 {
+  "owner": "subply",
   "appName": "dietmate",
-  "displayName": "DietMate"
+  "displayName": "DietMate",
+  "extra": {
+    "eas": {
+      "projectId": "99952cd0-f7ae-4c01-9523-be8c04a543a0"
+    }
+  }
 }

@@ -30,7 +30,6 @@ import {
   useUpdateDietDetail,
 } from '../../shared/api/queries/diet';
 import {reGroupBySellerFromDTOData} from '../../shared/utils/dataTransform';
-import Config from 'react-native-config';
 import {useDispatch, useSelector} from 'react-redux';
 import {closeModal} from '../../features/reduxSlices/modalSlice';
 import {RootState} from '../../app/store/reduxStore';
@@ -105,7 +104,9 @@ const MenuNumSelectContent = () => {
                   marginTop: 16,
                 }}>
                 <ThumbnailImg
-                  source={{uri: `${Config.BASE_URL}${food.mainAttUrl}`}}
+                  source={{
+                    uri: `${process.env.BASE_URL}${food.mainAttUrl}`,
+                  }}
                 />
                 <Col
                   style={{

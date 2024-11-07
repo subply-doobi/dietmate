@@ -7,7 +7,6 @@ import {commaToNum} from '../../../shared/utils/sumUp';
 import {SERVICE_PRICE_PER_PRODUCT} from '../../../shared/constants';
 import {useNavigation} from '@react-navigation/native';
 import {icons} from '../../../shared/iconSource';
-import Config from 'react-native-config';
 
 interface IChangeFoodList {
   food: IProductData;
@@ -39,7 +38,9 @@ const ChangeFoodList = ({
             });
           }}>
           <ThumbnailImage
-            source={{uri: `${Config.BASE_URL}${food.mainAttUrl}`}}
+            source={{
+              uri: `${process.env.BASE_URL}${food.mainAttUrl}`,
+            }}
             resizeMode="center"
           />
         </FoodDetailBtn>

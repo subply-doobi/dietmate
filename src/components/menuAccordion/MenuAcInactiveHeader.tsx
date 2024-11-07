@@ -19,7 +19,6 @@ import {
   useDeleteDiet,
   useListDietTotalObj,
 } from '../../shared/api/queries/diet';
-import Config from 'react-native-config';
 import DTooltip from '../../shared/ui/DTooltip';
 import {checkNoStockP} from '../../shared/utils/productStatusCheck';
 import {ActivityIndicator} from 'react-native';
@@ -164,7 +163,9 @@ const MenuAcInactiveHeader = ({
                 dDData.map(p => (
                   <Thumbnail
                     key={p.productNo}
-                    source={{uri: `${Config.BASE_URL}${p.mainAttUrl}`}}
+                    source={{
+                      uri: `${process.env.BASE_URL}${p.mainAttUrl}`,
+                    }}
                   />
                 ))
               )}

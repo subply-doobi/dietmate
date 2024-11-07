@@ -1,5 +1,4 @@
 // 3rd
-import Config from 'react-native-config';
 import styled from 'styled-components/native';
 import {useSelector} from 'react-redux';
 
@@ -49,7 +48,9 @@ const FoodList = ({menu}: {menu: IOrderedProduct[]}) => {
     <Col key={thumbnailIndex} style={{marginTop: 24}}>
       <Row style={{alignItems: 'flex-start'}}>
         <ThumbnailImage
-          source={{uri: `${Config.BASE_URL}${item?.mainAttUrl}`}}
+          source={{
+            uri: `${process.env.BASE_URL}${item?.mainAttUrl}`,
+          }}
         />
         <Col
           style={{

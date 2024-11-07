@@ -29,7 +29,6 @@ import {
 } from '../../../shared/constants';
 import {useDeleteProductMark} from '../../../shared/api/queries/product';
 import CommonAlertContent from '../../../components/common/alert/CommonAlertContent';
-import Config from 'react-native-config';
 
 interface IFoodList {
   item: IProductData;
@@ -167,7 +166,7 @@ const FoodList = ({item, screen = 'Search'}: IFoodList) => {
           }}>
           <Thumbnail
             source={{
-              uri: `${Config.BASE_URL}${item?.mainAttUrl}`,
+              uri: `${process.env.BASE_URL}${item?.mainAttUrl}`,
             }}
             resizeMode="contain"
           />

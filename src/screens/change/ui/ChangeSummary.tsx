@@ -12,7 +12,6 @@ import styled from 'styled-components/native';
 import {icons} from '../../../shared/iconSource';
 import {commaToNum} from '../../../shared/utils/sumUp';
 import colors from '../../../shared/colors';
-import Config from 'react-native-config';
 
 interface IChangeSummary {
   foodToChange: IProductData;
@@ -61,7 +60,9 @@ const ChangeSummary = ({foodToChange, selectedProduct}: IChangeSummary) => {
       <Row style={{columnGap: 24}}>
         <Box>
           <Thumbnail
-            source={{uri: `${Config.BASE_URL}${foodToChange.mainAttUrl}`}}
+            source={{
+              uri: `${process.env.BASE_URL}${foodToChange.mainAttUrl}`,
+            }}
             resizeMode="cover"
           />
           <PlatformNm>{foodToChange?.platformNm}</PlatformNm>
@@ -85,7 +86,9 @@ const ChangeSummary = ({foodToChange, selectedProduct}: IChangeSummary) => {
         ) : (
           <Box>
             <Thumbnail
-              source={{uri: `${Config.BASE_URL}${selectedProduct.mainAttUrl}`}}
+              source={{
+                uri: `${process.env.BASE_URL}${selectedProduct.mainAttUrl}`,
+              }}
               resizeMode="cover"
             />
             <PlatformNm>{selectedProduct?.platformNm}</PlatformNm>

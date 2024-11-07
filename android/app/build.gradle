@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+// apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply plugin: 'com.google.gms.google-services' // Google Play services Gradle plugin
@@ -57,6 +57,11 @@ react {
     /* Autolinking */
     autolinkLibrariesWithApp()
 
+    //
+    // Added by install-expo-modules
+    entryFile = file(["node", "-e", "require('expo/scripts/resolveAppEntry')", rootDir.getAbsoluteFile().getParentFile().getAbsolutePath(), "android", "absolute"].execute(null, rootDir).text.trim())
+    cliFile = new File(["node", "--print", "require.resolve('@expo/cli')"].execute(null, rootDir).text.trim())
+    bundleCommand = "export:embed"
 }
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.

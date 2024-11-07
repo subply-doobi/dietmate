@@ -1,4 +1,3 @@
-import Config from 'react-native-config';
 import {IAddressData} from '../../../shared/api/types/address';
 import {IDietDetailAllData} from '../../../shared/api/types/diet';
 import {IUserData} from '../../../shared/api/types/user';
@@ -194,7 +193,7 @@ export const setPayParams = ({
   payParams_doobi: IDoobiPayParams;
 } => {
   const payParams_iamport: IIamportPayParams = {
-    storeId: Config.STORE_ID_IAMPORT,
+    storeId: process.env.STORE_ID_IAMPORT as string,
     paymentId: `paymentU${userData.userId}D${Date.now()}`,
     orderName: `${menuNum}개 끼니 (식품 ${productNum}개)`,
     totalAmount: priceTotal + shippingPrice,
@@ -220,10 +219,10 @@ export const setPayParams = ({
       pc: 'REDIRECTION',
       mobile: 'REDIRECTION',
     },
-    redirectUrl: Config.REDIRECT_URL_IAMPORT,
+    redirectUrl: process.env.REDIRECT_URL_IAMPORT as string,
     // noticeUrls : '',
     // confirmUrl : '',
-    appScheme: Config.APP_SCHEME_IAMPORT,
+    appScheme: process.env.APP_SCHEME_IAMPORT as string,
     isEscrow: undefined,
     products: [
       {

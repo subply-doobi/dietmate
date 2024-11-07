@@ -51,7 +51,6 @@ import {ITableItem, makeTableData} from './util/makeNutrTable';
 import {ActivityIndicator} from 'react-native';
 import CtaButton from '../../shared/ui/CtaButton';
 import {tfDTOToDDA} from '../../shared/utils/dataTransform';
-import Config from 'react-native-config';
 
 interface IShowPart {
   clicked: string;
@@ -199,7 +198,7 @@ const FoodDetail = () => {
             {/* 식품 썸네일 */}
             <FoodImageContainer
               source={{
-                uri: `${Config.BASE_URL}${productData.mainAttUrl}`,
+                uri: `${process.env.BASE_URL}${productData.mainAttUrl}`,
               }}
               style={{resizeMode: 'contain'}}
             />

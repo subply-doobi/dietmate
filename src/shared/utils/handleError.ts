@@ -8,7 +8,6 @@ import {isAxiosError} from 'axios';
 import {navigationRef} from '../../app/navigators/navigationRef';
 import {queryClient} from '../../app/store/reactQueryStore';
 import {setTutorialStart} from '../../features/reduxSlices/commonSlice';
-import Config from 'react-native-config';
 import {openModal} from '../../features/reduxSlices/modalSlice';
 
 // 에러 -> 에러코드
@@ -19,7 +18,7 @@ const convertErrorToCode = async (error: unknown) => {
   if (!isAxiosError(error)) return 520;
   if (
     error.message === 'Network Error' ||
-    error.message === `timeout of ${Config.AXIOS_TIMEOUT}ms exceeded`
+    error.message === `timeout of ${process.env.AXIOS_TIMEOUT}ms exceeded`
   ) {
     const isOnline = (await NetInfo.fetch()).isConnected;
     return isOnline ? 999 : null;

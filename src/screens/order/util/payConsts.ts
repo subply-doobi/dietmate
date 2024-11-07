@@ -1,4 +1,3 @@
-import Config from 'react-native-config';
 import colors from '../../../shared/colors';
 import {icons} from '../../../shared/iconSource';
 
@@ -15,8 +14,8 @@ export type IPayMethod =
 export const channelKey: {
   [key in IPG]: string;
 } = {
-  kakaopay: Config.CHANNEL_KEY_KAKAOPAY,
-  smartro_v2: Config.CHANNEL_KEY_SMARTRO_V2,
+  kakaopay: process.env.CHANNEL_KEY_KAKAOPAY as string,
+  smartro_v2: process.env.CHANNEL_KEY_SMARTRO_V2 as string,
 };
 
 export const PAY_METHOD = [

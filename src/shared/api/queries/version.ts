@@ -3,10 +3,9 @@ import {GET_VERSION} from '../urls';
 import {IQueryOptions} from '../types/common';
 import {useQuery} from '@tanstack/react-query';
 import {VERSION} from '../keys';
-import Config from 'react-native-config';
 
 const requestConfig = {
-  timeout: Number(Config.AXIOS_TIMEOUT),
+  timeout: Number(process.env.AXIOS_TIMEOUT),
 };
 
 const queryFn = async () => {

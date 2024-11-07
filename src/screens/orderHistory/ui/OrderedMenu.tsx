@@ -2,7 +2,6 @@
 import {ScrollView} from 'react-native';
 
 // 3rd
-import Config from 'react-native-config';
 import styled from 'styled-components/native';
 
 // doobi
@@ -33,7 +32,7 @@ const OrderedMenu = ({order}: {order: IOrderedProduct[][]}) => {
                 <ThumbnailImage
                   key={productIdx}
                   source={{
-                    uri: `${Config.BASE_URL}${product.mainAttUrl}`,
+                    uri: `${process.env.BASE_URL}${product.mainAttUrl}`,
                   }}
                 />
               ))}

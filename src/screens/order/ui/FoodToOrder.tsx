@@ -13,7 +13,6 @@ import colors from '../../../shared/colors';
 import {commaToNum} from '../../../shared/utils/sumUp';
 import {RootState} from '../../../app/store/reduxStore';
 import {regroupDDataBySeller} from '../../../shared/utils/dataTransform';
-import Config from 'react-native-config';
 
 const FoodToOrder = () => {
   // redux
@@ -71,7 +70,7 @@ const FoodsInOneDiet = ({dietNo}: FoodInOneDietProps) => {
               <Row key={product.productNo} style={{marginTop: 16}}>
                 <FoodThumbnail
                   source={{
-                    uri: `${Config.BASE_URL}${product.mainAttUrl}`,
+                    uri: `${process.env.BASE_URL}${product.mainAttUrl}`,
                   }}
                 />
                 <Col style={{flex: 1, marginLeft: 8}}>
