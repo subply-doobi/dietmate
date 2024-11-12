@@ -29,6 +29,10 @@ import ErrorPage from '../../screens/error/ErrorPage';
 // doobi shared
 import colors from '../../shared/colors';
 import Payment from '../../screens/payment/Payment';
+import styled from 'styled-components/native';
+import {BtnSmall, BtnSmallText} from '../../shared/ui/styledComps';
+import {link} from '../../shared/utils/linking';
+import {INQUIRY_URL} from '../../shared/constants';
 
 const Stack = createNativeStackNavigator();
 
@@ -143,6 +147,11 @@ const RootStackNav = () => {
         component={OrderHistoryDetail}
         options={{
           headerShown: true,
+          headerRight: () => (
+            <InquireBtn onPress={() => link(INQUIRY_URL)}>
+              <BtnSmallText>문의</BtnSmallText>
+            </InquireBtn>
+          ),
         }}
       />
 
@@ -206,3 +215,9 @@ const RootStackNav = () => {
 };
 
 export default RootStackNav;
+
+const InquireBtn = styled(BtnSmall)`
+  align-self: flex-end;
+  width: 'auto';
+  padding: 0 16px;
+`;

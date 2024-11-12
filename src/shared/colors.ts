@@ -24,6 +24,7 @@ export default {
   darkBrown: `#3C2400`,
   pink: '#F1948A',
   green: '#A3CB37', // same as carb
+  orange: '#F39C11', // same as calorie
   //
   kakaoColor: '#ffe812',
   naverColor: '#03C75A',

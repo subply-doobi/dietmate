@@ -21,6 +21,8 @@ export const regroupDDataBySeller = (dDData: IDietDetailData | undefined) =>
         return acc;
       }, {});
 
+// 다른 끼니에 같은 productNo 식품 있어도 그냥 추가
+// <- 식품사별 금액만 계산할 것이라서 이후 식품을 보여준다면 중복상품qty 조절 필요함
 export const reGroupOrderBySeller = (
   orderData: IOrderData | undefined,
 ): IOrderedProduct[][] => {
